@@ -1,0 +1,466 @@
+{
+  "长沙市": [
+    {
+      "name": "橘子洲",
+      "description": "https://zh.wikipedia.org/wiki/橘子洲",
+      "image": "https://example.com/images/orange_island.jpg",
+      "visitorFlow": 500000,
+      "rating": 4.7
+    },
+    {
+      "name": "岳麓山",
+      "description": "https://zh.wikipedia.org/wiki/岳麓山",
+      "image": "https://example.com/images/yuelu_mountain.jpg",
+      "visitorFlow": 400000,
+      "rating": 4.6
+    },
+    {
+      "name": "长沙世界之窗",
+      "description": "https://zh.wikipedia.org/wiki/长沙世界之窗",
+      "image": "https://example.com/images/world_window.jpg",
+      "visitorFlow": 300000,
+      "rating": 4.5
+    },
+    {
+      "name": "湖南省博物馆",
+      "description": "https://zh.wikipedia.org/wiki/湖南省博物馆",
+      "image": "https://example.com/images/hunan_museum.jpg",
+      "visitorFlow": 280000,
+      "rating": 4.7
+    },
+    {
+      "name": "天心阁",
+      "description": "https://zh.wikipedia.org/wiki/天心阁",
+      "image": "https://img1.qunarzz.com/travel/d8/1704/68/412f1862482efbb5.jpg_r_640x426x70_6b5b7641.jpg",
+      "visitorFlow": 220000,
+      "rating": 4.4
+    },
+    {
+      "name": "马王堆汉墓",
+      "description": "https://zh.wikipedia.org/wiki/马王堆汉墓",
+      "image": "https://example.com/images/mawangdui_tombs.jpg",
+      "visitorFlow": 180000,
+      "rating": 4.5
+    },
+    {
+      "name": "长沙生态动物园",
+      "description": "https://zh.wikipedia.org/wiki/长沙生态动物园",
+      "image": "https://example.com/images/eco_zoo.jpg",
+      "visitorFlow": 150000,
+      "rating": 4.3
+    },
+    {
+      "name": "烈士公园",
+      "description": "https://zh.wikipedia.org/wiki/烈士公园",
+      "image": "https://example.com/images/martyrs_park.jpg",
+      "visitorFlow": 170000,
+      "rating": 4.4
+    }
+  ],
+  "岳阳市": [
+    {
+      "name": "岳阳楼",
+      "description": "https://zh.wikipedia.org/wiki/岳阳楼",
+      "image": "https://example.com/images/yueyang_tower.jpg",
+      "visitorFlow": 300000,
+      "rating": 4.5
+    },
+    {
+      "name": "洞庭湖",
+      "description": "https://zh.wikipedia.org/wiki/洞庭湖",
+      "image": "https://example.com/images/dongting_lake.jpg",
+      "visitorFlow": 250000,
+      "rating": 4.6
+    },
+    {
+      "name": "君山岛",
+      "description": "https://zh.wikipedia.org/wiki/君山岛",
+      "image": "https://example.com/images/junshan_island.jpg",
+      "visitorFlow": 200000,
+      "rating": 4.5
+    },
+    {
+      "name": "张谷英村",
+      "description": "https://zh.wikipedia.org/wiki/张谷英村",
+      "image": "https://example.com/images/zhangguying_village.jpg",
+      "visitorFlow": 150000,
+      "rating": 4.3
+    },
+    {
+      "name": "岳阳植物园",
+      "description": "https://zh.wikipedia.org/wiki/岳阳植物园",
+      "image": "https://example.com/images/yueyang_botanical_garden.jpg",
+      "visitorFlow": 120000,
+      "rating": 4.2
+    },
+    {
+      "name": "南湖",
+      "description": "https://zh.wikipedia.org/wiki/南湖",
+      "image": "https://example.com/images/nanhu_lake.jpg",
+      "visitorFlow": 110000,
+      "rating": 4.1
+    },
+    {
+      "name": "君山风景区",
+      "description": "https://zh.wikipedia.org/wiki/君山风景区",
+      "image": "https://example.com/images/junshan_scenic.jpg",
+      "visitorFlow": 100000,
+      "rating": 4.0
+    },
+    {
+      "name": "岳阳温泉度假村",
+      "description": "https://zh.wikipedia.org/wiki/岳阳温泉度假村",
+      "image": "https://example.com/images/yueyang_hot_spring.jpg",
+      "visitorFlow": 90000,
+      "rating": 4.2
+    }
+  ],
+  "张家界市": [
+    {
+      "name": "张家界国家森林公园",
+      "description": "https://zh.wikipedia.org/wiki/张家界国家森林公园",
+      "image": "https://example.com/images/zhangjiajie_forest_park.jpg",
+      "visitorFlow": 800000,
+      "rating": 4.8
+    },
+    {
+      "name": "天门山",
+      "description": "https://zh.wikipedia.org/wiki/天门山",
+      "image": "https://example.com/images/tianmen_mountain.jpg",
+      "visitorFlow": 600000,
+      "rating": 4.7
+    },
+    {
+      "name": "宝峰湖",
+      "description": "https://zh.wikipedia.org/wiki/宝峰湖",
+      "image": "https://example.com/images/baofeng_lake.jpg",
+      "visitorFlow": 400000,
+      "rating": 4.6
+    },
+    {
+      "name": "黄龙洞",
+      "description": "https://zh.wikipedia.org/wiki/黄龙洞",
+      "image": "https://example.com/images/huanglong_cave.jpg",
+      "visitorFlow": 300000,
+      "rating": 4.5
+    },
+    {
+      "name": "大峡谷",
+      "description": "https://zh.wikipedia.org/wiki/张家界大峡谷",
+      "image": "https://example.com/images/zhangjiajie_grand_canyon.jpg",
+      "visitorFlow": 280000,
+      "rating": 4.6
+    },
+    {
+      "name": "百龙天梯",
+      "description": "https://zh.wikipedia.org/wiki/百龙天梯",
+      "image": "https://example.com/images/bailong_elevator.jpg",
+      "visitorFlow": 240000,
+      "rating": 4.4
+    },
+    {
+      "name": "袁家界",
+      "description": "https://zh.wikipedia.org/wiki/袁家界",
+      "image": "https://example.com/images/yuanjiajie.jpg",
+      "visitorFlow": 210000,
+      "rating": 4.5
+    },
+    {
+      "name": "天门山玻璃栈道",
+      "description": "https://zh.wikipedia.org/wiki/天门山玻璃栈道",
+      "image": "https://example.com/images/glass_walkway.jpg",
+      "visitorFlow": 200000,
+      "rating": 4.6
+    }
+  ],
+  "常德市": [
+    {
+      "name": "柳叶湖",
+      "description": "https://zh.wikipedia.org/wiki/柳叶湖",
+      "image": "https://example.com/images/liuye_lake.jpg",
+      "visitorFlow": 200000,
+      "rating": 4.4
+    },
+    {
+      "name": "常德桃花源",
+      "description": "https://zh.wikipedia.org/wiki/常德桃花源",
+      "image": "https://example.com/images/taohuayuan.jpg",
+      "visitorFlow": 180000,
+      "rating": 4.5
+    },
+    {
+      "name": "夹山寺",
+      "description": "https://zh.wikipedia.org/wiki/夹山寺",
+      "image": "https://example.com/images/jiashan_temple.jpg",
+      "visitorFlow": 120000,
+      "rating": 4.3
+    },
+    {
+      "name": "西洞庭湖",
+      "description": "https://zh.wikipedia.org/wiki/西洞庭湖",
+      "image": "https://example.com/images/xidongting_lake.jpg",
+      "visitorFlow": 90000,
+      "rating": 4.2
+    },
+    {
+      "name": "万福街",
+      "description": "https://zh.wikipedia.org/wiki/万福街",
+      "image": "https://example.com/images/wanfu_street.jpg",
+      "visitorFlow": 80000,
+      "rating": 4.1
+    },
+    {
+      "name": "南岳庙",
+      "description": "https://zh.wikipedia.org/wiki/南岳庙",
+      "image": "https://example.com/images/nanyue_temple.jpg",
+      "visitorFlow": 70000,
+      "rating": 4.0
+    },
+    {
+      "name": "桃源桥",
+      "description": "https://zh.wikipedia.org/wiki/桃源桥",
+      "image": "https://example.com/images/taoyuan_bridge.jpg",
+      "visitorFlow": 50000,
+      "rating": 4.3
+    },
+    {
+      "name": "水上乐园",
+      "description": "https://zh.wikipedia.org/wiki/水上乐园",
+      "image": "https://example.com/images/water_park.jpg",
+      "visitorFlow": 40000,
+      "rating": 4.2
+    }
+  ],
+  "益阳市": [
+    {
+      "name": "桃花源",
+      "description": "https://zh.wikipedia.org/wiki/桃花源",
+      "image": "https://example.com/images/taohuayuan.jpg",
+      "visitorFlow": 250000,
+      "rating": 4.6
+    },
+    {
+      "name": "安化黑茶园",
+      "description": "https://zh.wikipedia.org/wiki/安化黑茶",
+      "image": "https://example.com/images/anhua_tea.jpg",
+      "visitorFlow": 150000,
+      "rating": 4.5
+    },
+    {
+      "name": "沅江大桥",
+      "description": "https://zh.wikipedia.org/wiki/沅江大桥",
+      "image": "https://example.com/images/yuanyang_bridge.jpg",
+      "visitorFlow": 100000,
+      "rating": 4.3
+    },
+    {
+      "name": "大云山",
+      "description": "https://zh.wikipedia.org/wiki/大云山",
+      "image": "https://example.com/images/dayun_mountain.jpg",
+      "visitorFlow": 120000,
+      "rating": 4.4
+    },
+    {
+      "name": "高明寺",
+      "description": "https://zh.wikipedia.org/wiki/高明寺",
+      "image": "https://example.com/images/gaoming_temple.jpg",
+      "visitorFlow": 90000,
+      "rating": 4.2
+    },
+    {
+      "name": "安化古镇",
+      "description": "https://zh.wikipedia.org/wiki/安化古镇",
+      "image": "https://example.com/images/anhua_ancient_town.jpg",
+      "visitorFlow": 80000,
+      "rating": 4.3
+    },
+    {
+      "name": "黄家湾",
+      "description": "https://zh.wikipedia.org/wiki/黄家湾",
+      "image": "https://example.com/images/huangjia_bay.jpg",
+      "visitorFlow": 70000,
+      "rating": 4.2
+    },
+    {
+      "name": "凤凰山",
+      "description": "https://zh.wikipedia.org/wiki/凤凰山",
+      "image": "https://example.com/images/fenghuang_mountain.jpg",
+      "visitorFlow": 65000,
+      "rating": 4.1
+    }
+  ],
+  "湘潭市": [
+    {
+      "name": "韶山",
+      "description": "https://zh.wikipedia.org/wiki/韶山",
+      "image": "https://example.com/images/shaoshan.jpg",
+      "visitorFlow": 400000,
+      "rating": 4.7
+    },
+    {
+      "name": "毛泽东故居",
+      "description": "https://zh.wikipedia.org/wiki/毛泽东故居",
+      "image": "https://example.com/images/maozedong_residence.jpg",
+      "visitorFlow": 350000,
+      "rating": 4.8
+    },
+    {
+      "name": "滴水洞",
+      "description": "https://zh.wikipedia.org/wiki/滴水洞",
+      "image": "https://example.com/images/dishui_cave.jpg",
+      "visitorFlow": 250000,
+      "rating": 4.6
+    },
+    {
+      "name": "云门寺",
+      "description": "https://zh.wikipedia.org/wiki/云门寺",
+      "image": "https://example.com/images/yunmen_temple.jpg",
+      "visitorFlow": 180000,
+      "rating": 4.5
+    },
+    {
+      "name": "昭山",
+      "description": "https://zh.wikipedia.org/wiki/昭山",
+      "image": "https://example.com/images/zhaoshan.jpg",
+      "visitorFlow": 130000,
+      "rating": 4.3
+    },
+    {
+      "name": "韶山烈士陵园",
+      "description": "https://zh.wikipedia.org/wiki/韶山烈士陵园",
+      "image": "https://example.com/images/shaoshan_martyrs.jpg",
+      "visitorFlow": 120000,
+      "rating": 4.5
+    },
+    {
+      "name": "南岳会馆",
+      "description": "https://zh.wikipedia.org/wiki/南岳会馆",
+      "image": "https://example.com/images/nanyue_hall.jpg",
+      "visitorFlow": 100000,
+      "rating": 4.2
+    },
+    {
+      "name": "韶山国家森林公园",
+      "description": "https://zh.wikipedia.org/wiki/韶山国家森林公园",
+      "image": "https://example.com/images/shaoshan_forest_park.jpg",
+      "visitorFlow": 110000,
+      "rating": 4.6
+    }
+  ],
+  "株洲市": [
+    {
+      "name": "炎帝陵",
+      "description": "https://zh.wikipedia.org/wiki/炎帝陵",
+      "image": "https://example.com/images/yandi_tomb.jpg",
+      "visitorFlow": 180000,
+      "rating": 4.5
+    },
+    {
+      "name": "神农城",
+      "description": "https://zh.wikipedia.org/wiki/神农城",
+      "image": "https://example.com/images/shennong_city.jpg",
+      "visitorFlow": 120000,
+      "rating": 4.4
+    },
+    {
+      "name": "石峰公园",
+      "description": "https://zh.wikipedia.org/wiki/石峰公园",
+      "image": "https://example.com/images/shifeng_park.jpg",
+      "visitorFlow": 110000,
+      "rating": 4.3
+    },
+    {
+      "name": "茶陵县城墙",
+      "description": "https://zh.wikipedia.org/wiki/茶陵县城墙",
+      "image": "https://example.com/images/chaling_wall.jpg",
+      "visitorFlow": 95000,
+      "rating": 4.2
+    },
+    {
+      "name": "酒仙湖",
+      "description": "https://zh.wikipedia.org/wiki/酒仙湖",
+      "image": "https://example.com/images/jiuxian_lake.jpg",
+      "visitorFlow": 85000,
+      "rating": 4.4
+    },
+    {
+      "name": "云阳山",
+      "description": "https://zh.wikipedia.org/wiki/云阳山",
+      "image": "https://example.com/images/yunyang_mountain.jpg",
+      "visitorFlow": 75000,
+      "rating": 4.1
+    },
+    {
+      "name": "攸县温泉",
+      "description": "https://zh.wikipedia.org/wiki/攸县温泉",
+      "image": "https://example.com/images/youxian_hot_spring.jpg",
+      "visitorFlow": 68000,
+      "rating": 4.3
+    },
+    {
+      "name": "醴陵瓷器博物馆",
+      "description": "https://zh.wikipedia.org/wiki/醴陵瓷器博物馆",
+      "image": "https://example.com/images/liling_museum.jpg",
+      "visitorFlow": 60000,
+      "rating": 4.4
+    }
+  ],
+  "衡阳市": [
+    {
+      "name": "南岳衡山",
+      "description": "https://zh.wikipedia.org/wiki/南岳衡山",
+      "image": "https://example.com/images/nanyue_hengshan.jpg",
+      "visitorFlow": 600000,
+      "rating": 4.8
+    },
+    {
+      "name": "蔡伦竹海",
+      "description": "https://zh.wikipedia.org/wiki/蔡伦竹海",
+      "image": "https://example.com/images/cailun_bamboo.jpg",
+      "visitorFlow": 300000,
+      "rating": 4.7
+    },
+    {
+      "name": "石鼓书院",
+      "description": "https://zh.wikipedia.org/wiki/石鼓书院",
+      "image": "https://example.com/images/shigu_academy.jpg",
+      "visitorFlow": 200000,
+      "rating": 4.5
+    },
+    {
+      "name": "莲花山",
+      "description": "https://zh.wikipedia.org/wiki/莲花山",
+      "image": "https://example.com/images/lianhua_mountain.jpg",
+      "visitorFlow": 180000,
+      "rating": 4.4
+    },
+    {
+      "name": "南岳古镇",
+      "description": "https://zh.wikipedia.org/wiki/南岳古镇",
+      "image": "https://example.com/images/nanyue_town.jpg",
+      "visitorFlow": 150000,
+      "rating": 4.3
+    },
+    {
+      "name": "南湖公园",
+      "description": "https://zh.wikipedia.org/wiki/南湖公园",
+      "image": "https://example.com/images/nanhu_park.jpg",
+      "visitorFlow": 120000,
+      "rating": 4.2
+    },
+    {
+      "name": "王船山故居",
+      "description": "https://zh.wikipedia.org/wiki/王船山故居",
+      "image": "https://example.com/images/wangchuanshan_residence.jpg",
+      "visitorFlow": 90000,
+      "rating": 4.4
+    },
+    {
+      "name": "岳屏山",
+      "description": "https://zh.wikipedia.org/wiki/岳屏山",
+      "image": "https://example.com/images/yueping_mountain.jpg",
+      "visitorFlow": 80000,
+      "rating": 4.3
+    }
+  ]
+}
