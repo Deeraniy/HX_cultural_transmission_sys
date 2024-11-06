@@ -1,54 +1,87 @@
 <template>
-  <el-table :data="tableData" >
-    <el-table-column prop="word" label="评价词" ></el-table-column>
-    <el-table-column prop="frequency" label="频数" ></el-table-column>
-    <el-table-column prop="sentiment" label="情感倾向" >
+  <el-table :data="tableData" stripe border style="width: 100%;" height="500">
+    <el-table-column prop="word" label="评价词" align="center">
       <template #default="scope">
-        <span :class="scope.row.sentiment === '正面' ? 'positive' : 'negative'">{{ scope.row.sentiment }}</span>
+        <span class="word-cell">{{ scope.row.word }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="frequency" label="频数" align="center">
+      <template #default="scope">
+        <span class="frequency-cell">{{ scope.row.frequency }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="sentiment" label="情感倾向" align="center">
+      <template #default="scope">
+        <span :class="scope.row.sentiment === '正面' ? 'positive' : scope.row.sentiment === '负面' ? 'negative' : 'neutral'">
+          {{ scope.row.sentiment }}
+        </span>
       </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ElTable, ElTableColumn } from 'element-plus'
+import { defineProps } from 'vue'
+
 const props = defineProps({
   tableData: {
     type: Array,
     required: true
   }
 })
-
-/*const tableData = ref([
-  { word: '震撼', frequency: 102, sentiment: '正面' },
-  { word: '美丽', frequency: 77, sentiment: '正面' },
-  { word: '失望', frequency: 34, sentiment: '负面' },
-  { word: '满意', frequency: 89, sentiment: '正面' },
-  { word: '糟糕', frequency: 23, sentiment: '负面' },
-  { word: '完美', frequency: 120, sentiment: '正面' },
-  { word: '一般', frequency: 65, sentiment: '中立' },
-  { word: '差劲', frequency: 15, sentiment: '负面' },
-  { word: '精彩', frequency: 95, sentiment: '正面' },
-  { word: '无聊', frequency: 18, sentiment: '负面' },
-  { word: '有趣', frequency: 70, sentiment: '正面' },
-  { word: '失望透顶', frequency: 10, sentiment: '负面' },
-  { word: '惊喜', frequency: 55, sentiment: '正面' },
-  { word: '无语', frequency: 20, sentiment: '负面' },
-  { word: '感动', frequency: 45, sentiment: '正面' },
-  { word: '乏味', frequency: 12, sentiment: '负面' },
-  { word: '惊艳', frequency: 110, sentiment: '正面' },
-  { word: '糟糕透顶', frequency: 5, sentiment: '负面' },
-  { word: '满意极了', frequency: 100, sentiment: '正面' },
-  { word: '无法忍受', frequency: 8, sentiment: '负面' }
-])*/
 </script>
 
-<style>
+<style scoped>
+/* 表格整体样式 */
+.el-table {
+  background-color: #fafafa;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 单元格样式 */
+.word-cell, .frequency-cell {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+/* 情感倾向颜色 */
 .positive {
-  color: green;
+  color: #67C23A;
+  font-weight: bold;
 }
 .negative {
-  color: red;
+  color: #F56C6C;
+  font-weight: bold;
+}
+.neutral {
+  color: #E6A23C;
+  font-weight: bold;
+}
+
+/* 表头样式 */
+.el-table th {
+  background-color: #f3f4f6;
+  color: #606266;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* 分隔线样式 */
+.el-table__header, .el-table__body {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.el-table--striped .el-table__row--striped {
+  background-color: #f9f9f9;
+}
+
+/* 表格行高亮效果 */
+.el-table__row:hover {
+  background-color: #e8f4ff;
 }
 </style>
