@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^get_comment_count_last_12_months/',comment.get_comment_count_last_12_months),
     url(r'^get_comment_ip_count/',comment.get_comment_ip_count),
     url(r'^get_spot/',spot.get_spot_list),
+    url(r'^sentiments_result/',sentiments_analyze.sentiments_result),
 
     url(r'^lda_analyze/',lda_topic_extractor.lda_analyze),
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
