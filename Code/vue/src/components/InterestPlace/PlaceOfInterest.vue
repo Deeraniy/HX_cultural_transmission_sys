@@ -208,7 +208,7 @@ const isUrl = (text: string): boolean => {
 
 }
 .hunan-tourist-attractions {
-  background-image: url('@/assets/img2.png');
+
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -219,7 +219,7 @@ const isUrl = (text: string): boolean => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #fff8f0;
+
   min-height: 100vh;
   padding: 10px;
 
