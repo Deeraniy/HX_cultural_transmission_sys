@@ -5,7 +5,7 @@ from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import sentiments_analyze,city,cloud,comment,spot,view,lda_topic_extractor,sentiments_analyze
+from app01 import sentiments_analyze,city,cloud,comment,spot,view,lda_topic_extractor,sentiments_analyze,preview
 urlpatterns = [
     
     url(r'^testdb/$', testdb.testdb),
@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^get_comment_count_last_12_months/',comment.get_comment_count_last_12_months),
     url(r'^get_comment_ip_count/',comment.get_comment_ip_count),
     url(r'^get_spot/',spot.get_spot_list),
-    url(r'^sentiments_result/',sentiments_analyze.sentiments_result),
+    url(r'^preview/',preview.preview),
 
     url(r'^lda_analyze/',lda_topic_extractor.lda_analyze),
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
