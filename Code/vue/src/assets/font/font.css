@@ -1,0 +1,18 @@
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('./qiji-combo.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ChillKaiShu';
+    src: url('./ChillLongCangKaiShu_Regular.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ZhuanTi';
+    src: url('./SanJiXiaoZhuanJian-2.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

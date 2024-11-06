@@ -1,7 +1,5 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import PlaceOfInterest from './components/PlaceOfInterest.vue';
+import PlaceOfInterest from '@/components/InterestPlace/PlaceOfInterest.vue';
 </script>
 
 <template>
