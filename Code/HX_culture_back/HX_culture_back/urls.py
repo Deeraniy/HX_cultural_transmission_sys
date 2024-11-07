@@ -28,7 +28,8 @@ urlpatterns = [
     url(r'^lda_analyze/',lda_topic_extractor.lda_analyze),
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
     url(r'^sentiments_analyze/',sentiments_analyze.sentiments_analyze),
-    
+    url(r'^sentiments_result/',sentiments_analyze.sentiments_result),
+    # url(r'^generate_report/',sentiments_analyze.generate_report),
 
 
     
