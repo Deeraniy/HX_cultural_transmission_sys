@@ -117,7 +117,7 @@ Web网页应用
 #####  3.5.5 接口设计：重要的业务功能（可与用户故事对应）和工具类设计
 |接口名称|接口功能|输入变量或对象|输出对象|备注|
 |:--|--|---|---|--:|
-|payAli|调用Alipay接口|inputObj1，inputObj2，。。。|outputobj1，outputobj2，。。。|需向支付宝申请付款账号|
+|ZhipuAI|调用智谱AI接口|prompt|response|需向智谱AI购买API Key|
 
 列出方法描述，包括方法名，输入变量（如果有），返回值（如果有），可参考
 微信支付API统一下单 https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_1
