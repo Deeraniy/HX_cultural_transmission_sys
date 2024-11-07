@@ -54,7 +54,7 @@ def sentiments_analyze(request):
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
     comment_list =cursor.fetchall()
-    print(comment_list)
+    # print(comment_list)
     comment_list = [comment['content'] for comment in comment_list]
     results=process_comments(comment_list)
     cursor.close()
@@ -176,6 +176,7 @@ def sentiments_result(request):
         """
         cursor.execute(comment_sql, (spot_id,))
         results = cursor.fetchall()
+        # print(results)
         
         if not results:
             return JsonResponse({
@@ -189,6 +190,7 @@ def sentiments_result(request):
             })
         
         # 按年月分组数据
+        print(results)
         monthly_data = {}
         for row in results:
             date_key = f"{row['year']}-{row['month']}"
