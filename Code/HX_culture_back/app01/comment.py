@@ -63,7 +63,8 @@ def get_comment_list_recent(request):
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    spot_id=cursor.fetchone()['spot_id']
     sql_query = "SELECT * FROM usercomment WHERE spot_id=%s AND YEAR(comment_time)=%s AND MONTH(comment_time)=%s"
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id, current_year, current_month))
