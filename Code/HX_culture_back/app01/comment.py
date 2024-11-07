@@ -37,7 +37,7 @@ def get_comment_list_recent(request):
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
-    sql_query = "SELECT * FROM usercomment WHERE spot_id=%s AND YEAR(comment_time)=%s AND MONTH(comment_time)=%s"
+    sql_query = "SELECT * FROM usercomment WHERE spot_id=%s AND YEAR(create_time)=%s AND MONTH(create_time)=%s"
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id, current_year, current_month))
     comment_list =cursor.fetchall()
@@ -59,7 +59,7 @@ def get_comment_time_span(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     
     # 查询该地点的评论时间范围
-    sql_query = "SELECT MIN(comment_time) AS start_time, MAX(comment_time) AS end_time FROM usercomment WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
+    sql_query = "SELECT MIN(create_time) AS start_time, MAX(create_time) AS end_time FROM usercomment WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
     cursor.execute(sql_query, (spot_name,))
     time_span = cursor.fetchone()
     
@@ -111,15 +111,15 @@ def get_average_score_by_bi_month(request):
     # SQL 查询，根据每两个月分组计算平均得分
     sql_query = """
         SELECT 
-            DATE_FORMAT(comment_time, '%%Y-%%m') AS period,  -- 双百分号
+            DATE_FORMAT(create_time, '%%Y-%%m') AS period,  -- 双百分号
             AVG(like_count) AS average_score
         FROM 
             usercomment
         WHERE 
             spot_id = (SELECT spot_id FROM scenicspot WHERE spot_name = %s) 
-            AND comment_time >= %s
+            AND create_time >= %s
         GROUP BY 
-            DATE_FORMAT(comment_time, '%%Y-%%m')  -- 这里也是双百分号
+            DATE_FORMAT(create_time, '%%Y-%%m')  -- 这里也是双百分号
         ORDER BY 
             period DESC
         LIMIT 6
@@ -152,15 +152,15 @@ def get_comment_count_last_12_months(request):
     # SQL 查询，统计最近12个月每月的评论数量
     sql_query = """
         SELECT 
-            DATE_FORMAT(comment_time, '%%Y-%%m') AS month,
+            DATE_FORMAT(create_time, '%%Y-%%m') AS month,
             COUNT(*) AS comment_count
         FROM 
             usercomment
         WHERE 
             spot_id = (SELECT spot_id FROM scenicspot WHERE spot_name = %s)
-            AND comment_time >= %s
+            AND create_time >= %s
         GROUP BY 
-            DATE_FORMAT(comment_time, '%%Y-%%m')
+            DATE_FORMAT(create_time, '%%Y-%%m')
         ORDER BY 
             month DESC
     """
