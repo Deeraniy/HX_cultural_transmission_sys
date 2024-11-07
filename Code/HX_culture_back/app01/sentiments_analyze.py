@@ -54,7 +54,7 @@ def sentiments_analyze(request):
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
     comment_list =cursor.fetchall()
-    print(comment_list)
+    # print(comment_list)
     comment_list = [comment['content'] for comment in comment_list]
     results=process_comments(comment_list)
     cursor.close()
@@ -72,7 +72,7 @@ def sentiments_all():
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
         # 获取所有评论
-        cursor.execute("SELECT id, content FROM bilibili_video_comment")
+        cursor.execute("SELECT id, content FROM usercomment")
         comments = cursor.fetchall()
         
         # 逐条处理评论
@@ -81,7 +81,7 @@ def sentiments_all():
             logging.info(f"评论ID: {comment['id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
             # 更新数据库
             update_sql = """
-                UPDATE bilibili_video_comment 
+                UPDATE usercomment 
                 SET sentiment = %s, sentiment_confidence = %s 
                 WHERE id = %s
             """
@@ -172,6 +172,7 @@ def sentiments_result(request):
         """
         cursor.execute(comment_sql, (spot_id,))
         results = cursor.fetchall()
+        # print(results)
         
         if not results:
             return JsonResponse({
@@ -185,9 +186,11 @@ def sentiments_result(request):
             })
         
         # 按年月分组数据
+        print(results)
         monthly_data = {}
         for row in results:
             date = row['date']
+            print(date)
             year_month = f"{date.year}-{date.month:02d}"
             
             if year_month not in monthly_data:
