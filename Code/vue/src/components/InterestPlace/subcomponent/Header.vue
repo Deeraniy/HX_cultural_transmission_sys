@@ -3,7 +3,7 @@
     <!-- 返回按钮和标题 -->
     <el-page-header @back="onBack" class="header">
       <template #content>
-        <span class="title">返回</span>
+        <span class="title" style="font-size: 30px">{{title}}</span>
       </template>
     </el-page-header>
 
@@ -37,11 +37,13 @@
 <script setup>
 import { ArrowLeft, Setting } from "@element-plus/icons-vue";
 import { ref } from "vue";
+import router from "@/router.js";
 const drawer = ref(false)
 
 const circleUrl = ref("https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png");
-
+const props = defineProps({title:String})
 const onBack = () => {
+  router.go(-1);
   console.log("返回按钮被点击");
 };
 </script>

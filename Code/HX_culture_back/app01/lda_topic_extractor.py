@@ -95,6 +95,13 @@ def lda_analyze(request):
 
     # 转 tf_idf 为数组，以便后面使用它来对文本主题概率分布进行计算
     X = tf_idf.toarray()
+    def calculate_word_frequency(comments, topic_words):
+        word_freq = {}
+        for word in topic_words:
+            word_freq[word] = sum(comment.count(word) for comment in comments)
+        return word_freq
+
+    
 
     def predict_to_data_frame(model: LatentDirichletAllocation, X: np.ndarray) -> pd.DataFrame:
         matrix = model.transform(X)
@@ -104,8 +111,16 @@ def lda_analyze(request):
 
     # 计算完毕主题概率分布情况
     predict_df = predict_to_data_frame(lda, X)
+    frequency_data = []
+    for topic_words in top_words_array:
+        freq = calculate_word_frequency(df['text'].tolist(), topic_words)
+        frequency_data.append(freq)
 
+    print(frequency_data)
     # 保存文本主题概率分布到 csv 文件中
     # predict_df.to_csv(predict_topic_csv_path, encoding='utf-8-sig', index=None)
-    result={'topic_words':top_words_df.to_dict(orient='records')}
-    return JsonResponse(json_data,safe=False)
+    result = {
+        # 'topic_words': top_words_df.to_dict(orient='records'),
+        'topic_frequencies': frequency_data
+    }
+    return JsonResponse(result,safe=False)
