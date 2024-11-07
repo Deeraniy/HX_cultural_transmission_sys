@@ -2,16 +2,19 @@ import request from "@/utils/request";
 
 const DICT_BASE_URL = "";
 
-class SpotsAPI {
-    static getSpotsAPI() {
+class SentimentAPI {
+    static getSentimentAnalyzeAPI(spot_name:string) {
         return request({
-            url: `${DICT_BASE_URL}/get_spot/`,
+            url: `${DICT_BASE_URL}/sentiments_analyze/`,
             method: "get",
+            params: {
+                spot_name: spot_name
+            }
         });
     }
-    static getSpotByNameAPI(spot_name:string) {
+    static getSentimentResultAPI(spot_name:string) {
         return request({
-            url: `${DICT_BASE_URL}/get_spot_by_name/`,
+            url: `${DICT_BASE_URL}/sentiments_result/`,
             method: "get",
             params: {
                 spot_name: spot_name
@@ -21,5 +24,5 @@ class SpotsAPI {
 
 }
 
-export default SpotsAPI;
+export default SentimentAPI;
 
