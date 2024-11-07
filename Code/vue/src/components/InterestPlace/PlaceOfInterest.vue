@@ -107,14 +107,19 @@ onMounted(() => {
   //     .catch(error => {
   //       console.error('Error occurred:', error);
   //     });
-
   // PreviewAPI.PreviewAPI([5,7,8,9,10],9,3).then(data => {
   //   console.log('预测', data); // 确保打印的是后端返回的 `data`
   // })
   //     .catch(error => {
   //       console.error('Error occurred:', error);
   //     });
-  
+  //   SpotsAPI.getSpotByNameAPI("橘子洲").then(data => {
+  //     console.log('Spots2:', data); // 确保打印的是后端返回的 `data`
+  //   })
+  //     .catch(error => {
+  //       console.error('Error occurred:', error);
+  //     });
+
 
 
 
