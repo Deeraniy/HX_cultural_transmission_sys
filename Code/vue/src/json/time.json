@@ -1,0 +1,2228 @@
+[
+  {
+    "year": 2022,
+    "month": 10,
+    "sentiment_score": 0.424,
+    "sentiment": "neutral",
+    "comment_count": 16
+  },
+  {
+    "year": 2022,
+    "month": 11,
+    "sentiment_score": 0.382,
+    "sentiment": "neutral",
+    "comment_count": 18
+  },
+  {
+    "year": 2022,
+    "month": 12,
+    "sentiment_score": 0.462,
+    "sentiment": "neutral",
+    "comment_count": 15
+  },
+  {
+    "year": 2023,
+    "month": 1,
+    "sentiment_score": 0.365,
+    "sentiment": "neutral",
+    "comment_count": 16
+  },
+  {
+    "year": 2023,
+    "month": 2,
+    "sentiment_score": 0.508,
+    "sentiment": "neutral",
+    "comment_count": 13
+  },
+  {
+    "year": 2023,
+    "month": 3,
+    "sentiment_score": 0.228,
+    "sentiment": "negative",
+    "comment_count": 21
+  },
+  {
+    "year": 2023,
+    "month": 4,
+    "sentiment_score": 0.359,
+    "sentiment": "neutral",
+    "comment_count": 21
+  },
+  {
+    "year": 2023,
+    "month": 5,
+    "sentiment_score": 0.513,
+    "sentiment": "neutral",
+    "comment_count": 13
+  },
+  {
+    "year": 2023,
+    "month": 6,
+    "sentiment_score": 0.497,
+    "sentiment": "neutral",
+    "comment_count": 9
+  },
+  {
+    "year": 2023,
+    "month": 7,
+    "sentiment_score": 0.415,
+    "sentiment": "neutral",
+    "comment_count": 19
+  },
+  {
+    "year": 2023,
+    "month": 8,
+    "sentiment_score": 0.305,
+    "sentiment": "neutral",
+    "comment_count": 21
+  },
+  {
+    "year": 2023,
+    "month": 9,
+    "sentiment_score": 0.27,
+    "sentiment": "negative",
+    "comment_count": 14
+  },
+  {
+    "year": 2023,
+    "month": 10,
+    "sentiment_score": 0.215,
+    "sentiment": "negative",
+    "comment_count": 13
+  },
+  {
+    "year": 2023,
+    "month": 11,
+    "sentiment_score": 0.479,
+    "sentiment": "neutral",
+    "comment_count": 12
+  },
+  {
+    "year": 2023,
+    "month": 12,
+    "sentiment_score": 0.331,
+    "sentiment": "neutral",
+    "comment_count": 11
+  },
+  {
+    "year": 2024,
+    "month": 1,
+    "sentiment_score": 0.353,
+    "sentiment": "neutral",
+    "comment_count": 14
+  },
+  {
+    "year": 2024,
+    "month": 2,
+    "sentiment_score": 0.456,
+    "sentiment": "neutral",
+    "comment_count": 20
+  },
+  {
+    "year": 2024,
+    "month": 3,
+    "sentiment_score": 0.48,
+    "sentiment": "neutral",
+    "comment_count": 11
+  },
+  {
+    "year": 2024,
+    "month": 4,
+    "sentiment_score": 0.407,
+    "sentiment": "neutral",
+    "comment_count": 14
+  },
+  {
+    "year": 2024,
+    "month": 5,
+    "sentiment_score": 0.49,
+    "sentiment": "neutral",
+    "comment_count": 18
+  },
+  {
+    "year": 2024,
+    "month": 6,
+    "sentiment_score": 0.32,
+    "sentiment": "neutral",
+    "comment_count": 11
+  },
+  {
+    "year": 2024,
+    "month": 7,
+    "sentiment_score": 0.521,
+    "sentiment": "neutral",
+    "comment_count": 15
+  },
+  {
+    "year": 2024,
+    "month": 8,
+    "sentiment_score": 0.631,
+    "sentiment": "neutral",
+    "comment_count": 17
+  },
+  {
+    "year": 2024,
+    "month": 9,
+    "sentiment_score": 0.536,
+    "sentiment": "neutral",
+    "comment_count": 16
+  },
+  {
+    "year": 2024,
+    "month": 10,
+    "sentiment_score": 0.511,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1600452,
+    "month": 1600452,
+    "sentiment_score": 0.677,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1610737,
+    "month": 1610737,
+    "sentiment_score": 0.455,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1610811,
+    "month": 1610811,
+    "sentiment_score": 0.798,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1610938,
+    "month": 1610938,
+    "sentiment_score": 0.985,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1611766,
+    "month": 1611766,
+    "sentiment_score": 0.975,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1612080,
+    "month": 1612080,
+    "sentiment_score": 0.764,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1612805,
+    "month": 1612805,
+    "sentiment_score": 0.808,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1612974,
+    "month": 1612974,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1621918,
+    "month": 1621918,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1624022,
+    "month": 1624022,
+    "sentiment_score": 0.503,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1629191,
+    "month": 1629191,
+    "sentiment_score": 0.686,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1629903,
+    "month": 1629903,
+    "sentiment_score": 0.991,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1631768,
+    "month": 1631768,
+    "sentiment_score": 0.961,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1632311,
+    "month": 1632311,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1632504,
+    "month": 1632504,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1632924,
+    "month": 1632924,
+    "sentiment_score": 0.964,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1633012,
+    "month": 1633012,
+    "sentiment_score": 0.478,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1633361,
+    "month": 1633361,
+    "sentiment_score": 0.995,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1636032,
+    "month": 1636032,
+    "sentiment_score": 0.583,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1638254,
+    "month": 1638254,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1638676,
+    "month": 1638676,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1638887,
+    "month": 1638887,
+    "sentiment_score": 0.779,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1638958,
+    "month": 1638958,
+    "sentiment_score": 0.981,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1639321,
+    "month": 1639321,
+    "sentiment_score": 0.964,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1639447,
+    "month": 1639447,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1640001,
+    "month": 1640001,
+    "sentiment_score": 0.865,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1641393,
+    "month": 1641393,
+    "sentiment_score": 0.526,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1647769,
+    "month": 1647769,
+    "sentiment_score": 0.657,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1650022,
+    "month": 1650022,
+    "sentiment_score": 0.226,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1653811,
+    "month": 1653811,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1653843,
+    "month": 1653843,
+    "sentiment_score": 0.392,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1653903,
+    "month": 1653903,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1654155,
+    "month": 1654155,
+    "sentiment_score": 0.704,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1654180,
+    "month": 1654180,
+    "sentiment_score": 0.389,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1654319,
+    "month": 1654319,
+    "sentiment_score": 0.617,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1654432,
+    "month": 1654432,
+    "sentiment_score": 0.902,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1654919,
+    "month": 1654919,
+    "sentiment_score": 0.928,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1655126,
+    "month": 1655126,
+    "sentiment_score": 0.507,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1655174,
+    "month": 1655174,
+    "sentiment_score": 0.91,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1655211,
+    "month": 1655211,
+    "sentiment_score": 0.77,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1660632,
+    "month": 1660632,
+    "sentiment_score": 0.992,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1660728,
+    "month": 1660728,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1661531,
+    "month": 1661531,
+    "sentiment_score": 0.191,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1661532,
+    "month": 1661532,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1661534,
+    "month": 1661534,
+    "sentiment_score": 0.752,
+    "sentiment": "positive",
+    "comment_count": 2
+  },
+  {
+    "year": 1661535,
+    "month": 1661535,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1661536,
+    "month": 1661536,
+    "sentiment_score": 0.505,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1661564,
+    "month": 1661564,
+    "sentiment_score": 0.81,
+    "sentiment": "positive",
+    "comment_count": 2
+  },
+  {
+    "year": 1661575,
+    "month": 1661575,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1662260,
+    "month": 1662260,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1662547,
+    "month": 1662547,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1662634,
+    "month": 1662634,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1662651,
+    "month": 1662651,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1662652,
+    "month": 1662652,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1662657,
+    "month": 1662657,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1662697,
+    "month": 1662697,
+    "sentiment_score": 0.621,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1662730,
+    "month": 1662730,
+    "sentiment_score": 0.862,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1662807,
+    "month": 1662807,
+    "sentiment_score": 0.402,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1662967,
+    "month": 1662967,
+    "sentiment_score": 0.648,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1662989,
+    "month": 1662989,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1663253,
+    "month": 1663253,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1664114,
+    "month": 1664114,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1664423,
+    "month": 1664423,
+    "sentiment_score": 0.433,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1666684,
+    "month": 1666684,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1671187,
+    "month": 1671187,
+    "sentiment_score": 0.949,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1671189,
+    "month": 1671189,
+    "sentiment_score": 0.394,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1671191,
+    "month": 1671191,
+    "sentiment_score": 0.793,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1671193,
+    "month": 1671193,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1671197,
+    "month": 1671197,
+    "sentiment_score": 0.802,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1671378,
+    "month": 1671378,
+    "sentiment_score": 0.945,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1671458,
+    "month": 1671458,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1671459,
+    "month": 1671459,
+    "sentiment_score": 0.544,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1671564,
+    "month": 1671564,
+    "sentiment_score": 0.774,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1672761,
+    "month": 1672761,
+    "sentiment_score": 0.946,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1674357,
+    "month": 1674357,
+    "sentiment_score": 0.963,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1677379,
+    "month": 1677379,
+    "sentiment_score": 0.706,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1677462,
+    "month": 1677462,
+    "sentiment_score": 0.51,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677492,
+    "month": 1677492,
+    "sentiment_score": 0.527,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677546,
+    "month": 1677546,
+    "sentiment_score": 0.833,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1677550,
+    "month": 1677550,
+    "sentiment_score": 0.801,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1677556,
+    "month": 1677556,
+    "sentiment_score": 0.12,
+    "sentiment": "negative",
+    "comment_count": 2
+  },
+  {
+    "year": 1677557,
+    "month": 1677557,
+    "sentiment_score": 0.477,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677562,
+    "month": 1677562,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1677581,
+    "month": 1677581,
+    "sentiment_score": 0.433,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677583,
+    "month": 1677583,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1677587,
+    "month": 1677587,
+    "sentiment_score": 0.184,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1677590,
+    "month": 1677590,
+    "sentiment_score": 0.202,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1677593,
+    "month": 1677593,
+    "sentiment_score": 0.627,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677600,
+    "month": 1677600,
+    "sentiment_score": 0.915,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1677602,
+    "month": 1677602,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1677638,
+    "month": 1677638,
+    "sentiment_score": 0.277,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1677642,
+    "month": 1677642,
+    "sentiment_score": 0.543,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677650,
+    "month": 1677650,
+    "sentiment_score": 0.65,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677666,
+    "month": 1677666,
+    "sentiment_score": 0.303,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677727,
+    "month": 1677727,
+    "sentiment_score": 0.495,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1677808,
+    "month": 1677808,
+    "sentiment_score": 0.737,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1678076,
+    "month": 1678076,
+    "sentiment_score": 0.946,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1678267,
+    "month": 1678267,
+    "sentiment_score": 0.27,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1678415,
+    "month": 1678415,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1678534,
+    "month": 1678534,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1678664,
+    "month": 1678664,
+    "sentiment_score": 0.853,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1678794,
+    "month": 1678794,
+    "sentiment_score": 0.177,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1679336,
+    "month": 1679336,
+    "sentiment_score": 0.674,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1682907,
+    "month": 1682907,
+    "sentiment_score": 0.9,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1683710,
+    "month": 1683710,
+    "sentiment_score": 0.864,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1683780,
+    "month": 1683780,
+    "sentiment_score": 0.38,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1683786,
+    "month": 1683786,
+    "sentiment_score": 0.224,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1683793,
+    "month": 1683793,
+    "sentiment_score": 0.412,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1683801,
+    "month": 1683801,
+    "sentiment_score": 0.532,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1683823,
+    "month": 1683823,
+    "sentiment_score": 0.938,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1683867,
+    "month": 1683867,
+    "sentiment_score": 0.267,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1683881,
+    "month": 1683881,
+    "sentiment_score": 0.766,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1683895,
+    "month": 1683895,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1683896,
+    "month": 1683896,
+    "sentiment_score": 0.371,
+    "sentiment": "neutral",
+    "comment_count": 2
+  },
+  {
+    "year": 1683910,
+    "month": 1683910,
+    "sentiment_score": 0.655,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1683913,
+    "month": 1683913,
+    "sentiment_score": 0.982,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1683936,
+    "month": 1683936,
+    "sentiment_score": 0.366,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1683944,
+    "month": 1683944,
+    "sentiment_score": 0.725,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1683951,
+    "month": 1683951,
+    "sentiment_score": 0.583,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1683986,
+    "month": 1683986,
+    "sentiment_score": 0.923,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1684025,
+    "month": 1684025,
+    "sentiment_score": 0.241,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1684213,
+    "month": 1684213,
+    "sentiment_score": 0.981,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1684468,
+    "month": 1684468,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1684640,
+    "month": 1684640,
+    "sentiment_score": 0.727,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1684645,
+    "month": 1684645,
+    "sentiment_score": 0.598,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1684806,
+    "month": 1684806,
+    "sentiment_score": 0.526,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1684829,
+    "month": 1684829,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1687268,
+    "month": 1687268,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1687335,
+    "month": 1687335,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1687428,
+    "month": 1687428,
+    "sentiment_score": 0.444,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687508,
+    "month": 1687508,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1687523,
+    "month": 1687523,
+    "sentiment_score": 0.275,
+    "sentiment": "negative",
+    "comment_count": 2
+  },
+  {
+    "year": 1687525,
+    "month": 1687525,
+    "sentiment_score": 0.944,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1687535,
+    "month": 1687535,
+    "sentiment_score": 0.644,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687580,
+    "month": 1687580,
+    "sentiment_score": 0.364,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687585,
+    "month": 1687585,
+    "sentiment_score": 0.198,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1687587,
+    "month": 1687587,
+    "sentiment_score": 0.413,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687596,
+    "month": 1687596,
+    "sentiment_score": 0.185,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1687609,
+    "month": 1687609,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1687620,
+    "month": 1687620,
+    "sentiment_score": 0.664,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687621,
+    "month": 1687621,
+    "sentiment_score": 0.541,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687629,
+    "month": 1687629,
+    "sentiment_score": 0.836,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1687666,
+    "month": 1687666,
+    "sentiment_score": 0.37,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687668,
+    "month": 1687668,
+    "sentiment_score": 0.893,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1687675,
+    "month": 1687675,
+    "sentiment_score": 0.63,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687689,
+    "month": 1687689,
+    "sentiment_score": 0.553,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687707,
+    "month": 1687707,
+    "sentiment_score": 0.989,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1687764,
+    "month": 1687764,
+    "sentiment_score": 0.412,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687794,
+    "month": 1687794,
+    "sentiment_score": 0.461,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1687798,
+    "month": 1687798,
+    "sentiment_score": 0.96,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1688206,
+    "month": 1688206,
+    "sentiment_score": 0.44,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1688311,
+    "month": 1688311,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1688403,
+    "month": 1688403,
+    "sentiment_score": 0.465,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1688442,
+    "month": 1688442,
+    "sentiment_score": 0.339,
+    "sentiment": "neutral",
+    "comment_count": 2
+  },
+  {
+    "year": 1688483,
+    "month": 1688483,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1688741,
+    "month": 1688741,
+    "sentiment_score": 0.395,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1689235,
+    "month": 1689235,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1689547,
+    "month": 1689547,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1690109,
+    "month": 1690109,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1690532,
+    "month": 1690532,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1691230,
+    "month": 1691230,
+    "sentiment_score": 0.934,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1693709,
+    "month": 1693709,
+    "sentiment_score": 0.917,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1694407,
+    "month": 1694407,
+    "sentiment_score": 0.94,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1694700,
+    "month": 1694700,
+    "sentiment_score": 0.481,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1694701,
+    "month": 1694701,
+    "sentiment_score": 0.674,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1694703,
+    "month": 1694703,
+    "sentiment_score": 0.378,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1694707,
+    "month": 1694707,
+    "sentiment_score": 0.56,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1694720,
+    "month": 1694720,
+    "sentiment_score": 0.193,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1694733,
+    "month": 1694733,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1694734,
+    "month": 1694734,
+    "sentiment_score": 0.712,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1694751,
+    "month": 1694751,
+    "sentiment_score": 0.505,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1694971,
+    "month": 1694971,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1695086,
+    "month": 1695086,
+    "sentiment_score": 0.915,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1695372,
+    "month": 1695372,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1695713,
+    "month": 1695713,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1696223,
+    "month": 1696223,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1696236,
+    "month": 1696236,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1696253,
+    "month": 1696253,
+    "sentiment_score": 0.409,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1696260,
+    "month": 1696260,
+    "sentiment_score": 0.859,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1696266,
+    "month": 1696266,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1696301,
+    "month": 1696301,
+    "sentiment_score": 0.174,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1696432,
+    "month": 1696432,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1696493,
+    "month": 1696493,
+    "sentiment_score": 0.421,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1696515,
+    "month": 1696515,
+    "sentiment_score": 0.93,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1696732,
+    "month": 1696732,
+    "sentiment_score": 0.564,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1696918,
+    "month": 1696918,
+    "sentiment_score": 0.455,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1696920,
+    "month": 1696920,
+    "sentiment_score": 0.455,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1697332,
+    "month": 1697332,
+    "sentiment_score": 0.993,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1697701,
+    "month": 1697701,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1698253,
+    "month": 1698253,
+    "sentiment_score": 0.96,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1699873,
+    "month": 1699873,
+    "sentiment_score": 0.453,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1702120,
+    "month": 1702120,
+    "sentiment_score": 0.873,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1702897,
+    "month": 1702897,
+    "sentiment_score": 0.856,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1703572,
+    "month": 1703572,
+    "sentiment_score": 0.515,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1704193,
+    "month": 1704193,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1704282,
+    "month": 1704282,
+    "sentiment_score": 0.976,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1704469,
+    "month": 1704469,
+    "sentiment_score": 0.356,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1705218,
+    "month": 1705218,
+    "sentiment_score": 0.354,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1707158,
+    "month": 1707158,
+    "sentiment_score": 0.923,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1707190,
+    "month": 1707190,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1707215,
+    "month": 1707215,
+    "sentiment_score": 0.222,
+    "sentiment": "negative",
+    "comment_count": 2
+  },
+  {
+    "year": 1707230,
+    "month": 1707230,
+    "sentiment_score": 0.388,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1707234,
+    "month": 1707234,
+    "sentiment_score": 0.477,
+    "sentiment": "neutral",
+    "comment_count": 2
+  },
+  {
+    "year": 1707249,
+    "month": 1707249,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1707284,
+    "month": 1707284,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1707320,
+    "month": 1707320,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1707324,
+    "month": 1707324,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1708077,
+    "month": 1708077,
+    "sentiment_score": 0.541,
+    "sentiment": "neutral",
+    "comment_count": 2
+  },
+  {
+    "year": 1708082,
+    "month": 1708082,
+    "sentiment_score": 0.506,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1708083,
+    "month": 1708083,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1708088,
+    "month": 1708088,
+    "sentiment_score": 0.657,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1708138,
+    "month": 1708138,
+    "sentiment_score": 0.51,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1708165,
+    "month": 1708165,
+    "sentiment_score": 0.417,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1708176,
+    "month": 1708176,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1708262,
+    "month": 1708262,
+    "sentiment_score": 0.564,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1708333,
+    "month": 1708333,
+    "sentiment_score": 0.198,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1708691,
+    "month": 1708691,
+    "sentiment_score": 0.491,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1713355,
+    "month": 1713355,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1713356,
+    "month": 1713356,
+    "sentiment_score": 0.974,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1713357,
+    "month": 1713357,
+    "sentiment_score": 0.358,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1713362,
+    "month": 1713362,
+    "sentiment_score": 0.22,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1713366,
+    "month": 1713366,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1713370,
+    "month": 1713370,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1713371,
+    "month": 1713371,
+    "sentiment_score": 0.398,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1713377,
+    "month": 1713377,
+    "sentiment_score": 0.762,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1713390,
+    "month": 1713390,
+    "sentiment_score": 0.754,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1713549,
+    "month": 1713549,
+    "sentiment_score": 0.614,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1714549,
+    "month": 1714549,
+    "sentiment_score": 0.869,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1715494,
+    "month": 1715494,
+    "sentiment_score": 0.746,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1717568,
+    "month": 1717568,
+    "sentiment_score": 0.417,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1717585,
+    "month": 1717585,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1717653,
+    "month": 1717653,
+    "sentiment_score": 0.522,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1719044,
+    "month": 1719044,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1719326,
+    "month": 1719326,
+    "sentiment_score": 0.891,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1720432,
+    "month": 1720432,
+    "sentiment_score": 0.404,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1720481,
+    "month": 1720481,
+    "sentiment_score": 0.97,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1720599,
+    "month": 1720599,
+    "sentiment_score": 0.503,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1720778,
+    "month": 1720778,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1721405,
+    "month": 1721405,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1722297,
+    "month": 1722297,
+    "sentiment_score": 0.662,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1722882,
+    "month": 1722882,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1723129,
+    "month": 1723129,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1723218,
+    "month": 1723218,
+    "sentiment_score": 0.576,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1723250,
+    "month": 1723250,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1723472,
+    "month": 1723472,
+    "sentiment_score": 0.41,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1723483,
+    "month": 1723483,
+    "sentiment_score": 0.262,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1723869,
+    "month": 1723869,
+    "sentiment_score": 0.663,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1723942,
+    "month": 1723942,
+    "sentiment_score": 0.595,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1723976,
+    "month": 1723976,
+    "sentiment_score": 0.947,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1723986,
+    "month": 1723986,
+    "sentiment_score": 0.535,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1723990,
+    "month": 1723990,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1723997,
+    "month": 1723997,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1724008,
+    "month": 1724008,
+    "sentiment_score": 0.985,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1724072,
+    "month": 1724072,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1724080,
+    "month": 1724080,
+    "sentiment_score": 0.657,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1724130,
+    "month": 1724130,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1724197,
+    "month": 1724197,
+    "sentiment_score": 0.673,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1724205,
+    "month": 1724205,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1724254,
+    "month": 1724254,
+    "sentiment_score": 0.98,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1724334,
+    "month": 1724334,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1724459,
+    "month": 1724459,
+    "sentiment_score": 0.77,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1726071,
+    "month": 1726071,
+    "sentiment_score": 0.756,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1726119,
+    "month": 1726119,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1726122,
+    "month": 1726122,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1726296,
+    "month": 1726296,
+    "sentiment_score": 0.171,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1726409,
+    "month": 1726409,
+    "sentiment_score": 0.944,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1726629,
+    "month": 1726629,
+    "sentiment_score": 0.986,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1726658,
+    "month": 1726658,
+    "sentiment_score": 0.477,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1726747,
+    "month": 1726747,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1727264,
+    "month": 1727264,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1727266,
+    "month": 1727266,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1727498,
+    "month": 1727498,
+    "sentiment_score": 0.717,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1727953,
+    "month": 1727953,
+    "sentiment_score": 0.522,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1727955,
+    "month": 1727955,
+    "sentiment_score": 0.445,
+    "sentiment": "neutral",
+    "comment_count": 2
+  },
+  {
+    "year": 1727956,
+    "month": 1727956,
+    "sentiment_score": 0.859,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1727960,
+    "month": 1727960,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1727972,
+    "month": 1727972,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1727975,
+    "month": 1727975,
+    "sentiment_score": 0.391,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1728044,
+    "month": 1728044,
+    "sentiment_score": 0.988,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1728121,
+    "month": 1728121,
+    "sentiment_score": 0.502,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1728387,
+    "month": 1728387,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1728394,
+    "month": 1728394,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1728395,
+    "month": 1728395,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1728401,
+    "month": 1728401,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1728408,
+    "month": 1728408,
+    "sentiment_score": 0.972,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1728409,
+    "month": 1728409,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1728517,
+    "month": 1728517,
+    "sentiment_score": 0.511,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1728532,
+    "month": 1728532,
+    "sentiment_score": 0.434,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1729000,
+    "month": 1729000,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1729086,
+    "month": 1729086,
+    "sentiment_score": 0.0,
+    "sentiment": "negative",
+    "comment_count": 1
+  },
+  {
+    "year": 1729245,
+    "month": 1729245,
+    "sentiment_score": 0.905,
+    "sentiment": "positive",
+    "comment_count": 1
+  },
+  {
+    "year": 1730073,
+    "month": 1730073,
+    "sentiment_score": 0.624,
+    "sentiment": "neutral",
+    "comment_count": 1
+  },
+  {
+    "year": 1730536,
+    "month": 1730536,
+    "sentiment_score": 0.482,
+    "sentiment": "neutral",
+    "comment_count": 1
+  }
+]

@@ -2,128 +2,106 @@
   <div ref="lineRaceChart" style="width: 100%; height: 600px;"></div>
 </template>
 
-<script setup>
-import * as echarts from 'echarts'
-import { onMounted, ref } from 'vue'
+<script setup lang="ts">
+import * as echarts from 'echarts';
+import { onMounted, ref, watch } from 'vue';
 
-const lineRaceChart = ref(null)
-let chartInstance = null
+// 定义 props 类型
+type Props = {
+  timeData: Array<{
+    date: string;
+    sentimentScore: number;
+    sentiment: string;
+    commentCount: number;
+  }>;
+};
 
-// 随机生成数据
-function generateRandomData() {
-  const data = [];
-  const countries = [
-    'Finland', 'France', 'Germany', 'Iceland', 'Norway', 'Poland', 'Russia', 'United Kingdom'
-  ];
+// 接收父组件传递的时间情感数据
+const props = defineProps<Props>();
 
-  countries.forEach(country => {
-    for (let year = 1950; year <= 2020; year++) {
-      data.push({
-        Year: year,
-        Country: country,
-        Income: Math.floor(Math.random() * 50000) + 10000  // 随机生成收入数据
-      });
-    }
-  });
-
-  return data;
-}
-
-// 设置图表选项
-function setChartOption(data) {
-  const countries = [
-    'Finland', 'France', 'Germany', 'Iceland', 'Norway', 'Poland', 'Russia', 'United Kingdom'
-  ];
-  const datasetWithFilters = [];
-  const seriesList = [];
-
-  echarts.util.each(countries, function (country) {
-    var datasetId = 'dataset_' + country;
-    datasetWithFilters.push({
-      id: datasetId,
-      fromDatasetId: 'dataset_raw',
-      transform: {
-        type: 'filter',
-        config: {
-          and: [
-            { dimension: 'Year', gte: 1950 },
-            { dimension: 'Country', '=': country }
-          ]
-        }
-      }
-    });
-    seriesList.push({
-      type: 'line',
-      datasetId: datasetId,
-      showSymbol: false,
-      name: country,
-      endLabel: {
-        show: true,
-        formatter: function (params) {
-          return params.value[3] + ': ' + params.value[0];
-        }
-      },
-      labelLayout: {
-        moveOverlap: 'shiftY'
-      },
-      emphasis: {
-        focus: 'series'
-      },
-      encode: {
-        x: 'Year',
-        y: 'Income',
-        label: ['Country', 'Income'],
-        itemName: 'Year',
-        tooltip: ['Income']
-      }
-    });
-  });
-
-  return {
-    animationDuration: 10000,
-    dataset: [
-      {
-        id: 'dataset_raw',
-        source: data
-      },
-      ...datasetWithFilters
-    ],
-    title: {
-      text: 'Income of Selected European Countries since 1950',
-      bottom: 0,  // 将标题放置在图表底部
-      left: 'center'  // 水平居中
-    },
-    tooltip: {
-      order: 'valueDesc',
-      trigger: 'axis'
-    },
-    xAxis: {
-      type: 'category',
-      nameLocation: 'middle'
-    },
-    yAxis: {
-      name: 'Income'
-    },
-    grid: {
-      right: 140
-    },
-    series: seriesList
-  };
-}
+const lineRaceChart = ref(null);
+let chartInstance = null;
 
 // 初始化图表并设置选项
-function initChart() {
+function initChart(data) {
   if (lineRaceChart.value) {
-    chartInstance = echarts.init(lineRaceChart.value)
-    const data = generateRandomData();
+    chartInstance = echarts.init(lineRaceChart.value);
     const option = setChartOption(data);
     chartInstance.setOption(option);
   }
 }
 
-onMounted(() => {
-  initChart();
-});
+// 设置图表选项
+function setChartOption(data) {
+  // 数据转换为 echarts 能识别的格式
+  const chartData = data.map(item => ({
+    date: item.date, // 横轴日期
+    sentimentScore: item.sentimentScore * 100, // 纵轴情感分数（扩大比例）
+  }));
+
+  return {
+    title: {
+      text: '情感变化趋势',
+      left: 'center',
+    },
+    tooltip: {
+      trigger: 'axis',
+      formatter: function (params) {
+        const point = params[0];
+        return `
+          日期: ${point.data.date}<br/>
+          情感分数: ${(point.data.sentimentScore / 100).toFixed(2)}
+        `;
+      },
+    },
+    xAxis: {
+      type: 'category',
+      name: '日期',
+      nameLocation: 'middle',
+      nameGap: 30,
+      data: chartData.map(item => item.date), // 横轴为日期
+      axisLabel: {
+        interval: 1, // 每个点显示一个标签
+        rotate: 45, // 旋转标签避免拥挤
+      },
+    },
+    yAxis: {
+      type: 'value',
+      name: '情感分数',
+    },
+    grid: {
+      left: '10%',
+      right: '10%',
+      bottom: '15%',
+    },
+    series: [
+      {
+        type: 'line',
+        name: '情感变化',
+        data: chartData.map(item => ({
+          value: item.sentimentScore, // 数据点的值
+          date: item.date, // 数据点的日期
+        })),
+        showSymbol: true, // 显示数据点
+        symbolSize: 8, // 数据点大小
+        lineStyle: {
+          width: 2, // 线条宽度
+        },
+      },
+    ],
+  };
+}
+
+// 监听 props 数据的变化
+watch(
+    () => props.timeData,
+    newData => {
+      if (newData && newData.length) {
+        initChart(newData);
+      }
+    },
+    { immediate: true }
+);
 </script>
 
 <style scoped>
