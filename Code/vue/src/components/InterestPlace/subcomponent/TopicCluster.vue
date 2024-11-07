@@ -1,8 +1,8 @@
 <template>
   <el-table :data="tableData" stripe border style="width: 100%;" height="700">
-    <el-table-column prop="theme" label="主题" align="center">
+    <el-table-column prop="topic" label="主题" align="center">
       <template #default="scope">
-        <span class="table-cell">{{ scope.row.theme }}</span>
+        <span class="table-cell">{{ scope.row.topic }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="frequency" label="频数" align="center">
@@ -13,7 +13,7 @@
     <el-table-column prop="sentiment" label="情感倾向" align="center">
       <template #default="scope">
         <span :class="getClassForSentiment(scope.row.sentiment)">
-          {{ scope.row.sentiment }}
+          {{ translateSentiment(scope.row.sentiment) }}
         </span>
       </template>
     </el-table-column>
@@ -30,14 +30,28 @@ const props = defineProps({
   }
 })
 
+// 翻译情感倾向
+const translateSentiment = (sentiment) => {
+  switch (sentiment) {
+    case 'positive':
+      return '正面';
+    case 'neutral':
+      return '中立';
+    case 'negative':
+      return '负面';
+    default:
+      return sentiment;
+  }
+}
+
 // 根据情感倾向返回对应的类名
 const getClassForSentiment = (sentiment) => {
   switch (sentiment) {
-    case '正面':
+    case 'positive':
       return 'positive';
-    case '中立':
+    case 'neutral':
       return 'neutral';
-    case '负面':
+    case 'negative':
       return 'negative';
     default:
       return '';
@@ -101,5 +115,4 @@ const getClassForSentiment = (sentiment) => {
 .el-table__body-wrapper {
   overflow-y: hidden;
 }
-
 </style>
