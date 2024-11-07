@@ -40,7 +40,7 @@
       <div class="attraction-card-box">
         <!-- 动态展示当前选中的城市景点 -->
         <div class="attractions-container">
-          <div class="attraction-card" v-for="attraction in attractions" :key="attraction.name" >
+          <div class="attraction-card" @click="goToPlaceDetail(attraction.name)" v-for="attraction in attractions" :key="attraction.name" >
             <img :src="attraction.image" :alt="attraction.name" class="attraction-image" />
             <div class="attraction-details">
               <h3>
@@ -49,8 +49,6 @@
               </h3>
               <a :href="attraction.description" target="_blank" rel="noopener noreferrer">{{ attraction.description }}</a>
             </div>
-
-
           </div>
         </div>
       </div>
@@ -74,8 +72,7 @@ import cityInfoDataLocal from '@/assets/cityInfo.json'; // 导入城市信息
 //import interestDataLocal from '@/json/interests.json'; // 导入景点信息
 import SpotsAPI  from "@/api/spot";
 import CityAPI from "@/api/city";
-import CloudAPI from "@/api/cloud";
-import {error} from "echarts/types/src/util/log";
+import router from "@/router"
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
@@ -90,7 +87,8 @@ const interestData = ref<any>(null);
 const cityInfoData = ref<any>(null);
 let myChart: any;
 
-const attractions = ref([]); // 保存当前选中的城市景点
+const attractions = ref([]); // 保存当前选中的城市的所有景点
+
 // 从 interest.json 中加载数据并更新 attractions
 const loadAttractions = (cityName: string) => {
 
@@ -218,7 +216,10 @@ const onCitySelect = () => {
   updateCityInfo(); // 更新城市信息
   loadAttractions(selectedCity.value); // 加载选中城市的景点信息
 };
-
+//const attractionName=ref('')//保存当前点击的景点的名字，并进行跳转，将景点名传给详情页
+const goToPlaceDetail = (attractionName) => {
+  router.push({ path: '/placeDetail', query: { name: attractionName } });
+}
 // 更新城市信息
 const updateCityInfo = () => {
   console.log('Selected City:', selectedCity.value); // 检查 selectedCity 的值
