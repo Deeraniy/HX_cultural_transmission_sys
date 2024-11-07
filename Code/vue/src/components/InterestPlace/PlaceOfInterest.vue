@@ -75,7 +75,10 @@ import cityInfoDataLocal from '@/assets/cityInfo.json'; // 导入城市信息
 import SpotsAPI  from "@/api/spot";
 import CityAPI from "@/api/city";
 import CloudAPI from "@/api/cloud";
-import {error} from "echarts/types/src/util/log";
+import CommentAPI from "@/api/comment";
+import LdaAPI from "@/api/lda";
+import Lda from "@/api/lda";
+import PreviewAPI from "@/api/preview";
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
@@ -93,87 +96,32 @@ let myChart: any;
 const attractions = ref([]); // 保存当前选中的城市景点
 // 从 interest.json 中加载数据并更新 attractions
 const loadAttractions = (cityName: string) => {
-
-  // 确保 cityInfoData 和 interestData 已加载且是数组
-  if (!cityInfoData.value || !Array.isArray(cityInfoData.value)) {
-    console.warn("城市数据未加载或格式错误");
-    return;
-  }
-  if (!interestData.value || !Array.isArray(interestData.value)) {
-    console.warn("景点数据未加载或格式错误");
-    return;
-  }
-
-  console.log(cityInfoData.value);
-  console.log("当前城市的名称:", cityName);
-
-  // 找到当前城市的 city_id
-  const city = cityInfoData.value.find((c: any) => c.city_name === cityName);
-  console.log("当前城市的城市ID:", city);
-
-  if (city) {
-    const cityId = city.city_id;
-
-    // 根据 city_id 筛选景点数据
-    attractions.value = interestData.value
-        .filter((spot: any) => spot.city_id === cityId)
-        .map((spot: any) => ({
-          name: spot.spot_name,
-          image: spot.image_url,
-          description: spot.description,
-        }));
-    console.log("筛选后的景点:", attractions.value);
-  } else {
-    console.warn("未找到匹配的城市");
-    attractions.value = [];
-  }
+  // 更新选中的城市景点
+  console.log(interestData)
+  attractions.value = interestData[cityName] || [];
+  console.log("attractions"+interestData[cityName])
 };
 
+onMounted(() => {
+  // SpotsAPI.getSpotsAPI().then(data => {
+  //   console.log('SpotsData:', data); // 确保打印的是后端返回的 `data`
+  // })
+  //     .catch(error => {
+  //       console.error('Error occurred:', error);
+  //     });
 
-onMounted(async () => {
-  try {
-    const spotsResponse = await SpotsAPI.getSpotsAPI();
+  // PreviewAPI.PreviewAPI([5,7,8,9,10],9,3).then(data => {
+  //   console.log('预测', data); // 确保打印的是后端返回的 `data`
+  // })
+  //     .catch(error => {
+  //       console.error('Error occurred:', error);
+  //     });
+  
 
-    if (typeof spotsResponse === "string") {
-      // 替换 "Decimal('4.40')" 为合法的数字 4.40
-      const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
 
-      // 替换单引号为双引号，解析 JSON 对象
-      const spotsArray = fixedResponse
-          .replace(/'/g, '"')
-          .match(/{[^}]+}/g)
-          .map((spot) => JSON.parse(spot));
 
-      interestData.value = spotsArray;
 
-      console.log("景点数据（处理后）:", interestData.value);
-    } else {
-      console.error("景点数据格式错误，期望为字符串形式");
-    }
-  } catch (error) {
-    console.error("加载景点数据时出错:", error);
-  }
-  try {
-    const cityResponse = await CityAPI.getCityAPI();
 
-    if (typeof cityResponse === "string") {
-      // 替换单引号为双引号
-      const fixedString = cityResponse.replace(/'/g, '"');
-
-      // 添加数组括号并分割字符串
-      const cityArray = fixedString
-          .match(/{[^}]+}/g) // 匹配所有 JSON 对象
-          .map((city) => JSON.parse(city)); // 解析为 JSON 对象
-
-      cityInfoData.value = cityArray;
-
-      console.log("城市数据（处理后）:", cityInfoData.value);
-    } else {
-      console.error("城市数据格式错误，期望为字符串形式");
-    }
-  } catch (error) {
-    console.error("加载城市数据时出错:", error);
-  }
 
 
 
