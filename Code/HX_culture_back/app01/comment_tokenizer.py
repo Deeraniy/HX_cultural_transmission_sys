@@ -3,6 +3,7 @@ import pymysql
 import logging
 import random
 import time
+from django.http import JsonResponse
 
 # 配置日志
 logging.basicConfig(
@@ -156,6 +157,64 @@ def process_word_batch(words, spot_id):
         logger.error(f"处理词语批次时出错: {str(e)}")
         if 'conn' in locals():
             conn.rollback()
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+
+def get_word_frequency(request):
+    """获取词语频率以及情感"""
+    try:
+        spot_name = request.GET.get('spot_name')
+        if not spot_name:
+            return JsonResponse({
+                'status': 'error',
+                'message': '景点名称不能为空'
+            }, status=400)
+
+        # 获取数据库连接
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+        # 获取spot_id
+        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
+        cursor.execute(spot_sql, (spot_name,))
+        spot_result = cursor.fetchone()
+
+        if not spot_result:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'未找到景点: {spot_name}'
+            }, status=404)
+
+        spot_id = spot_result['spot_id']
+        logger.info(f"查询景点 {spot_name} (ID: {spot_id}) 的词频")
+
+        # 查询前30个高频词
+        frequency_sql = """
+            SELECT token_name as word, count as frequency, sentiment
+            FROM token 
+            WHERE spot_id = %s 
+            ORDER BY count DESC 
+            LIMIT 30
+        """
+        cursor.execute(frequency_sql, (spot_id,))
+        words = cursor.fetchall()
+
+        logger.info(f"找到 {len(words)} 个高频词")
+
+        return JsonResponse({
+            'status': 'success',
+            'data': words
+        })
+
+    except Exception as e:
+        logger.error(f"获取词频时出错: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
     finally:
         if 'cursor' in locals():
             cursor.close()
