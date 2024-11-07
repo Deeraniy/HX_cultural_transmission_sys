@@ -32,8 +32,8 @@
 
           <!-- PieChart和WordCloud上下并列，与TopicCluster同一行 -->
           <div class="mixed-charts-row">
-            <SentimentStats :tableData="sentiment" style="width: 50%; height: 500px; border: 15px" />
-            <TopicCluster :tableData="topic" style="width: 50%; height: 500px; justify-self: right;" />
+            <SentimentStats :tableData="topic" style="width: 50%; height: 500px; border: 15px" />
+            <TopicCluster :tableData="sentiment" style="width: 50%; height: 500px; justify-self: right;" />
           </div>
         </div>
         <LineRace :timeData="processedTimeData" style="width: 100%; height: 500px;" />
@@ -54,7 +54,7 @@ import SentimentStats from "@/components/InterestPlace/subcomponent/SentimentSta
 import data2 from "@/json/data2.json";
 import time from "@/json/time.json"
 //import sentiment from "@/json/sentiment.json";
-import topic from '@/json/topic.json';
+//import topic from '@/json/topic.json';
 import wordcloud from '@/json/wordCloud.json';
 import CloudAPI from "@/api/cloud";
 import danmaku from 'vue3-danmaku';
@@ -69,6 +69,7 @@ const attractions = ref<any>({}); // 初始化为一个空对象
 const cloudUrl = ref('');
 const processedTimeData = ref<any>([]);
 const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
+const topic = ref<any>([]);
 const data1 = [
   { name: '正面', value: 58.84 },
   { name: '中立', value: 7.28 },
@@ -244,6 +245,27 @@ onMounted(async () => {
   } catch (error) {
     console.error("加载 LDA 数据时出错:", error);
   }
+
+  try {
+    // 获取 WordResponse 数据
+    const wordResponse = await SentimentAPI.getSentimentWordAPI(attractionName.value);
+
+    // 检查数据有效性，并格式化为表格需要的格式
+    if (wordResponse && Array.isArray(wordResponse.data)) {
+      topic.value = wordResponse.data.map(item => ({
+        word: item.word, // 关键词
+        frequency: item.frequency, // 出现频率
+        sentiment: item.sentiment, // 情感
+      }));
+      console.log("Word 数据加载成功:", topic.value);
+    } else {
+      console.warn("Word 数据格式不正确:", wordResponse);
+    }
+  } catch (error) {
+    console.error("加载 Word 数据时出错:", error);
+  }
+
+
 
 // 在加载时间情感数据后，赋值给 processedTimeData
   try {
