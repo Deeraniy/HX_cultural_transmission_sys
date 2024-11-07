@@ -60,6 +60,7 @@ import danmuData from '@/json/danmuData.json';
 import {onMounted, ref} from 'vue';
 import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
+import SentimentAPI from "@/api/sentiment";
 const interestData = ref<any>(null);
 const attractions = ref<any | null>(null); // 初始化为 null
 
@@ -119,8 +120,11 @@ onMounted(async () => {
 });
 CloudAPI.getCloudAPI("橘子洲").then((res) => {
   console.log("词云数据:", res);
-  
+
 });
+SentimentAPI.getSentimentReportAPI("橘子洲").then((res)=>{
+  console.log("ai报告",res)
+})
 
 </script>
 
