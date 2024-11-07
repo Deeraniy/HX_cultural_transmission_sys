@@ -158,36 +158,47 @@ onMounted(async () => {
     console.error("加载景点数据时出错:", error);
   }
 
-  // 获取评论并加载到弹幕
   try {
     const commentResponse = await CommentAPI.getCommentList(attractionName.value);
 
-    if (typeof commentResponse === "string") {
-      console.log("原始评论数据:", commentResponse);
+    console.log("原始评论数据:", commentResponse);
 
+    if (typeof commentResponse === "string") {
+      // 修复字符串的逻辑
       const fixedResponse = commentResponse
-          .replace(/None/g, 'null') // 替换 None 为 null
-          .replace(/Decimal\('([\d.]+)'\)/g, '$1') // 替换 Decimal 为数字
-          .replace(/'/g, '"') // 替换单引号为双引号
-          .replace(/\\(?!["\\/bfnrtu])/g, ''); // 删除非法转义字符
+          .replace(/None/g, 'null')
+          .replace(/Decimal\('([\d.]+)'\)/g, '$1')
+          .replace(/'/g, '"')
+          .replace(/\\(?!["\\/bfnrtu])/g, '');
 
       console.log("修复后的评论数据:", fixedResponse);
 
-      const commentsArray = JSON.parse(`[${fixedResponse.match(/{[^}]+}/g)?.join(',')}]`);
+      const matches = fixedResponse.match(/{.*?}/g);
+      if (!matches || matches.length === 0) {
+        throw new Error("未找到有效的 JSON 数据块。修复后的数据为: " + fixedResponse);
+      }
 
-      // 映射评论数据到弹幕格式
-      danmus.value = commentsArray.map((comment: any) => ({
+      const commentsArray = JSON.parse(`[${matches.join(',')}]`);
+      console.log("解析后的评论数组:", commentsArray);
+      danmus.value = commentsArray.map(comment => ({
         name: comment.user_id || '匿名用户',
         text: comment.content || '',
       }));
-
-      console.log("弹幕数据（处理后）:", danmus.value);
+    } else if (typeof commentResponse === "object" && commentResponse !== null) {
+      // 直接处理对象
+      const commentsArray = Array.isArray(commentResponse) ? commentResponse : [commentResponse];
+      console.log("对象类型评论数据:", commentsArray);
+      danmus.value = commentsArray.map(comment => ({
+        name: comment.user_id || '匿名用户',
+        text: comment.content || '',
+      }));
     } else {
-      console.error("评论数据格式错误，期望为字符串形式");
+      throw new Error("评论数据格式不正确");
     }
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+
   try {
     const cloudResponse = await CloudAPI.getCloudAPI(attractionName.value);
     console.log("词云地址:", cloudResponse.wordcloud_url);
