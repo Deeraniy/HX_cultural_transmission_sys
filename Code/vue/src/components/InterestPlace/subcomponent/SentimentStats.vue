@@ -1,8 +1,8 @@
 <template>
   <el-table :data="tableData" stripe border style="width: 100%;" height="500">
-    <el-table-column prop="topic" label="评价词" align="center">
+    <el-table-column prop="word" label="评价词" align="center">
       <template #default="scope">
-        <span class="word-cell">{{ scope.row.topic }}</span>
+        <span class="word-cell">{{ scope.row.word }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="frequency" label="频数" align="center">
