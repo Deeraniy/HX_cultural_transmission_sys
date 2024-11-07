@@ -16,9 +16,9 @@ top_words_csv_path = './top-topic-words.csv'
 # 输出各文档所属主题的文件路径
 predict_topic_csv_path = './document-distribution.csv'
 # 选定的主题数
-n_topics = 1
+n_topics = 5
 # 要输出的每个主题的前 n_top_words 个主题词数
-n_top_words = 10
+n_top_words = 5
 # 去除无意义字符的正则表达式
 pattern = '[\\s\\d,.<>/?:;\'\"[\\]{}()\\|~!\t"@#$%^&*\\-_=+，。\n《》、？：；""''｛｝【】（）…￥！—┄－]+'
 
