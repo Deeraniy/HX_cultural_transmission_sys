@@ -54,7 +54,6 @@ import data2 from "@/json/data2.json";
 import sentiment from "@/json/sentiment.json";
 import topic from '@/json/topic.json';
 import wordcloud from '@/json/wordCloud.json';
-import CloudAPI from "@/api/cloud";
 import danmaku from 'vue3-danmaku';
 import danmuData from '@/json/danmuData.json';
 import {onMounted, ref} from 'vue';
