@@ -18,7 +18,8 @@ def get_cloud(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     # SQL查询，根据spot_name查找评论
-    spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    spot_id=cursor.fetchone()['spot_id']
     cursor.execute("SELECT * FROM usercomment WHERE spot_id = %s", (spot_id))
     comments = cursor.fetchall()
     print(comments)
