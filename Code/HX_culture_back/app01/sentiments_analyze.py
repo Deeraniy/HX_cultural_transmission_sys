@@ -54,7 +54,7 @@ def sentiments_analyze(request):
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
     comment_list =cursor.fetchall()
-    print(comment_list)
+    # print(comment_list)
     comment_list = [comment['content'] for comment in comment_list]
     results=process_comments(comment_list)
     cursor.close()
@@ -165,13 +165,18 @@ def sentiments_result(request):
         
         # 查询评论数据
         comment_sql = """
-            SELECT sentiment, sentiment_confidence, DATE(create_time) as date 
+            SELECT 
+                sentiment, 
+                sentiment_confidence, 
+                SUBSTRING_INDEX(LEFT(create_time, 7), '-', 1) as year,
+                SUBSTRING_INDEX(LEFT(create_time, 7), '-', -1) as month
             FROM usercomment 
             WHERE spot_id = %s AND sentiment IS NOT NULL
             ORDER BY create_time
         """
         cursor.execute(comment_sql, (spot_id,))
         results = cursor.fetchall()
+        # print(results)
         
         if not results:
             return JsonResponse({
@@ -185,16 +190,15 @@ def sentiments_result(request):
             })
         
         # 按年月分组数据
+        print(results)
         monthly_data = {}
         for row in results:
-            date = row['date']
-            year_month = f"{date.year}-{date.month:02d}"
-            
-            if year_month not in monthly_data:
-                monthly_data[year_month] = []
+            date_key = f"{row['year']}-{row['month']}"
+            if date_key not in monthly_data:
+                monthly_data[date_key] = []
             
             if row['sentiment'] and row['sentiment_confidence']:
-                monthly_data[year_month].append(
+                monthly_data[date_key].append(
                     (row['sentiment'], float(row['sentiment_confidence']))
                 )
         
@@ -202,6 +206,7 @@ def sentiments_result(request):
         analysis_results = []
         for year_month, sentiments in monthly_data.items():
             year, month = map(int, year_month.split('-'))
+            # 直接使用元组列表
             sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
             
             analysis_results.append({
@@ -235,6 +240,112 @@ def sentiments_result(request):
             cursor.close()
         if 'conn' in locals():
             conn.close()
+
+from zhipuai import ZhipuAI
+client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")  # 请替换为您的真实API密钥
+
+def generate_report(request):
+    """
+    基于情感分析结果生成报告的API
+    """
+    try:
+        # 获取景点名称
+        spot_name = request.GET.get('spot_name', '').strip()
+        if not spot_name:
+            return JsonResponse({
+                'status': 'error',
+                'message': '景点名称不能为空'
+            }, status=400)
+
+        # 调用情感分析API获取数据
+        sentiment_response = sentiments_result(request)
+        sentiment_data = json.loads(sentiment_response.content)
+
+        if sentiment_data['status'] != 'success':
+            return JsonResponse({
+                'status': 'error',
+                'message': sentiment_data.get('message', '获取情感分析数据失败')
+            }, status=400)
+
+        data = sentiment_data['data']
+        
+        # 处理数据，计算每个月的统计信息
+        monthly_stats = {}
+        for entry in data:
+            year = entry['year']
+            month = entry['month']
+            sentiment = entry['sentiment']
+            sentiment_score = entry['sentiment_score']
+            comment_count = entry['comment_count']
+            
+            key = (year, month)
+            if key not in monthly_stats:
+                monthly_stats[key] = {
+                    'total_comments': 0,
+                    'sentiment_counts': {'positive': 0, 'neutral': 0, 'negative': 0},
+                    'sentiment_scores': {'positive': [], 'neutral': [], 'negative': []},
+                }
+            monthly_stats[key]['total_comments'] += comment_count
+            monthly_stats[key]['sentiment_counts'][sentiment] += comment_count
+            monthly_stats[key]['sentiment_scores'][sentiment].append(sentiment_score * comment_count)
+
+        # 计算百分比和平均情感得分
+        for key in monthly_stats:
+            stats = monthly_stats[key]
+            total_comments = stats['total_comments']
+            for sentiment in ['positive', 'neutral', 'negative']:
+                count = stats['sentiment_counts'][sentiment]
+                percentage = (count / total_comments) * 100 if total_comments > 0 else 0
+                total_score = sum(stats['sentiment_scores'][sentiment])
+                avg_score = (total_score / count) if count > 0 else 0
+                stats['sentiment_counts'][sentiment] = {'count': count, 'percentage': percentage}
+                stats['sentiment_scores'][sentiment] = avg_score
+
+        # 构建提示语
+        prompt = f"我已经完成了{spot_name}景点的情感分析，分析结果如下：\n\n"
+        for key in sorted(monthly_stats.keys()):
+            year, month = key
+            stats = monthly_stats[key]
+            prompt += f"{year}年{month}月:\n"
+            total_comments = stats['total_comments']
+            prompt += f"- 总评论数：{total_comments}\n"
+            for sentiment in ['positive', 'neutral', 'negative']:
+                count_info = stats['sentiment_counts'][sentiment]
+                avg_score = stats['sentiment_scores'][sentiment]
+                sentiment_chinese = {'positive': '正面', 'neutral': '中性', 'negative': '负面'}[sentiment]
+                if count_info['count'] > 0:
+                    if count_info['percentage'] == 100:
+                        prompt += f"  - {sentiment_chinese}评论占比居多\n"
+                    else:
+                        prompt += f"  - {sentiment_chinese}反馈：{count_info['count']}条，占比{count_info['percentage']:.2f}%\n"
+                    prompt += f"    - 平均情感得分：{avg_score:.2f}\n"
+            prompt += "\n"
+
+        prompt += "请基于以上数据，帮助我生成一份情感分析报告，包括每个月的情感趋势和总体总结，使用幽默的语调。请不要包括改进建议。"
+
+        # 调用 ZhipuAI 的聊天模型
+        client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")
+        response = client.chat.completions.create(
+            model="chatglm_std",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        report = response.choices[0].message.content.strip()
+        
+        return JsonResponse({
+            'status': 'success',
+            'report': report,
+            'spot_name': spot_name
+        })
+
+    except Exception as e:
+        logger.error(f"生成报告时出错: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
 
 # 使用示例
 if __name__ == "__main__":
