@@ -21,9 +21,11 @@ def get_cloud(request):
     spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
     cursor.execute("SELECT * FROM usercomment WHERE spot_id = %s", (spot_id))
     comments = cursor.fetchall()
+    print(comments)
         # 合并评论文本
-    text = " ".join(comment['comment_text'] for comment in comments)
+    text = " ".join(comment['content'] for comment in comments)
     text = [word for word in jieba.cut(text) if len(word) > 1]
+    text = list(set(text))
     text = " ".join(text)
     print(text)
 
