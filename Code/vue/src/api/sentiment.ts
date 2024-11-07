@@ -22,6 +22,16 @@ class SentimentAPI {
         });
     }
 
+    static getSentimentReportAPI(spot_name:string) {
+        return request({
+            url: `${DICT_BASE_URL}/generate_report/`,
+            method: "get",
+            params: {
+                spot_name: spot_name
+            }
+        });
+    }
+
 }
 
 export default SentimentAPI;
