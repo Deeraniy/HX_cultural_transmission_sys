@@ -42,7 +42,7 @@ const initializeChart = () => {
     },
     xAxis: {
       type: 'category',
-      data: props.chartData.map(item => item.word), // X轴数据为词汇
+      data: props.chartData.map(item => item.topic), // X轴数据为词汇
     },
     yAxis: [
       {
