@@ -72,20 +72,20 @@ def sentiments_all():
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
         # 获取所有评论
-        cursor.execute("SELECT id, content FROM usercomment")
+        cursor.execute("SELECT token_id, token_name FROM token")
         comments = cursor.fetchall()
         
         # 逐条处理评论
         for comment in comments:
-            sentiment_label, confidence = get_sentiment_label(comment['content'])
-            logging.info(f"评论ID: {comment['id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
+            sentiment_label, confidence = get_sentiment_label(comment['token_name'])
+            logging.info(f"评论ID: {comment['token_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
             # 更新数据库
             update_sql = """
-                UPDATE usercomment 
+                UPDATE token 
                 SET sentiment = %s, sentiment_confidence = %s 
-                WHERE id = %s
+                WHERE token_id = %s
             """
-            cursor.execute(update_sql, (sentiment_label, confidence, comment['id']))
+            cursor.execute(update_sql, (sentiment_label, confidence, comment['token_id']))
             
         # 提交更改
         conn.commit()
