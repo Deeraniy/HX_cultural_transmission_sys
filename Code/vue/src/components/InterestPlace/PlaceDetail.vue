@@ -54,6 +54,7 @@ import data2 from "@/json/data2.json";
 import sentiment from "@/json/sentiment.json";
 import topic from '@/json/topic.json';
 import wordcloud from '@/json/wordCloud.json';
+import CloudAPI from "@/api/cloud";
 import danmaku from 'vue3-danmaku';
 import danmuData from '@/json/danmuData.json';
 import {onMounted, ref} from 'vue';
@@ -61,6 +62,7 @@ import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
 import CommentAPI from "@/api/comment";
 import CloudAPI from "@/api/cloud";
+import SentimentAPI from "@/api/sentiment";
 const interestData = ref<any>(null);
 const attractions = ref<any>({}); // 初始化为一个空对象
 const cloudUrl = ref('');
@@ -159,6 +161,13 @@ onMounted(async () => {
   }
 
 });
+CloudAPI.getCloudAPI("橘子洲").then((res) => {
+  console.log("词云数据:", res);
+
+});
+SentimentAPI.getSentimentReportAPI("橘子洲").then((res)=>{
+  console.log("ai报告",res)
+})
 
 
 </script>
