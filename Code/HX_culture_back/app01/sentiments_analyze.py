@@ -129,6 +129,86 @@ def sentiment_month_analyze(sentiments):
         
     return avg_score, dominant_sentiment
 
+def sentiments_result_total_count(request):
+    """获取景点的情感分析占比统计"""
+    try:
+        spot_name = request.GET.get('spot_name', '').strip()
+        if not spot_name:
+            return JsonResponse({
+                'status': 'error',
+                'message': '景点名称不能为空'
+            }, status=400)
+            
+        logger.info(f"正在查询景点: {spot_name}")
+            
+        # 数据库连接
+        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
+                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+                             charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+        # 首先获取景点ID
+        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
+        cursor.execute(spot_sql, (spot_name,))
+        spot_result = cursor.fetchone()
+        
+        if not spot_result:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'未找到景点: {spot_name}'
+            }, status=404)
+            
+        spot_id = spot_result['spot_id']
+        
+        # 查询各情感类型的评论数量和占比
+        sentiment_sql = """
+            SELECT 
+                sentiment,
+                COUNT(*) as count,
+                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
+            FROM usercomment 
+            WHERE spot_id = %s AND sentiment IS NOT NULL
+            GROUP BY sentiment
+        """
+        cursor.execute(sentiment_sql, (spot_id,))
+        results = cursor.fetchall()
+        
+        # 初始化结果字典
+        sentiment_stats = {
+            'positive': 0,
+            'neutral': 0,
+            'negative': 0,
+            'total_count': 0
+        }
+        
+        # 处理查询结果
+        for row in results:
+            if row['sentiment'] in sentiment_stats:
+                sentiment_stats[row['sentiment']] = round(row['percentage'], 2)
+                sentiment_stats['total_count'] += row['count']
+
+        return JsonResponse({
+            'status': 'success',
+            'data': {
+                'positive_percentage': sentiment_stats['positive'],
+                'neutral_percentage': sentiment_stats['neutral'],
+                'negative_percentage': sentiment_stats['negative'],
+                'total_comments': sentiment_stats['total_count']
+            }
+        })
+
+    except Exception as e:
+        logger.error(f"获取情感统计时出错: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+
 @require_GET
 def sentiments_result(request):
     """根据景点名称获取情感分析时间序列结果"""

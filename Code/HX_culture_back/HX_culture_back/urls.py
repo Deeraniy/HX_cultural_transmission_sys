@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^sentiments_analyze/',sentiments_analyze.sentiments_analyze),
     url(r'^sentiments_result/',sentiments_analyze.sentiments_result),
     url(r'^generate_report/',sentiments_analyze.generate_report),
-
+    url(r'^sentiments_count/',sentiments_analyze.sentiments_result_total_count),
 
     
 
