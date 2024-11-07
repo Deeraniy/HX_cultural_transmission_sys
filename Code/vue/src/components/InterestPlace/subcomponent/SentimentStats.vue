@@ -1,8 +1,8 @@
 <template>
   <el-table :data="tableData" stripe border style="width: 100%;" height="500">
-    <el-table-column prop="word" label="评价词" align="center">
+    <el-table-column prop="topic" label="评价词" align="center">
       <template #default="scope">
-        <span class="word-cell">{{ scope.row.word }}</span>
+        <span class="word-cell">{{ scope.row.topic }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="frequency" label="频数" align="center">
@@ -12,8 +12,12 @@
     </el-table-column>
     <el-table-column prop="sentiment" label="情感倾向" align="center">
       <template #default="scope">
-        <span :class="scope.row.sentiment === '正面' ? 'positive' : scope.row.sentiment === '负面' ? 'negative' : 'neutral'">
-          {{ scope.row.sentiment }}
+        <!-- 根据 sentiment 的值映射为中文，并添加对应样式 -->
+        <span
+            :class="scope.row.sentiment === 'positive' ? 'positive'
+                  : scope.row.sentiment === 'negative' ? 'negative'
+                  : 'neutral'">
+          {{ sentimentMap[scope.row.sentiment] || '未知' }}
         </span>
       </template>
     </el-table-column>
@@ -22,6 +26,13 @@
 
 <script setup>
 import { defineProps } from 'vue'
+
+// 定义 sentiment 的映射
+const sentimentMap = {
+  positive: '正面',
+  negative: '负面',
+  neutral: '中立'
+}
 
 const props = defineProps({
   tableData: {

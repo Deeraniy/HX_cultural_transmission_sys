@@ -28,17 +28,34 @@
         </el-dropdown>
       </div>
     </div>
-    <el-drawer v-model="drawer" title="I am the title" :with-header="false">
-      <span>Hi there!</span>
+    <el-drawer v-model="drawer" title="AI Report">
+      <!-- 使用 v-html 动态渲染 Markdown 内容 -->
+      <div v-html="markdownContent"></div>
     </el-drawer>
+
   </div>
 </template>
 
 <script setup>
 import { ArrowLeft, Setting } from "@element-plus/icons-vue";
-import { ref } from "vue";
 import router from "@/router.js";
 const drawer = ref(false)
+import { ref, onMounted } from 'vue';
+import { marked } from 'marked';
+import SentimentAPI from "@/api/sentiment.ts";
+
+const markdownContent = ref(''); // 存储转换后的 HTML 内容
+const drawerVisible = ref(false); // 控制抽屉的可见性
+
+
+const openDrawer = () => {
+  drawerVisible.value = true;
+};
+
+const closeDrawer = () => {
+  drawerVisible.value = false;
+};
+
 
 const circleUrl = ref("https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png");
 const props = defineProps({title:String})
@@ -46,6 +63,26 @@ const onBack = () => {
   router.go(-1);
   console.log("返回按钮被点击");
 };
+
+onMounted(() => {
+  SentimentAPI.getSentimentReportAPI(props.title)
+      .then((res) => {
+        console.log("AI 报告原始 Markdown:", res);
+
+        if (res && res.report) {
+          const cleanedMarkdown = res.report.replace(/^\s+/, "");
+          markdownContent.value = marked(res.report); // 提取 report 字段，并转换为 HTML
+          console.log("AI 报告解析后的 HTML:", markdownContent.value);
+        } else {
+          console.warn("API 返回的内容不包含 'report' 字段:", res);
+        }
+      })
+      .catch((error) => {
+        console.error("加载 AI 报告时出错:", error);
+      });
+});
+
+
 </script>
 
 <style scoped>
@@ -70,6 +107,12 @@ const onBack = () => {
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+.el-drawer div {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
 }
 
 .back-icon {
