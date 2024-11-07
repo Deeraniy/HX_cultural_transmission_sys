@@ -72,7 +72,7 @@ def sentiments_all():
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
         # 获取所有评论
-        cursor.execute("SELECT id, content FROM usercomment")
+        cursor.execute("SELECT id, content FROM bilibili_video_comment")
         comments = cursor.fetchall()
         
         # 逐条处理评论
@@ -81,7 +81,7 @@ def sentiments_all():
             logging.info(f"评论ID: {comment['id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
             # 更新数据库
             update_sql = """
-                UPDATE usercomment 
+                UPDATE bilibili_video_comment 
                 SET sentiment = %s, sentiment_confidence = %s 
                 WHERE id = %s
             """
