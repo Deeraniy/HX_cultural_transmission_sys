@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container style="height: 100vh; overflow: auto;">
-      <el-header class="header" style="height:80px;width: 100%">
+      <el-header class="header" style="height:90px;width: 100%">
         <Header />
       </el-header>
       <el-main class="main">
