@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import Header from "@/components/InterestPlace/subcomponent/Header.vue";
 import BarChart from "@/components/InterestPlace/subcomponent/BarChart.vue";
 import PieChart from "@/components/InterestPlace/subcomponent/PieChart.vue";
@@ -56,9 +56,33 @@ import topic from '@/json/topic.json';
 import wordcloud from '@/json/wordCloud.json';
 import danmaku from 'vue3-danmaku';
 import danmuData from '@/json/danmuData.json';
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
+import SpotsAPI from "@/api/spot";
+const interestData = ref<any>(null);
+const attractions = ref<any | null>(null); // 初始化为 null
 
+const loadAttractions = (spotName: string) => {
+  if (!interestData.value || !Array.isArray(interestData.value)) {
+    console.warn("景点数据未加载或格式错误");
+    return;
+  }
+
+  // 查找匹配的单个景点
+  const spot = interestData.value.find((spot: any) => spot.spot_name === spotName);
+  if (spot) {
+    attractions.value = {
+      name: spot.spot_name,
+      image: spot.image_url,
+      description: spot.description,
+    };
+  } else {
+    console.warn(`未找到名称为 "${spotName}" 的景点`);
+    attractions.value = null;
+  }
+
+  console.log("当前选中的景点:", attractions.value);
+};
 const danmus = ref(danmuData);
 const colorList = ref(['rgb(204,255,255)', 'white', 'rgb(204,255,204)', 'white', 'rgb(0,255,255)', 'white', 'rgb(255,204,255)', 'pink']);
 // 生成随机颜色的函数
@@ -66,6 +90,33 @@ function getRandomColor() {
   const color = colorList.value[Math.floor(Math.random() * 8)];
   return color;
 }
+
+onMounted(async () => {
+  try {
+    const spotsResponse = await SpotsAPI.getSpotsAPI();
+
+    if (typeof spotsResponse === "string") {
+      // 替换 "Decimal('4.40')" 为合法的数字 4.40
+      const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+
+      // 替换单引号为双引号，解析 JSON 对象
+      const spotsArray = fixedResponse
+          .replace(/'/g, '"')
+          .match(/{[^}]+}/g)
+          .map((spot) => JSON.parse(spot));
+
+      interestData.value = spotsArray;
+
+      console.log("景点数据（处理后）:", interestData.value);
+    } else {
+      console.error("景点数据格式错误，期望为字符串形式");
+    }
+  } catch (error) {
+    console.error("加载景点数据时出错:", error);
+  }
+
+});
+
 </script>
 
 <style scoped>
