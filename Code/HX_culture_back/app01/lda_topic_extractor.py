@@ -124,13 +124,10 @@ def lda_analyze(request):
     print(sentiments_json)
     data=sentiments_json
     sentiments_list=[result['sentiment'] for result in data]
-
+    result=[]
+    for key,value,sentiment in zip(keys_list,values_list,sentiments_list):
+        result.append({'topic':key,'frequency':value,'sentiment':sentiment})
     # 保存文本主题概率分布到 csv 文件中
     # predict_df.to_csv(predict_topic_csv_path, encoding='utf-8-sig', index=None)
-    result = {
-        # 'topic_words': top_words_df.to_dict(orient='records'),
-        'topic': keys_list,
-        'frequency': values_list,
-        'sentiments': sentiments_list
-    }
+    
     return JsonResponse(result,safe=False)
