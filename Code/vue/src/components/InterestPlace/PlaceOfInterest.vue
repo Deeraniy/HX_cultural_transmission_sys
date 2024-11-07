@@ -78,6 +78,7 @@ import CloudAPI from "@/api/cloud";
 import CommentAPI from "@/api/comment";
 import LdaAPI from "@/api/lda";
 import Lda from "@/api/lda";
+import PreviewAPI from "@/api/preview";
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
@@ -107,12 +108,14 @@ onMounted(() => {
   //       console.error('Error occurred:', error);
   //     });
 
-  LdaAPI.LdaAPI("橘子洲").then(data => {
-    console.log('Lda:', data); // 确保打印的是后端返回的 `data`
-  })
-      .catch(error => {
-        console.error('Error occurred:', error);
-      });
+  // PreviewAPI.PreviewAPI([5,7,8,9,10],9,3).then(data => {
+  //   console.log('预测', data); // 确保打印的是后端返回的 `data`
+  // })
+  //     .catch(error => {
+  //       console.error('Error occurred:', error);
+  //     });
+  
+
 
 
 
