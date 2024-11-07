@@ -8,8 +8,8 @@
         <div class="content">
           <!-- 图片和弹幕区域 -->
           <div class="image-danmu-container">
-            <img src="https://newbbs-fd.zol-img.com.cn/t_s1200x5000/g7/M00/06/0D/ChMkLGMemR2Ib0M8AAeC6JO1m20AAHa6gLY1ukAB4MA189.jpg" alt="城市图片" class="city-image" />
-            <img src="@/assets/CS.png" alt="城市词云图" class="wordcloud" />
+            <img :src="attractions.image" alt="城市图片" class="city-image" />
+            <img :src="cloudUrl" alt="城市词云图" class="wordcloud" />
             <div class="danmu">
               <danmaku ref="danmakuRef" v-model:danmus="danmus" :speeds="50" useSlot loop :channels="7" style="height:100%; width:100%;">
                 <template v-slot:dm="{ danmu }">
@@ -60,10 +60,12 @@ import danmuData from '@/json/danmuData.json';
 import {onMounted, ref} from 'vue';
 import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
+import CommentAPI from "@/api/comment";
+import CloudAPI from "@/api/cloud";
 import SentimentAPI from "@/api/sentiment";
 const interestData = ref<any>(null);
-const attractions = ref<any | null>(null); // 初始化为 null
-
+const attractions = ref<any>({}); // 初始化为一个空对象
+const cloudUrl = ref('');
 const loadAttractions = (spotName: string) => {
   if (!interestData.value || !Array.isArray(interestData.value)) {
     console.warn("景点数据未加载或格式错误");
@@ -78,6 +80,7 @@ const loadAttractions = (spotName: string) => {
       image: spot.image_url,
       description: spot.description,
     };
+    console.log("当前选中的景点:", attractions);
   } else {
     console.warn(`未找到名称为 "${spotName}" 的景点`);
     attractions.value = null;
@@ -85,7 +88,7 @@ const loadAttractions = (spotName: string) => {
 
   console.log("当前选中的景点:", attractions.value);
 };
-const danmus = ref(danmuData);
+const danmus = ref([]);
 const colorList = ref(['rgb(204,255,255)', 'white', 'rgb(204,255,204)', 'white', 'rgb(0,255,255)', 'white', 'rgb(255,204,255)', 'pink']);
 // 生成随机颜色的函数
 function getRandomColor() {
@@ -98,10 +101,7 @@ onMounted(async () => {
     const spotsResponse = await SpotsAPI.getSpotsAPI();
 
     if (typeof spotsResponse === "string") {
-      // 替换 "Decimal('4.40')" 为合法的数字 4.40
       const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-
-      // 替换单引号为双引号，解析 JSON 对象
       const spotsArray = fixedResponse
           .replace(/'/g, '"')
           .match(/{[^}]+}/g)
@@ -110,11 +110,54 @@ onMounted(async () => {
       interestData.value = spotsArray;
 
       console.log("景点数据（处理后）:", interestData.value);
+      if (interestData.value.length > 0) {
+        loadAttractions("岳麓山");
+      } else {
+        console.warn("景点数据为空");
+      }
     } else {
       console.error("景点数据格式错误，期望为字符串形式");
     }
   } catch (error) {
     console.error("加载景点数据时出错:", error);
+  }
+
+  // 获取评论并加载到弹幕
+  try {
+    const commentResponse = await CommentAPI.getCommentList("岳麓山");
+
+    if (typeof commentResponse === "string") {
+      console.log("原始评论数据:", commentResponse);
+
+      const fixedResponse = commentResponse
+          .replace(/None/g, 'null') // 替换 None 为 null
+          .replace(/Decimal\('([\d.]+)'\)/g, '$1') // 替换 Decimal 为数字
+          .replace(/'/g, '"') // 替换单引号为双引号
+          .replace(/\\(?!["\\/bfnrtu])/g, ''); // 删除非法转义字符
+
+      console.log("修复后的评论数据:", fixedResponse);
+
+      const commentsArray = JSON.parse(`[${fixedResponse.match(/{[^}]+}/g)?.join(',')}]`);
+
+      // 映射评论数据到弹幕格式
+      danmus.value = commentsArray.map((comment: any) => ({
+        name: comment.user_id || '匿名用户',
+        text: comment.content || '',
+      }));
+
+      console.log("弹幕数据（处理后）:", danmus.value);
+    } else {
+      console.error("评论数据格式错误，期望为字符串形式");
+    }
+  } catch (error) {
+    console.error("加载评论数据时出错:", error);
+  }
+  try {
+    const cloudResponse = await CloudAPI.getCloudAPI("岳麓山");
+    console.log("词云地址:", cloudResponse.wordcloud_url);
+    cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
+  } catch (error) {
+    console.error("加载评论数据时出错:", error);
   }
 
 });
@@ -125,6 +168,7 @@ CloudAPI.getCloudAPI("橘子洲").then((res) => {
 SentimentAPI.getSentimentReportAPI("橘子洲").then((res)=>{
   console.log("ai报告",res)
 })
+
 
 </script>
 
