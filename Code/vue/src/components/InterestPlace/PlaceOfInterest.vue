@@ -76,6 +76,7 @@ import CloudAPI from "@/api/cloud";
 import SentimentAPI from "@/api/sentiment";
 import {error} from "echarts/types/src/util/log";
 import Sentiment from "@/api/sentiment";
+import router from '@/router'
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
