@@ -72,7 +72,10 @@ import cityInfoDataLocal from '@/assets/cityInfo.json'; // 导入城市信息
 //import interestDataLocal from '@/json/interests.json'; // 导入景点信息
 import SpotsAPI  from "@/api/spot";
 import CityAPI from "@/api/city";
-import router from "@/router"
+import CloudAPI from "@/api/cloud";
+import SentimentAPI from "@/api/sentiment";
+import {error} from "echarts/types/src/util/log";
+import Sentiment from "@/api/sentiment";
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
@@ -172,6 +175,12 @@ onMounted(async () => {
   } catch (error) {
     console.error("加载城市数据时出错:", error);
   }
+  // SentimentAPI.getSentimentAnalyzeAPI("橘子洲").then(data=>{
+  //   console.log("情感分析",data);
+  // })
+  SentimentAPI.getSentimentResultAPI("橘子洲").then(data=>{
+    console.log("情感结果",data);
+  })
 
   myChart = echarts.init(chartsDOM.value as HTMLElement);
 

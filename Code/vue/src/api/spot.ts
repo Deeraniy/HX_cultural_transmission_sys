@@ -9,6 +9,15 @@ class SpotsAPI {
             method: "get",
         });
     }
+    static getSpotByNameAPI(spot_name:string) {
+        return request({
+            url: `${DICT_BASE_URL}/get_spot_by_name/`,
+            method: "get",
+            params: {
+                spot_name: spot_name
+            }
+        });
+    }
 
 }
 
