@@ -242,7 +242,7 @@ onMounted(async () => {
         const paddedMonth = item.month < 10 ? '0' + item.month : item.month; // 手动补零
         return {
           date: `${item.year}-${paddedMonth}`, // YYYY-MM 格式
-          sentimentScore: item.sentiment_score,
+          sentimentScore: parseFloat(item.sentiment_score) || 0, // 确保是数字
           sentiment: item.sentiment,
           commentCount: item.comment_count,
         };
