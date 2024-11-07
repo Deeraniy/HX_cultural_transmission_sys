@@ -3,7 +3,7 @@
     <el-container style="height: 100vh; overflow: auto;">
       <el-header class="header" style="height:90px;width: 100%">
         <Header :title="attractionName"/>
-        <!--       {{attractionName}}-->
+<!--               {{attractionName}}-->
       </el-header>
       <el-main class="main">
         <div class="content">
@@ -36,7 +36,7 @@
             <TopicCluster :tableData="topic" style="width: 50%; height: 500px; justify-self: right;" />
           </div>
         </div>
-        <LineRace  style="width: 100%; height: 500px;" />
+        <LineRace :timeData="processedTimeData" style="width: 100%; height: 500px;" />
       </el-main>
     </el-container>
   </div>
@@ -52,62 +52,72 @@ import WordCloud from "@/components/InterestPlace/subcomponent/WordCloud.vue";
 import SentimentStats from "@/components/InterestPlace/subcomponent/SentimentStats.vue";
 import data1 from "@/json/data1.json";
 import data2 from "@/json/data2.json";
+import time from "@/json/time.json"
 import sentiment from "@/json/sentiment.json";
 import topic from '@/json/topic.json';
 import wordcloud from '@/json/wordCloud.json';
 import CloudAPI from "@/api/cloud";
 import danmaku from 'vue3-danmaku';
 import danmuData from '@/json/danmuData.json';
-import {onMounted, ref} from 'vue';
 import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
 import CommentAPI from "@/api/comment";
-import CloudAPI from "@/api/cloud";
 import SentimentAPI from "@/api/sentiment";
 const interestData = ref<any>(null);
 const attractions = ref<any>({}); // 初始化为一个空对象
 const cloudUrl = ref('');
-const loadAttractions = (spotName: string) => {
+const processedTimeData = ref<any>([]);
+const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
   if (!interestData.value || !Array.isArray(interestData.value)) {
     console.warn("景点数据未加载或格式错误");
     return;
   }
 
+console.log("景点数据（未处理）:", spotName.value);
   // 查找匹配的单个景点
-  const spot = interestData.value.find((spot: any) => spot.spot_name === spotName);
+  const spot = interestData.value.find((spot: any) => spot.spot_name === spotName.value);
   if (spot) {
     attractions.value = {
       name: spot.spot_name,
       image: spot.image_url,
       description: spot.description,
     };
-    console.log("当前选中的景点:", attractions);
+    console.log("当前选中的景点:", attractions.name);
   } else {
     console.warn(`未找到名称为 "${spotName}" 的景点`);
     attractions.value = null;
   }
 
-  console.log("当前选中的景点:", attractions.value);
+  console.log("当前选中的景点:", attractions);
 };
 const danmus = ref([]);
 const colorList = ref(['rgb(204,255,255)', 'white', 'rgb(204,255,204)', 'white', 'rgb(0,255,255)', 'white', 'rgb(255,204,255)', 'pink']);
 // 生成随机颜色的函数
-import { ref, onMounted, watch } from 'vue';
+import {ref, onMounted, watch, Ref, UnwrapRef} from 'vue';
 import { useRoute } from 'vue-router';
 const route = useRoute();
-const attractionName = ref('');
+const attractionName = ref<string>('');
+
+watch(() => route.query.name, (newAttractionName) => {
+  if (typeof newAttractionName === 'string') {
+    attractionName.value = newAttractionName;
+    console.log("name2", attractionName.value)
+  } else {
+    console.warn('路由参数 "name" 不是字符串:', newAttractionName);
+    attractionName.value = '';
+  }
+}, { immediate: true });
+
 
 onMounted(() => {
   fetchAttractionName();
 });
 
 const fetchAttractionName = () => {
-  attractionName.value = route.query.name;
+  attractionName.value = <string>route.query.name;
   console.log("name",route.query.name);
 };
-watch(() => route.query.name, (newAttractionName) => {
-  attractionName.value = newAttractionName;
-}, { immediate: true });
+
 
 function getRandomColor() {
   const color = colorList.value[Math.floor(Math.random() * 8)];
@@ -129,7 +139,7 @@ onMounted(async () => {
 
       console.log("景点数据（处理后）:", interestData.value);
       if (interestData.value.length > 0) {
-        loadAttractions("岳麓山");
+        loadAttractions(attractionName);
       } else {
         console.warn("景点数据为空");
       }
@@ -142,7 +152,7 @@ onMounted(async () => {
 
   // 获取评论并加载到弹幕
   try {
-    const commentResponse = await CommentAPI.getCommentList("岳麓山");
+    const commentResponse = await CommentAPI.getCommentList(attractionName.value);
 
     if (typeof commentResponse === "string") {
       console.log("原始评论数据:", commentResponse);
@@ -171,19 +181,63 @@ onMounted(async () => {
     console.error("加载评论数据时出错:", error);
   }
   try {
-    const cloudResponse = await CloudAPI.getCloudAPI("岳麓山");
+    const cloudResponse = await CloudAPI.getCloudAPI(attractionName.value);
     console.log("词云地址:", cloudResponse.wordcloud_url);
     cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+  try {
+    console.log("情感分析数据:", attractions.value);
+    const sentimentResponse = await SentimentAPI.getSentimentAnalyzeAPI(attractionName.value);
+
+    if (typeof sentimentResponse === "string") {
+      console.log("原始情感数据:", sentimentResponse);
+
+      const fixedResponse = sentimentResponse
+          .replace(/None/g, 'null') // 替换 None 为 null
+          .replace(/Decimal\('([\d.]+)'\)/g, '$1') // 替换 Decimal 为数字
+          .replace(/'/g, '"') // 替换单引号为双引号
+          .replace(/\\(?!["\\/bfnrtu])/g, ''); // 删除非法转义字符
+
+      console.log("修复后的情感数据:", fixedResponse);
+      const sentimentArray = JSON.parse(`[${fixedResponse.match(/{[^}]+}/g)?.join(',')}]`);
+      console.log("情感分析数据（处理后）:", sentimentArray);
+    } else {
+      console.error("评论数据格式错误，期望为字符串形式");
+    }
+  } catch (error) {
+    console.error("加载评论数据时出错:", error);
+  }
+
+
+
+// 在加载时间情感数据后，赋值给 processedTimeData
+  try {
+    const timeResponse = await SentimentAPI.getSentimentResultAPI(attractionName.value);
+    if (timeResponse && typeof timeResponse === "object" && Array.isArray(timeResponse.data)) {
+      processedTimeData.value = timeResponse.data.map(item => {
+        const paddedMonth = item.month < 10 ? '0' + item.month : item.month; // 手动补零
+        return {
+          date: `${item.year}-${paddedMonth}`, // YYYY-MM 格式
+          sentimentScore: item.sentiment_score,
+          sentiment: item.sentiment,
+          commentCount: item.comment_count,
+        };
+      });
+      console.log("时间情感数据（处理后）:", processedTimeData.value);
+    }
+  } catch (error) {
+    console.error("加载时间情感数据时出错:", error);
+  }
+
 
 });
-CloudAPI.getCloudAPI("橘子洲").then((res) => {
+CloudAPI.getCloudAPI(attractionName.value).then((res) => {
   console.log("词云数据:", res);
 
 });
-SentimentAPI.getSentimentReportAPI("橘子洲").then((res)=>{
+SentimentAPI.getSentimentReportAPI(attractionName.value).then((res)=>{
   console.log("ai报告",res)
 })
 
