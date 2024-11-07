@@ -1,6 +1,8 @@
 import jieba
 import pymysql
 import logging
+import random
+import time
 
 # 配置日志
 logging.basicConfig(
@@ -32,16 +34,17 @@ def process_spot_tokens(spot_name):
             logger.error("景点名称不能为空")
             return False
 
-        # 数据库连接
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
-                             charset='utf8')
+        # 获取spot_id的连接
+        conn = get_db_connection()
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
         # 获取spot_id
         spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
         cursor.execute(spot_sql, (spot_name,))
         spot_result = cursor.fetchone()
+        
+        cursor.close()
+        conn.close()
         
         if not spot_result:
             logger.error(f'未找到景点: {spot_name}')
@@ -50,23 +53,74 @@ def process_spot_tokens(spot_name):
         spot_id = spot_result['spot_id']
         logger.info(f"处理景点: {spot_name} (ID: {spot_id})")
 
+        # 获取评论的连接
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
         # 获取所有评论
         comment_sql = "SELECT content FROM usercomment WHERE spot_id = %s"
         cursor.execute(comment_sql, (spot_id,))
         comments = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
 
-        # 处理每条评论
+        # 每100条评论提交一次事务
+        batch_size = 100
+        current_batch = 0
         total_words = 0
+        word_batch = []
+
+        # 先收集所有词语
         for comment in comments:
-            # 分词
             words = jieba.cut(comment['content'])
-            
-            # 过滤词语
             filtered_words = [word for word in words if filter_words(word)]
             
-            # 更新数据库
-            for word in filtered_words:
-                total_words += 1
+            if len(filtered_words) > 10:
+                filtered_words = random.sample(filtered_words, 10)
+            
+            word_batch.extend(filtered_words)
+            total_words += len(filtered_words)
+            
+            # 当批次达到大小时处理
+            if len(word_batch) >= batch_size:
+                process_word_batch(word_batch, spot_id)
+                word_batch = []
+                logger.info(f"已处理 {total_words} 个词语")
+
+        # 处理剩余的词语
+        if word_batch:
+            process_word_batch(word_batch, spot_id)
+            
+        logger.info(f"处理完成，共处理 {len(comments)} 条评论，{total_words} 个词语")
+        return True
+
+    except Exception as e:
+        logger.error(f"处理分词时出错: {str(e)}")
+        return False
+
+def get_db_connection():
+    """获取数据库连接"""
+    return pymysql.connect(
+        host='120.233.26.237', 
+        port=15320, 
+        user='root', 
+        passwd='kissme77', 
+        db='hx_cultural_transmission_sys', 
+        charset='utf8',
+        connect_timeout=10,
+        read_timeout=30,
+        write_timeout=30
+    )
+
+def process_word_batch(words, spot_id):
+    """处理一批词语"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        
+        for word in words:
+            try:
                 # 检查词语是否存在
                 check_sql = """
                     SELECT token_id, count 
@@ -91,17 +145,17 @@ def process_spot_tokens(spot_name):
                         VALUES (%s, 1, %s)
                     """
                     cursor.execute(insert_sql, (word, spot_id))
-                    logger.info(f"插入新词: {word}")
-
+                    
+            except Exception as e:
+                logger.error(f"处理词语 {word} 时出错: {str(e)}")
+                continue
+                
         conn.commit()
-        logger.info(f"处理完成，共处理 {len(comments)} 条评论，{total_words} 个词语")
-        return True
-
+        
     except Exception as e:
-        logger.error(f"处理分词时出错: {str(e)}")
+        logger.error(f"处理词语批次时出错: {str(e)}")
         if 'conn' in locals():
             conn.rollback()
-        return False
     finally:
         if 'cursor' in locals():
             cursor.close()
