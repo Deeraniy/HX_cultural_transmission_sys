@@ -1,9 +1,11 @@
 <script setup>
-import PlaceOfInterest from '@/components/InterestPlace/PlaceOfInterest.vue';
+import router from "@/router.js";
 </script>
 
 <template>
-  <PlaceOfInterest/>
+  <div id="app">
+  <router-view/>
+  </div>
 </template>
 
 <style scoped>

@@ -16,4 +16,5 @@
 <script setup lang="ts">
 
 import {ArrowLeft, CirclePlusFilled, RemoveFilled, Share,ArrowRight} from "@element-plus/icons-vue";
+
 </script>
