@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'TestModel',               # 添加此项
+    'corsheaders',
 )
 
 
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'HX_culture_back.urls'
@@ -79,11 +81,11 @@ DATABASES = {
     'default': 
     { 
         'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
-        'NAME': 'hx_culture', # 数据库名称
-        'HOST': '127.0.0.1', # 数据库地址，本机 ip 地址 127.0.0.1 
-        'PORT': 3306, # 端口 
+        'NAME': 'hx_cultural_transmission_sys', # 数据库名称
+        'HOST': '120.233.26.237', # 数据库地址，本机 ip 地址 127.0.0.1 
+        'PORT': 15320, # 端口 
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': '123123', # 数据库密码
+        'PASSWORD': 'kissme77', # 数据库密码
     }  
 }
 
@@ -117,6 +119,9 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIAL = True
 
 
 # Static files (CSS, JavaScript, Images)
