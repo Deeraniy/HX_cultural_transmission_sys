@@ -32,6 +32,15 @@ class SentimentAPI {
         });
     }
 
+    static getSentimentPieAPI(spot_name:string) {
+        return request({
+            url: `${DICT_BASE_URL}/sentiments_count/`,
+            method: "get",
+            params: {
+                spot_name: spot_name
+            }
+        });
+    }
 }
 
 export default SentimentAPI;
