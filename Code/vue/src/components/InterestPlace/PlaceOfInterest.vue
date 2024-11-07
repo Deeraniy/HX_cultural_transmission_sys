@@ -76,6 +76,8 @@ import SpotsAPI  from "@/api/spot";
 import CityAPI from "@/api/city";
 import CloudAPI from "@/api/cloud";
 import CommentAPI from "@/api/comment";
+import LdaAPI from "@/api/lda";
+import Lda from "@/api/lda";
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
@@ -105,30 +107,14 @@ onMounted(() => {
   //       console.error('Error occurred:', error);
   //     });
 
-//   CityAPI.getCityAPI().then(data => {
-//     console.log('CityData:', data)
-// })
-//   CloudAPI.getCloudAPI("橘子洲").then(data => {
-//     console.log(data)
-//   })
-//   CommentAPI.getAverageScore('橘子洲').then(data => {
-//     console.log("均分",data)
-//   })
-  // CommentAPI.getCommentList('橘子洲').then(data => {
-  //   console.log("评论",data)
-  // })
-  // CommentAPI.getCommentIPCount('橘子洲').then(data => {
-  //   console.log("IP",data)
-  // })
-  // CommentAPI.getCommentCountLastYear('橘子洲').then(data => {
-  //   console.log("Count",data)
-  // })
-  // CommentAPI.getCommentTimeSpan('橘子洲').then(data => {
-  //   console.log("Time",data)
-  // })
-  // CommentAPI.getCommentListRecent('橘子洲').then(data => {
-  //   console.log("recent",data)
-  // })
+  LdaAPI.LdaAPI("橘子洲").then(data => {
+    console.log('Lda:', data); // 确保打印的是后端返回的 `data`
+  })
+      .catch(error => {
+        console.error('Error occurred:', error);
+      });
+
+
 
 
 
