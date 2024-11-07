@@ -5,11 +5,6 @@
         <span class="table-cell">{{ scope.row.theme }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="keyword" label="关键词" align="center">
-      <template #default="scope">
-        <span class="table-cell">{{ scope.row.keyword }}</span>
-      </template>
-    </el-table-column>
     <el-table-column prop="frequency" label="频数" align="center">
       <template #default="scope">
         <span class="table-cell">{{ scope.row.frequency }}</span>

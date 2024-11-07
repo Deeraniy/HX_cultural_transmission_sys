@@ -50,7 +50,7 @@ function setChartOption(data) {
         const point = params[0];
         return `
           日期: ${point.data.date}<br/>
-          情感分数: ${(point.data.sentimentScore * 100).toFixed(2)}
+          情感分数: ${point.data.sentimentScore}
         `;
       },
     },
