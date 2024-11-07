@@ -165,11 +165,7 @@ def sentiments_result(request):
         
         # 查询评论数据
         comment_sql = """
-            SELECT 
-                sentiment, 
-                sentiment_confidence, 
-                SUBSTRING_INDEX(LEFT(create_time, 7), '-', 1) as year,
-                SUBSTRING_INDEX(LEFT(create_time, 7), '-', -1) as month
+            SELECT sentiment, sentiment_confidence, DATE(create_time) as date 
             FROM usercomment 
             WHERE spot_id = %s AND sentiment IS NOT NULL
             ORDER BY create_time
@@ -193,12 +189,15 @@ def sentiments_result(request):
         print(results)
         monthly_data = {}
         for row in results:
-            date_key = f"{row['year']}-{row['month']}"
-            if date_key not in monthly_data:
-                monthly_data[date_key] = []
+            date = row['date']
+            print(date)
+            year_month = f"{date.year}-{date.month:02d}"
+            
+            if year_month not in monthly_data:
+                monthly_data[year_month] = []
             
             if row['sentiment'] and row['sentiment_confidence']:
-                monthly_data[date_key].append(
+                monthly_data[year_month].append(
                     (row['sentiment'], float(row['sentiment_confidence']))
                 )
         
@@ -206,7 +205,6 @@ def sentiments_result(request):
         analysis_results = []
         for year_month, sentiments in monthly_data.items():
             year, month = map(int, year_month.split('-'))
-            # 直接使用元组列表
             sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
             
             analysis_results.append({
