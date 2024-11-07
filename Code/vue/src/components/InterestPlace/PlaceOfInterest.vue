@@ -175,9 +175,6 @@ onMounted(async () => {
     console.error("加载城市数据时出错:", error);
   }
 
-
-
-
   myChart = echarts.init(chartsDOM.value as HTMLElement);
 
   myChart.showLoading();
