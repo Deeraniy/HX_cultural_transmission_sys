@@ -1,30 +1,57 @@
 from django.shortcuts import render, redirect,HttpResponse
 import pymysql
 import datetime
+import logging
+
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 def get_comment_list(request):
-    # pass
-    spot_name=request.GET.get('spot_name')
+    spot_name = request.GET.get('spot_name')
+    
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
-                           db='hx_cultural_transmission_sys',charset='utf8')
+    conn = pymysql.connect(
+        host='120.233.26.237', 
+        port=15320, 
+        user='root', 
+        passwd='kissme77',
+        db='hx_cultural_transmission_sys',
+        charset='utf8'
+    )
+    
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
-    sql_query = "select * from usercomment where spot_id=%s"
-    # 执行SQL，并返回收影响行数
-    effect_row = cursor.execute(sql_query, spot_id)
     
-    comment_list =cursor.fetchall()
-    print(comment_list)
-
-    # 关闭游标
+    # 查询spot_id
+    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s", (spot_name,))
+    spot_result = cursor.fetchone()
+    
+    if spot_result:
+        spot_id = spot_result['spot_id']
+        logger.info(f"查到的spot_id: {spot_id}")
+    else:
+        logger.error(f"未找到景点: {spot_name}")
+        cursor.close()
+        conn.close()
+        return HttpResponse("未找到景点", status=404)
+    
+    # 查询评论
+    sql_query = "SELECT * FROM usercomment WHERE spot_id=%s"
+    cursor.execute(sql_query, (spot_id,))
+    comment_list = cursor.fetchall()
+    
+    logger.info(f"查到的评论数: {len(comment_list)}")
+    
+    # 关闭游标和连接
     cursor.close()
-    # 关闭连接
     conn.close()
+    
     return HttpResponse(comment_list)
-    # 将查询得到的数据放在class_list列表中
-    # return render(request,'classes.html',{'class_list':class_list})
+
 def get_comment_list_recent(request):
     # pass
     spot_name=request.GET.get('spot_name')
