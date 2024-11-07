@@ -2,7 +2,8 @@
   <div class="common-layout">
     <el-container style="height: 100vh; overflow: auto;">
       <el-header class="header" style="height:90px;width: 100%">
-        <Header />
+        <Header :title="attractionName"/>
+        <!--       {{attractionName}}-->
       </el-header>
       <el-main class="main">
         <div class="content">
@@ -91,6 +92,23 @@ const loadAttractions = (spotName: string) => {
 const danmus = ref([]);
 const colorList = ref(['rgb(204,255,255)', 'white', 'rgb(204,255,204)', 'white', 'rgb(0,255,255)', 'white', 'rgb(255,204,255)', 'pink']);
 // 生成随机颜色的函数
+import { ref, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const attractionName = ref('');
+
+onMounted(() => {
+  fetchAttractionName();
+});
+
+const fetchAttractionName = () => {
+  attractionName.value = route.query.name;
+  console.log("name",route.query.name);
+};
+watch(() => route.query.name, (newAttractionName) => {
+  attractionName.value = newAttractionName;
+}, { immediate: true });
+
 function getRandomColor() {
   const color = colorList.value[Math.floor(Math.random() * 8)];
   return color;
