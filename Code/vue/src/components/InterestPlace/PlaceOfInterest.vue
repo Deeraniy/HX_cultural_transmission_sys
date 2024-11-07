@@ -73,7 +73,8 @@ import hunanMapData from '@/json/湖南省.json';
 import cityInfoData from '@/assets/cityInfo.json'; // 导入城市信息
 import interestData from '@/json/interests.json'; // 导入景点信息
 import SpotsAPI  from "@/api/spot";
-
+import CityAPI from "@/api/city";
+import CloudAPI from "@/api/cloud";
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
@@ -96,12 +97,23 @@ const loadAttractions = (cityName: string) => {
 };
 
 onMounted(() => {
-  SpotsAPI.getSpotsAPI().then(data => {
-    console.log('Data:', data); // 确保打印的是后端返回的 `data`
+  // SpotsAPI.getSpotsAPI().then(data => {
+  //   console.log('SpotsData:', data); // 确保打印的是后端返回的 `data`
+  // })
+  //     .catch(error => {
+  //       console.error('Error occurred:', error);
+  //     });
+
+//   CityAPI.getCityAPI().then(data => {
+//     console.log('CityData:', data)
+// })
+  CloudAPI.getCloudAPI("橘子洲").then(data => {
+    console.log(data)
   })
-      .catch(error => {
-        console.error('Error occurred:', error);
-      });
+
+
+
+
   myChart = echarts.init(chartsDOM.value as HTMLElement);
 
   myChart.showLoading();
