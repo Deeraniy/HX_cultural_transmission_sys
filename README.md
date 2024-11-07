@@ -72,18 +72,19 @@ Web网页应用
 |:--|--|---|--:|
 |||||
 #### 3.5 软件概要设计
+https://github.com/bettermorn/ACMWDevHubPPT/blob/master/UploadImg/%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3%E7%9B%B8%E5%85%B3%E5%9B%BE%E7%89%87.png
 ![设计文档图片](https://github.com/bettermorn/ACMWDevHubPPT/blob/master/UploadImg/%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3%E7%9B%B8%E5%85%B3%E5%9B%BE%E7%89%87.png)
 #####  3.5.1 系统架构图，如Web应用的三层架构
 注意：通常架构图从底向上绘制较普遍，从左到右较少，可根据实际情况选择
-![系统架构图](doc/系统架构图.png)
 #####  3.5.2 基础设施图，如只有一台服务器，可不画。
-仅一台服务器
 #####  3.5.3 如果使用数据分析或者大数据/人工智能算法模型设计方法/区块链技术/数字孪生（虚拟现实XR）应用，请说明。
 * 选择算法模型的原因
 * 比较多种算法模型的实际效果，包括理论和指标
+机器学习算法：
+* Distilbert-base-multilingual-cased-sentiments-student（基于 DistilBERT 的多语言情感分析模型）
+选择原因：支持多语言，处理速度快
 #####  3.5.4 数据库设计：包括E-R图即可，可使用数据库工具基于已有的数据库表逆向生成
-![E-R图](doc/E-R图.png)  
-3.5.5 接口设计：重要的业务功能（可与用户故事对应）和工具类设计
+#####  3.5.5 接口设计：重要的业务功能（可与用户故事对应）和工具类设计
 |接口名称|接口功能|输入变量或对象|输出对象|备注|
 |:--|--|---|---|--:|
 |payAli|调用Alipay接口|inputObj1，inputObj2，。。。|outputobj1，outputobj2，。。。|需向支付宝申请付款账号|
