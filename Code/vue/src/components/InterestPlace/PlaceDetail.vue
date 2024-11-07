@@ -50,14 +50,15 @@ import TopicCluster from "@/components/InterestPlace/subcomponent/TopicCluster.v
 import LineChart from "@/components/InterestPlace/subcomponent/LineChart.vue";
 import WordCloud from "@/components/InterestPlace/subcomponent/WordCloud.vue";
 import SentimentStats from "@/components/InterestPlace/subcomponent/SentimentStats.vue";
-import data1 from "@/json/data1.json";
+//import data1 from "@/json/data1.json";
 import data2 from "@/json/data2.json";
 import time from "@/json/time.json"
-import sentiment from "@/json/sentiment.json";
+//import sentiment from "@/json/sentiment.json";
 import topic from '@/json/topic.json';
 import wordcloud from '@/json/wordCloud.json';
 import CloudAPI from "@/api/cloud";
 import danmaku from 'vue3-danmaku';
+import LdaAPI from "@/api/lda";
 import danmuData from '@/json/danmuData.json';
 import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
@@ -67,6 +68,12 @@ const interestData = ref<any>(null);
 const attractions = ref<any>({}); // 初始化为一个空对象
 const cloudUrl = ref('');
 const processedTimeData = ref<any>([]);
+const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
+const data1 = [
+  { name: '正面', value: 58.84 },
+  { name: '中立', value: 7.28 },
+  { name: '负面', value: 33.73 }
+]
 const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
   if (!interestData.value || !Array.isArray(interestData.value)) {
     console.warn("景点数据未加载或格式错误");
@@ -95,6 +102,7 @@ const colorList = ref(['rgb(204,255,255)', 'white', 'rgb(204,255,204)', 'white',
 // 生成随机颜色的函数
 import {ref, onMounted, watch, Ref, UnwrapRef} from 'vue';
 import { useRoute } from 'vue-router';
+import {marked} from "marked";
 const route = useRoute();
 const attractionName = ref<string>('');
 
@@ -188,29 +196,43 @@ onMounted(async () => {
     console.error("加载评论数据时出错:", error);
   }
   try {
-    console.log("情感分析数据:", attractions.value);
-    const sentimentResponse = await SentimentAPI.getSentimentAnalyzeAPI(attractionName.value);
+    const pieResponse = await SentimentAPI.getSentimentPieAPI(attractionName.value);
 
-    if (typeof sentimentResponse === "string") {
-      console.log("原始情感数据:", sentimentResponse);
+    if (pieResponse && pieResponse.data) {
+      // 格式化为 PieChart 需要的数据结构
+      data1.value = [
+        { name: '正面', value: parseFloat(pieResponse.data.positive_percentage) },
+        { name: '中立', value: parseFloat(pieResponse.data.neutral_percentage) },
+        { name: '负面', value: parseFloat(pieResponse.data.negative_percentage) }
+      ];
 
-      const fixedResponse = sentimentResponse
-          .replace(/None/g, 'null') // 替换 None 为 null
-          .replace(/Decimal\('([\d.]+)'\)/g, '$1') // 替换 Decimal 为数字
-          .replace(/'/g, '"') // 替换单引号为双引号
-          .replace(/\\(?!["\\/bfnrtu])/g, ''); // 删除非法转义字符
-
-      console.log("修复后的情感数据:", fixedResponse);
-      const sentimentArray = JSON.parse(`[${fixedResponse.match(/{[^}]+}/g)?.join(',')}]`);
-      console.log("情感分析数据（处理后）:", sentimentArray);
+      console.log("饼图数据（处理后）:", data1.value);
     } else {
-      console.error("评论数据格式错误，期望为字符串形式");
+      console.warn("饼图数据格式不正确:", pieResponse);
     }
   } catch (error) {
-    console.error("加载评论数据时出错:", error);
+    console.error("加载饼图数据时出错:", error);
   }
 
 
+  try {
+    // 获取 LdaResponse 数据
+    const ldaResponse = await LdaAPI.LdaAPI(attractionName.value);
+
+    // 检查数据有效性，并格式化为表格需要的格式
+    if (Array.isArray(ldaResponse)) {
+      sentiment.value = ldaResponse.map(item => ({
+        topic: item.topic, // 主题
+        frequency: item.frequency, // 出现频率
+        sentiment: item.sentiment, // 情感
+      }));
+      console.log("LDA 数据加载成功:", sentiment.value);
+    } else {
+      console.warn("LDA 数据格式不正确:", ldaResponse);
+    }
+  } catch (error) {
+    console.error("加载 LDA 数据时出错:", error);
+  }
 
 // 在加载时间情感数据后，赋值给 processedTimeData
   try {
@@ -233,14 +255,14 @@ onMounted(async () => {
 
 
 });
-CloudAPI.getCloudAPI(attractionName.value).then((res) => {
-  console.log("词云数据:", res);
 
-});
-SentimentAPI.getSentimentReportAPI(attractionName.value).then((res)=>{
-  console.log("ai报告",res)
-})
-
+// SentimentAPI.getSentimentReportAPI(attractionName.value).then((res) => {
+//   console.log("AI 报告原始 Markdown:", res);
+//   markdownContent.value = marked(res); // 将 Markdown 转换为 HTML
+//   console.log("AI 报告解析后的 HTML:", markdownContent.value);
+// }).catch((error) => {
+//   console.error("加载 AI 报告时出错:", error);
+// });
 
 </script>
 
