@@ -136,12 +136,12 @@ Web网页应用
 4.将教师模型生成的软标签用于训练学生模型，训练目标是通过KL散度最小化，鼓励学生模型的预测分布尽可能接近教师模型。
 5.在测试集上评估学生模型的性能，主要衡量其与教师模型预测结果的一致性。
 #####  3.5.4 数据库设计：包括E-R图即可，可使用数据库工具基于已有的数据库表逆向生成
-<img width="658" alt="a913dfde5a7aa0d10f825675a51d521" src="https://github.com/user-attachments/assets/c133a424-d442-4f84-91c8-0c86e52aa763">
+<img width="658" alt="ER-diagram" src="https://github.com/user-attachments/assets/c133a424-d442-4f84-91c8-0c86e52aa763">
 
 #####  3.5.5 接口设计：重要的业务功能（可与用户故事对应）和工具类设计
 |接口名称|接口功能|输入变量或对象|输出对象|备注|
 |:--|--|---|---|--:|
-|ZhipuAI|调用智谱AI接口|prompt|response|需向智谱AI购买API Key|
+|ZhipuAI|调用智谱AI接口|prompt|response|需向智谱AI调用API Key|
 
 列出方法描述，包括方法名，输入变量（如果有），返回值（如果有），可参考
 微信支付API统一下单 https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_1
