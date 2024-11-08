@@ -40,7 +40,7 @@
       <div class="attraction-card-box">
         <!-- 动态展示当前选中的城市景点 -->
         <div class="attractions-container">
-          <div class="attraction-card" @click="goToPlaceDetail(attraction.name)" v-for="attraction in attractions" :key="attraction.name" >
+          <div class="attraction-card" @click="goToPlaceDetail(attraction.name)" v-for="attraction in filteredAttractions" :key="attraction.name" >
             <img :src="attraction.image" :alt="attraction.name" class="attraction-image" />
             <div class="attraction-details">
               <h3>
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import * as echarts from 'echarts';
 import hunanMapData from '@/json/湖南省.json';
 import cityInfoDataLocal from '@/assets/cityInfo.json'; // 导入城市信息
@@ -130,6 +130,7 @@ const loadAttractions = (cityName: string) => {
     attractions.value = [];
   }
 };
+
 
 
 onMounted(async () => {
@@ -284,6 +285,21 @@ const isUrl = (text: string): boolean => {
       '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
       '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
   return !!urlPattern.test(text);
+};
+
+// 计算属性用于动态更新过滤后的景点
+const filteredAttractions = computed(() => {
+  if (!searchQuery.value) return attractions.value;
+
+  return attractions.value.filter(attraction =>
+      attraction.name.includes(searchQuery.value) ||
+      (attraction.description && attraction.description.includes(searchQuery.value))
+  );
+});
+
+const searchAttractions = () => {
+  console.log("搜索结果：", filteredAttractions.value);
+  // 您可以在这里添加额外的逻辑，比如记录搜索日志等
 };
 
 </script>
@@ -455,10 +471,11 @@ const isUrl = (text: string): boolean => {
 .attraction-details a {
   color: #2c3e50; /* 设置链接的颜色 */
   font-family: 'HelveticaNeue',serif;
-  font-size: 15px;
+  font-size: 12px;
   text-decoration: underline; /* 添加下划线让用户知道是链接 */
   cursor: pointer; /* 确保鼠标悬停时显示为指针 */
   pointer-events: auto; /* 确保链接可以点击 */
+  word-break: break-all; /* 允许长链接换行 */
 }
 
 .attraction-details h3 {

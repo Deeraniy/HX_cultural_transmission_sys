@@ -1,7 +1,7 @@
 <template>
   <div class="button-container">
     <!-- 返回按钮和标题 -->
-    <el-page-header @back="onBack" class="header">
+    <el-page-header @back="onBack" class="header" style="color: #fff8f0;font-size: 30px">
       <template #content>
         <span class="title" style="font-size: 30px">{{title}}</span>
       </template>
@@ -10,23 +10,24 @@
     <!-- 用户信息和头像 -->
     <div class="user-info">
       <img src="@/assets/cat.gif" style="width: 100px" @click="drawer = true">
-      <div class="block">
-        <el-avatar :size="50" :src="circleUrl" />
-      </div>
-      <div class="toolbar">
-        <el-dropdown>
-          <el-icon style="margin-right: 0px; font-size: 25px; margin-top: 5px">
-            <Setting />
-          </el-icon>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>退出登录</el-dropdown-item>
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item>修改密码</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </div>
+      <h3 class="no-wrap">👈👈👈点我查看报告😸</h3>
+<!--      <div class="block">-->
+<!--        <el-avatar :size="50" :src="circleUrl" />-->
+<!--      </div>-->
+<!--      <div class="toolbar">-->
+<!--        <el-dropdown>-->
+<!--          <el-icon style="margin-right: 0px; font-size: 25px; margin-top: 5px">-->
+<!--            <Setting />-->
+<!--          </el-icon>-->
+<!--          <template #dropdown>-->
+<!--            <el-dropdown-menu>-->
+<!--              <el-dropdown-item>退出登录</el-dropdown-item>-->
+<!--              <el-dropdown-item>个人信息</el-dropdown-item>-->
+<!--              <el-dropdown-item>修改密码</el-dropdown-item>-->
+<!--            </el-dropdown-menu>-->
+<!--          </template>-->
+<!--        </el-dropdown>-->
+<!--      </div>-->
     </div>
     <el-drawer v-model="drawer" title="AI Report">
       <!-- 使用 v-html 动态渲染 Markdown 内容 -->
@@ -100,7 +101,11 @@ onMounted(() => {
   border-bottom-left-radius: 30px;
   border-bottom-right-radius: 30px;
 }
-
+.no-wrap {
+  font-family: 'HelveticaNeue', serif;
+  white-space: nowrap; /* 强制不换行 */
+  display: inline-block; /* 确保宽度由内容决定 */
+}
 /* 返回按钮样式 */
 .header {
   width: 100%;
