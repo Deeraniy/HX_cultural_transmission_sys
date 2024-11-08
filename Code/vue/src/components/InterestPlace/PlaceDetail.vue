@@ -12,7 +12,7 @@
             <img :src="attractions.image" alt="城市图片" class="city-image" />
             <img :src="cloudUrl" alt="城市词云图" class="wordcloud" />
             <div class="danmu">
-              <danmaku ref="danmakuRef" v-model:danmus="danmus" :speeds="50" useSlot loop :channels="7" style="height:100%; width:100%;">
+              <danmaku ref="danmakuRef" v-model:danmus="danmus" :speeds="50" useSlot loop :channels="7" style="height:100%; width:100%;" :is-suspend="true">
                 <template v-slot:dm="{ danmu }">
                   <div class="danmu-item">
                     <span class="bullet-item" :style="{ color: getRandomColor() }">
