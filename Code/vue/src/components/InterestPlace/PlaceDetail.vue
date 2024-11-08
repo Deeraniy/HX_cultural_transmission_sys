@@ -36,7 +36,7 @@
             <TopicCluster :tableData="sentiment" style="width: 50%; height: 500px; justify-self: right;" />
           </div>
         </div>
-        <LineRace :timeData="processedTimeData" style="width: 100%; height: 500px;" />
+        <LineRace v-if="processedTimeData.length > 0" :timeData="processedTimeData" />
       </el-main>
     </el-container>
   </div>
@@ -159,13 +159,14 @@ onMounted(async () => {
     console.error("加载景点数据时出错:", error);
   }
 
+
   try {
     const commentResponse = await CommentAPI.getCommentList(attractionName.value);
 
     console.log("原始评论数据:", commentResponse);
 
     if (typeof commentResponse === "string") {
-      // 修复字符串的逻辑
+      // 1. 修复常见的 JSON 格式问题
       const fixedResponse = commentResponse
           .replace(/None/g, 'null')
           .replace(/Decimal\('([\d.]+)'\)/g, '$1')
@@ -174,22 +175,34 @@ onMounted(async () => {
 
       console.log("修复后的评论数据:", fixedResponse);
 
-      const matches = fixedResponse.match(/{.*?}/g);
-      if (!matches || matches.length === 0) {
-        throw new Error("未找到有效的 JSON 数据块。修复后的数据为: " + fixedResponse);
-      }
+      // 2. 提取每个 JSON 对象
+      const matches = fixedResponse.match(/{[^}]+}/g); // 匹配每个 JSON 对象
 
-      const commentsArray = JSON.parse(`[${matches.join(',')}]`);
-      console.log("解析后的评论数组:", commentsArray);
-      danmus.value = commentsArray.map(comment => ({
-        name: comment.user_id || '匿名用户',
-        text: comment.content || '',
-      }));
-    } else if (typeof commentResponse === "object" && commentResponse !== null) {
-      // 直接处理对象
-      const commentsArray = Array.isArray(commentResponse) ? commentResponse : [commentResponse];
-      console.log("对象类型评论数据:", commentsArray);
-      danmus.value = commentsArray.map(comment => ({
+      if (matches) {
+        const commentsArray = [];
+
+        for (const match of matches) {
+          try {
+            const comment = JSON.parse(match); // 逐个解析 JSON 对象
+            commentsArray.push(comment);
+          } catch (jsonError) {
+            console.warn("跳过无法解析的 JSON 对象:", match, jsonError); // 输出无法解析的对象
+          }
+        }
+
+        console.log("成功解析的评论数组:", commentsArray);
+
+        // 映射到弹幕数据
+        danmus.value = commentsArray.map(comment => ({
+          name: comment.user_id || '匿名用户',
+          text: comment.content || '',
+        }));
+      } else {
+        console.warn("未找到有效的 JSON 对象。");
+      }
+    } else if (Array.isArray(commentResponse)) {
+      // 直接处理对象数组
+      danmus.value = commentResponse.map(comment => ({
         name: comment.user_id || '匿名用户',
         text: comment.content || '',
       }));
@@ -199,6 +212,7 @@ onMounted(async () => {
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+
 
   try {
     const cloudResponse = await CloudAPI.getCloudAPI(attractionName.value);
@@ -272,14 +286,16 @@ onMounted(async () => {
     const timeResponse = await SentimentAPI.getSentimentResultAPI(attractionName.value);
     if (timeResponse && typeof timeResponse === "object" && Array.isArray(timeResponse.data)) {
       processedTimeData.value = timeResponse.data.map(item => {
-        const paddedMonth = item.month < 10 ? '0' + item.month : item.month; // 手动补零
+        const paddedMonth = item.month < 10 ? '0' + item.month : item.month;
+        console.log("你好！！！" + parseFloat(item.sentiment_score));
         return {
-          date: `${item.year}-${paddedMonth}`, // YYYY-MM 格式
-          sentimentScore: parseFloat(item.sentiment_score) || 0, // 确保是数字
+          date: `${item.year}-${paddedMonth}`,
+          sentimentScore: parseFloat(item.sentiment_score) || 0,
           sentiment: item.sentiment,
           commentCount: item.comment_count,
         };
       });
+
       console.log("时间情感数据（处理后）:", processedTimeData.value);
     }
   } catch (error) {
