@@ -19,7 +19,7 @@
             </el-option>
           </el-select>
           <div>
-            <h3 style="text-align: center;font-family: 'ChillKaiShu',serif;">地理位置</h3>
+            <h3 style="text-align: center;font-family: 'HelveticaNeue', serif;font-size: 25px">地理位置</h3>
             <div v-if="selectedCityInfoLocal" class="city-info">
               <div class="image-container">
                 <img :src="selectedCityInfoLocal.image" alt="城市图片" class="city-image" />
@@ -30,7 +30,7 @@
               </div>
             </div>
             <div v-else class="city-name-display" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-              <el-text style="color: darkgray;font-family: 'ChillKaiShu',serif;">请点击地图中的城市以显示其名称</el-text>
+              <el-text style="color: darkgray;">请点击地图中的城市以显示其名称</el-text>
             </div>
           </div>
 
@@ -409,7 +409,7 @@ const searchAttractions = () => {
 /* 滚动文本框样式 */
 .description-box {
   max-height: 240px; /* 设置文本框的最大高度 */
-  font-family: 'ChillKaiShu',serif;
+  //font-family: 'ChillKaiShu',serif;
   overflow-y: auto; /* 启用垂直滚动 */
   padding: 10px;
   background-color: #f9f9f9;

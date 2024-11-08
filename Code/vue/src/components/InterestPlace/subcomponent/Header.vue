@@ -9,7 +9,12 @@
 
     <!-- 用户信息和头像 -->
     <div class="user-info">
-      <img src="@/assets/cat.gif" style="width: 100px" @click="drawer = true">
+      <img
+          src="@/assets/cat.gif"
+          style="width: 100px; cursor: pointer;"
+          @click="drawer = true"
+      />
+
       <h3 class="no-wrap">👈👈👈点我查看报告😸</h3>
 <!--      <div class="block">-->
 <!--        <el-avatar :size="50" :src="circleUrl" />-->
