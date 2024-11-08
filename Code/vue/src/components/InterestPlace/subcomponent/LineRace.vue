@@ -62,7 +62,7 @@ function setChartOption(data) {
       type: 'category',
       name: '日期',
       nameLocation: 'middle',
-      nameGap: 30,
+      nameGap: 55,
       data: chartData.map(item => item.date),
       axisLabel: {
         interval: 1,

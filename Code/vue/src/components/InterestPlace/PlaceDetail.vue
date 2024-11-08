@@ -36,7 +36,7 @@
             <TopicCluster :tableData="sentiment" style="width: 50%; height: 500px; justify-self: right;" />
           </div>
         </div>
-        <LineRace v-if="processedTimeData.length > 0" :timeData="processedTimeData" />
+        <LineRace v-if="processedTimeData.length > 0" :timeData="processedTimeData"  style="margin-top: 30px"/>
       </el-main>
     </el-container>
   </div>
