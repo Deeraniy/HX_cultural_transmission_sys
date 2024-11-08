@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import io
 import base64
 import jieba
+import jieba.posseg as pseg
 import os
 def get_cloud(request):
     # 从请求中获取spot_name
@@ -22,17 +23,21 @@ def get_cloud(request):
     spot_id=cursor.fetchone()['spot_id']
     cursor.execute("SELECT * FROM usercomment WHERE spot_id = %s", (spot_id))
     comments = cursor.fetchall()
-    print(comments)
         # 合并评论文本
     text = " ".join(comment['content'] for comment in comments)
-    text = [word for word in jieba.cut(text) if len(word) > 1]
-    text = list(set(text))
-    text = " ".join(text)
+    # print(text)
+    words=pseg.cut(text)
+    nouns = [word for word, flag in words if flag.startswith('n') and len(word) > 1]
+    text = " ".join(nouns)
+    # text = [word for word in jieba.cut(text) if len(word) > 1]
+    # text = list(set(text))
+    # text = " ".join(text)
     print(text)
+    stopwords = ["这个","可以","一个","一下","一定","是不是","不是","什么","应该","我们","你们","他们","那个","怎么","然后","最后","因为","但是"]
 
         # 生成词云图
     
-    wordcloud = WordCloud(width=800,height=800,font_path='C:\\Windows\\Fonts\\simhei.ttf', max_words=200, max_font_size=100, background_color=None).generate(text)
+    wordcloud = WordCloud(collocations=False,width=800,height=800,font_path='C:\\Windows\\Fonts\\simhei.ttf', max_words=200, max_font_size=100, background_color=None, mode='RGBA',stopwords=stopwords).generate(text)
     image_path = os.path.join('static', 'wordclouds', f"{spot_name}_wordcloud.png")
     wordcloud.to_file(image_path)
     image_url = f"/static/wordclouds/{spot_name}_wordcloud.png"
