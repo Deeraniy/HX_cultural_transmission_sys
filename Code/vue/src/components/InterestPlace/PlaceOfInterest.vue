@@ -455,10 +455,11 @@ const isUrl = (text: string): boolean => {
 .attraction-details a {
   color: #2c3e50; /* 设置链接的颜色 */
   font-family: 'HelveticaNeue',serif;
-  font-size: 15px;
+  font-size: 12px;
   text-decoration: underline; /* 添加下划线让用户知道是链接 */
   cursor: pointer; /* 确保鼠标悬停时显示为指针 */
   pointer-events: auto; /* 确保链接可以点击 */
+  word-break: break-all; /* 允许长链接换行 */
 }
 
 .attraction-details h3 {
