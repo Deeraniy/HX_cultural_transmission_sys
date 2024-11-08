@@ -32,11 +32,11 @@
 
           <!-- PieChart和WordCloud上下并列，与TopicCluster同一行 -->
           <div class="mixed-charts-row">
-            <SentimentStats :tableData="sentiment" style="width: 50%; height: 500px; border: 15px" />
-            <TopicCluster :tableData="topic" style="width: 50%; height: 500px; justify-self: right;" />
+            <SentimentStats :tableData="topic" style="width: 50%; height: 500px; border: 15px" />
+            <TopicCluster :tableData="sentiment" style="width: 50%; height: 500px; justify-self: right;" />
           </div>
         </div>
-        <LineRace :timeData="processedTimeData" style="width: 100%; height: 500px;" />
+        <LineRace v-if="processedTimeData.length > 0" :timeData="processedTimeData" />
       </el-main>
     </el-container>
   </div>
@@ -54,7 +54,7 @@ import SentimentStats from "@/components/InterestPlace/subcomponent/SentimentSta
 import data2 from "@/json/data2.json";
 import time from "@/json/time.json"
 //import sentiment from "@/json/sentiment.json";
-import topic from '@/json/topic.json';
+//import topic from '@/json/topic.json';
 import wordcloud from '@/json/wordCloud.json';
 import CloudAPI from "@/api/cloud";
 import danmaku from 'vue3-danmaku';
@@ -69,6 +69,7 @@ const attractions = ref<any>({}); // 初始化为一个空对象
 const cloudUrl = ref('');
 const processedTimeData = ref<any>([]);
 const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
+const topic = ref<any>([]);
 const data1 = [
   { name: '正面', value: 58.84 },
   { name: '中立', value: 7.28 },
@@ -158,36 +159,61 @@ onMounted(async () => {
     console.error("加载景点数据时出错:", error);
   }
 
-  // 获取评论并加载到弹幕
+
   try {
     const commentResponse = await CommentAPI.getCommentList(attractionName.value);
 
-    if (typeof commentResponse === "string") {
-      console.log("原始评论数据:", commentResponse);
+    console.log("原始评论数据:", commentResponse);
 
+    if (typeof commentResponse === "string") {
+      // 1. 修复常见的 JSON 格式问题
       const fixedResponse = commentResponse
-          .replace(/None/g, 'null') // 替换 None 为 null
-          .replace(/Decimal\('([\d.]+)'\)/g, '$1') // 替换 Decimal 为数字
-          .replace(/'/g, '"') // 替换单引号为双引号
-          .replace(/\\(?!["\\/bfnrtu])/g, ''); // 删除非法转义字符
+          .replace(/None/g, 'null')
+          .replace(/Decimal\('([\d.]+)'\)/g, '$1')
+          .replace(/'/g, '"')
+          .replace(/\\(?!["\\/bfnrtu])/g, '');
 
       console.log("修复后的评论数据:", fixedResponse);
 
-      const commentsArray = JSON.parse(`[${fixedResponse.match(/{[^}]+}/g)?.join(',')}]`);
+      // 2. 提取每个 JSON 对象
+      const matches = fixedResponse.match(/{[^}]+}/g); // 匹配每个 JSON 对象
 
-      // 映射评论数据到弹幕格式
-      danmus.value = commentsArray.map((comment: any) => ({
+      if (matches) {
+        const commentsArray = [];
+
+        for (const match of matches) {
+          try {
+            const comment = JSON.parse(match); // 逐个解析 JSON 对象
+            commentsArray.push(comment);
+          } catch (jsonError) {
+            console.warn("跳过无法解析的 JSON 对象:", match, jsonError); // 输出无法解析的对象
+          }
+        }
+
+        console.log("成功解析的评论数组:", commentsArray);
+
+        // 映射到弹幕数据
+        danmus.value = commentsArray.map(comment => ({
+          name: comment.user_id || '匿名用户',
+          text: comment.content || '',
+        }));
+      } else {
+        console.warn("未找到有效的 JSON 对象。");
+      }
+    } else if (Array.isArray(commentResponse)) {
+      // 直接处理对象数组
+      danmus.value = commentResponse.map(comment => ({
         name: comment.user_id || '匿名用户',
         text: comment.content || '',
       }));
-
-      console.log("弹幕数据（处理后）:", danmus.value);
     } else {
-      console.error("评论数据格式错误，期望为字符串形式");
+      throw new Error("评论数据格式不正确");
     }
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+
+
   try {
     const cloudResponse = await CloudAPI.getCloudAPI(attractionName.value);
     console.log("词云地址:", cloudResponse.wordcloud_url);
@@ -234,19 +260,42 @@ onMounted(async () => {
     console.error("加载 LDA 数据时出错:", error);
   }
 
+  try {
+    // 获取 WordResponse 数据
+    const wordResponse = await SentimentAPI.getSentimentWordAPI(attractionName.value);
+
+    // 检查数据有效性，并格式化为表格需要的格式
+    if (wordResponse && Array.isArray(wordResponse.data)) {
+      topic.value = wordResponse.data.map(item => ({
+        word: item.word, // 关键词
+        frequency: item.frequency, // 出现频率
+        sentiment: item.sentiment, // 情感
+      }));
+      console.log("Word 数据加载成功:", topic.value);
+    } else {
+      console.warn("Word 数据格式不正确:", wordResponse);
+    }
+  } catch (error) {
+    console.error("加载 Word 数据时出错:", error);
+  }
+
+
+
 // 在加载时间情感数据后，赋值给 processedTimeData
   try {
     const timeResponse = await SentimentAPI.getSentimentResultAPI(attractionName.value);
     if (timeResponse && typeof timeResponse === "object" && Array.isArray(timeResponse.data)) {
       processedTimeData.value = timeResponse.data.map(item => {
-        const paddedMonth = item.month < 10 ? '0' + item.month : item.month; // 手动补零
+        const paddedMonth = item.month < 10 ? '0' + item.month : item.month;
+        console.log("你好！！！" + parseFloat(item.sentiment_score));
         return {
-          date: `${item.year}-${paddedMonth}`, // YYYY-MM 格式
-          sentimentScore: parseFloat(item.sentiment_score) || 0, // 确保是数字
+          date: `${item.year}-${paddedMonth}`,
+          sentimentScore: parseFloat(item.sentiment_score) || 0,
           sentiment: item.sentiment,
           commentCount: item.comment_count,
         };
       });
+
       console.log("时间情感数据（处理后）:", processedTimeData.value);
     }
   } catch (error) {

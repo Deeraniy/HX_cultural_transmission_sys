@@ -37,7 +37,7 @@ def get_cloud(request):
 
         # 生成词云图
     
-    wordcloud = WordCloud(collocations=False,width=800,height=800,font_path='C:\\Windows\\Fonts\\simhei.ttf', max_words=200, max_font_size=100, background_color=None, mode='RGBA',stopwords=stopwords).generate(text)
+    wordcloud = WordCloud(collocations=False,width=800,height=800,font_path='C:\\Windows\\Fonts\\simhei.ttf', max_words=200, max_font_size=200, background_color=None, mode='RGBA',stopwords=stopwords).generate(text)
     image_path = os.path.join('static', 'wordclouds', f"{spot_name}_wordcloud.png")
     wordcloud.to_file(image_path)
     image_url = f"/static/wordclouds/{spot_name}_wordcloud.png"

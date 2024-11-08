@@ -41,6 +41,15 @@ class SentimentAPI {
             }
         });
     }
+    static getSentimentWordAPI(spot_name:string) {
+        return request({
+            url: `${DICT_BASE_URL}/get_word_frequency/`,
+            method: "get",
+            params: {
+                spot_name: spot_name
+            }
+        });
+    }
 }
 
 export default SentimentAPI;
