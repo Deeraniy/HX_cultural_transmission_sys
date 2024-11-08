@@ -9,6 +9,10 @@ const routes = [
     {
         path: '/placeDetail',
         component:() => import('./components/InterestPlace/PlaceDetail.vue'),
+    },
+    {
+        path: '/3d',
+        component:() => import('./components/Three.vue')
     }
 ];
 
