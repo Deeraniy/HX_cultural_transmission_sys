@@ -381,8 +381,8 @@ def generate_report(request):
                 stats['sentiment_counts'][sentiment] = {'count': count, 'percentage': percentage}
                 stats['sentiment_scores'][sentiment] = avg_score
 
-        # 构建提示语
-        prompt = f"我已经完成了{spot_name}景点的情感分析，分析结果如下：\n\n"
+            # 构建提示语
+        prompt = "我已经完成了情感分析，分析结果如下：\n\n"
         for key in sorted(monthly_stats.keys()):
             year, month = key
             stats = monthly_stats[key]
@@ -393,6 +393,7 @@ def generate_report(request):
                 count_info = stats['sentiment_counts'][sentiment]
                 avg_score = stats['sentiment_scores'][sentiment]
                 sentiment_chinese = {'positive': '正面', 'neutral': '中性', 'negative': '负面'}[sentiment]
+                # 仅在评论数大于0时添加描述
                 if count_info['count'] > 0:
                     if count_info['percentage'] == 100:
                         prompt += f"  - {sentiment_chinese}评论占比居多\n"
@@ -401,7 +402,13 @@ def generate_report(request):
                     prompt += f"    - 平均情感得分：{avg_score:.2f}\n"
             prompt += "\n"
 
-        prompt += "请基于以上数据，帮助我生成一份情感分析报告，包括每个月的情感趋势和总体总结，使用幽默的语调。请不要包括改进建议。"
+        # 修改提示语，要求使用幽默的语调，并不包括改进建议
+        prompt += (
+            "请基于以上数据，帮助我生成一份情感分析报告，包括每个月的情感趋势和总体总结，"
+            "使用幽默的语调,并在报告中多使用emoji和颜文字请不要包括改进建议。"
+            "请在总结部分详细分析整体情感趋势，深入探讨可能的原因和影响，多写一些内容。"
+        )
+
 
         # 调用 ZhipuAI 的聊天模型
         client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")
