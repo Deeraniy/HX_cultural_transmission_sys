@@ -25,16 +25,22 @@ pattern = '[\\s\\d,.<>/?:;\'\"[\\]{}()\\|~!\t"@#$%^&*\\-_=+，。\n《》、？�
 
 def lda_analyze(request):
     spot_name = request.GET.get('spot_name')
+    print(spot_name)
     conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys',charset='utf8')
 
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+
+    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    spot_id = cursor.fetchone()['spot_id']
+    print("id名称为",spot_id)
+    
     sql_query = "SELECT content FROM usercomment WHERE spot_id=%s"
+    
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
     comment_list =cursor.fetchall()
-    print(comment_list)
+    # print(comment_list)
 
     data = {
      '回答内容': [comment['content'] for comment in comment_list]  # 假设评论存储在数据库的第一列
@@ -85,12 +91,12 @@ def lda_analyze(request):
     top_words_df = top_words_data_frame(lda, tf_idf_vectorizer, n_top_words)
     top_words_df=top_words_data_frame(lda, tf_idf_vectorizer, n_top_words)
     top_words_array=top_words_df.values
-    print(top_words_array)
+    # print(top_words_array)
     json_data=[]
     for topic_words in top_words_array:
         json_item = process_comments(topic_words)
         json_data.append(json_item)
-    print(json_data)
+    # print(json_data)
     # 保存 n_top_words 个主题词到 csv 文件中
     # top_words_df.to_csv(top_words_csv_path, encoding='utf-8-sig', index=None)
 
@@ -117,11 +123,11 @@ def lda_analyze(request):
         freq = calculate_word_frequency(df['text'].tolist(), topic_words)
         frequency_data.update(freq)
 
-    print(frequency_data)
+    # print(frequency_data)
     keys_list = list(frequency_data.keys())
     values_list = list(frequency_data.values())
     sentiments_json=process_comments(keys_list)
-    print(sentiments_json)
+    # print(sentiments_json)
     data=sentiments_json
     sentiments_list=[result['sentiment'] for result in data]
     result=[]
