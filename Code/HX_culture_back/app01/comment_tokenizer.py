@@ -197,7 +197,7 @@ def get_word_frequency(request):
             FROM token 
             WHERE spot_id = %s 
             ORDER BY count DESC 
-            LIMIT 30 OFFSET 34
+            LIMIT 30 OFFSET 40
         """
         cursor.execute(frequency_sql, (spot_id,))
         words = cursor.fetchall()

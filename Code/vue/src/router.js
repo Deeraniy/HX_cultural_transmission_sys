@@ -13,6 +13,10 @@ const routes = [
     {
         path: '/3d',
         component:() => import('./components/Three.vue')
+    },
+    {
+        path: '/model',
+        component:() => import('./components/MaoZedongSeries.vue')
     }
 ];
 
