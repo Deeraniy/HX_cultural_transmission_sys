@@ -1930,4 +1930,4 @@
 
     $.isTouch = isTouch;
 
-})(jquery);
+})(window.jQuery);
