@@ -43,6 +43,8 @@
           </div>
         </div>
       </div>
+
+      <BookShelf/>
     </div>
 
 
@@ -55,6 +57,7 @@ import {computed, nextTick, onMounted, ref, watch} from 'vue';
 import $ from 'jquery'
 
 import turn from '@/utils/turn'
+import BookShelf from "@/components/FilmLiterature/BookShelf.vue";
 // Carousel 数据
 const carouselData = ref([
   {
@@ -144,6 +147,7 @@ onMounted(() => {
   --el-main-padding:0;
 
 }
+
 .hunan-tourist-attractions {
 
   background-size: cover;
@@ -196,6 +200,7 @@ onMounted(() => {
 
 
 .location-box {
+  font-family: 'HelveticaNeue', serif;
   margin-top: 20px;
   margin-left: 40px;
   margin-right: 20px;
@@ -239,19 +244,23 @@ onMounted(() => {
 
 
 .s-title {
-  font-size: 24px;
+  margin-left: 10px;
+  margin-top: 8px;
+  font-size: 34px;
   font-weight: bold;
   color: #333;
 }
 
 .p {
-  font-size: 16px;
+  margin-left: 10px;
+  font-size: 26px;
   color: #666;
   margin-top: 10px;
 }
 
 .ts {
-  font-size: 14px;
+  margin-left: 10px;
+  font-size: 18px;
   color: #999;
 }
 
