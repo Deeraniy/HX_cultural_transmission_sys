@@ -18,6 +18,10 @@ const routes = [
         path: '/filmLiterature',
         component:() => import('./components/FilmLiterature/FilmLiteratureMain.vue')
     },
+    {
+        path: '/model',
+        component:() => import('./components/MaoZedongSeries.vue')
+    }
 ];
 
 // 创建路由器实例
