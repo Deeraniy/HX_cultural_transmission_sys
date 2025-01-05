@@ -13,7 +13,11 @@ const routes = [
     {
         path: '/3d',
         component:() => import('./components/Three.vue')
-    }
+    },
+    {
+        path: '/filmLiterature',
+        component:() => import('./components/FilmLiterature/FilmLiteratureMain.vue')
+    },
 ];
 
 // 创建路由器实例
