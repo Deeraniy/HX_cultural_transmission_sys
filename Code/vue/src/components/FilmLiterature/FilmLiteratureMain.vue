@@ -15,13 +15,14 @@
           @select="handleSelect"
       >
         <!-- 作品总览菜单项 -->
-        <el-sub-menu index="2">
+        <el-sub-menu index="2" class="horizontal-submenu">
           <template #title>
             作品总览
           </template>
-          <el-menu-item index="2-1">子菜单项 1</el-menu-item>
-          <el-menu-item index="2-2">子菜单项 2</el-menu-item>
-          <el-menu-item index="2-3">子菜单项 3</el-menu-item>
+          <el-menu-item index="2-1">文学</el-menu-item>
+          <el-menu-item index="2-2">古代文学</el-menu-item>
+          <el-menu-item index="2-3">新媒体艺术</el-menu-item>
+          <el-menu-item index="2-4">表演艺术</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="3">知识图谱</el-menu-item>
         <el-menu-item index="4">沉浸式故事体验</el-menu-item>
@@ -42,8 +43,12 @@
         </el-sub-menu>
       </el-menu>
     </div>
+
     <el-main>
-      <FilmLiterature />
+      <!-- 根据 activeIndex 显示不同的组件 -->
+      <FilmLiterature v-if="activeIndex === '2-1'||activeIndex===null" />
+      <PoemDisplay v-if="activeIndex === '2-2'" />
+      <VideoDisplay v-if="activeIndex === '2-3'" />
     </el-main>
   </div>
 </template>
@@ -51,10 +56,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import FilmLiterature from "@/components/FilmLiterature/Literature/FilmLiterature.vue";
+import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
+import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
+// 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
+const activeIndex = ref<'2-1' | '2-2' | 'null' | string>(null);
 
-const activeIndex = ref('2');
+// 处理菜单选择
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
+  activeIndex.value = key;  // 更新选中的菜单项
 };
 </script>
 
@@ -96,6 +106,27 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 .el-popper__arrow {
   display: none !important;
+}
+
+/* 新增的菜单项横向布局样式 */
+.horizontal-submenu .el-menu-item {
+  display: inline-block; /* 让菜单项横向排列 */
+  margin-right: 20px; /* 为子菜单项之间添加间距 */
+}
+
+.horizontal-submenu .el-menu-item:last-child {
+  margin-right: 0; /* 最后一个子项去除右边距 */
+}
+
+.horizontal-submenu .el-sub-menu__title {
+  padding: 0 10px; /* 子菜单标题内边距 */
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 子菜单的弹出框样式 */
+.horizontal-submenu .el-sub-menu__popper {
+  display: none; /* 去除子菜单下拉显示 */
 }
 </style>
 
@@ -145,6 +176,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 .el-menu-item {
   margin-right: 0px;
+  background-color: #B71C1C64 !important;
   color: #fff8f0 !important;
   font-size: 20px;
   font-family: 'HelveticaNeue', serif !important;
@@ -154,12 +186,12 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .el-menu-item.is-active,
 .el-menu-item:hover {
   color: #ffd700 !important;
-  background-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: #B71C1C64 !important;
 }
 
 :deep(.el-sub-menu__title) {
   color: #fff8f0 !important;
-  background-color: transparent !important;
+  background-color: #B71C1C64 !important;
   font-family: 'HelveticaNeue', serif !important;
   font-size: 20px;
   padding: 0 10px;
@@ -176,7 +208,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 :deep(.el-sub-menu__title:hover),
 :deep(.el-sub-menu__title.is-active) {
   color: #ffd700 !important;
-  background-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: #B71C1C64 !important;
 }
 
 :deep(.el-sub-menu) {
