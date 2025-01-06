@@ -1,5 +1,6 @@
 <script setup>
 import router from "@/router.js";
+
 </script>
 
 <template>

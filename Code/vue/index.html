@@ -9,5 +9,16 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <!-- 引入 jQuery -->
+    <!-- 在 public/index.html 中引入 jQuery 和 Turn.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // 确保 jQuery 在全局暴露
+        window.$ = window.jQuery = $;
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.0.0/turn.min.js"></script>
+
+
+
   </body>
 </html>
