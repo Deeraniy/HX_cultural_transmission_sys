@@ -58,14 +58,53 @@ const handleSelect = (key: string, keyPath: string[]) => {
 };
 </script>
 
+<style>
+/* 全局样式覆盖 */
+.el-menu,
+.el-menu--horizontal,
+.el-menu--popup,
+.el-menu--popup-container,
+.el-popper,
+.el-sub-menu__popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.el-menu-item,
+.el-sub-menu,
+.el-sub-menu__title {
+  background: transparent !important;
+}
+
+.el-popper.is-light {
+  background: transparent !important;
+  border: none !important;
+}
+
+.el-menu--popup .el-menu-item,
+.el-menu .el-menu-item {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff8f0 !important;
+}
+
+.el-menu--popup .el-menu-item:hover,
+.el-menu .el-menu-item:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: #ffd700 !important;
+}
+
+.el-popper__arrow {
+  display: none !important;
+}
+</style>
+
 <style scoped>
 @import '@/assets/font/font.css';
 
-/* 样式区域 */
-
 .total {
   display: flex;
-  align-items: flex-end; /* 对齐底部 */
+  align-items: flex-end;
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
@@ -85,11 +124,11 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 .menu-title {
-  transform: translateY(25px); /* 向下移动 25px */
+  transform: translateY(25px);
   font-family: 'HelveticaNeue', serif;
   font-size: 30px;
   color: #fff8f0;
-  margin-right: 510px; /* 给标题和菜单项之间添加间距 */
+  margin-right: 510px;
 }
 
 .el-menu-demo {
@@ -118,9 +157,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* 使用深度选择器进行样式修改 */
-
-:deep .el-sub-menu__title {
+:deep(.el-sub-menu__title) {
   color: #fff8f0 !important;
   background-color: transparent !important;
   font-family: 'HelveticaNeue', serif !important;
@@ -129,37 +166,20 @@ const handleSelect = (key: string, keyPath: string[]) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer; /* 使其看起来像可点击的元素 */
+  cursor: pointer;
 }
 
-/* 去掉箭头 */
-:deep .el-sub-menu__icon-arrow {
+:deep(.el-sub-menu__icon-arrow) {
   display: none !important;
 }
 
-/* 子菜单弹出层的样式 */
-:deep .el-sub-menu__popper {
-  background-color: transparent !important; /* 子菜单弹出层背景透明 */
-  display: flex !important;
-  flex-direction: row !important;
-  padding: 0 !important;
-}
-
-/* 子菜单项的背景设置为透明 */
-:deep .el-sub-menu__popper .el-menu-item {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-/* 悬浮效果 */
-:deep .el-sub-menu__title:hover,
-:deep .el-sub-menu__title.is-active {
+:deep(.el-sub-menu__title:hover),
+:deep(.el-sub-menu__title.is-active) {
   color: #ffd700 !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* 子菜单展开时的样式 */
-:deep .el-sub-menu {
-  background-color: rgba(255, 255, 255, 0.2) !important; /* 确保整个子菜单背景透明 */
+:deep(.el-sub-menu) {
+  background-color: transparent !important;
 }
-
 </style>

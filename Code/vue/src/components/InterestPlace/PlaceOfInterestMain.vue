@@ -1,10 +1,7 @@
 <template>
   <div class="whole">
     <div class="total">
-      <!-- 固定显示的标题，不作为菜单项 -->
       <h2 class="fixed-title">名胜古迹分析界面</h2>
-
-      <!-- 菜单区域 -->
       <el-menu
           :default-active="activeIndex"
           class="el-menu-demo"
@@ -37,12 +34,10 @@
       <PlaceOfInterest/>
     </el-main>
   </div>
-
-
 </template>
 
 <script lang="ts" setup>
-import { ref,onMounted } from 'vue'
+import { ref } from 'vue'
 import PlaceOfInterest from "@/components/InterestPlace/PlaceOfInterest.vue";
 
 const activeIndex = ref('2')
@@ -51,69 +46,136 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 </script>
 
+<style>
+/* 全局样式覆盖 */
+.el-menu,
+.el-menu--horizontal,
+.el-menu--popup,
+.el-menu--popup-container,
+.el-popper,
+.el-sub-menu__popper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.el-menu-item,
+.el-sub-menu,
+.el-sub-menu__title {
+  background: transparent !important;
+}
+
+.el-popper.is-light {
+  background: transparent !important;
+  border: none !important;
+}
+
+.el-menu--popup .el-menu-item,
+.el-menu .el-menu-item {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #fff8f0 !important;
+  min-width: 120px !important;
+  padding: 0 15px !important;
+}
+
+.el-menu--popup .el-menu-item:hover,
+.el-menu .el-menu-item:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: #ffd700 !important;
+}
+
+.el-popper__arrow {
+  display: none !important;
+}
+
+/* 控制菜单宽度 */
+.el-menu--horizontal > .el-menu-item,
+.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
+  min-width: auto !important;
+  padding: 0 15px !important;
+}
+
+.el-menu--popup {
+  min-width: 120px !important;
+}
+</style>
+
 <style scoped>
 @import '@/assets/font/font.css';
-.total{
+
+.total {
+  display: flex;
+  align-items: center; /* 修改为center以便更好地对齐 */
+  justify-content: space-between; /* 添加这个以确保标题和菜单的间距 */
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
-  border-bottom-left-radius: 30px; /* 左下圆角 */
-  border-bottom-right-radius: 30px; /* 右下圆角 */
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  padding: 0 20px; /* 添加内边距 */
 }
-.whole{
+
+.whole {
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   background-size: cover;
   background-position: center;
 }
+
 .el-main {
   padding: 0;
 }
-/* 固定标题样式 */
+
 .fixed-title {
   color: #fff8f0;
   font-family: 'HelveticaNeue', serif;
   font-size: 45px;
-  margin: 0 16px;
+  margin: 0;
+  white-space: nowrap; /* 防止标题换行 */
 }
 
-/* 菜单样式 */
 .el-menu-demo {
-  display: flex; /* 使用 flex 布局 */
-  justify-content: flex-end;   /* 菜单项靠右对齐 */
-  background-color: transparent !important; /* 将菜单背景设为透明 */
-  box-shadow: none; /* 移除默认阴影（如果有的话） */
-  padding-right: 20px;
-  border-bottom-left-radius: 30px; /* 左下圆角 */
-  border-bottom-right-radius: 30px; /* 右下圆角 */
+  display: flex;
+  justify-content: flex-end;
+  background-color: transparent !important;
   box-shadow: none;
+  border: none;
+  max-width: fit-content;
+  margin-left: auto;
 }
 
-/* 覆盖菜单项文字样式 */
 .el-menu-item {
   color: #fff8f0 !important;
   font-size: 20px;
   font-family: 'HelveticaNeue', serif !important;
+  padding: 0 15px !important;
+  min-width: auto !important;
 }
 
-/* 选中和悬停菜单项的颜色和背景 */
 .el-menu-item.is-active,
 .el-menu-item:hover {
-  color: #ffd700 !important; /* 设置选中和悬停状态的文字颜色为金色 */
-  background-color: rgba(255, 255, 255, 0.2) !important; /* 透明度为20%的淡色背景 */
-  border-bottom: 2px solid #ffd700; /* 添加选中和悬停菜单项的下边框 */
-}
-
-/* 覆盖“工作台”标题样式 */
-.el-sub-menu >>> .el-sub-menu__title {
-  color: #fff8f0 !important;
-  font-family: 'HelveticaNeue', serif !important;
-}
-
-/* 子菜单的悬停和选中样式 */
-.el-sub-menu__title:hover,
-.el-sub-menu__title.is-active {
   color: #ffd700 !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
+  border-bottom: 2px solid #ffd700;
+}
+
+:deep(.el-sub-menu__title) {
+  color: #fff8f0 !important;
+  background-color: transparent !important;
+  font-family: 'HelveticaNeue', serif !important;
+  padding: 0 15px !important;
+  min-width: auto !important;
+}
+
+:deep(.el-sub-menu__title:hover),
+:deep(.el-sub-menu__title.is-active) {
+  color: #ffd700 !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 控制子菜单宽度 */
+:deep(.el-menu--popup .el-menu-item) {
+  min-width: 120px !important;
+  padding: 0 15px !important;
 }
 </style>
