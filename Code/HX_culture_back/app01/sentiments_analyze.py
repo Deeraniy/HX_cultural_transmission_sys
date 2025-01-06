@@ -23,13 +23,18 @@ distilled_student_sentiment_classifier = pipeline(
 def get_sentiment_label(text):
     """获取文本的情感标签和得分"""
     try:
+        # 如果文本过长，截取前512个字符
+        max_length = 512
+        if len(text) > max_length:
+            text = text[:max_length]
+            
         results = distilled_student_sentiment_classifier(text)[0]  # 获取分析结果
         # 找出得分最高的标签
         max_score_label = max(results, key=lambda x: x['score'])
         return max_score_label['label'], max_score_label['score']
     except Exception as e:
         logger.error(f"处理文本时出错: {text}. 错误信息: {str(e)}")
-        return 'error', 0.0
+        return 'neutral', 0.5  # 对于处理失败的情况返回中性评价
 
 def process_comments(comments_list):
     """处理评论列表并返回带标签的DataFrame"""
@@ -64,39 +69,79 @@ def sentiments_analyze(request):
 
 
 def sentiments_all():
-    """对所有评论进行情感分析并更新数据库"""
+    """对所有文学评论进行情感分析并更新数据库"""
     try:
-        # 建立数据库连接
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
-                             db='hx_cultural_transmission_sys', charset='utf8')
+        # 建立数据库连接，添加超时设置
+        conn = pymysql.connect(
+            host='120.233.26.237', 
+            port=15320, 
+            user='root', 
+            passwd='kissme77',
+            db='hx_cultural_transmission_sys', 
+            charset='utf8',
+            connect_timeout=10,        # 连接超时
+            read_timeout=30,           # 读取超时
+            write_timeout=30,          # 写入超时
+            autocommit=True            # 自动提交
+        )
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
+        # 确保开始前没有未完成的事务
+        conn.rollback()
+        
         # 获取所有评论
-        cursor.execute("SELECT token_id, token_name FROM token")
+        cursor.execute("SELECT comment_id, comment_text FROM user_comment_literature WHERE sentiment IS NULL")
         comments = cursor.fetchall()
         
-        # 逐条处理评论
+        processed_count = 0
+        
         for comment in comments:
-            sentiment_label, confidence = get_sentiment_label(comment['token_name'])
-            logging.info(f"评论ID: {comment['token_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
-            # 更新数据库
-            update_sql = """
-                UPDATE token 
-                SET sentiment = %s, sentiment_confidence = %s 
-                WHERE token_id = %s
-            """
-            cursor.execute(update_sql, (sentiment_label, confidence, comment['token_id']))
+            try:
+                sentiment_label, confidence = get_sentiment_label(comment['comment_text'])
+                logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
+                
+                # 更新数据库
+                update_sql = """
+                    UPDATE user_comment_literature 
+                    SET sentiment = %s, sentiment_confidence = %s 
+                    WHERE comment_id = %s
+                """
+                cursor.execute(update_sql, (sentiment_label, confidence, comment['comment_id']))
+                processed_count += 1
+                
+                if processed_count % 10 == 0:  # 每10条记录输出一次进度
+                    logger.info(f"已处理 {processed_count} 条评论")
+                    
+            except pymysql.Error as e:
+                logger.error(f"数据库操作出错 (评论ID: {comment['comment_id']}): {str(e)}")
+                # 尝试重新连接
+                if not conn.open:
+                    conn = pymysql.connect(
+                        host='120.233.26.237', 
+                        port=15320, 
+                        user='root', 
+                        passwd='kissme77',
+                        db='hx_cultural_transmission_sys', 
+                        charset='utf8',
+                        connect_timeout=10,
+                        read_timeout=30,
+                        write_timeout=30,
+                        autocommit=True
+                    )
+                    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+            except Exception as e:
+                logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
+                continue
             
-        # 提交更改
-        conn.commit()
-        logger.info("所有评论的情感分析已完成并更新到数据库")
+        logger.info(f"所有文学评论的情感分析已完成，共处理 {processed_count} 条评论")
         
     except Exception as e:
         logger.error(f"情感分析过程中出错: {str(e)}")
-        conn.rollback()
     finally:
-        cursor.close()
-        conn.close()
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals() and conn.open:
+            conn.close()
     
 
 def sentiment_month_analyze(sentiments):
