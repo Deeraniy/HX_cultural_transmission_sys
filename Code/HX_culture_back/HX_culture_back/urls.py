@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^preview/',preview.preview),
 
     url(r'^lda_analyze/',lda_topic_extractor.lda_analyze),
+    url(r'^lda_analyze_literature/',lda_topic_extractor.lda_analyze_literature),
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
     url(r'^get_comment/',comment.get_comment_list),
     url(r'^sentiments_analyze/',sentiments_analyze.sentiments_analyze),
