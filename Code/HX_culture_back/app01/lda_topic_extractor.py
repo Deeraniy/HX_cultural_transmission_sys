@@ -3,24 +3,38 @@ import pandas as pd
 import jieba
 import re
 import pymysql
+import logging
 from django.http import JsonResponse
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 from .sentiments_analyze import process_comments
-from app01.sentiments_analyze import process_comments
-import json
 
+# 配置日志
+logger = logging.getLogger(__name__)
 
+def top_words_data_frame(model: LatentDirichletAllocation, 
+                        tf_idf_vectorizer: TfidfVectorizer, 
+                        n_top_words: int) -> pd.DataFrame:
+    """获取每个主题的前N个主题词"""
+    rows = []
+    feature_names = tf_idf_vectorizer.get_feature_names_out()
+    for topic in model.components_:
+        top_words = [feature_names[i] for i in topic.argsort()[:-n_top_words - 1:-1]]
+        rows.append(top_words)
+    columns = [f'topic word {i+1}' for i in range(n_top_words)]
+    df = pd.DataFrame(rows, columns=columns)
+    return df
 
-# 输出主题词的文件路径
-top_words_csv_path = './top-topic-words.csv'
-# 输出各文档所属主题的文件路径
-predict_topic_csv_path = './document-distribution.csv'
-# 选定的主题数
-n_topics = 5
-# 要输出的每个主题的前 n_top_words 个主题词数
-n_top_words = 5
-# 去除无意义字符的正则表达式
+def calculate_word_frequency(comments, topic_words):
+    """计算主题词在评论中的出现频率"""
+    word_freq = {}
+    for word in topic_words:
+        word_freq[word] = sum(comment.count(word) for comment in comments)
+    return word_freq
+
+# 其他配置参数
+n_topics = 5  # 主题数量
+n_top_words = 5  # 每个主题的主题词数量
 pattern = '[\\s\\d,.<>/?:;\'\"[\\]{}()\\|~!\t"@#$%^&*\\-_=+，。\n《》、？：；""''｛｝【】（）…￥！—┄－]+'
 
 def lda_analyze(request):
@@ -74,19 +88,6 @@ def lda_analyze(request):
     # 使用 tf_idf 语料使用 lda 模型
     lda.fit(tf_idf)
 
-    def top_words_data_frame(model: LatentDirichletAllocation, 
-                            tf_idf_vectorizer: TfidfVectorizer, 
-                            n_top_words: int) -> pd.DataFrame:
-        rows = []
-        feature_names = tf_idf_vectorizer.get_feature_names_out()
-        for topic in model.components_:
-            top_words = [feature_names[i] for i in topic.argsort()[:-n_top_words - 1:-1]]
-            rows.append(top_words)
-        columns = [f'topic word {i+1}' for i in range(n_top_words)]
-        df = pd.DataFrame(rows, columns=columns)
-
-        return df
-
     # 计算 n_top_words 个主题词
     top_words_df = top_words_data_frame(lda, tf_idf_vectorizer, n_top_words)
     top_words_df=top_words_data_frame(lda, tf_idf_vectorizer, n_top_words)
@@ -137,3 +138,130 @@ def lda_analyze(request):
     # predict_df.to_csv(predict_topic_csv_path, encoding='utf-8-sig', index=None)
     
     return JsonResponse(result,safe=False)
+
+def lda_analyze_literature(request):
+    """对文学评论进行LDA主题分析"""
+    try:
+        liter_name = request.GET.get('liter_name')
+        if not liter_name:
+            return JsonResponse({
+                'status': 'error',
+                'message': '文学作品名称不能为空'
+            }, status=400)
+
+        # 数据库连接
+        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+                             db='hx_cultural_transmission_sys', charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+        # 获取文学作品ID
+        cursor.execute("SELECT liter_id FROM literature WHERE liter_name=%s", (liter_name,))
+        result = cursor.fetchone()
+        if not result:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'未找到文学作品: {liter_name}'
+            }, status=404)
+        
+        liter_id = result['liter_id']
+
+        # 获取该文学作品的所有评论
+        sql_query = "SELECT comment_text FROM user_comment_literature WHERE liter_id=%s"
+        cursor.execute(sql_query, (liter_id,))
+        comment_list = cursor.fetchall()
+
+        if not comment_list:
+            return JsonResponse({
+                'status': 'success',
+                'message': '该文学作品暂无评论',
+                'data': []
+            })
+
+        # 准备数据
+        data = {
+            '评论内容': [comment['comment_text'] for comment in comment_list]
+        }
+
+        df = pd.DataFrame(data).drop_duplicates().rename(columns={
+            '评论内容': 'text'
+        })
+
+        # 设置停用词
+        stop_words_set = set(['你', '我'])
+        
+        # 文本预处理：去重、去缺失、分词
+        df['cut'] = (
+            df['text']
+            .apply(lambda x: str(x))
+            .apply(lambda x: re.sub(pattern, ' ', x))
+            .apply(lambda x: " ".join([word for word in jieba.lcut(x) if word not in stop_words_set]))
+        )
+
+        # 构造 tf-idf
+        tf_idf_vectorizer = TfidfVectorizer()
+        tf_idf = tf_idf_vectorizer.fit_transform(df['cut'])
+
+        # LDA 模型
+        lda = LatentDirichletAllocation(
+            n_components=n_topics,
+            max_iter=50,
+            learning_method='online',
+            learning_offset=50,
+            random_state=0
+        )
+
+        # 训练 LDA 模型
+        lda.fit(tf_idf)
+
+        # 获取主题词
+        top_words_df = top_words_data_frame(lda, tf_idf_vectorizer, n_top_words)
+        top_words_array = top_words_df.values
+
+        # 对主题词进行情感分析
+        json_data = []
+        for topic_words in top_words_array:
+            json_item = process_comments(topic_words)
+            json_data.append(json_item)
+
+        # 计算词频
+        X = tf_idf.toarray()
+        frequency_data = {}
+        for topic_words in top_words_array:
+            freq = calculate_word_frequency(df['text'].tolist(), topic_words)
+            frequency_data.update(freq)
+
+        # 准备返回结果
+        keys_list = list(frequency_data.keys())
+        values_list = list(frequency_data.values())
+        sentiments_json = process_comments(keys_list)
+        data = sentiments_json
+        sentiments_list = [result['sentiment'] for result in data]
+        
+        result = []
+        for key, value, sentiment in zip(keys_list, values_list, sentiments_list):
+            result.append({
+                'topic': key,
+                'frequency': value,
+                'sentiment': sentiment
+            })
+        
+        return JsonResponse({
+            'status': 'success',
+            'data': result,
+            'liter_info': {
+                'name': liter_name,
+                'id': liter_id
+            }
+        })
+
+    except Exception as e:
+        logger.error(f"处理文学作品 {liter_name} 的主题分析时出错: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
