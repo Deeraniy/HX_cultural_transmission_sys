@@ -1,8 +1,10 @@
 <template>
   <div class="whole">
     <div class="total">
-      <!-- 固定显示的标题，不作为菜单项 -->
-      <h2 class="fixed-title">影视文学分析界面</h2>
+      <!-- 左侧大标题 -->
+      <div class="menu-title">
+        <h2>影视文学分析</h2>
+      </div>
 
       <!-- 菜单区域 -->
       <el-menu
@@ -12,11 +14,18 @@
           :ellipsis="false"
           @select="handleSelect"
       >
-        <el-menu-item index="2">情感分析与预测</el-menu-item>
-        <el-menu-item index="3">传播策略生成</el-menu-item>
-        <el-menu-item index="4">风景名胜3D展示</el-menu-item>
-        <el-menu-item index="5">社交分享信息展示</el-menu-item>
-        <el-menu-item index="6">沉浸式故事叙述</el-menu-item>
+        <!-- 作品总览菜单项 -->
+        <el-sub-menu index="2">
+          <template #title>
+            作品总览
+          </template>
+          <el-menu-item index="2-1">子菜单项 1</el-menu-item>
+          <el-menu-item index="2-2">子菜单项 2</el-menu-item>
+          <el-menu-item index="2-3">子菜单项 3</el-menu-item>
+        </el-sub-menu>
+        <el-menu-item index="3">知识图谱</el-menu-item>
+        <el-menu-item index="4">沉浸式故事体验</el-menu-item>
+        <el-menu-item index="5">全球传播情况</el-menu-item>
         <el-sub-menu index="1">
           <template #title>
             <span class="work">工作台</span>
@@ -34,86 +43,123 @@
       </el-menu>
     </div>
     <el-main>
-      <FilmLiterature/>
+      <FilmLiterature />
     </el-main>
   </div>
-
-
 </template>
 
 <script lang="ts" setup>
-import { ref,onMounted } from 'vue'
-import FilmLiterature from "@/components/FilmLiterature/filmLiterature.vue";
+import { ref } from 'vue';
+import FilmLiterature from "@/components/FilmLiterature/Literature/FilmLiterature.vue";
 
-const activeIndex = ref('2')
+const activeIndex = ref('2');
 const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
+  console.log(key, keyPath);
+};
 </script>
 
 <style scoped>
 @import '@/assets/font/font.css';
-.total{
+
+/* 样式区域 */
+
+.total {
+  display: flex;
+  align-items: flex-end; /* 对齐底部 */
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
-  border-bottom-left-radius: 30px; /* 左下圆角 */
-  border-bottom-right-radius: 30px; /* 右下圆角 */
+  padding-left: 20px;
 }
-.whole{
+
+.whole {
+  margin-top: -70px;
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   background-size: cover;
   background-position: center;
 }
+
 .el-main {
   padding: 0;
 }
-/* 固定标题样式 */
-.fixed-title {
-  color: #fff8f0;
+
+.menu-title {
+  transform: translateY(25px); /* 向下移动 25px */
   font-family: 'HelveticaNeue', serif;
-  font-size: 45px;
-  margin: 0 16px;
+  font-size: 30px;
+  color: #fff8f0;
+  margin-right: 510px; /* 给标题和菜单项之间添加间距 */
 }
 
-/* 菜单样式 */
 .el-menu-demo {
-  display: flex; /* 使用 flex 布局 */
-  justify-content: flex-end;   /* 菜单项靠右对齐 */
-  background-color: transparent !important; /* 将菜单背景设为透明 */
-  box-shadow: none; /* 移除默认阴影（如果有的话） */
-  padding-right: 20px;
-  border-bottom-left-radius: 30px; /* 左下圆角 */
-  border-bottom-right-radius: 30px; /* 右下圆角 */
+  margin-right: 0px;
+  display: flex;
+  justify-content: flex-end;
+  background-color: transparent !important;
   box-shadow: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  border-radius: 0;
 }
 
-/* 覆盖菜单项文字样式 */
 .el-menu-item {
+  margin-right: 0px;
   color: #fff8f0 !important;
   font-size: 20px;
   font-family: 'HelveticaNeue', serif !important;
+  border-bottom: none !important;
 }
 
-/* 选中和悬停菜单项的颜色和背景 */
 .el-menu-item.is-active,
 .el-menu-item:hover {
-  color: #ffd700 !important; /* 设置选中和悬停状态的文字颜色为金色 */
-  background-color: rgba(255, 255, 255, 0.2) !important; /* 透明度为20%的淡色背景 */
-  border-bottom: 2px solid #ffd700; /* 添加选中和悬停菜单项的下边框 */
-}
-
-/* 覆盖“工作台”标题样式 */
-.el-sub-menu >>> .el-sub-menu__title {
-  color: #fff8f0 !important;
-  font-family: 'HelveticaNeue', serif !important;
-}
-
-/* 子菜单的悬停和选中样式 */
-.el-sub-menu__title:hover,
-.el-sub-menu__title.is-active {
   color: #ffd700 !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
 }
+
+/* 使用深度选择器进行样式修改 */
+
+:deep .el-sub-menu__title {
+  color: #fff8f0 !important;
+  background-color: transparent !important;
+  font-family: 'HelveticaNeue', serif !important;
+  font-size: 20px;
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer; /* 使其看起来像可点击的元素 */
+}
+
+/* 去掉箭头 */
+:deep .el-sub-menu__icon-arrow {
+  display: none !important;
+}
+
+/* 子菜单弹出层的样式 */
+:deep .el-sub-menu__popper {
+  background-color: transparent !important; /* 子菜单弹出层背景透明 */
+  display: flex !important;
+  flex-direction: row !important;
+  padding: 0 !important;
+}
+
+/* 子菜单项的背景设置为透明 */
+:deep .el-sub-menu__popper .el-menu-item {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 悬浮效果 */
+:deep .el-sub-menu__title:hover,
+:deep .el-sub-menu__title.is-active {
+  color: #ffd700 !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 子菜单展开时的样式 */
+:deep .el-sub-menu {
+  background-color: rgba(255, 255, 255, 0.2) !important; /* 确保整个子菜单背景透明 */
+}
+
 </style>

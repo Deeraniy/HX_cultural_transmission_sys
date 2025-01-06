@@ -141,7 +141,7 @@ const onBookClick = (shelfIndex, rowIndex, bookIndex) => {
 <style scoped>
 @import '@/assets/font/font.css';
 .bookshelf-container {
-  margin-top: 80px;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   gap: 40px; /* 每个书架之间的间距 */
@@ -192,7 +192,10 @@ const onBookClick = (shelfIndex, rowIndex, bookIndex) => {
 
 .pagination button {
   font-family: 'HelveticaNeue', serif;
-  margin: 0 10px;
+  margin-top: -10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
   padding: 10px 20px;
   background-color: #b71c1c;
   color: white;
