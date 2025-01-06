@@ -7,12 +7,20 @@ const routes = [
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
     {
+        path: '/index',
+        component:() => import('./components/index.vue'),
+    },
+    {
         path: '/placeDetail',
         component:() => import('./components/InterestPlace/PlaceDetail.vue'),
     },
     {
         path: '/3d',
         component:() => import('./components/Three.vue')
+    },
+    {
+        path: '/filmLiterature',
+        component:() => import('./components/FilmLiterature/FilmLiteratureMain.vue')
     },
     {
         path: '/model',
