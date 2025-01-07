@@ -34,7 +34,102 @@
       </el-menu>
     </div>
     <el-main>
+      <div style="display: flex;height: 100% ">
+        <div style="flex-grow: 1; justify-content: center; align-items: center;width: 100%">
+          <div>
+            我是文化作品名称
+          </div>
 
+          <div class="评分图">
+            <div>
+              我是评分图
+            </div>
+            <div>
+
+
+            </div>
+
+          </div>
+          <div class="词云图">
+            <div>
+              我是词云图
+            </div>
+            <div>
+
+
+            </div>
+
+          </div>
+          <div class="情感占比图">
+            <div>
+              我是情感占比图
+            </div>
+            <div>
+
+
+            </div>
+
+          </div>
+          <div class="情感变化趋势图">
+            <div>
+              我是情感变化趋势图
+            </div>
+            <div>
+
+
+            </div>
+
+          </div>
+          <div class="情感变化趋势图">
+            <div>
+              我是情感变化趋势图
+            </div>
+            <div>
+
+
+            </div>
+
+          </div>
+
+
+
+
+
+
+
+
+
+        </div>
+        <div style="flex-grow: 1; display: flex; justify-content: flex-end; align-items: center;width: 500px">
+<!--          轮盘菜单-->
+          <div style="border-top-left-radius: 1000px; border-bottom-left-radius: 1000px; position: relative; display: flex; flex-direction: column; align-items: flex-end; margin-top: 10px; width: 300px; background-image: url(src/assets/folkCustom/纹理6.jpg);">
+            <div style="margin-bottom: 15px; text-align: right; margin-right: 5px;">
+              <img src="@/assets/folkCustom/用户趋势.png" alt="" style="width: 40px; height: 40px;"/>
+              <p style="margin: 5px 0 0; font-size: 14px; color: #333;">菜单1</p>
+            </div>
+            <div style="margin-bottom: 15px; text-align: right; margin-right: 100px;">
+              <img src="@/assets/folkCustom/服务评分模板.png" alt="" style="width: 40px; height: 40px;"/>
+              <p style="margin: 5px 0 0; font-size: 14px; color: #333;">菜单2</p>
+            </div>
+            <div style="margin-bottom: 15px; text-align: right; margin-right: 200px;">
+              <img src="@/assets/folkCustom/智能分析＊.png" alt="" style="width: 40px; height: 40px;"/>
+              <p style="margin: 5px 0 0; font-size: 14px; color: #333;">菜单3</p>
+            </div>
+            <div style="margin-bottom: 15px; text-align: right; margin-right: 200px; margin-top: 30px;">
+              <img src="@/assets/folkCustom/词云图.png" alt="" style="width: 40px; height: 40px;"/>
+              <p style="margin: 5px 0 0; font-size: 14px; color: #333;">菜单4</p>
+            </div>
+            <div style="margin-bottom: 15px; text-align: right; margin-right: 100px; margin-top: 20px;">
+              <img src="@/assets/folkCustom/饼图.png" alt="" style="width: 40px; height: 40px;"/>
+              <p style="margin: 5px 0 0; font-size: 14px; color: #333;">菜单5</p>
+            </div>
+            <div style="margin-bottom: 15px; text-align: right; margin-right: 5px;">
+              <img src="@/assets/folkCustom/评论.png" alt="" style="width: 40px; height: 40px;"/>
+              <p style="margin: 5px 0 0; font-size: 14px; color: #333;">菜单6</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </el-main>
   </div>
 
