@@ -25,6 +25,18 @@ const routes = [
     {
         path: '/model',
         component:() => import('./components/MaoZedongSeries.vue')
+    },
+    {
+        path: '/folkCustom',
+        component:() => import('./components/FolkCustom/FolkCustomMain.vue')
+    },
+    {
+        path: '/folkCustomInfluence',
+        component:() => import('./components/FolkCustom/FolkCustomInfluence.vue')
+    }
+    ,{
+        path: '/folkSentimentAnalyze',
+        component:() => import('./components/FolkCustom/FolkSentimentAnalyze.vue')
     }
 ];
 
