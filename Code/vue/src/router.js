@@ -25,6 +25,10 @@ const routes = [
     {
         path: '/model',
         component:() => import('./components/MaoZedongSeries.vue')
+    },
+    {
+        path:'/page',
+        component:() => import('./components/FilmLiterature/Literature/PageFlip.vue')
     }
 ];
 
