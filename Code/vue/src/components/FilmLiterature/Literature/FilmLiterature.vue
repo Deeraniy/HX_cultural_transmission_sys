@@ -2,6 +2,11 @@
   <el-main>
     <div class="hunan-tourist-attractions">
       <div class="attraction-container">
+        <!-- 上方的淡红色条 -->
+        <div class="scroll-bar">
+          <span class="scroll-bar-text">2024美国总统hello8</span>
+          <span class="scroll-bar-text">2025美国总统hello9</span>
+        </div>
         <!-- 图片轮播（垂直方向） -->
         <el-carousel height="400px" direction="vertical" :autoplay="false" v-model:active-index="currentIndex" @change="onCarouselChange">
           <el-carousel-item v-for="(item, index) in carouselData" :key="index">
@@ -24,8 +29,6 @@
           </template>
         </el-carousel>
 
-
-
         <!-- 右侧详情区域 -->
         <div class="location-box">
           <div class="s-title w">
@@ -42,12 +45,11 @@
             <p>开本：{{ carouselData[currentIndex]?.format }}</p>
           </div>
         </div>
+
       </div>
 
       <BookShelf/>
     </div>
-
-
   </el-main>
 </template>
 
@@ -57,78 +59,27 @@ import {computed, nextTick, onMounted, ref, watch} from 'vue';
 import $ from 'jquery'
 
 import turn from '@/utils/turn'
-import BookShelf from "@/components/FilmLiterature/BookShelf.vue";
-// Carousel 数据
-const carouselData = ref([
-  {
-    title: '故宫日历·2025年·汉英对照',
-    description: '2025年，乙巳年，生肖蛇，适逢故宫博物院建院一百周年。汉英对照版日历通过文物展示故宫百年来的发展历程。',
-    image: 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png',
-    editor: '陈丽华',
-    isbn: '978-7-5134-1668-9',
-    publisher: '故宫出版社',
-    price: '96元',
-    edition: '2024年11月第1版',
-    prints: '16',
-    format: '48开'
-  },
-  {
-    title: '汉代玉器研究',
-    description: '汉代是玉器发展史中的繁荣时代，玉器艺术进入高峰。',
-    image: 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉代玉器研究-FXpuCWAOK260.png',
-    editor: '徐琳',
-    isbn: '978-7-5134-1614-6',
-    publisher: '故宫出版社',
-    price: '236元',
-    edition: '2024年9月第1版',
-    prints: '34',
-    format: '16开'
-  },
-  {
-    title: '清代大运彩瓷（全二册）',
-    description: '清代大运瓷器是御窑厂每年烧制并送往清宫的基本任务。',
-    image: 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546清代大运彩瓷-QWGTJeobg260.png',
-    editor: '故宫博物院',
-    isbn: '978-7-5134-1653-5',
-    publisher: '故宫出版社',
-    price: '880元',
-    edition: '2024年8月第1版',
-    prints: '66.5',
-    format: '12开'
-  }
-]);
-const imageArray = carouselData.value.map(item => item.image);
-console.log(imageArray);
+import BookShelf from "@/components/FilmLiterature/Literature/BookShelf.vue";
+// 直接导入 JSON 文件
+import bookData from '@/json/Book.json';
+console.log(bookData.title)
+const carouselData = bookData
 
 const currentIndex = ref(0);
+
 // 监听 currentIndex 的变化
 watch(currentIndex, (newIndex) => {
   nextTick(() => {
     console.log("currentIndex updated to:", newIndex);
   });
 });
+
 // 轮播变化时手动更新
 const onCarouselChange = (index: number) => {
   currentIndex.value = index;
   console.log("Carousel changed to index:", index);
 };
-// 切换上一张
-const prevSlide = () => {
-  if (currentIndex.value > 0) {
-    currentIndex.value -= 1;
-  } else {
-    currentIndex.value = carouselData.value.length - 1;
-  }
-};
 
-// 切换下一张
-const nextSlide = () => {
-  if (currentIndex.value < carouselData.value.length - 1) {
-    currentIndex.value += 1;
-  } else {
-    currentIndex.value = 0;
-  }
-};
 onMounted(() => {
   nextTick(() => {
     console.log("Mounted, currentIndex:", currentIndex.value);
@@ -144,83 +95,95 @@ onMounted(() => {
 }
 
 .el-main {
-  --el-main-padding:0;
-
+  --el-main-padding: 0;
 }
 
 .hunan-tourist-attractions {
-
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
+
 .attraction-container {
-  display: flex;
-  align-items: flex-start; /* 图片和文本在一行显示 */
-  justify-content: space-between;
+  height: 500px;
+  position: relative;
+  display: flex; /* 使用 flex 布局 */
+  flex-direction: row; /* 保证图片和文字并排显示 */
   width: 100%;
+  //height: 100%; /* 保证容器占满屏幕 */
+  background-image: url('@/assets/BookB.png');
 }
 
-.hunan-tourist-attractions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  min-height: 100vh;
-  padding: 10px;
-
+.attraction-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2); /* 半透明白色，透明度可调 */
+  z-index: -1; /* 确保覆盖层在背景图和文本下面 */
 }
 
-
-
-.centered-text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-
-
-.fancy-name {
-  font-family: 'ZhuanTi', serif; /* 使用纂体字体 */
-  font-size: 13px; /* 根据需要调整字体大小 */
-  color: #555; /* 设置字体颜色 */
-}
-
-
-.image-carousel {
-  width: 500px;
-  height: 500px; /* 允许容器根据内容自适应高度 */
-  margin-right: 20px;
+.scroll-bar {
+  width: 100%;
+  height: 40px; /* 增加滚动条高度 */
+  background-color: #B71C1C64; /* 淡红色 */
+  position: absolute;
+  top: 0; /* 确保它固定在容器顶部 */
+  z-index: 10; /* 保证滚动条位于最上层 */
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #fff;
+  font-size: 18px; /* 调整字体大小 */
+  overflow: hidden; /* 超出部分隐藏 */
+}
+
+.scroll-bar-text {
+  font-family: 'HelveticaNeue', serif;
+  white-space: nowrap; /* 防止文本换行 */
+  display: inline-block;
+  padding-right: 100%; /* 保证文本宽度足够 */
+  animation: scroll-text 20s linear infinite; /* 文字滚动动画 */
+}
+
+/* 滚动条的动画效果 */
+@keyframes scroll-text {
+  0% {
+    transform: translateX(100%); /* 初始时，文本在右侧外面 */
+  }
+  100% {
+    transform: translateX(-100%); /* 最终，文本滚动到左侧外面 */
+  }
 }
 
 
 .location-box {
+  margin-top: 60px;
   font-family: 'HelveticaNeue', serif;
-  margin-top: 20px;
   margin-left: 40px;
   margin-right: 20px;
   width: 650px;
   height: 320px; /* 设置固定高度 */
-  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  overflow-y: auto; /* 内容超出时显示滚动条 */
+
+  /* 去掉背景色 */
+  background-color: transparent; /* 完全透明的背景 */
+
+  /* 去掉边框和阴影 */
+  border: none; /* 去除边框 */
+  box-shadow: none; /* 去除阴影 */
 
   /* 设置右下角背景图片 */
-  background-image: url('@/assets/水墨小人.png');
+  //background-image: url('@/assets/水墨小人.png');
   background-position: right 10px bottom -10px; /* 向下偏移一点 */
-  background-repeat: no-repeat;     /* 不重复显示背景 */
-  background-size: 200px 250px;     /* 将背景图大小调整为 100px */
-  //opacity: 0.3;
+  background-repeat: no-repeat; /* 不重复显示背景 */
+  background-size: 200px 250px; /* 将背景图大小调整为 100px */
+
+  /* 保证卡片的内容不受影响，保持完全不透明 */
+  opacity: 1; /* 保证内容不透明 */
 }
-
-
 
 .carousel-image-container {
   width: 100%;
@@ -242,26 +205,25 @@ onMounted(() => {
   object-fit: cover; /* 保证图片不变形，填充整个容器 */
 }
 
-
 .s-title {
   margin-left: 10px;
   margin-top: 8px;
   font-size: 34px;
   font-weight: bold;
-  color: #333;
+  color: #fff8f0;
 }
 
 .p {
   margin-left: 10px;
   font-size: 26px;
-  color: #666;
+  color: #fff8f0;
   margin-top: 10px;
 }
 
 .ts {
   margin-left: 10px;
   font-size: 18px;
-  color: #999;
+  color: #fff8f0;
 }
 
 /* 使用 :deep() 来深度修改 el-carousel 的垂直指示器样式 */
@@ -279,9 +241,9 @@ onMounted(() => {
   background-color: #b71c1c; /* 激活时的颜色 */
 }
 
-
-/* 样式修改 */
 .el-carousel {
+  margin-top: 60px;
+  margin-bottom: 20px;
   margin-left: 20px;
   width: 500px;
   height: auto;
