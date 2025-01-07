@@ -49,6 +49,7 @@
       <FilmLiterature v-if="activeIndex === '2-1'||activeIndex===null" />
       <PoemDisplay v-if="activeIndex === '2-2'" />
       <VideoDisplay v-if="activeIndex === '2-3'" />
+      <ShowDisplay v-if="activeIndex === '2-4'" />
     </el-main>
   </div>
 </template>
@@ -58,6 +59,7 @@ import { ref } from 'vue';
 import FilmLiterature from "@/components/FilmLiterature/Literature/FilmLiterature.vue";
 import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
 import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
+import ShowDisplay from "@/components/FilmLiterature/Literature/ShowDisplay.vue";
 // 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
 const activeIndex = ref<'2-1' | '2-2' | 'null' | string>(null);
 

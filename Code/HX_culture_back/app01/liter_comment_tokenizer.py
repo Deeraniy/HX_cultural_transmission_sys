@@ -44,14 +44,22 @@ def process_liter_tokens(liter_name):
         cursor.execute(liter_sql, (liter_name,))
         liter_result = cursor.fetchone()
         
-        cursor.close()
-        conn.close()
-        
         if not liter_result:
             logger.error(f'未找到文学作品: {liter_name}')
+            cursor.close()
+            conn.close()
             return False
         
         liter_id = liter_result['liter_id']
+        
+        # 检查是否已有足够的分词
+        token_count = check_token_count(liter_id)
+        if token_count >= 500:
+            logger.info(f"文学作品 {liter_name} (ID: {liter_id}) 已有 {token_count} 个分词，跳过处理")
+            cursor.close()
+            conn.close()
+            return True
+            
         logger.info(f"处理文学作品: {liter_name} (ID: {liter_id})")
 
         # 获取评论的连接
@@ -102,27 +110,44 @@ def process_liter_tokens(liter_name):
         return False
 
 def get_db_connection():
-    """获取数据库连接"""
-    return pymysql.connect(
-        host='120.233.26.237', 
-        port=15320, 
-        user='root', 
-        passwd='kissme77', 
-        db='hx_cultural_transmission_sys', 
-        charset='utf8',
-        connect_timeout=10,
-        read_timeout=30,
-        write_timeout=30
-    )
+    """获取数据库连接，带有重试机制"""
+    max_retries = 3
+    base_delay = 5  # 基础等待时间（秒）
+    
+    for attempt in range(max_retries):
+        try:
+            return pymysql.connect(
+                host='120.233.26.237', 
+                port=15320, 
+                user='root', 
+                passwd='kissme77', 
+                db='hx_cultural_transmission_sys', 
+                charset='utf8',
+                connect_timeout=30,    # 增加连接超时时间
+                read_timeout=30,
+                write_timeout=30
+            )
+        except pymysql.Error as e:
+            if attempt < max_retries - 1:
+                delay = base_delay * (2 ** attempt) * (1 + random.random())
+                logger.warning(f"数据库连接失败 (尝试 {attempt + 1}/{max_retries}): {str(e)}\n等待 {delay:.1f} 秒后重试...")
+                time.sleep(delay)
+            else:
+                logger.error(f"数据库连接失败，已达到最大重试次数: {str(e)}")
+                raise
 
 def process_word_batch(words, liter_id):
-    """处理一批词语"""
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
-        for word, comment_id in words:  # 修改这里以接收comment_id
+    """处理一批词语，带有重试机制"""
+    max_retries = 5  # 最大重试次数
+    base_delay = 60  # 基础等待时间（秒）
+    
+    for word, comment_id in words:
+        retry_count = 0
+        while retry_count < max_retries:
             try:
+                conn = get_db_connection()
+                cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+                
                 # 检查词语是否存在
                 check_sql = """
                     SELECT token_id, count 
@@ -148,21 +173,44 @@ def process_word_batch(words, liter_id):
                     """
                     cursor.execute(insert_sql, (word, liter_id, comment_id))
                     
-            except Exception as e:
-                logger.error(f"处理词语 {word} (评论ID: {comment_id}) 时出错: {str(e)}")
-                continue
+                conn.commit()
+                logger.debug(f"成功处理词语: {word} (评论ID: {comment_id})")
+                break  # 成功处理，跳出重试循环
                 
-        conn.commit()
-        
-    except Exception as e:
-        logger.error(f"处理词语批次时出错: {str(e)}")
-        if 'conn' in locals():
-            conn.rollback()
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conn' in locals():
-            conn.close()
+            except pymysql.Error as e:
+                retry_count += 1
+                if retry_count < max_retries:
+                    delay = base_delay * (1 + random.random())  # 添加随机延迟
+                    logger.warning(
+                        f"处理词语 {word} (评论ID: {comment_id}) 时出错 "
+                        f"(尝试 {retry_count}/{max_retries}): {str(e)}\n"
+                        f"等待 {delay:.1f} 秒后重试..."
+                    )
+                    time.sleep(delay)
+                    if 'conn' in locals():
+                        try:
+                            conn.rollback()
+                        except:
+                            pass
+                else:
+                    logger.error(
+                        f"处理词语 {word} (评论ID: {comment_id}) 失败，"
+                        f"已达到最大重试次数 ({max_retries}): {str(e)}"
+                    )
+            except Exception as e:
+                logger.error(f"处理词语 {word} (评论ID: {comment_id}) 时出现未知错误: {str(e)}")
+                break  # 非数据库错误直接跳过
+            finally:
+                if 'cursor' in locals():
+                    try:
+                        cursor.close()
+                    except:
+                        pass
+                if 'conn' in locals():
+                    try:
+                        conn.close()
+                    except:
+                        pass
 
 def get_word_frequency(request):
     """获取词语频率以及情感"""
@@ -198,7 +246,7 @@ def get_word_frequency(request):
             FROM liter_token 
             WHERE liter_id = %s 
             ORDER BY count DESC 
-            LIMIT 30
+            LIMIT 30 OFFSET 20
         """
         cursor.execute(frequency_sql, (liter_id,))
         words = cursor.fetchall()
@@ -293,11 +341,19 @@ if __name__ == "__main__":
         
         # 处理每个文学作品
         success_count = 0
+        skipped_count = 0  # 记录跳过的数量
         failed_liters = []
         
         for i, liter_name in enumerate(liters, 1):
             logger.info(f"正在处理第 {i}/{len(liters)} 个文学作品: {liter_name}")
             try:
+                # 检查是否已有足够的分词
+                liter_id = get_liter_id(liter_name)
+                if liter_id and check_token_count(liter_id) >= 500:
+                    logger.info(f"文学作品 {liter_name} 已有足够分词，跳过处理")
+                    skipped_count += 1
+                    continue
+                
                 # 使用重试机制处理文学作品
                 if retry_with_backoff(process_liter_tokens, liter_name, max_retries=3):
                     success_count += 1
@@ -310,16 +366,21 @@ if __name__ == "__main__":
                 logger.error(f"处理文学作品 {liter_name} 时出错: {str(e)}")
         
         # 输出首次处理的总结
-        logger.info(f"首次处理完成！成功: {success_count}, 失败: {len(failed_liters)}")
+        logger.info(f"""
+        首次处理完成！
+        跳过: {skipped_count}
+        成功: {success_count}
+        失败: {len(failed_liters)}
+        """)
         
         # 获取token数量不足的文学作品
-        insufficient_liters = get_insufficient_tokens()
+        insufficient_liters = get_insufficient_liters()
         logger.info(f"发现 {len(insufficient_liters)} 个token数量不足的文学作品")
         
         # 重新处理token数量不足的文学作品
         reprocess_success = 0
         for liter in insufficient_liters:
-            logger.info(f"重新处理token不足的文学作品: {liter['liter_name']}")
+            logger.info(f"重新处理token不足的文学作品: {liter['liter_name']} (当前token数: {liter['token_count']})")
             try:
                 # 清理现有的tokens
                 clean_existing_tokens(liter['liter_id'])
@@ -336,8 +397,13 @@ if __name__ == "__main__":
         # 最终总结
         logger.info(f"""
         处理完成！
-        首次处理: 成功 {success_count}, 失败 {len(failed_liters)}
-        重新处理: 成功 {reprocess_success}, 失败 {len(insufficient_liters) - reprocess_success}
+        首次处理:
+            - 跳过: {skipped_count}
+            - 成功: {success_count}
+            - 失败: {len(failed_liters)}
+        重新处理:
+            - 成功: {reprocess_success}
+            - 失败: {len(insufficient_liters) - reprocess_success}
         """)
         
         # 输出最终仍然token不足的文学作品

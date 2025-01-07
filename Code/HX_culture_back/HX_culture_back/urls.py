@@ -5,7 +5,7 @@ from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import sentiments_analyze,city,cloud,comment,spot,view,lda_topic_extractor,sentiments_analyze,preview,comment_tokenizer
+from app01 import sentiments_analyze,city,cloud,comment,spot,view,lda_topic_extractor,sentiments_analyze,preview,comment_tokenizer,liter_comment_tokenizer,literature
 urlpatterns = [
     
     url(r'^testdb/$', testdb.testdb),
@@ -34,7 +34,8 @@ urlpatterns = [
     url(r'^generate_report/',sentiments_analyze.generate_report),
     url(r'^sentiments_count/',sentiments_analyze.sentiments_result_total_count),
     url(r'^get_word_frequency/',comment_tokenizer.get_word_frequency),
-    
+    url(r'^get_word_frequency_literature/',liter_comment_tokenizer.get_word_frequency),
+    url(r'^get_literature_by_type/',literature.get_literature_by_type),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -37,6 +37,10 @@ const routes = [
     ,{
         path: '/folkSentimentAnalyze',
         component:() => import('./components/FolkCustom/FolkSentimentAnalyze.vue')
+    },
+    {
+        path:'/page',
+        component:() => import('./components/FilmLiterature/Literature/PageFlip.vue')
     }
 ];
 

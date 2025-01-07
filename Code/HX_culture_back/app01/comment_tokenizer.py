@@ -191,7 +191,7 @@ def get_word_frequency(request):
         spot_id = spot_result['spot_id']
         logger.info(f"查询景点 {spot_name} (ID: {spot_id}) 的词频")
 
-        # 查询前30个高频词
+        # 查询中间40个高频词
         frequency_sql = """
             SELECT token_name as word, count as frequency, sentiment
             FROM token 
