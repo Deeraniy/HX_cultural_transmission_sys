@@ -12,7 +12,7 @@ def crawl_and_update_literature():
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         
         # 获取所有文献记录
-        cursor.execute("SELECT id, description FROM literature WHERE text IS NULL")
+        cursor.execute("SELECT liter_id, description FROM literature WHERE text IS NULL")
         literature_list = cursor.fetchall()
         
         headers = {
@@ -39,8 +39,8 @@ def crawl_and_update_literature():
                         
                         # 更新数据库
                         cursor.execute(
-                            "UPDATE literature SET text = %s WHERE id = %s",
-                            (summary_text, item['id'])
+                            "UPDATE literature SET text = %s WHERE liter_id = %s",
+                            (summary_text, item['liter_id'])
                         )
                         conn.commit()
                 
@@ -51,13 +51,21 @@ def crawl_and_update_literature():
         cursor.close()
         conn.close()
         
-        return JsonResponse({
+        return {
             'status': 'success',
             'message': '爬取完成'
-        })
+        }
         
     except Exception as e:
-        return JsonResponse({
+        return {
             'status': 'error',
             'message': str(e)
-        })
+        }
+
+def main():
+    print("开始爬取百度百科内容...")
+    result = crawl_and_update_literature()
+    print(f"爬取结果：{result}")  # 直接打印字典结果
+
+if __name__ == "__main__":
+    main()
