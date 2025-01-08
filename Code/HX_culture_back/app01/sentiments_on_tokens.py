@@ -2,6 +2,10 @@ import pymysql
 import logging
 from transformers import pipeline
 import time
+import signal
+from functools import wraps
+import random
+import threading
 
 # 配置日志
 logging.basicConfig(
@@ -22,11 +26,44 @@ def init_sentiment_classifier():
         logger.error(f"初始化情感分析模型失败: {str(e)}")
         raise
 
+class TimeoutError(Exception):
+    pass
+
+def timeout(seconds):
+    """使用 threading.Timer 实现的超时装饰器"""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            result = []
+            error = []
+            
+            def target():
+                try:
+                    result.append(func(*args, **kwargs))
+                except Exception as e:
+                    error.append(e)
+            
+            thread = threading.Thread(target=target)
+            thread.daemon = True
+            thread.start()
+            thread.join(seconds)
+            
+            if thread.is_alive():
+                raise TimeoutError(f"函数执行超过 {seconds} 秒")
+            
+            if error:
+                raise error[0]
+                
+            return result[0] if result else None
+            
+        return wrapper
+    return decorator
+
+@timeout(10)  # 设置10秒超时
 def get_sentiment_label(text):
     """获取文本的情感标签和置信度"""
     try:
         results = distilled_student_sentiment_classifier(text)
-        # 获取最高置信度的情感
         sentiment_scores = results[0]
         max_sentiment = max(sentiment_scores, key=lambda x: x['score'])
         return max_sentiment['label'], max_sentiment['score']
@@ -34,10 +71,49 @@ def get_sentiment_label(text):
         logger.error(f"情感分析出错: {str(e)}")
         return None, None
 
+def process_single_token(token, conn, cursor, max_retries=3):
+    """处理单个词语，带有重试机制"""
+    retry_count = 0
+    while retry_count < max_retries:
+        try:
+            # 进行情感分析
+            sentiment_label, confidence = get_sentiment_label(token['token_name'])
+            
+            if sentiment_label and confidence:
+                # 更新数据库
+                update_sql = """
+                    UPDATE liter_token 
+                    SET sentiment = %s, sentiment_confidence = %s 
+                    WHERE token_id = %s
+                """
+                cursor.execute(update_sql, (sentiment_label, confidence, token['token_id']))
+                conn.commit()
+                logger.info(f"成功处理词语: {token['token_name']}, 情感: {sentiment_label}, 置信度: {confidence:.4f}")
+                return True
+            else:
+                retry_count += 1
+                delay = (2 ** retry_count) + random.random()  # 指数退避 + 随机延迟
+                logger.warning(f"处理词语 {token['token_name']} 失败，{delay:.1f}秒后进行第{retry_count + 1}次重试")
+                time.sleep(delay)
+        
+        except TimeoutError:
+            retry_count += 1
+            delay = (2 ** retry_count) + random.random()
+            logger.warning(f"处理词语 {token['token_name']} 超时，{delay:.1f}秒后进行第{retry_count + 1}次重试")
+            time.sleep(delay)
+        
+        except Exception as e:
+            retry_count += 1
+            delay = (2 ** retry_count) + random.random()
+            logger.error(f"处理词语 {token['token_name']} 出错: {str(e)}，{delay:.1f}秒后进行第{retry_count + 1}次重试")
+            time.sleep(delay)
+    
+    logger.error(f"处理词语 {token['token_name']} 失败，已达到最大重试次数")
+    return False
+
 def analyze_token_sentiments():
     """对liter_token表中的词语进行情感分析"""
     try:
-        # 建立数据库连接
         conn = pymysql.connect(
             host='120.233.26.237', 
             port=15320, 
@@ -45,11 +121,10 @@ def analyze_token_sentiments():
             passwd='kissme77',
             db='hx_cultural_transmission_sys', 
             charset='utf8',
-            connect_timeout=30  # 增加连接超时时间
+            connect_timeout=30
         )
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 获取所有未分析情感的词语
         cursor.execute("""
             SELECT token_id, token_name 
             FROM liter_token 
@@ -67,57 +142,29 @@ def analyze_token_sentiments():
         error_count = 0
 
         for token in tokens:
-            try:
-                logger.info(f"正在处理第 {processed_count + 1}/{total_tokens} 个词语: {token['token_name']}")
-                
-                # 进行情感分析
-                sentiment_label, confidence = get_sentiment_label(token['token_name'])
-                
-                if sentiment_label and confidence:
-                    try:
-                        # 更新数据库
-                        update_sql = """
-                            UPDATE liter_token 
-                            SET sentiment = %s, sentiment_confidence = %s 
-                            WHERE token_id = %s
-                        """
-                        cursor.execute(update_sql, (sentiment_label, confidence, token['token_id']))
-                        conn.commit()
-                        
-                        processed_count += 1
-                        logger.info(f"成功处理词语: {token['token_name']}, 情感: {sentiment_label}, 置信度: {confidence:.4f}")
-                        
-                    except pymysql.Error as e:
-                        logger.error(f"数据库更新失败: {str(e)}")
-                        error_count += 1
-                        conn.rollback()
-                else:
-                    logger.warning(f"词语 {token['token_name']} 情感分析返回空结果")
-                    error_count += 1
-                
-                # 每100个词语重新连接一次数据库，避免连接超时
-                if processed_count % 100 == 0 and processed_count > 0:
-                    cursor.close()
-                    conn.close()
-                    conn = pymysql.connect(
-                        host='120.233.26.237', 
-                        port=15320, 
-                        user='root', 
-                        passwd='kissme77',
-                        db='hx_cultural_transmission_sys', 
-                        charset='utf8',
-                        connect_timeout=30
-                    )
-                    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-                    logger.info("数据库连接已刷新")
-                
-                # 添加短暂延迟避免请求过快
-                time.sleep(0.1)
-                
-            except Exception as e:
-                logger.error(f"处理词语 {token['token_name']} (ID: {token['token_id']}) 时出错: {str(e)}")
+            logger.info(f"正在处理第 {processed_count + 1}/{total_tokens} 个词语: {token['token_name']}")
+            
+            # 处理单个词语
+            if process_single_token(token, conn, cursor):
+                processed_count += 1
+            else:
                 error_count += 1
-                continue
+            
+            # 每100个词语重新连接数据库
+            if processed_count % 100 == 0 and processed_count > 0:
+                cursor.close()
+                conn.close()
+                conn = pymysql.connect(
+                    host='120.233.26.237', 
+                    port=15320, 
+                    user='root', 
+                    passwd='kissme77',
+                    db='hx_cultural_transmission_sys', 
+                    charset='utf8',
+                    connect_timeout=30
+                )
+                cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+                logger.info("数据库连接已刷新")
 
         logger.info(f"""
         情感分析完成！
