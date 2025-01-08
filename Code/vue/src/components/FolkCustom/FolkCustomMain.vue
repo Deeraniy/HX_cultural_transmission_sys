@@ -33,9 +33,14 @@
         </el-sub-menu>
       </el-menu>
     </div>
-    <el-main>
-      <FolkCustom/>
-    </el-main>
+
+      <iframe
+          src="../../static/前端/www.ihchina.cn/index.html"
+          style="height: 1000px;width: 100%"
+      ></iframe>
+
+
+          <FolkCustom/>
   </div>
 
 
@@ -44,6 +49,7 @@
 <script lang="ts" setup>
 import { ref,onMounted } from 'vue'
 import FolkCustom from './FolkCustom.vue'
+
 const activeIndex = ref('2')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
