@@ -4,16 +4,29 @@
       <!-- 右上角关闭按钮 -->
       <button class="close-button" @click="closeModal">X</button>
       <div class="scene">
-        <article class="book" @click="handlePageClick">
+        <article class="book">
           <section
               v-for="(page, index) in pages"
               :key="index"
               :class="['page', { active: page.isActive, flipped: page.isFlipped }]">
-            <div class="front">
-              <p><img :src="page.frontImage" alt="Front Image"></p>
+            <div class="front" @click="handlePageClick(index, 'front')">
+              <!-- 第一页展示封面，后续展示书名/描述 -->
+              <div v-if="index === 0">
+                <img :src="book.image_url" alt="Book Cover" class="book-cover" />
+              </div>
+              <div v-else>
+                <p>{{ page.frontText }}</p>
+              </div>
             </div>
-            <div class="back">
-              <p><img :src="page.backImage" alt="Back Image"></p>
+            <div class="back" @click="handlePageClick(index, 'back')">
+              <div v-if="index === 0">
+                <h2 class="centered-title" style="position: absolute; top: 40%; left: 35%; transform: translate(-50%, -50%);">{{ page.title }}</h2>
+                <button v-if="index === 0" class="jump-button" @click="analyze">情感分析</button>
+
+              </div>
+              <div v-else>
+                <p>{{ page.backText }}</p>
+              </div>
             </div>
           </section>
         </article>
@@ -24,6 +37,7 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
+import router from "@/router.js";
 
 // 传入的 book 对象
 const props = defineProps({
@@ -33,17 +47,67 @@ const props = defineProps({
 // 定义 emit 事件
 const emit = defineEmits();
 
-// 页面数据
+// 分割文本逻辑
+const splitText = (text, maxLength) => {
+  if (text.length <= maxLength) {
+    return [text, ''];
+  } else {
+    const frontText = text.substring(0, maxLength);
+    const backText = text.substring(maxLength);
+    return [frontText, backText];
+  }
+};
+
+// 初始化页面数据，第一页为封面，后续页为书名和描述
 const pages = ref([
-  { frontImage: 'https://c-ssl.dtstatic.com/uploads/blog/201502/08/20150208220613_WYYAQ.thumb.400_0.jpeg', backImage: 'https://th.bing.com/th/id/OIP.rj8jMjV8zZgtUmZuKNhYLwHaKx?rs=1&pid=ImgDetMain', isActive: true, isFlipped: false },
-  { frontImage: 'https://placeimg.com/480/640/any?3', backImage: 'https://placeimg.com/480/640/any?4', isActive: false, isFlipped: false }
+  {
+    frontImage: props.book.image_url,
+    backImage: 'https://placeimg.com/480/640/any?4',
+    title: props.book.liter_name,
+    frontText: '',
+    backText: '',
+    isActive: true,
+    isFlipped: false
+  }, // 封面
+  {
+    frontImage: '',
+    backImage: 'https://placeimg.com/480/640/any?4',
+    title: '',
+    frontText: '',
+    backText: '',
+    isActive: false,
+    isFlipped: false
+  }  // 书名和描述
 ]);
 
-// 处理页面翻转
-const handlePageClick = () => {
-  const activePage = pages.value.find(page => page.isActive);
+// 在初始化时分割文本
+const maxTextLength = 491; // 假设每页最多显示 150 个字符
+const [frontText, backText] = splitText(props.book.text, maxTextLength);
+pages.value[1].frontText = frontText;
+pages.value[1].backText = backText;
 
-  if (activePage) {
+// 触摸事件变量
+let touchStartX = 0;
+let touchEndX = 0;
+
+// 处理页面翻转
+const handlePageClick = (index, side) => {
+  const activePage = pages.value.find(page => page.isActive);
+  if (!activePage) return; // 如果没有活动页面，返回
+
+  const currentPageIndex = pages.value.indexOf(activePage);
+  const nextPage = pages.value[currentPageIndex + 1];
+  const prevPage = pages.value[currentPageIndex - 1];
+
+  if (side === 'front') {
+    // 点击正面，翻到上一页
+    if (!activePage.isFlipped) {
+      flipPageToBack(activePage);
+    } else {
+      flipPageToFront(activePage);
+    }
+  } else if (side === 'back') {
+    // 点击背面，翻到下一页
     if (!activePage.isFlipped) {
       flipPageToBack(activePage);
     } else {
@@ -65,7 +129,7 @@ const flipPageToBack = (page) => {
 
 // 翻转到正面
 const flipPageToFront = (page) => {
-  page.isFlipped = false;
+  page.isFlipped = false; // 修正翻转到正面时的状态
   page.isActive = false;
 
   const prevPage = pages.value[pages.value.indexOf(page) - 1];
@@ -78,9 +142,57 @@ const flipPageToFront = (page) => {
 const closeModal = () => {
   emit('close');
 };
+
+// 处理点击事件：判断点击位置
+const handleClick = (event) => {
+  const clickX = event.clientX; // 获取点击位置的X坐标
+  const screenWidth = window.innerWidth; // 获取窗口的宽度
+  const isLeftHalf = clickX < screenWidth / 2; // 判断是否在左半边
+
+  if (isLeftHalf) {
+    goToPrevPage(); // 左半边点击翻到上一页
+  } else {
+    goToNextPage(); // 右半边点击翻到下一页
+  }
+};
+
+const analyze = () => {
+  // 跳转到 PlaceDetail 页面
+  router.push('/placeDetail'); // 直接使用路径进行跳转
+};
+
+
+// 翻到下一页
+const goToNextPage = () => {
+  const activePage = pages.value.find(page => page.isActive);
+  if (!activePage) return;
+
+  const currentPageIndex = pages.value.indexOf(activePage);
+  const nextPage = pages.value[currentPageIndex + 1];
+
+  if (nextPage) {
+    nextPage.isActive = true;
+    flipPageToBack(activePage);
+  }
+};
+
+// 翻到上一页
+const goToPrevPage = () => {
+  const activePage = pages.value.find(page => page.isActive);
+  if (!activePage) return;
+
+  const currentPageIndex = pages.value.indexOf(activePage);
+  const prevPage = pages.value[currentPageIndex - 1];
+
+  if (prevPage) {
+    prevPage.isActive = true;
+    flipPageToFront(activePage); // 确保翻转回正面
+  }
+};
 </script>
 
 <style scoped>
+@import '@/assets/font/font.css';
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -105,7 +217,10 @@ const closeModal = () => {
   max-width: 90%;
   max-height: 80%;
 }
-
+.centered-title{
+  font-size: 60px;
+  font-family: 'HelveticaNeue', serif;
+}
 .close-button {
   position: absolute;
   top: 10px;
@@ -124,6 +239,29 @@ const closeModal = () => {
   margin: 16px auto;
   perspective: 1500px; /* 提高透视效果 */
 }
+.jump-button {
+  position: absolute;
+  bottom: 20px; /* 距离底部 20px */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 精确居中 */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  z-index: 1000; /* 确保按钮在顶部 */
+}
+
+.jump-button:hover {
+  background-color: #0056b3;
+}
+
+.jump-button:focus {
+  outline: none;
+}
 
 .book {
   position: relative;
@@ -138,10 +276,10 @@ const closeModal = () => {
   color: black;
   width: 100%;
   height: 100%;
-  transition: 1.5s transform cubic-bezier(0.25, 0.8, 0.25, 1); /* 更柔滑的过渡 */
+  transition: 1.5s transform;
   transform-style: preserve-3d;
   transform-origin: left center;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* 添加阴影增加立体感 */
+
 }
 
 .front,
@@ -151,8 +289,9 @@ const closeModal = () => {
   height: 100%;
   box-sizing: border-box;
   backface-visibility: hidden;
-  background-color: #f8f8f8; /* 书页背景色 */
-  overflow: hidden; /* 防止图片溢出 */
+  background-color: #fff8f0; /* 书页背景色 */
+  padding: 25px; /* 增加边距 */
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .front img,
@@ -174,10 +313,22 @@ const closeModal = () => {
 }
 
 .page.flipped {
-  transform: rotateY(-180deg) scale(0.98); /* 增加缩放效果 */
+  transform: rotateY(-180deg);
 }
 
 .page.flipped:last-of-type {
   z-index: 1;
+}
+
+.book-cover {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+.centered-title {
+  font-size: 60px;
+  font-family: 'HelveticaNeue', serif;
+  writing-mode: vertical-rl; /* 竖排文本 */
+  transform: rotate(180deg); /* 如果你想调整方向，可以旋转 */
 }
 </style>

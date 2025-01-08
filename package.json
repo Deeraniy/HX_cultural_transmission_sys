@@ -2,5 +2,8 @@
   "dependencies": {
     "jquery": "^3.7.1",
     "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
   }
 }

@@ -1,6 +1,5 @@
 <template>
   <div class="circle-container">
-
     <div
         v-for="(circle, index) in circles"
         :key="index"
@@ -51,6 +50,8 @@ function shuffleArray(arr) {
 // 在组件挂载后设置每个圆形的水平和垂直位置
 onMounted(() => {
   // 打乱位置数组
+
+
   // 为每个圆形分配一个随机的位置
   circles.value.forEach((circle, index) => {
     circle.left = positions[index].left;
@@ -60,42 +61,20 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import '@/assets/font/font.css';
 .circle-container {
-  background-image: url("@/assets/img2.png");
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  z-index: -11;
 }
-.main-title {
-  font-family: 'HelveticaNeue', serif;
-  position: absolute;
-  top: 450px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 8rem;
-  font-weight: bold;
-  color: #070608;
-  text-align: center;
-  z-index: 9999; /* 设置为最大值，确保在顶层 */
-}
+
 .circle {
   position: absolute;
   top: -120px; /* 从页面顶部进入 */
   border-radius: 50%;
   animation: slideDown 1s forwards;
-  z-index: -10;
 }
-/* iframe 样式 */
 
-.embedded-html {
-  width: 100%;
-  height: 100vh; /* 高度填满视口 */
-  border: none;
-  overflow: auto; /* 允许内部滚动 */
-}
 .circle-image {
   width: 100%;
   height: 100%;

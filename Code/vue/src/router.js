@@ -41,6 +41,27 @@ const routes = [
     {
         path:'/page',
         component:() => import('./components/FilmLiterature/Literature/PageFlip.vue')
+    },
+    {
+        path: '/food',
+        name: 'HomePageMain',
+        component:()=>import('./components/Food/HomePageMain.vue'), // 美食文化主页组件
+    },
+    {
+        path: '/food/propagation',
+        name: 'PropagationPage',
+        component:()=>import('./components/Food/PropagationPage.vue'), // 传播效果分析页面
+    },
+    {
+        path: '/food/detail',
+        name: 'FoodPage',
+        component:()=>import('./components/Food/FoodPage.vue'), // 美食专区页面
+    },
+    {
+        path: '/food/detail/:foodName',
+        name: 'FoodDetailPage',
+        component:()=>import('./components/Food/FoodDetailPage.vue'), // 美食详情页面
+        props: true, // Pass the `foodName` as a prop to the component
     }
 ];
 
