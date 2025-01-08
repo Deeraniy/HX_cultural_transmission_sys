@@ -28,7 +28,7 @@
           </template>
         </el-carousel>
       </div>
-      <BookShelf/>
+      <BookShelf :current-index="3" />
     </div>
   </el-main>
 </template>

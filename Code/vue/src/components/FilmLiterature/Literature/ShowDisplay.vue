@@ -36,7 +36,7 @@
 
       </div>
 
-      <BookShelf/>
+      <BookShelf :current-index="2" />
     </div>
   </el-main>
 </template>
