@@ -1,0 +1,793 @@
+@charset "utf-8";
+.t_head.col1 .h30 {color: #688c8a;}
+.t_head.col1 .h30:before {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/left1.png);}
+.t_head.col1 .h30:after {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/right1.png);}
+.t_more.col1 {color: #688c8a;}
+.t_more.col1:before {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/left2.png);background-position: center !important;}
+.t_more.col1:after {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/right2.png);background-position: center !important;}
+
+
+#example_video_1 {min-width: 100%;min-height: 100%;}
+.video-js .vjs-tech {min-width: 100%;min-height: 100%;}
+#video {min-width: 100%;min-height: 100%;}
+video{ object-fit:fill;}
+
+.jjl-banner {background-size: cover;background-position: center;background-repeat: no-repeat;overflow: hidden;width: 100%;height: 976px;}
+.jjl-banner.phone {display:none;height:3.79rem;}
+
+.solar_terms1 {margin-top: -126px;height: 739px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms1.png) no-repeat center;background-color: transparent !important;}
+.solar_terms1 .clear {padding-top: 160px;}
+.solar_terms1 .l {float: left;width: 570px;}
+.solar_terms1 .l .text .t_head {text-align: left;padding: 140px 0 35px;}
+.solar_terms1 .l .text .p {color: #7d8884;font-size: 14px;padding-bottom: 55px;font-family:微软雅黑;}
+.solar_terms1 .l .text .t_more:hover {color:#346b68;}
+.solar_terms1 .l .text .t_more:hover:before {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/left2_a.png);}
+.solar_terms1 .l .text .t_more:hover:after {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/right2_a.png);}
+.solar_terms1 .r {width: 449px;height: 550px;float: right;margin-right: 65px;}
+.solar_terms1 .r img {width: 100%;height: auto;}
+.solar_terms2 {background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms2.jpg) no-repeat center;height: 793px;overflow: hidden;}
+.solar_terms2 .t_head {padding: 90px 0 80px;}
+.solar_terms2 .clear .item {width: 494px;height: 223px;background: #fff;position: relative;margin-left: 121px;margin-bottom: 74px; float: left;}
+.solar_terms2 .clear .item .img {width: 331px;height: 297px;position: absolute;top: -35px;left: -101px;}
+.solar_terms2 .clear .item .img img {width: 100%;height: auto;}
+.solar_terms2 .clear .item .text {padding: 75px 0 0 250px;color: #7d8884;overflow: hidden;}
+.solar_terms2 .clear .item .text .p {width: 20px;text-align: center;font-size: 18px;float: left;padding-top: 50px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr1.png) no-repeat top center;margin: 0 7px;}
+.solar_terms2 .clear .item .text .p:hover {color:#3D8853;}
+.solar_terms2 .clear .item:nth-child(2) .text .p:hover {color:#9F5454;}
+.solar_terms2 .clear .item:nth-child(3) .text .p:hover {color:#B0A08B;}
+.solar_terms2 .clear .item:nth-child(4) .text .p:hover {color:#F49395;}
+.solar_terms3 {background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms4.jpg) no-repeat center;height: 1027px;}
+.solar_terms3 .t_head {padding: 100px 0 40px;}
+.solar_terms3 .imgs {width: 100%;height: 586px;overflow: hidden; position: relative;}
+.solar_terms3 .imgs img {width: 100%;height: auto;position: absolute;left: 0;top: 0;visibility: hidden;opacity: 0;transition: all 1s ease-in-out;}
+.solar_terms3 .imgs img.act {position: relative;visibility: visible;opacity: 1;z-index: 1;}
+.solar_terms3 .list {height: 295px;margin-top: -110px;position: relative;z-index: 2;font-family:微软雅黑;}
+.solar_terms3 .list .item {position: relative;background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms7.png);width: 75px;overflow: hidden;float: left;
+	-webkit-transition: width 0.6s;
+	transition: width 0.6s;
+}
+.solar_terms3 .list .item .tit {width: 75px;padding-top: 40px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr2.png) no-repeat top center;font-size: 18px;color: #fff;-webkit-writing-mode: vertical-lr;writing-mode: vertical-lr;writing-mode: tb-lr;line-height: 75px;margin-top: 40px;float: left;margin-right:45px;}
+.solar_terms3 .list .item .txt {overflow: hidden;padding: 0px 35px 0 0;transform: scale(0);opacity: 0;position: relative;height: 100%;width:299px;}
+.solar_terms3 .list .item .txt .p {font-size: 14px;color: #fff;padding-top: 40px;}
+.solar_terms3 .t_more {color: #fff !important;position: absolute;left: 45px;bottom: 40px;}
+.solar_terms3 .list .item:nth-child(1) {background-color: #638987;height: 100%;}
+.solar_terms3 .list .item:nth-child(2) {background-color: #638970;height: 268px;}
+.solar_terms3 .list .item:nth-child(3) {background-color: #426251;height: 223px;}
+.solar_terms3 .list .item:nth-child(4) {background-color: #b0a08b;height: 251px;}
+.solar_terms3 .list .item:nth-child(5) {background-color: #516079;height: 278px;}
+.solar_terms3 .list .item:nth-child(6) {background-color: #73789b;height: 85%;}
+.solar_terms3 .list .item:nth-child(7) {background-color: #9d8b73;height: 76%;}
+.solar_terms3 .list .item:nth-child(8) {background-color: #52698e;height: 86%;}
+.solar_terms3 .list .item:nth-child(9) {background-color: #758ba9;height: 94%;}
+.solar_terms3 .list .item:nth-child(10) {background-color: #7f6e66;height: 88%;}
+.solar_terms3 .list .item:nth-child(11) {background-color: #404461;height: 100%;}
+.solar_terms3 .list .item.cur {width: 472px;margin-right: 5px;}
+.solar_terms3 .list .item .con {width:472px;height:100%;}
+.solar_terms3 .list .item.cur .txt {transform: scale(1);opacity: 1;visibility: visible;}
+.solar_terms3 .list .item:last-child.cur {margin-left: 5px;margin-right: 0;}
+.solar_terms3 .list .item .more {position:absolute;left:0;bottom:40px;color:#fff;}
+.solar_terms4 {background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms5.jpg) no-repeat center;height: 1040px;}
+.solar_terms4 .t_head {padding: 100px 0 40px;}
+.solar_terms4 .cont {height: 652px;position: relative;font-family:微软雅黑;}
+.solar_terms4 .cont .padd {overflow: hidden;}
+.solar_terms4 .cont .tit {font-size: 24px;}
+.solar_terms4 .cont .tit:hover {color:#346b68;}
+.solar_terms4 .cont .p {font-size: 14px;}
+.solar_terms4 .cont .d1 .tit, .solar_terms4 .cont .d2 .tit{-webkit-writing-mode: vertical-lr;writing-mode: vertical-lr;writing-mode: tb-lr;text-align: center;float: left;height: 100%;}
+.solar_terms4 .cont .d1 .p, .solar_terms4 .cont .d2 .p  {-webkit-writing-mode: vertical-lr;writing-mode: vertical-lr;writing-mode: tb-lr;text-align: center;float: left;height: 100%;padding-right: 14px;}
+.solar_terms4 .cont .d1 {width: 600px;height: 362px;position: absolute;top: 0;right: 390px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms6.jpg) no-repeat center;background-size: cover;}
+.solar_terms4 .cont .d1 .padd {padding-left: 125px;height:100%;}
+.solar_terms4 .cont .d1 .tit {padding-right: 44px;}
+.solar_terms4 .cont .d2 {width: 300px;height: 280px;position: absolute;bottom: 0;right: 390px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms7.jpg) no-repeat center;background-size: cover;}
+.solar_terms4 .cont .d2 .padd {padding: 45px 48px;height:100%;}
+.solar_terms4 .cont .d2 .tit, .solar_terms4 .cont .d2 .p {padding-right: 12px;height: auto;}
+.solar_terms4 .cont .d3 {width: 380px;height: 552px;position: absolute;top: 0;right: 0;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms8.jpg) no-repeat center;background-size: cover;text-align: center;}
+.solar_terms4 .cont .d3 .padd {padding: 70px 25px 0;}
+.solar_terms4 .cont .d3 .tit {padding-bottom: 25px;}
+.solar_terms4 .cont .d3 .tit:hover {color:#0b9c96;}
+.solar_terms4 .cont .d3 .p {padding-bottom: 15px;}
+.solar_terms4 .cont .d4 {width: 530px;height: 411px;overflow: hidden;position: absolute;left: 0;bottom: 0;}
+.solar_terms4 .cont .d4 img {width: 100%;height: auto;}
+.solar_terms5 {overflow: hidden;height: 713px;}
+.solar_terms5 .t_head {text-align: left;padding: 0 0 15px;}
+.solar_terms5 .t_more {margin-top: 25px;}
+.solar_terms5 .t_more:hover {color:#346b68;}
+.solar_terms5 .t_more:hover:before {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/left2_a.png);}
+.solar_terms5 .t_more:hover:after {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/right2_a.png);}
+
+.solar_terms5 .list {height: 411px;font-family: "微软雅黑";}
+.solar_terms5 .l {float: left;height: 100%;width: 50%;position: relative;background: #d3dbd9;}
+.solar_terms5 .l .con {position: absolute;right: 30px;top: 100px;width: 580px;}
+.solar_terms5 .l .list .item {overflow: hidden;padding: 20px 0;}
+.solar_terms5 .item+.item {border-top: 1px dashed #bdc7d1;}
+.solar_terms5 .l .list .item .img {float: left;width: 293px;height: 165px;overflow: hidden;}
+.solar_terms5 .l .list .item .img img {width: 100%;height: auto;}
+.solar_terms5 .l .list .item .txt {overflow: hidden;padding-left: 24px;}
+.solar_terms5 .l .list .item .txt .h16 {color: #7d8884;height: 54px;padding-top: 5px;line-height: 1.4;}
+.solar_terms5 .l .list .item:hover .txt .h16 {color:#346b68;}
+.solar_terms5 .l .list .item .txt .p {color: #7d8884;font-size: 14px;height: 82px;}
+.solar_terms5 .l .list .item .txt .date {color: #7d8884;font-size: 14px;font-family: arial;}
+.solar_terms5 .r {float: right;height: 100%;width: 50%;position: relative;background: #e2e7e8;}
+.solar_terms5 .r .con {position: absolute;left: 60px;top: 100px;width: 550px;}
+.solar_terms5 .r .list .item {padding: 25px 0;height: 155px;box-sizing: content-box;}
+.solar_terms5 .r .list .item .h24 {color: #7d8884;padding-bottom: 24px;}
+.solar_terms5 .r .list .item .p {color: #7d8884;font-size: 16px;line-height: 1.4;padding-bottom: 8px;}
+
+
+.inherit_xx1 .t_head {position: relative;padding-bottom:60px;}
+.inherit_xx1 .btn_wp {position: absolute;bottom: 22px;right: 0;font-family: "微软雅黑";}
+.inherit_xx1 .btn_wp .btn1 {display: inline-block;line-height: 30px;height: 30px;font-size: 14px;color: #972a2a;padding: 0 25px;}
+.inherit_xx1 .btn_wp .btn1 img {position: relative;top: -2px;margin-right: 6px;}
+.inherit_xx1 .btn_wp .video_btn {border-left: 1px solid #b5b5b5;}
+.inherit_xx1 .cont {font-family: "微软雅黑";}
+.inherit_xx1 .cont .line:first-child {border-top: 1px dashed #b5b5b5;}
+.inherit_xx1 .cont .line {overflow: hidden;border-bottom: 1px dashed #b5b5b5;}
+.inherit_xx1 .cont .line .p {float: left;padding: 20px 2%;width: 46%;font-size: 18px;}
+.inherit_xx1 .text {font-family: "微软雅黑";padding: 0px 28px 30px;position: relative;}
+.inherit_xx1 .text .p {font-size: 16px;line-height: 1.6;padding-bottom: 20px;text-align: justify;text-indent: 2em;}
+.inherit_xx2 {padding: 45px 0 50px;}
+.inherit_xx2 .tit {padding-bottom: 24px;}
+.inherit_xx2 .tit .h24 .ico {width: 30px;height: auto;display: inline-block;margin-right: 10px;position: relative; top: -2px;}
+.inherit_xx2 .tit .h24 .ico img {width: 100%;height: auto;}
+.inherit_xx2 .list {padding-bottom: 50px;}
+/*.inherit_xx2 .list .list-mod2 {border-top: 1px dashed #b5b5b5;}*/
+.inherit_xx2 .list .list-mod2 .list-link {background: none;border-bottom: 1px dashed #b5b5b5;padding-left: 0;padding-right: 0;}
+.inherit_xx2 .list .list-mod2 .list-link + .list-link {margin-top: 0;}
+.inherit_xx2 .list .list-mod2 .list-link:after {display: none;}
+.x-tables {margin-bottom: 50px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/inherit_xx1.jpg) no-repeat;}
+.x-tables table {width: 100%;font-family: "微软雅黑";}
+.x-tables table tr:first-child {}
+.x-tables table th {font-size: 16px;color: #fff;font-weight: normal;line-height: 68px;}
+.x-tables table td {font-size: 14px;color: #333;padding: 23px 0;text-align: center;border-bottom: 1px dashed #b5b5b5;}
+.x-tables table td .name {display: none;}
+.x-tables table tr:hover td {color: #972a2a;}
+
+.pop-img {}
+.pop-img .pop-dialog {width: 700px;height: 555px;}
+.pop-img .slick-item .img {text-align: center;margin: 0 auto;height: 506px;line-height: 506px;}
+.pop-img .slick-item .img img {max-width: 100%;max-height: 100%;display: inline-block;vertical-align: middle;}
+.pop-img .slick-item .p {text-align: center;font-size: 24px;color: #fff;padding-top: 8px;}
+.pop-img .slick-prev {position: absolute;top: 0;bottom: 0;left: -80px;}
+.pop-img .slick-next {position: absolute;top: 0;bottom: 0;right: -80px;}
+.pop-img .pop-close {right: 0;top: 0;}
+
+.pop-video {display: none;}
+.pop-video.x-show {display: block;}
+.pop-video .pop-close {right: 0;top: -40px;z-index: 9;}
+.pop-video .pop-dialog {width: 1170px;height: 480px;}
+.pop-video .cont {height: 100%;}
+.pop-video .cont .l {float: left;width: 855px;height: 100%;margin-right: 40px;}
+.pop-video .cont .l .video {width: 100%;height: 100%;position: relative;}
+.pop-video .cont .r {float: right;height: 100%;width: 274px;}
+.pop-video .vjs-default-skin.vjs-big-play-centered .vjs-big-play-button {width: 80px;height: 80px;border-radius: 50%;text-align: center;line-height: 80px;}
+.pop-video .slick-item {position: relative;overflow: hidden;cursor: pointer;}
+.pop-video .slick-item img {width: 100%;height: auto;-webkit-transition: all 0.3s ease-in-out;transition: all 0.3s ease-in-out;}
+.pop-video .slick-item .play {position: absolute;left: 50%;top: 50%;width: 81px;height: 81px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/play1.png) no-repeat center;margin:-40px 0 0 -40px;}
+.pop-video .slick-item:hover img {-webkit-transform: scale(1.2) rotate(-3deg);transform: scale(1.2) rotate(-3deg);}
+.pop-video .slick-slide {margin-bottom: 6px;}
+.pop-video .slick-prev {position: absolute;top: -30px;left: 0;right: 0;width: auto;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/top1.png) no-repeat top center;}
+.pop-video .slick-next {position: absolute;bottom: -30px;left: 0;right: 0;width: auto;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/bottom1.png) no-repeat bottom center;}
+
+
+.fullpage .bread-mod {position: absolute;top: 142px;left: 0;width: 100%;z-index: 99;}
+
+
+.represen1 {height: 850px;overflow: hidden;position: relative;}
+.represen1.home6 .tab-item {opacity: 1;visibility: visible;}
+.represen1.home6 .tab-bar {background-repeat: no-repeat;background-position: center;background-size: cover;}
+.represen1.home6 .title {left: 8.5%;color: #fff;}
+.represen1.home6 .title-txt {padding-bottom: 155px;}
+.represen1.home6 .title-txt:before {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/top2.png);}
+.represen1.home6 .title-txt:after {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/bottom2.png);background-position: top center;height: 134px;}
+.represen1.home6 .tab-track {left: 17.5%;width: 66%;}
+.represen1.home6 .tab-term {width: 60px;}
+.represen1.home6 .tab-term:before {display: none;}
+.represen1.home6 .tab-term .h16:before, .represen1.home6 .tab-term .h16:after {display: none;}
+.represen1.home6 .tab-term .h16 {position: relative;bottom: 0;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr3.png) no-repeat right top;padding-right: 30px;color: #9da4ac;margin-left: 35px;}
+.represen1.home6 .tab-term:hover .h16 {color: #fefefe;}
+.home6 .tab-term.t7 .h16{ top: 65%;}
+.home6 .tab-term.t8 .h16{ top: 62%;}
+.represen2 {padding: 100px 0 50px;overflow:hidden;}
+.represen2 .title {text-align: center;color: #333;padding: 0 40px 53px;}
+.represen2 .title .p {font-family: "微软雅黑";font-size: 14px;padding: 30px 0 35px;text-align: justify;text-indent:2em;}
+.represen2 .screen-mod .select-mod {color: #333;width: 206px;}
+.represen2 .screen-mod .input {width: 203px;}
+.represen2 .screen-mod .input input {color:#333;}
+.represen2 .tit {color: #333;padding: 50px 0 25px;font-family: "微软雅黑";}
+.represen2 .tit .col {color: #9a2929;display: inline-block;}
+.represen2 .select-mod .select-cont, .represen2 .select-mod .select-query {background-size: 100% auto;}
+.represen2 .select-mod .select-cont:before, .represen2 .select-mod .select-query:before {background-size: 100% auto;height: 15px;}
+.represen2 .page-mod {margin-top: 40px;}
+.represen2 .page-mod .page-item > a {color: #333;}
+.represen2 .page-mod .page-item > a:hover, .represen2 .page-mod .page-item > a.cur {color: #fff;}
+
+.represen2 .screen-mod{ font-size:0; }
+.represen2 .screen-mod .select-mod,.represen2 .screen-mod .input,.represen2 .screen-mod .submit{ font-size:14px; margin-right:16px; }
+.represen2 .screen-mod .submit{ margin:0; }
+
+.result1 {color: #fff;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/result1.jpg) center no-repeat; height: 407px;text-align: center;}
+.result1 .title {padding: 100px 0 35px;}
+.result1 .title .h30{ line-height: 44px;}
+.result1 .title .h30:before, .result1 .title .h30:after{ content: ''; display: inline-block; width: 22px; height: 44px; vertical-align: top; background: url(https://www.ihchina.cn/Public/static/themes/image/temp/png8.png) no-repeat;}
+.result1 .title .h30:before{ background-position: left; margin-right: 18px;}
+.result1 .title .h30:after{ background-position: right; margin-left: 18px;}
+.result1 .screen-mod.top .submit button:after{ content: '\e854'; font-size: 20px;
+    font-family: "xfont" !important;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+.layui-laydate {font-family:微软雅黑;}
+.result1 .screen-mod {font-family:微软雅黑;}
+.result1 .screen-mod.top .input {width: 588px;}
+.result1 .screen-mod.top .input input {color:#333;}
+.result1 .screen-mod.bottom .input {width: 170px;margin: 0;}
+.result1 .screen-mod.bottom .hx {margin: 0 12px;border-bottom: 1px solid #546e85;display: inline-block;vertical-align: middle;width: 19px;}
+.result1 .bp-border.cur:before, .result1 .bp-border.cur:after, .result1 a.bp-border:hover:before, .result1 a.bp-border:hover:after {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr4.png);}
+.result1 .screen-mod.bottom .submit {margin-left: 12px;}
+.result1 .bp-border.cur .bp-inner, .result1 a.bp-border:hover .bp-inner {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr5.png);}
+.result1 .screen-mod.bottom .input .bp-inner {position: relative;background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr5.png);}
+.result1 .screen-mod.bottom .input .bp-inner input{background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/icon3.png) no-repeat right center; cursor: pointer;}
+.result1 .screen-mod.bottom .bp-border:before, .result1 .screen-mod.bottom .bp-border:after {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr4.png);}
+.result1 .screen-mod.bottom .input input {color:#fff;}
+.result1 .screen-mod.bottom .input input::-webkit-input-placeholder{ color: #fff;}
+/* Mozilla Firefox 4 to 18 */
+.result1 .screen-mod.bottom .input input:-moz-placeholder{ color: #fff; opacity: 1;}
+/* Mozilla Firefox 19+ */
+.result1 .screen-mod.bottom .input input::-moz-placeholder{ color: #fff; opacity: 1;}
+/* Internet Explorer 10+ */
+.result1 .screen-mod.bottom .input input:-ms-input-placeholder{ color: #fff;}
+
+.placeholder{ color: #333;}
+.result1 .txt {font-size: 14px;color: #fff;padding: 15px 0 40px;font-family:微软雅黑;width:685px;margin:0 auto;text-align:left;}
+.result1 .txt a {display:inline-block;}
+.result2 {padding-bottom: 100px;}
+.result2 .tab-bar {overflow: hidden;padding: 16px 0 18px;position: relative;font-family:微软雅黑;}
+.result2 .tab-bar .tab-term {float: left;width: 85px;height: 113px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/result1.png) no-repeat center;text-align: center;color: #fff;font-size: 14px;}
+.result2 .tab-bar .tab-term.cur {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/result1_a.png);color:#415568;}
+.result2 .tab-bar .tab-term a {display: block;line-height: 1.2;padding: 41px 0;}
+.result2 .tab-bar .link_wp {position: absolute;right: 0;bottom: 40px;}
+.result2 .tab-bar .link_wp a {font-size: 14px;color: #333;padding-right: 25px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr6.png) no-repeat right center;float: left;line-height: 20px;margin-left: 30px;}
+.result2 .tab-bar .link_wp a.now {color:#356490;}
+.result2 .tab-bar .link_wp a.btm {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr6_a.png);}
+.result2 .list-mod3 {padding: 40px 0;}
+.result2 .list-mod3 .list-item {background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/result2.jpg) no-repeat center;padding: 30px 52px;}
+.result2 .list-mod3 .h16 {margin-top:0;overflow:hidden;}
+.result2 .list-mod3 .p {margin-bottom: 20px;}
+.result2 .list-mod3 .cont {height:auto;}
+.result2 .list-item {}
+.result2 .list-item .h16 .ellip {max-width:75%;overflow: hidden;white-space: nowrap;text-overflow:ellipsis;display:block;float:left;}
+.result2 .list-item .h16 .rq {float:right;font-family:Arial;font-size:14px;}
+.result2 .list-item:hover .h16, .result2 .list-item:hover .date{ color: #556f87;}
+.result2 .list-item:hover .s{ background: #fff url(https://www.ihchina.cn/Public/static/themes/image/jjl/result2.png) no-repeat right center;}
+.result2 .list-item:hover .date:before{ border-color: #556f87;}
+.result2 .list-item:hover .t_more{ color: #556f87;}
+.result2 .list-item:hover .t_more:before{ background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/left4.png);background-position: 2px center;}
+.result2 .list-item:hover .t_more:after{  background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/right4.png);background-position: center;}
+.result2 .page-mod .page-btn:hover, .result2 .page-mod .page-item > a:hover, .result2 .page-mod .page-item > a.cur{ background-color: #415568;}
+.result2 .page-mod .page-item .prev:hover, .result2 .page-mod .page-item .next:hover{ background-color: transparent; background-image: url(https://www.ihchina.cn/Public/static/themes/image/temp/png37.png);}
+
+
+.padd_top {padding-top: 30px;}
+.video_cont {height: 509px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/article2.jpg) no-repeat center;font-family:微软雅黑;}
+.video_cont .padd {overflow: hidden;padding: 38px;}
+.video_cont .l {float:left;width: 770px;height: 434px;}
+.video_cont .l .video {position: relative;width:100%;height:100%;min-width:100%;overflow: hidden;}
+.video_cont .l .video iframe {min-height:100%;min-width:100%;}
+.video_cont .r {overflow:hidden;padding-left: 39px;}
+.video_cont .r .tit {color:#fff;padding:20px 0 5px;}
+.video_cont .r .tit .h18 {line-height:1.4;}
+.video_cont .r .li {line-height:68px;border-bottom:1px solid #788881;font-size: 14px;color:#fff;}
+.video_cont .r .li img {width:16px;height:auto;position:relative;top:-2px;margin-right:5px;}
+
+.mp3_cont {height:344px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/article6.jpg) no-repeat center;position:relative;}
+.mp3_cont .padd {overflow:hidden;padding: 40px;}
+.mp3_cont .article-title .h24 {color: #fff;}
+.mp3_cont .title {padding:25px 0 20px;}
+.mp3_cont .title .h30{ line-height: 44px;color:#fff;}
+.mp3_cont .title .h30:before, .mp3_cont .title .h30:after{ content: ''; display: inline-block; width: 22px; height: 44px; vertical-align: top; background: url(https://www.ihchina.cn/Public/static/themes/image/temp/png8.png) no-repeat;}
+.mp3_cont .title .h30:before{ background-position: left; margin-right: 18px;}
+.mp3_cont .title .h30:after{ background-position: right; margin-left: 18px;}
+.mp3_cont .l {float:left;width:264px;height:264px;}
+.mp3_cont .l img {width:100%;height:100%;}
+.mp3_cont .r {overflow:hidden;padding-left:60px;height:264px;}
+.mp3_cont .sub .sub-item {color:#fff;display:inline-block;font-family:微软雅黑;}
+.mp3_cont .sub .sub-item + .sub-item {margin-left:100px;}
+.mp3_cont .sub .sub-item img {width:16px;height:auto;position:relative;top:-2px;margin-right:5px;}
+.mp3_cont .mp3_wp {padding-top:35px;}
+.mp3_cont .audiojs {width:739px;background:none;box-shadow:inherit;height:22px;overflow: inherit;margin: 0 11px;}
+.mp3_cont .audiojs .progress:after {content:"";width:22px;height:22px;position: absolute;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/icon9.png) no-repeat center;background-size: 100% 100%;top: 0;right: -11px;}
+.mp3_cont .audiojs .scrubber{ width: 100%; margin:0; height:22px; background:none; border:none; overflow: inherit; }
+.mp3_cont .audiojs .progress{ height:100%; background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/article2_a.png) no-repeat center left; }
+.mp3_cont .audiojs .loaded{ height:100%;  background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/article2.png) no-repeat center left; min-width: 100%; background-size: 100% auto; }
+.mp3_cont .audiojs .time{  border:0; width: 100%;  color:#fff; text-shadow:none; float: none; padding:0; margin:0; line-height: 25px; font-family: arial; }
+.mp3_cont .audiojs .time em{ float: left; color:#fff; }
+.mp3_cont .audiojs .time strong{ float: right; } 
+.mp3_cont .play-pause {position: absolute;padding:0;width:52px;height:52px;border:0;left:145px;top:50%;margin: -26px 0 0 0;}
+.mp3_cont .audiojs .play {background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/play2.png);margin:0;width:100%;height:100%;background-size:cover;}
+.mp3_cont .audiojs .pause {background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/play2_a.png);margin:0;width:100%;height:100%;background-size:cover;}
+.mp3_cont .l img.on{ animation:rotate 3s linear infinite; -webkit-animation:rotate 3s linear infinite; } 
+
+@keyframes rotate{   
+    0% { transform:rotate(0deg); -webkit-transform:rotate(0deg); }
+    100% { transform:rotate(360deg); -webkit-transform:rotate(360deg); }
+}
+@-webkit-keyframes rotate{
+    0% { transform:rotate(0deg); -webkit-transform:rotate(0deg); }
+    100% { transform:rotate(360deg); -webkit-transform:rotate(360deg); }
+}
+
+.list-mod {overflow: hidden;padding-bottom: 100px;}
+.list-mod .tit {position: relative;padding-bottom: 25px;margin-bottom: 35px;}
+.list-mod .list {width: 105%;font-family: 微软雅黑;}
+.list-mod .list .item {width: 400px;height: 225px;position: relative;float: left;margin-right: 15px;overflow:hidden;}
+.list-mod .list .item img {width:100%;height:auto;}
+.list-mod .list .item .mask {position: absolute;left: 0;bottom: 0;background: url(https://www.ihchina.cn/Public/static/themes/image/opacity-b60.png);width: 100%;line-height: 49px;text-align: center;}
+.list-mod .list .item .mask .p {font-size: 16px;color: #fff;}
+
+
+.represen2 .num-box{ margin-bottom: 57px; text-align: center;}
+.represen2 .num-item{ display: inline-block; width: 23%; vertical-align: top;}
+.represen2 .num-item .b{ font-family: impact; font-size: 92px; line-height: 1.3; color: #333;}
+.represen2 .num-item .h18{color:#333;font-family:微软雅黑;}
+
+
+.resources1 {position:relative;}
+.resources1 .x-wrap {position:relative;z-index:1;}
+.resources1 .bgi {background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/resources1.jpg);position:absolute;left:0;top:0;height:850px;width:100%;}
+.resources1 .title {padding:240px 0 55px;text-align:center;}
+.resources1 .title .t_head {padding:0 0 50px;background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr13.png) no-repeat bottom center;margin-bottom:20px;}
+.resources1 .t_head .h30:before, .resources1 .t_head .h30:after {background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr7.png);}
+.resources1 .list {height:616px;overflow:hidden;}
+.resources1 .list .item {float:left;background-repeat:no-repeat;background-position:center;background-size:cover;height:100%;width:16.66%;position:relative;}
+.resources1 .list .item a {display:block;width:100%;height:100%;}
+.resources1 .list .item.act {width:50%;}
+.resources1 .list .item .h18 {position:absolute;left:30px;top:60px;width:22px;text-align:center;color:#f0e5d8;bottom:60px;}
+.resources2 {overflow:hidden;padding-bottom:120px;}
+.resources2 .cont {margin-top:157px;position:relative;height:503px;}
+.resources2 .cont .l {width:918px;height:100%;position:absolute;left:-165px;bottom:0px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/resources1.png) no-repeat center;}
+.resources2 .cont .l .img {width:469px;height:469px;border-radius:6px;overflow:hidden;position:absolute;left:165px;bottom:34px;}
+.resources2 .cont .l .img img {width:100%;height:auto;}
+.resources2 .cont .r {width:500px;float:right;position:relative;}
+.resources2 .cont .r .title {overflow:hidden;color:#333;margin-bottom:0px;}
+.resources2 .cont .r .title .h30{ position: relative; float: left; padding: 0 32px;}
+.resources2 .cont .r .title .h30:before, .resources2 .cont .r .title .h30:after{ content: ''; position: absolute; top: 0; bottom: 0; width: 22px; background: url(https://www.ihchina.cn/Public/static/themes/image/temp/png7.png) no-repeat;}
+.resources2 .cont .r .title .h30:before{ left: 0; background-position: left;}
+.resources2 .cont .r .title .h30:after{ right: 0; background-position: right;}
+.resources2 .cont .r .title .t_more{ float: right; margin-top: 10px;}
+.resources2 .cont .r .list {font-family:微软雅黑;}
+.resources2 .cont .r .list .item {padding:28px 0;color:#333;border-bottom:1px dashed #b5b5b5;}
+.resources2 .cont .r .list .item .h16 {padding-bottom:12px;}
+.resources2 .cont .r .list .item:hover {color:#9a2929;}
+.resources3 {height:845px;background-repeat:no-repeat;background-position:top center;overflow:hidden;}
+.resources3 .cont {position:relative;height:100%;}
+.resources3 .cont .qin {width:533px;height:745px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/resources2.png) no-repeat center;position:absolute;right:-45px;bottom:0;}
+.resources3 .t_head {text-align:left;padding:115px 0 25px;}
+.resources3 .t_head .h30:before, .resources3 .t_head .h30:after{background-image: url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr7.png);}
+.resources3 .list {position:relative;z-index:1;padding-right:248px;font-family:微软雅黑;min-height:420px;}
+.resources3 .list .item {padding:16px 0;overflow:hidden;}
+.resources3 .list .item a {overflow:hidden;display:block;height:28px;line-height:28px;}
+.resources3 .list .item .h16 {float:left;color:#8997a3;line-height:28px;padding-right:50px;background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr8.png) no-repeat right center;}
+.resources3 .list .item .x {overflow:hidden;height:100%;background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr9.png) no-repeat right center;}
+.resources3 .list .item.i1 {margin-left:495px;}
+.resources3 .list .item.i2 {margin-left:535px;margin-right:13px;}
+.resources3 .list .item.i3 {margin-left:160px;margin-right:35px;}
+.resources3 .list .item.i4 {margin-left:385px;margin-right:42px;}
+.resources3 .list .item.i5 {margin-left:55px;margin-right:25px;}
+.resources3 .list .item.i6 {margin-left:445px;margin-right:32px;}
+.resources3 .list .item.i7 {margin-left:25px;margin-right:48px;}
+.resources3 .list .item a:hover .h16 {color:#fff;background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr8_a.png);}
+.resources3 .list .item a:hover .x {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr9_a.png);}
+.resources3 .t_more {margin-top:45px;}
+.resources4 {overflow:hidden;text-align:center;padding-bottom:100px;}
+.resources4 .t_head {padding:50px 0 35px;color:#333;}
+.resources4 .list {width:105%;overflow:hidden;font-family:微软雅黑;}
+.resources4 .list .item {float:left;width:400px;margin-right:15px;background:#fff;height:328px;margin-bottom:20px;}
+.resources4 .list .item .img {width:100%;height:225px;overflow:hidden;}
+.resources4 .list .item .img img {width:100%;height:auto;}
+.resources4 .list .item .txt {color:#333;text-align:center;padding:28px 20px 0;}
+.resources4 .list .item .txt .date {font-family:Arial;padding-top:10px;}
+.resources4 .list .item:hover .txt{color:#9a2929;}
+.resources4 .t_more {color:#333;margin-top:20px;}
+.resources4 .t_more:hover {color:#9a2929;}
+
+
+.guide1 {overflow:hidden;}
+.guide1 .t_head .tab-box {overflow:hidden;width:105%;}
+.guide1 .t_head .tab-link {margin:0 10px 0 0;float:left;}
+.guide1 .bp-border .bp-inner {line-height:inherit;height:88px;background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr11.png);width:280px;display:table;}
+.guide1 .bp-border .bp-inner .cell {line-height:1.4;display:table-cell;vertical-align:middle;padding:0 55px;}
+.guide1 .bp-border:before, .guide1 .bp-border:after {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr10.png);}
+.guide1 .bp-border.cur:before, .guide1 .bp-border.cur:after, .guide1 a.bp-border:hover:before, .guide1 a.bp-border:hover:after {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr10_a.png);}
+.guide1 .bp-border.cur .bp-inner, .guide1 a.bp-border:hover .bp-inner {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr11_a.png);}
+.guide1 .tab-mod {overflow:hidden;height:525px;font-family:微软雅黑;}
+.guide1 .tab-mod .tab-bar {float:left;height:100%;width:260px;background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/guide1.jpg);}
+.guide1 .tab-mod .tab-bar .tab-term {margin:70px 0;cursor:pointer;color:#aa9892;}
+.guide1 .tab-mod .tab-bar .tab-term .d1 {font-size:36px;font-family:Impact;padding-left:114px;line-height:1;}
+.guide1 .tab-mod .tab-bar .tab-term .x {height:17px;background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr12.png) no-repeat right center;}
+.guide1 .tab-mod .tab-bar .tab-term .d2 {line-height:1.2;padding-left:114px;}
+.guide1 .tab-mod .tab-bar .tab-term.cur {color:#fff;}
+.guide1 .tab-mod .tab-bar .tab-term.cur .x {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/arr12_a.png);}
+.guide1 .tab-mod .tab-cont {overflow:hidden;height:100%;background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/guide2.jpg) no-repeat center;}
+.guide1 .tab-mod .tab-cont .tab-item {display:none;padding:85px 65px;color:#fff;}
+.guide1 .tab-mod .tab-cont .tab-item.act {display:block;}
+.guide1 .tab-mod .tab-cont .tab-item .p {padding-bottom:20px;}
+.guide1 .tab-mod .tab-cont .tab-item .scroll1 {height:355px;text-align:justify;}
+.guide1 .mCSB_scrollTools .mCSB_draggerRail {background:#e0d1bf;}
+.guide1 .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {background:#e0d1bf;}
+.guide2 {padding-bottom:100px;position:relative;}
+.guide2 .x-wrap {position:relative;z-index:1;}
+.guide2 .t_head {padding:60px 0 35px;}
+.guide2 .list {font-family:"微软雅黑";padding-bottom:35px;}
+.guide2 .item {background:#fff;overflow:hidden;padding:0 45px;line-height:68px;position:relative;margin-bottom:5px;}
+.guide2 .item:after {content:"";display:block;width:0;border-bottom:2px solid #9a2929;-webkit-transition:all 0.4s ease-in-out;transition:all 0.4s ease-in-out;position:absolute;left:0;bottom:0;}
+.guide2 .item .t {display:block;max-width:80%;float:left;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+.guide2 .item .down {width:24px;height:22px;background:url(https://www.ihchina.cn/Public/static/themes/image/jjl/icon10.png) no-repeat center;display:block;float:right;margin-top:23px;}
+
+
+.book_list1 {padding-bottom: 100px;}
+.book_list1 .list {background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/bar1.png) no-repeat top center;padding-top: 45px;}
+.book_list1 .list .item {padding-bottom: 45px;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/bar1.png) no-repeat bottom center;margin-top: -10px;}
+.book_list1 .list .item .sHoverItem {width:219px;height: 302px;display: inline-block;vertical-align: bottom;position: relative;margin-left: 160px;}
+.book_list1 .list .item .sHoverItem+.sHoverItem {margin-left: 125px;}
+.book_list1 .list .item .sHoverItem .img {width: 100%;max-height: 100%;position: absolute;left: 0;bottom:0;}
+.book_list1 .list .item .sHoverItem .img img {width:100%;height: auto;}
+.book_list1 .list .item .sHoverItem .mask {width: 100%;position: absolute;left: 0;top: 0;right: 0;bottom: 0;color: #fff;overflow: hidden;zoom: 1;}
+.book_list1 .list .item .sHoverItem .mask a {display:block;width: 100%;height: 100%;background: rgba(0,0,0,0.8);}
+.book_list1 .list .item .sHoverItem .mask .middle-cont {padding: 0 15px;}
+.book_list1 .list .item .sHoverItem .mask .h20 {padding-bottom: 15px;}
+.book_list1 .list .item .sHoverItem .mask .p {overflow:hidden;}
+.book_list1 .list .item .sHoverItem .mask .p .s1 {float: left;min-width: 74px;text-align: justify;}
+.book_list1 .list .item .sHoverItem .mask .p .s1 .t1{width:60px;height:21px;display: inline-block;vertical-align: top;}
+.book_list1 .list .item .sHoverItem .mask .p .s1 .t1:after{content:'';display: inline-block;width:100%;height:0;}
+.book_list1 .list .item .sHoverItem .mask .p .s2 {overflow: hidden;}
+
+.banner_list1 {position: relative;max-width: 1920px;margin: auto;overflow: hidden;}
+.banner_list1 .banner1 {height: 985px;background-position: top center;background-repeat: no-repeat;}
+.banner_list1 .play1 {position: absolute;left: 50%;margin-left: -360px;top: 553px;cursor: pointer;transition: all 0.4s ease;}
+.banner_list1 .special8_new {color: #fff;background: none;background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/solar_terms13.jpg);}
+.banner_list1 .special8_new .slick-item a {color: #fff;}
+.banner_list1 .ico1 {position: absolute;left: 0;bottom: 0.5%;width: 53.2%;}
+.banner_list1 .ico1 img {width: 100%;height: auto;}
+.banner_list1 .ico2 {position: absolute;right: 0;width: 26.5%;bottom: 26.5%;}
+.banner_list1 .ico2 img {width: 100%;height: auto;}
+.banner_list1 .pic {position: absolute;}
+.banner_list1 .pic img {width: 100%;height: auto;}
+.banner_list1 .p1 {top: 168px;left: 287px;}
+.banner_list1 .p2 {top: 188px;left: 0;}
+.banner_list1 .p3 {top: 330px;right: -60px;}
+
+.banner_list1 .p1 {transform: scale(0.3);opacity: 0;transition: all 1.5s ease-in;}
+.banner_list1 .p2 {transform: translateX(50%) scale(0.3);opacity: 0;transition: all 2s ease-in-out;}
+.banner_list1 .p3 {transform: scale(1.5);opacity: 0;transition: all 2s ease-in-out;}
+
+.banner_list1.anim .pic {transform: none;opacity: 1;}
+
+
+
+
+
+
+
+
+@media screen and (min-width: 1230px){
+    .banner_list1 .play1:hover {transform: scale(1.1);}
+.solar_terms1 .l {-webkit-transition:all 1.2s ease-in-out;transition:all 1.2s ease-in-out;opacity:0;-webkit-transform:translateX(-120px);transform:translateX(-120px);}
+.solar_terms1 .r {-webkit-transition:all 1.2s ease-in-out;transition:all 1.2s ease-in-out;opacity:0;-webkit-transform:translateX(120px);transform:translateX(120px);}
+.solar_terms1 .clear.anim .l,.solar_terms1 .clear.anim .r {-webkit-transform:translateX(0);transform:translateX(0);opacity:1;}
+
+.solar_terms2 .clear .item:nth-child(1) {-webkit-transition: all 1.2s ease-in-out 0s;transition: all 1.2s ease-in-out 0s;-webkit-transform:translateY(100px);transform:translateY(100px);opacity:0;}
+.solar_terms2 .clear .item:nth-child(2) {-webkit-transition: all 1.2s ease-in-out 0.3s;transition: all 1.2s ease-in-out 0.3s;-webkit-transform:translateY(100px);transform:translateY(100px);opacity:0;}
+.solar_terms2 .clear .item:nth-child(3) {-webkit-transition: all 1.2s ease-in-out 0.6s;transition: all 1.2s ease-in-out 0.6s;-webkit-transform:translateY(100px);transform:translateY(100px);opacity:0;}
+.solar_terms2 .clear .item:nth-child(4) {-webkit-transition: all 1.2s ease-in-out 0.9s;transition: all 1.2s ease-in-out 0.9s;-webkit-transform:translateY(100px);transform:translateY(100px);opacity:0;}
+.solar_terms2 .clear.anim .item {-webkit-transform:translateY(0);transform:translateY(0);opacity:1;}
+
+.solar_terms4 .cont .d1 {-webkit-transition: all 1.2s ease-in-out;transition: all 1.2s ease-in-out;-webkit-transform:translate(100px,0);transform:translate(100px,0);opacity:0;}
+.solar_terms4 .cont .d2 {-webkit-transition: all 1.2s ease-in-out;transition: all 1.2s ease-in-out;-webkit-transform:translate(0,120px);transform:translate(0,120px);opacity:0;}
+.solar_terms4 .cont .d3 {-webkit-transition: all 1.2s ease-in-out;transition: all 1.2s ease-in-out;-webkit-transform:translate(0,-120px);transform:translate(0,-120px);opacity:0;}
+.solar_terms4 .cont .d4 {-webkit-transition: all 1.2s ease-in-out;transition: all 1.2s ease-in-out;-webkit-transform:translate(-100px,0);transform:translate(-100px,0);opacity:0;}
+.solar_terms4 .cont.anim div {-webkit-transform:translate(0,0);transform:translate(0,0);opacity:1;}
+.solar_terms5 .l {-webkit-transition:all 1.2s ease-in-out;transition:all 1.2s ease-in-out;opacity:0;-webkit-transform:translateX(-120px);transform:translateX(-120px);}
+.solar_terms5 .r {-webkit-transition:all 1.2s ease-in-out;transition:all 1.2s ease-in-out;opacity:0;-webkit-transform:translateX(120px);transform:translateX(120px);}
+.solar_terms5.anim .l,.solar_terms5.anim .r {-webkit-transform:translateX(0);transform:translateX(0);opacity:1;}
+
+.guide2 .item:hover {color:#9a2929;}
+.guide2 .item:hover .down {background-image:url(https://www.ihchina.cn/Public/static/themes/image/jjl/icon10_a.png);}
+.guide2 .item:hover:after {width:100%;}
+
+.rejuvenation4 .list-item .img img {-webkit-transition:all 0.5s;transition:all 0.5s;}
+.rejuvenation4 .list-item:hover .img img {-webkit-transform: scale(1.1);transform: scale(1.1);}
+
+.special2 .img img {-webkit-transition:all 0.5s;transition:all 0.5s;}
+.special2 .img:hover img {-webkit-transform: scale(1.1);transform: scale(1.1);}
+
+
+
+
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1460px) {
+	.train1 .cont {top:27%;}
+}
+
+@media screen and (max-width: 750px){
+	.inherit_xx1 .t_head {padding-bottom:0.4rem;}
+.jjl-banner {display:none;}
+.jjl-banner.phone {display:block;height:8rem;}
+
+.list-mod {padding-bottom:0.8rem;}
+.list-mod .tit {padding-bottom:0.35rem;margin-bottom:0.4rem;}
+.list-mod .list {width:auto;}
+.list-mod .list .item {width:100%;height:auto;margin-bottom:0.2rem;}
+
+.mp3_cont {height:auto;background-size:cover;}
+.mp3_cont .padd {padding:0.8rem 0.25rem 0.6rem;}
+.mp3_cont .l {width:3rem;height:3rem;float:none;margin:0 auto;}
+.mp3_cont .r {height:auto;padding-left:0;}
+.mp3_cont .title .h30{ line-height: 1.2;font-size:0.3rem;}
+.mp3_cont .title .h30::before, .mp3_cont .title .h30::after{ position: relative; top: -0.05rem; width: 0.22rem; height: 0.44rem; background-size: 200%;}
+.mp3_cont .title .h30::before{ margin-right: 0.2rem;}
+.mp3_cont .title .h30::after{ margin-left: 0.2rem;}
+.mp3_cont .audiojs {width:auto;}
+.mp3_cont .play-pause {left:50%;margin: -26px 0 0 -26px;top: 2.3rem;}
+.mp3_cont .sub .sub-item {width:100;display:block;margin:0 !important;padding-top:0.1rem;}
+.mp3_cont .title {padding: 0.4rem 0 0.2rem;}
+.mp3_cont .mp3_wp {padding-top:0.4rem;}
+.padd_top {padding-top:0.4rem;}
+
+.video_cont {height:auto;background-size:cover;}
+.video_cont .padd {padding: 0.6rem 0.3rem;}
+.video_cont .l {width:auto;height:3.6rem;float:none;}
+.video_cont .r {padding:0.4rem 0 0;}
+.video_cont .r .tit {padding: 0 0 0.05rem;}
+.video_cont .r .li {line-height:0.8rem;font-size:0.26rem;}
+.video_cont .r .li img {top:-1px;}
+
+.solar_terms1 {height:auto;margin-top:0;}
+.solar_terms1 .clear {padding:0;}
+.solar_terms1 .l .text .t_head {padding:0.8rem 0 0.4rem;}
+.solar_terms1 .l .text .p {font-size:0.26rem;padding-bottom:0.55rem;}
+
+.t_more.col1:before, .t_more.col1:after {background-size: 100%;}
+
+.solar_terms1 .l {width:auto;float:none;}
+.solar_terms1 .r {display:none;}
+.solar_terms2 {height:auto;background-repeat: repeat;}
+.solar_terms2 .clear .item {width:auto;height:auto;margin-left:1rem;float:none;margin-bottom:0.6rem;}
+.solar_terms2 .clear .item .img {width:2rem;height:auto;top:-0.35rem;left:-1rem;}
+.solar_terms2 .clear .item .text {padding:0.4rem 0rem 0.4rem 1rem;}
+.solar_terms2 .clear .item .text .p {font-size:0.3rem;margin:0 0.12rem;}
+.solar_terms2 .t_head {padding: 0.8rem 0 0.6rem;}
+.solar_terms3 {height:auto;}
+.solar_terms3 .t_head {padding: 0.8rem 0 0.4rem;}
+.solar_terms3 .imgs {height:auto;}
+.solar_terms3 .list {padding:0;margin:0.2rem 0 0;height:auto;}
+.solar_terms3 .list .item {height: 4.4rem !important;width:0.8rem;}
+.solar_terms3 .list .item.cur {width:4rem;}
+.solar_terms3 .list .item .con {width:4rem;}
+.solar_terms3 .list .item .tit {width:0.8rem;line-height:0.8rem;padding-top:0.6rem;margin-top:0.4rem;font-size:0.3rem;margin-right:0;}
+.solar_terms3 .list .item .txt {padding: 0.4rem 0.1rem 0.4rem 0;width:3.2rem;}
+.solar_terms3 .list .item .txt .p {padding:0;font-size:0.26rem;}
+.solar_terms3 .list .item .txt .more {bottom:0.5rem;}
+.solar_terms4 {height:auto;padding-bottom:0.8rem;}
+.solar_terms4 .t_head {padding:0.8rem 0 0.4rem;}
+.solar_terms4 .cont {height:auto;}
+.solar_terms4 .cont .d1 {position:static;width:auto;height:4rem;}
+.solar_terms4 .cont .d2 {position:static;width:auto;height:4rem;margin:0.2rem 0;}
+.solar_terms4 .cont .d3 {position:static;width:auto;height:auto;}
+.solar_terms4 .cont .d4 {display:none;}
+.solar_terms4 .cont .d1 .padd, .solar_terms4 .cont .d2 .padd, .solar_terms4 .cont .d3 .padd {padding: 0.6rem 0.3rem;}
+.solar_terms4 .cont .d1 .tit, .solar_terms4 .cont .d2 .tit {font-size:0.34rem;padding-right:0.4rem;height:100%;}
+.solar_terms4 .cont .d1 .p, .solar_terms4 .cont .d2 .p {padding-right:0.2rem;height:100%;font-size:0.26rem;}
+.solar_terms4 .cont .d3 .tit {font-size:0.34rem;padding-bottom:0.2rem;}
+.solar_terms4 .cont .d3 .p {font-size:0.26rem;padding:0.07rem 0;}
+.solar_terms5 {height:auto;}
+.solar_terms5 .list {height:auto;}
+.solar_terms5 .l ,.solar_terms5 .r {float:none;width:auto;margin:0rem;padding: 0.8rem 0;}
+.solar_terms5 .l .con, .solar_terms5 .r .con {position:static;width:auto;margin:0;padding:0 0.25rem;}
+.solar_terms5 .t_head {padding: 0;}
+.solar_terms5 .l .list .item {padding: 0.4rem 0;}
+.solar_terms5 .l .list .item .img {float:none;width:100%;height:auto;}
+.solar_terms5 .l .list .item .txt {padding: 0.3rem 0.15rem 0rem;}
+.solar_terms5 .l .list .item .txt .h16 {height:auto;}
+.solar_terms5 .l .list .item .txt .p {font-size:0.26rem;height:auto;padding:0.1rem 0;}
+.solar_terms5 .t_more {margin-top:0.25rem;}
+.solar_terms5 .r .list .item {padding:0.4rem 0;height:auto;}
+.solar_terms5 .r .list .item .h24 {padding-bottom:0.14rem;}
+.solar_terms5 .r .list .item .p {font-size: 0.28rem;padding:0.1rem 0 0;}
+
+
+.result1 {height:auto;padding:0.8rem 0;background-size:cover;background-position:center;}
+.result1 .title {padding: 0 0 0.2rem;}
+.result1 .title .h30 {font-size:0.45rem;line-height: 1.4;}
+.result1 .title .h30::before, .result1 .title .h30::after{ position: relative; top: 0.05rem; width: 0.22rem; height: 0.44rem; background-size: 200%;}
+.result1 .title .h30::before{ margin-right: 0.2rem;}
+.result1 .title .h30::after{ margin-left: 0.2rem;}
+.result1 .screen-mod.top .input {width:3.8rem;}
+.result1 .txt {font-size:0.26rem;padding: 0.15rem 0 0.2rem;width:auto;text-align:center;}
+.result1 .bp-border.cur .bp-inner, .result1 a.bp-border:hover .bp-inner {width:1rem;}
+.result1 .bp-border.cur:before, .result1 .bp-border.cur:after, .result1 a.bp-border:hover:before, .result1 a.bp-border:hover:after {background-size:cover;}
+.result1 .screen-mod.top .submit button:after {font-size:0.3rem;}
+.result1 .screen-mod.bottom .input {width: 2.6rem;}
+.result1 .screen-mod.bottom .hx {margin:0 0.12rem;width:0.2rem;}
+.result1 .screen-mod.bottom .submit {margin:0.2rem auto 0;}
+.result1 .screen-mod.bottom .input .bp-inner:after {width:0.3rem;height:0.3rem;right:0.05rem;margin-top:-0.15rem;}
+.result1 .screen-mod.bottom .input .bp-inner input {background-size: 0.36rem auto;}
+.result2 {padding-bottom:1rem;}
+.result2 .tab-bar {padding-bottom: 1rem;}
+.result2 .tab-bar .tab-term {float:left;width:25%;height:1.4rem;background-size:1.8rem auto;font-size:0.28rem;}
+.result2 .tab-bar .tab-term a {padding: 0.4rem 0;}
+.result2 .tab-bar .link_wp {bottom:0.25rem;}
+.result2 .list-mod3 {padding:0.4rem 0;}
+.result2 .list-mod3 .list-item {padding: 0.4rem 0.3rem;background-size:cover;}
+.result2 .list-mod3 .cont {padding:0;}
+
+.inherit_xx1 .text {padding: 0 0 0.3rem;}
+.inherit_xx1 .text .p {font-size:0.26rem;padding-bottom:0.2rem;}
+.inherit_xx1 .btn_wp {position:static;margin-top:0.3rem;}
+.inherit_xx1 .btn_wp .btn1 {height:0.6rem;line-height:0.6rem;}
+.inherit_xx2 {padding:0.8rem 0 0.5rem;}
+.inherit_xx2 .tit {padding-bottom:0.3rem;}
+
+.x-tables {margin-bottom:0.5rem;overflow-x: auto;    background: url(https://www.ihchina.cn/Public/static/themes/image/jjl/inherit_xx1.jpg) no-repeat; background-size: 100% 0.7rem; }
+.x-tables table tr:first-child{background:none;}
+.x-tables table table{ width: auto;}
+.x-tables table th{ width: auto; height: 0.7rem;line-height:0.7rem; padding: 0 0.3rem; font-size: 0.28rem; white-space: nowrap;}
+.x-tables table td{ width: auto; height: 0.7rem; padding: 0.1rem 0;}
+
+
+
+.pop-img .pop-dialog {width:7rem;height:6rem;}
+.pop-img .slick-item .img {width:5rem;height:auto;line-height:inherit;}
+.pop-img .slick-item .p {font-size:0.32rem;}
+.pop-img .slick-prev {left:0;}
+.pop-img .slick-next {right:0;}
+.pop-video .pop-dialog {width:7rem;height:6rem;}
+.pop-video .cont .l {width:100%;height:3.4rem;float:none;margin:0 0 0.2rem;}
+.pop-video .cont .r {float:none;width:auto;}
+.pop-video .slick-item .play {width:1.2rem;height:1.2rem;background-size:cover;margin:-0.6rem 0 0 -0.6rem;}
+.pop-video .slick-arrow {background: url(https://www.ihchina.cn/Public/static/themes/image/temp/png32.png) center no-repeat;width:1rem;height:1rem;}
+.pop-video .slick-prev {background-position:left center;left:-0.3rem;right:inherit;top:50%;margin-top:-0.5rem;}
+.pop-video .slick-next {background-position:right center;right:-0.3rem;left:inherit;top:50%;margin-top:-0.5rem;}
+
+
+.represen1 {height:auto;}
+.represen1.home6 .tab-term {width:auto;}
+.represen1.home6 .title {padding: 0.8rem 0 0.2rem;}
+.represen1.home6 .title-txt {padding-bottom:0;}
+.represen1.home6 .tab-track {width:auto;}
+.represen1.home6 .tab-term .h16 {background:none;margin-left:0;line-height:1.6;}
+.represen1.home6 .tab-term.t7 {display:none;}
+.represen1.home6 .tab-term.t8 {display:none;}
+.represen1.home6 .tab-bar {height:auto;padding-bottom:0.3rem;}
+.represen1.home6 .tab-cont {height:1.5rem;}
+.represen2 {padding:0.8rem 0 0.5rem;}
+.represen2 .title {padding: 0 0 0.5rem;}
+.represen2 .title .p {padding:0.3rem 0 0.4rem;font-size:0.26rem; }
+.represen2 .page-mod .page-more {color:#972a2a;border-color:#972a2a;}
+.represen2 .page-mod {margin-top:0.4rem;}
+.represen2 .tit {padding:0.5rem 0 0.25rem;}
+.represen2 .screen-mod {text-align:justify;}
+.represen2 .screen-mod .select-mod {margin-right: 0;margin-bottom: 0.2rem;width: 3.4rem;}
+.represen2 .screen-mod .input {width:5.2rem;margin-right:0;}
+.represen2 .screen-mod .submit .bp-inner {width:auto;padding:0 0.2rem;}
+.represen2 .screen-mod:after{ content: ''; display: inline-block; padding-left: 100%; font-size: 0; vertical-align: top;}
+
+
+.resources1 {padding-bottom:0.8rem;}
+.resources1 .title {padding:2.4rem 0 0.45rem;}
+.resources1.t_head {padding:0 0 0.25rem;}
+.resources1 .list {height:3.5rem;height:6rem;display: flex;}
+.resources1 .list .item {flex: 1;} 
+.resources1 .list .item .h18 {top:0.3rem;left:0.2rem;bottom:0.3rem;}
+.resources1 .bgi {height:100%;}
+.resources2 {padding-bottom:0;}
+.resources2 .cont .l {display:none;}
+.resources2 .cont .r {width:auto;float:none;}
+.resources2 .cont {height:auto;margin:0.8rem 0;}
+.resources2 .cont .r .list .item {padding:0.3rem 0;}
+.resources2 .cont .r .list .item .h16 {padding-bottom:0.12rem;}
+.resources2 .cont .r .title .h30 {padding: 0 0.4rem;}
+.resources2 .cont .r .title .h30:before, .resources2 .cont .r .title .h30:after{ background-size: 200%; width: 0.22rem; height: 0.44rem;}
+.resources2 .cont .r .title .t_more {margin-top: 0.05rem;}
+.resources3 {height:auto;padding-bottom:0.8rem;}
+.resources3 .cont .qin {display:none;}
+.resources3 .list {padding-right:0;min-height:inherit;}
+.resources3 .list .item {margin-right:0 !important;margin-left:0 !important;padding:0.16rem 0;}
+.resources4 {padding-bottom:1rem;}
+.resources4 .t_head {padding:0.8rem 0 0.4rem;}
+.resources4 .list .item {width:3.4rem;margin-right:0.2rem;margin-bottom:0.3rem;height:auto;}
+.resources4 .list .item .img {height:auto;}
+.resources4 .list .item .txt {padding:0.3rem 0.1rem;}
+.resources4 .list .item .txt .date {padding-top:0.1rem;}
+.resources4 .t_more {margin-top:0.2rem;}
+.resources3 .t_head {padding:0.8rem 0 0.24rem;}
+.resources3 .t_more {margin-top:0.45rem;}
+.resources1 .title .t_head {margin-bottom:0.2rem;}
+
+.guide1 .t_head  {width:auto;padding: 0.8rem 0 0.2rem;}
+.guide1 .bp-border .bp-inner {width:3.2rem;height:1rem;background-size:100% 100%;padding:0;}
+.guide1 .bp-border .bp-inner .cell {padding:0 0rem;}
+.guide1 .t_head .tab-link {float:left;margin:0 0.15rem 0.2rem 0;}
+.guide1 .t_head .tab-box {text-align:center;}
+.guide1 .tab-mod .tab-bar {float:none;width:auto;overflow:hidden;}
+.guide1 .tab-mod .tab-bar .tab-term {display:inline-block;width:33.33%;text-align:center;float:left;margin:0.4rem 0;}
+.guide1 .tab-mod .tab-bar .tab-term .d1 {font-size:0.56rem;padding-left:0;}
+.guide1 .tab-mod .tab-bar .tab-term .d2 {padding-left:0;}
+.guide1 .tab-mod .tab-bar .tab-term .x {display:none;}
+.guide1 .tab-mod {height:auto;}
+.guide1 .tab-mod .tab-cont .tab-item {padding:0.6rem 0.3rem;}
+.guide1 .mCSB_inside > .mCSB_container {margin-right:0.3rem;}
+.guide1 .tab-mod .tab-cont .tab-item .scroll1 {height:4.2rem;}
+.guide1 .tab-mod .tab-cont {background-size:cover;}
+.guide2 {padding-bottom:1rem;}
+.guide2 .t_head {padding:0.8rem 0 0.4rem;}
+.guide2 .item {padding:0 0.3rem;line-height:1rem;}
+.guide2 .item .down {margin-top:0.3rem;}
+.guide2 .list {padding-bottom:0.35rem;}
+
+.represen2 .num-box{ margin-bottom: 0.5rem;}
+.represen2 .num-item{ width: auto; margin: 0 0.2rem;}
+.represen2 .num-item .b{ font-size: 0.5rem;}		
+
+
+
+
+/*1126*/
+.solar_terms3 .list .item .tit{ writing-mode:inherit; -webkit-writing-mode:inherit; float: none; width:auto; padding:0 0 0 0.6rem; margin:0; background-position:left center; background-size:0.3rem auto; }
+.solar_terms3 .list .item{ float: none; width:auto; height:auto !important; margin:0 !important; }
+.solar_terms3 .list .item.cur{ width:auto;  }
+.solar_terms3 .list .item .con{ width:auto; padding:0.2rem 0.3rem; }
+.solar_terms3 .list .item .txt{ transform:scale(1); -webkit-transform:scale(1); opacity:1; width:auto; display:none; padding:0.2rem 0 1rem; }
+.solar_terms3 .list .item .txt .p{ padding:0.3rem 0; }
+.solar_terms3 .list .item .txt img{ display:block; width:100%; }
+.solar_terms3 .list .item.cur .txt{ display:block; }
+
+.represen2 .screen-mod .select-mod, .represen2 .screen-mod .input, .represen2 .screen-mod .submit,.x-tables table td{ font-size:0.24rem; }
+
+
+.book_list1 {padding-bottom: 1rem;}
+.book_list1 .list {background: none;overflow: hidden;padding-top: 0;padding-bottom: 0.4rem;}
+.book_list1 .list .item {background: none;width: 105%;margin-top: 0;}
+.book_list1 .list .item .sHoverItem .img {position: static;}
+.book_list1 .list .item .sHoverItem {width: 3.2rem;margin-left: 0.2rem;float: left;height: 5.8rem;margin-bottom: 0.2rem;}
+.book_list1 .list .item .sHoverItem+.sHoverItem {margin-left: 0.2rem;} 
+.book_list1 .list .item .sHoverItem .mask {position: static;}
+.book_list1 .list .item .sHoverItem .mask .p {display: none;}
+.book_list1 .list .item .sHoverItem .mask .h20 {padding: 0.3rem 0;text-align: center;}
+.book_list1 .list .item .sHoverItem .mask .middle-cont {padding: 0 0.15rem;}
+.book_list1 .list .item .sHoverItem .mask a {background: rgba(154, 41, 41, 1);}
+
+.result2 .list-item:hover .t_more:before{ background-image: url(https://www.ihchina.cn/Public/static/themes/image/temp/horn35_b.png);background-position: left top;}
+.result2 .list-item:hover .t_more:after{  background-image: url(https://www.ihchina.cn/Public/static/themes/image/temp/horn35_b.png);background-position: right top;}   
+.inherit_xx2 .list {padding-bottom: 0.5rem;}
+
+
+.banner_list1 .banner1 {height: 5.6rem;background-size: cover;}
+.banner_list1 .play1 {position: absolute;top: 3.2rem;margin-left: -2rem;width: 1rem;}
+.banner_list1 .play1 img {width: 100%;height: auto;}
+.banner_list1 .special8_new {background-size: 120%;}
+
+.banner_list1 .p1 {width: 35%;left: 13%;top: 12%;}
+.banner_list1 .p2 {width: 50%;left: 0;top: 13%;}
+.banner_list1 .p3 {width: 50%;right: 0;bottom: 25%;top: auto;}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
