@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1>班级列表</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>班级名称</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in class_list %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.title }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

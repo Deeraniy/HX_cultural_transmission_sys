@@ -1,0 +1,65 @@
+/*@import './base.css';*/
+/* src/assets/global.css */
+
+/* 全局默认光标 */
+/*html, body {*/
+/*    cursor: url('@/assets/cursor/normal.cur'), auto;*/
+/*}*/
+
+/*!* 输入框、文本框等恢复默认行为 *!*/
+/*input, textarea, select {*/
+/*    cursor: text; !* 文本光标 *!*/
+/*}*/
+
+/*!* 按钮和链接的光标 *!*/
+/*button, a {*/
+/*    cursor: url('@/assets/cursor/link.ani'), pointer;*/
+/*}*/
+
+/*!* 拖动操作光标 *!*/
+/*.dragging {*/
+/*    cursor: url('@/assets/cursor/move.cur'), move;*/
+/*}*/
+
+/*!* 排除背景区域 *!*/
+/*.background, .bg-image {*/
+/*    cursor: default;*/
+/*}*/
+
+/*!* 全局通配，覆盖所有未定义区域 *!*/
+/** {*/
+/*    cursor: url('@/assets/cursor/normal.cur'), auto;*/
+/*}*/
+
+
+/*#app {*/
+/*  max-width: 1280px;*/
+/*  margin: 0 auto;*/
+/*  padding: 2rem;*/
+/*  font-weight: normal;*/
+/*}*/
+
+/*a,*/
+/*.green {*/
+/*  text-decoration: none;*/
+/*  color: hsla(160, 100%, 37%, 1);*/
+/*  transition: 0.4s;*/
+/*  padding: 3px;*/
+/*}*/
+
+/*@media (hover: hover) {*/
+/*  a:hover {*/
+/*    background-color: hsla(160, 100%, 37%, 0.2);*/
+/*  }*/
+/*}*/
+
+/*@media (min-width: 1024px) {*/
+/*  body {*/
+/*    display: flex;*/
+/*    place-items: center;*/
+/*  }*/
+
+/*  #app {*/
+/*    padding: 0 2rem;*/
+/*  }*/
+/*}*/
