@@ -1,11 +1,12 @@
 <script setup>
 import router from "@/router.js";
+import HomePage from "@/components/Food/HomePage.vue";
 
 </script>
 
 <template>
   <div id="app">
-  <router-view/>
+  <HomePage />
   </div>
 </template>
 

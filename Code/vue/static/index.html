@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>故宫博物院</title>
+		<title>湖湘文化国际传播效果分析系统</title>
 		<link rel="stylesheet" type="text/css" href="css/deaderindext.css" />
         <link href="//unpkg.com/layui@2.9.21/dist/css/layui.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="css/index.css" />
@@ -36,9 +36,19 @@
 			})
 
 		</script>
+        <style>
+            /* 为页面添加顶部空间，避免头部和下方内容重叠 */
+            body {
+                padding-top: 45px;  /* 适当调整此值，确保div不被遮挡 */
+            }
 
+            /* 如果有其他固定定位的元素，可以清除固定定位 */
+            .sidebar {
+                position: relative;  /* 取消固定定位，确保正常流式布局 */
+            }
+        </style>
 	</head>
-	<body style="background-image: url(img/img_hx/背景.gif)">
+	<body style="background-image: url('../src/assets/img2.png')">
 		<div class="sc_cg" style="display:none;">
 			<div class="c">
 				<i class="close"></i>
@@ -48,11 +58,6 @@
 		</div>
 		<!--弹出提示框的效果-->
 		<script>
-
-
-
-
-
 			var my_alert = function(content, ico, url) {
 				url = url ? url : 'javascript:;';
 				ico = ((ico == 1) ? 2 : 1) || 1;
@@ -117,57 +122,35 @@
 							<div class="p">
 								<p><strong> <a   href=""     >情感分析</a> </strong></p>
 								<p><strong> <a   href=""     >传播效果</a> </strong></p>
-<!--								<p><strong> <a   href=""     >交通路线</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >游览须知</a> </strong></p>-->
-<!--								<p><strong> <a id="bdclick_btn1"  href=""     target="_blank" >全景故宫</a> </strong></p>-->
 							</div>
 						</div>
 						<div class="child c3">
 							<div class="p">
                                 <p><strong> <a   href=""     >情感分析</a> </strong></p>
                                 <p><strong> <a   href=""     >传播效果</a> </strong></p>
-<!--								<p><strong> <a   href=""     >原状陈列</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >赴外展览</a> </strong></p>-->
 							</div>
 						</div>
 						<div class="child c4">
 							<div class="p">
                                 <p><strong> <a   href=""     >情感分析</a> </strong></p>
                                 <p><strong> <a   href=""     >传播效果</a> </strong></p>
-<!--								<p><strong> <a   href=""     >国际博协培训中心</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >故宫志愿者</a> </strong></p>-->
 							</div>
 						</div>
 						<div class="child c5">
 							<div class="p">
                                 <p><strong> <a   href=""     >情感分析</a> </strong></p>
                                 <p><strong> <a   href=""     >传播效果</a> </strong></p>
-<!--								<p><strong> <a   href=""     >古籍</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >宫廷历史</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >文物医院</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >文化专题</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     target="_blank" >名画记</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     target="_blank" >数字多宝阁</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     target="_blank" >数字文物库</a> </strong></p>-->
 							</div>
 						</div>
 						<div class="child c6">
 							<div class="p">
                                 <p><strong> <a   href=""     >情感分析</a> </strong></p>
                                 <p><strong> <a   href=""     >传播效果</a> </strong></p>
-<!--								<p><strong> <a   href=""     >故宫研究院</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >故宫学院</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >其他学术机构</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >故宫博物院院刊</a> </strong></p>-->
 							</div>
 						</div>
 						<div class="child c7">
 							<div class="p">
 								<p><strong> <a   href=""     >联系我们</a> </strong></p>
-<!--								<p><strong> <a   href=""     >文创产品</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >故宫壁纸</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     >故宫APP</a> </strong></p>-->
-<!--								<p><strong> <a   href=""     target="_blank" >故宫游戏</a> </strong></p>-->
 							</div>
 						</div>
 						<div class="child c8">
@@ -197,7 +180,6 @@
 							<a href="/"><img src="img/zhong.png"></a>
 							<div class="language">
 								<span class="a" >EN</span>
-<!--								<span class="a" >青少版</span>-->
 							</div>
 						</li>
 						<li class="scbtn">
@@ -214,6 +196,7 @@
 				</div>
 			</div>
 		</div>
+
 <!--按钮菜单列表的开始-->
 		<div class="popWindow navbar ">
 			<div class="layer">
@@ -408,6 +391,7 @@
 		</script>
 <!--弹出（请输入关键字）的提示框的样式（和鼠标移入图片放大的效果）-->
 		<style>
+
 			.home .block1 .box2 .img img {
 				transform: scale3d(1, 1, 1);
 				transition: opacity 0.35s ease 0s, transform 0.35s ease 0s;

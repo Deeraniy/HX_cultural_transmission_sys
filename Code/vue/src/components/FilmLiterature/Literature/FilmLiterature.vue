@@ -48,7 +48,7 @@
 
       </div>
 
-      <BookShelf/>
+      <BookShelf :current-index="1" />
     </div>
   </el-main>
 </template>
@@ -62,6 +62,7 @@ import turn from '@/utils/turn'
 import BookShelf from "@/components/FilmLiterature/Literature/BookShelf.vue";
 // 直接导入 JSON 文件
 import bookData from '@/json/Book.json';
+
 console.log(bookData.title)
 const carouselData = bookData
 

@@ -25,55 +25,80 @@
               v-for="(book, index) in row"
               :key="index"
               class="sample"
-              :style="{ backgroundImage: 'url(' + book.image + ')' }"
-              @click="onBookClick(book)">
-          </div>
+              :style="{ backgroundImage: 'url(' + book.image_url + ')' }"
+              :class="{ highlighted: book.liter_id === currentIndex }"
+              @click="onBookClick(book)"
+              @mouseover="showBubble(book)"
+              @mouseleave="hideBubble">
+            <!-- 气泡提示 -->
+            <div v-if="book.showBubble" class="bubble">
+              <span>{{ book.liter_name }}</span> <!-- 显示书籍名称 -->
+            </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- 翻页按钮 -->
-    <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
-      <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
-    </div>
+  <!-- 翻页按钮 -->
+  <div class="pagination">
+    <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
+    <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
+  </div>
 
-    <!-- 弹出书籍翻书效果 -->
-    <BookFlipModal v-if="showBookModal" :book="selectedBook" @close="closeBookModal" />
+  <!-- 弹出书籍翻页效果 -->
+  <BookFlipModal v-if="showBookModal" :book="selectedBook" @close="closeBookModal" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import BookFlipModal from './BookFlipModel.vue'; // 引入翻书效果组件
+import { defineProps } from 'vue';
+import FilmLiteratureAPI from "@/api/filmLiterature"; // 引入 API
+
+// 接收来自父组件的 currentIndex 和 type_id
+const props = defineProps({
+  currentIndex: {
+    type: Number,
+    required: true
+  },
+  type_id: {
+    type: Number,
+    required: true
+  }
+});
 
 // 书籍数据
-const books = ref([
-  { image: 'https://turnjs.com/pics/book1.jpg', content: 'Content for page 1', category: '小说' },
-  { image: 'https://turnjs.com/pics/book2.jpg', content: 'Content for page 2', category: '历史' },
-  { image: 'https://turnjs.com/pics/book3.jpg', content: 'Content for page 3', category: '小说' },
-  { image: 'https://turnjs.com/pics/book4.jpg', content: 'Content for page 4', category: '科技' },
-  { image: 'https://turnjs.com/pics/book5.jpg', content: 'Content for page 5', category: '历史' },
-  { image: 'https://turnjs.com/pics/book6.jpg', content: 'Content for page 6', category: '小说' },
-]);
+const books = ref([]);
 
 // 分类和搜索功能
 const searchTerm = ref('');
 const selectedCategory = ref('');
-const categories = ['小说', '历史', '科技'];
+const categories = ['文学', '表演艺术', '新媒体艺术', '古诗词'];
 
 const filteredBooks = computed(() => {
   let result = books.value;
 
+  // 根据搜索词过滤
   if (searchTerm.value) {
     result = result.filter(book =>
-        book.content.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        book.category.toLowerCase().includes(searchTerm.value.toLowerCase())
+        book.liter_name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        book.type_id.toString().toLowerCase().includes(searchTerm.value.toLowerCase())
     );
   }
 
+  // 根据选择的类别过滤
   if (selectedCategory.value) {
-    result = result.filter(book => book.category === selectedCategory.value);
+    const categoryMapping = {
+      '文学': 1,
+      '表演艺术': 2,
+      '新媒体艺术': 3,
+      '古诗词': 4
+    };
+    const typeId = categoryMapping[selectedCategory.value];
+    if (typeId) {
+      result = result.filter(book => book.type_id === typeId);
+    }
   }
 
   return result;
@@ -125,6 +150,37 @@ const onBookClick = (book) => {
 const closeBookModal = () => {
   showBookModal.value = false;
 };
+// 显示气泡
+const showBubble = (book) => {
+  book.showBubble = true;
+};
+
+// 隐藏气泡
+const hideBubble = (book) => {
+  book.showBubble = false;
+};
+// 获取书籍数据并根据 type_id 传递相应的 type_name
+onMounted(async () => {
+  const typeMapping = {
+    1: '文学',
+    2: '表演艺术',
+    3: '新媒体艺术',
+    4: '古诗词'
+  };
+
+  const type_name = typeMapping[props.currentIndex]; // 获取对应的 type_name
+  console.log(props.currentIndex);
+  console.log(type_name);
+  const response = await FilmLiteratureAPI.getBook(type_name); // 向后端请求数据
+  console.log(response);
+
+  if (response.status === 'success') {
+    books.value = response.data.map(book => ({
+      ...book,
+      showBubble: false // 添加 showBubble 属性来控制气泡显示
+    })); // 初始化书籍数据
+  }
+});
 </script>
 
 <style scoped>
@@ -170,10 +226,30 @@ const closeBookModal = () => {
   background-position: center;
   transition: transform 0.3s ease-in-out;
   border-radius: 4px;
+  position: relative; /* 关键位置，用来定位气泡 */
 }
 
 .sample:hover {
   transform: scale(1.1);
+}
+
+.bubble {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sample:hover .bubble {
+  opacity: 1; /* 只在 hover 时显示气泡 */
 }
 
 .pagination button {
