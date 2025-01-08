@@ -481,16 +481,4 @@ def generate_report(request):
 
 # 使用示例
 if __name__ == "__main__":
-    # 示例评论列表
-    comments = [
-        "今天真是个坏天气,才怪",
-        "I love this movie and i would watch it again and again!",
-        "这个产品质量太差了",
-        "Service was just okay"
-    ]
-    
-    # 处理评论
-    results_df = process_comments(comments)
-    logger.info(f"处理完成，结果如下：\n{results_df}")
-    
     sentiments_all()
