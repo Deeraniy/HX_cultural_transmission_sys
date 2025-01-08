@@ -42,7 +42,7 @@
         </el-carousel>
 
       </div>
-      <BookShelf/>
+      <BookShelf :current-index="4" />
     </div>
   </el-main>
 </template>
