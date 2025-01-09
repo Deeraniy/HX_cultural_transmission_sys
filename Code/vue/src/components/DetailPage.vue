@@ -207,7 +207,7 @@ onMounted(async () => {
         console.error("景点数据格式错误，期望为字符串形式");
       }
     } catch (error) {
-      console.error("加载景点数据时出错:", error);
+      console.error("加载景点数据时出错:",error);
     }
   }else if(pageType===2){
     try {
@@ -224,7 +224,7 @@ onMounted(async () => {
         type_id = '古诗词';
       }
 
-// 调用 getBook 并传递 type_id
+     // 调用 getBook 并传递 type_id
       const booksResponse = await FilmLiterature.getBook(type_id);
       console.log("书籍数据（未处理）:", type_id);
 
@@ -251,10 +251,9 @@ onMounted(async () => {
     }
   }
 
-
-
   try {
-    const commentResponse = await CommentAPI.getCommentList(nowName.value, pageType.value);
+    const commentResponse = await CommentAPI.getCommentList(nowName.value,pageType.value);
+
     console.log("原始评论数据:", commentResponse);
 
     if (typeof commentResponse === "string") {
@@ -307,16 +306,15 @@ onMounted(async () => {
 
 
   try {
-    const cloudResponse = await CloudAPI.getCloudAPI(nowName.value，pageType.value);
+    const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageType.value);
     console.log("词云地址:", cloudResponse.wordcloud_url);
     cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
-
-
   try {
-    const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value，pageType.value);
+    const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value,pageType.value);
+
     if (pieResponse && pieResponse.data) {
       // 格式化为 PieChart 需要的数据结构
       data1.value = [
@@ -336,7 +334,7 @@ onMounted(async () => {
 
   try {
     // 获取 LdaResponse 数据
-    const ldaResponse = await LdaAPI.LdaAPI(nowName.value，pageType.value);
+    const ldaResponse = await LdaAPI.LdaAPI(nowName.value,pageType.value);
 
     // 检查数据有效性，并格式化为表格需要的格式
     if (Array.isArray(ldaResponse)) {
@@ -355,7 +353,7 @@ onMounted(async () => {
 
   try {
     // 获取 WordResponse 数据
-    const wordResponse = await SentimentAPI.getSentimentWordAPI(nowName.value，pageType.value);
+    const wordResponse = await SentimentAPI.getSentimentWordAPI(nowName.value,pageType.value);
 
     // 检查数据有效性，并格式化为表格需要的格式
     if (wordResponse && Array.isArray(wordResponse.data)) {
@@ -376,11 +374,7 @@ onMounted(async () => {
 
 // 在加载时间情感数据后，赋值给 processedTimeData
   try {
-    const timeResponse = await SentimentAPI.getSentimentResultAPI(nowName.value, pageType.value);
-    if(pageType===2){
-
-    }
-
+    const timeResponse = await SentimentAPI.getSentimentResultAPI(nowName.value,pageType.value);
     if (timeResponse && typeof timeResponse === "object" && Array.isArray(timeResponse.data)) {
       processedTimeData.value = timeResponse.data.map(item => {
         const paddedMonth = item.month < 10 ? '0' + item.month : item.month;
@@ -401,6 +395,7 @@ onMounted(async () => {
 
 
 });
+
 
 // SentimentAPI.getSentimentReportAPI(attractionName.value).then((res) => {
 //   console.log("AI 报告原始 Markdown:", res);

@@ -5,12 +5,16 @@ const DICT_BASE_URL = "";
 class SentimentAPI {
     static getSentimentAnalyzeAPI(name: string, type: number) {
         let urlPath = 'sentiments_analyze';
+        // 确保 type 是数字类型
+        if (typeof type === 'string') {
+            type = parseInt(type, 10);  // 如果是字符串类型，将其转化为数字
+        }
         if (type === 1) {
             urlPath = 'spot_sentiments_analyze';
         } else if (type === 2) {
-            urlPath = 'lite_sentiments_analyze';
+            urlPath = 'liter_sentiments_analyze';
         }
-        
+
         return request({
             url: `${DICT_BASE_URL}/${urlPath}/`,
             method: "get",
@@ -22,10 +26,14 @@ class SentimentAPI {
 
     static getSentimentResultAPI(name: string, type: number) {
         let urlPath = 'sentiments_result';
+        // 确保 type 是数字类型
+        if (typeof type === 'string') {
+            type = parseInt(type, 10);  // 如果是字符串类型，将其转化为数字
+        }
         if (type === 1) {
             urlPath = 'spot_sentiments_result';
         } else if (type === 2) {
-            urlPath = 'lite_sentiments_result';
+            urlPath = 'liter_sentiments_result';
         }
 
         return request({
@@ -39,10 +47,14 @@ class SentimentAPI {
 
     static getSentimentReportAPI(name: string, type: number) {
         let urlPath = 'generate_report';
+        // 确保 type 是数字类型
+        if (typeof type === 'string') {
+            type = parseInt(type, 10);  // 如果是字符串类型，将其转化为数字
+        }
         if (type === 1) {
             urlPath = 'spot_generate_report';
         } else if (type === 2) {
-            urlPath = 'lite_generate_report';
+            urlPath = 'liter_generate_report';
         }
 
         return request({
@@ -56,10 +68,14 @@ class SentimentAPI {
 
     static getSentimentPieAPI(name: string, type: number) {
         let urlPath = 'sentiments_count';
+        // 确保 type 是数字类型
+        if (typeof type === 'string') {
+            type = parseInt(type, 10);  // 如果是字符串类型，将其转化为数字
+        }
         if (type === 1) {
             urlPath = 'spot_sentiments_count';
         } else if (type === 2) {
-            urlPath = 'lite_sentiments_count';
+            urlPath = 'liter_sentiments_count';
         }
 
         return request({
@@ -73,10 +89,14 @@ class SentimentAPI {
 
     static getSentimentWordAPI(name: string, type: number) {
         let urlPath = 'get_word_frequency';
+        // 确保 type 是数字类型
+        if (typeof type === 'string') {
+            type = parseInt(type, 10);  // 如果是字符串类型，将其转化为数字
+        }
         if (type === 1) {
-            urlPath = 'spot_word_frequency';
+            urlPath = 'spot_get_word_frequency';
         } else if (type === 2) {
-            urlPath = 'lite_word_frequency';
+            urlPath = 'liter_get_word_frequency';
         }
 
         return request({
