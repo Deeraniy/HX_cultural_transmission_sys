@@ -144,81 +144,7 @@ function myalert_hide(){
     $('#myalert').hide();
 }
 </script>
-    <div class="section home1">
-<script>
-  $(function(){
-    $(".submit_base").click(function () {
-      var kkword = $(".kkword").val().replace(/ /g,"$@*");
-      if(kkword == '' || kkword == "search..."){
-        my_alert("请输入搜索内容");return false;
-      }
-      window.location = "/search_result/keyword/"+kkword;
-    });
-    $(".submit_base1").click(function () {
-      var kkword = $(".kkword1").val().replace(/ /g,"$@*");
-      if(kkword == '' || kkword == "search..."){
-        my_alert("请输入搜索内容");return false;
-      }
-      window.location = "/search_result/keyword/"+kkword;
-    });
 
-    if($(window).width() <=750) {
-        $(".x-header").keyup(function(e){
-          if(e.keyCode === 13){
-            $(".submit_base1").click();
-
-          }
-        });
-      }else{
-      $(".x-header").keyup(function(e){
-        if(e.keyCode === 13){
-          $(".submit_base").click();
-
-        }
-      });
-    }
-    $(".x-container .result1").keyup(function(e){
-      if(e.keyCode === 13){
-        $("#submit").click();
-      }
-    });
-  });
-</script>
-    <style>
-        .banner_class{height:100% !important;}
-        .banner_class .widget-area-edit{width:1px !important;}
-        .banner_class .widget-area-edit-btn{top:150px !important;}
-    </style>
-    <div class="banner_class" edit_params="width%3D1920%26height%3D960%26wap_width%3D750%26wap_height%3D1334%26zoom%3D3%26opacityShow%3D1%26tabs%3D10%26showLink%3D1"><div class="slick-mod banner">
-
-            <div class="slick-item">
-                            <a class="slick-link p-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2025/01/06/s677b3d7e4d035.png);"  href="javascript:void(0);"></a>
-                <a class="slick-link m-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2025/01/06/s677b3d7713236.png);"  href="javascript:void(0);"></a>        </div>        <div class="slick-item">
-                            <a class="slick-link p-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2024/12/06/s6752adafd312f.jpg);" href="https://www.ihchina.cn/news_details/29429.html" target="_blank"   ></a>
-                <a class="slick-link m-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2024/12/06/s6752dc5b130c5.jpg);" href="https://www.ihchina.cn/news_details/29429.html" target="_blank"   ></a>        </div>        <div class="slick-item">
-            <div class="p-show">
-                    <!--<video muted="" preload="none"  playsinline="">
-                        <source src="/Uploads/Media/2022/12/02/m63895da90bb55.mp4" type="video/mp4" />
-                    </video>-->
-                    <video muted=""  src="https://www.ihchina.cn/Uploads/Media/2022/12/02/m63895da90bb55.mp4" type="video/mp4" style="width: 100%;height: 100%;object-fit: cover;"></video>
-                    <a href="https://www.ihchina.cn/video_detail/26236.html" target="_blank" ></a>
-                </div>
-                <div class="m-show">
-                    <!--<video muted="" preload="none"  playsinline="">
-                        <source src="/Uploads/Media/2022/12/02/m63895db819f45.mp4" type="video/mp4" />
-                    </video>-->
-                    <!--<video muted="" src="/Uploads/Media/2022/12/02/m63895db819f45.mp4" type="video/mp4" style="width: 100%;height: 100%;object-fit: cover;"></video>-->
-                    <video  muted webkit-playsinline="" playsinline="" x5-video-player-type="h5" controlsList="nodownload">
-                        <source src="https://www.ihchina.cn/Uploads/Media/2022/12/02/m63895db819f45.mp4" type="video/mp4">
-                    </video>
-                    <a href="https://www.ihchina.cn/video_detail/26236.html" target="_blank" ></a>
-                </div>
-                        </div>        <div class="slick-item">
-                            <a class="slick-link p-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2024/10/30/s6721afbb43620.jpg);" href="https://www.ihchina.cn/news_details/29392.html" target="_blank"   ></a>
-                <a class="slick-link m-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2024/10/30/s6721afc520bef.jpg);" href="https://www.ihchina.cn/news_details/29392.html" target="_blank"   ></a>        </div>        <div class="slick-item">
-                            <a class="slick-link p-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2024/10/29/s67209847863af.jpg);" href="https://www.ihchina.cn/zhengce_details/28064" target="_blank"   ></a>
-                <a class="slick-link m-show" style="background-image: url(https://www.ihchina.cn/Uploads/Picture/2024/10/29/s67209853331e0.jpg);" href="https://www.ihchina.cn/zhengce_details/28064" target="_blank"   ></a>        </div></div>
-<div class="nav"></div></div></div>
 
         <div class="section home2">
 	<div class="slot">
@@ -747,21 +673,7 @@ function myalert_hide(){
 		}
 	</style>
 	<div class="right">
-		<!--<div class="right-item home8_img_1" edit_params="width%3D640%26height%3D960%26zoom%3D3%26title1Show%3D1%26title1Max%3D10%26title2Show%3D1%26title2Max%3D6%26showLink%3D1"><div class="h30"><div class="title-txt">文化和自然遗产日</div><div class="dot"></div>
-    <a  href="/special2022.html" target="_blank"  class="link">查看更多</a></div><div class="title"></div>
 
-<style>
-    .l4{
-        background-image: url("/Uploads/Picture/2019/03/04/s5c7cbeef90808.jpg")!important;
-    }
-</style></div>		<div class="right-item home8_img_2" edit_params="width%3D640%26height%3D960%26zoom%3D3%26title1Show%3D1%26title1Max%3D10%26title2Show%3D1%26title2Max%3D6%26showLink%3D1"><div class="h30"><div class="title-txt">影音</div><div class="dot"></div>
-    <a  href="/video.html" target="_blank"  class="link">查看更多 </a></div><div class="title"></div>
-
-<style>
-    .l5{
-        background-image: url("/Uploads/Picture/2019/02/25/s5c73943fb9948.jpg")!important;
-    }
-</style></div>-->
 		<div class="list-item l0">
 			<div edit_params="width%3D320%26height%3D960%26zoom%3D3%26title1Show%3D1%26title1Max%3D10%26title2Show%3D1%26title2Max%3D6%26showLink%3D1"><div class="cont"><div class="title-txt">展览</div>
     <div class="dot"></div><a href="https://www.ihchina.cn/zhanlan.html"   class="link">查看更多</a></div>
@@ -817,11 +729,9 @@ function myalert_hide(){
 </div>
 
     <div class="section fp-auto-height">
-    <div class="x-footer">
+    <div class="x-footer" style="margin-top: 0px">
         <div class="搜索索引">
             <div class="hunan-tourist-attractions">
-
-
                 <div class="bookshelf-container">
                     <!-- 搜索框 -->
                     <div class="search-category-container">
