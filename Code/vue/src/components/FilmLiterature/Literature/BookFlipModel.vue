@@ -156,7 +156,7 @@ const analyze = () => {
   // 跳转到 PlaceDetail 页面，带上书名和2的参数
   router.push({
     path: '/detail',
-    query: { name: props.book.liter_name, value: 2 ,theme:props.book.liter_id}
+    query: { name: props.book.liter_name, value: 2 ,theme:props.book.type_id}
   });
 };
 
