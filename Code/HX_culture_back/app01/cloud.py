@@ -10,7 +10,7 @@ import jieba.posseg as pseg
 import os
 def get_cloud(request):
     # 从请求中获取spot_name
-    spot_name = request.GET.get('spot_name')
+    spot_name = request.GET.get('name')
 
     # 创建连接
     conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
