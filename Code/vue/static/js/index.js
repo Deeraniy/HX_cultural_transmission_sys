@@ -26,7 +26,7 @@ $(function() {
 			sto_nav = setTimeout(function() {
 				$(".nav li").removeClass("cur");
 				$(".nav_child .child").removeClass("now");
-			}, 200);
+			}, 600);
 		}
 	);
 	$(".nav_child .child").hover(
@@ -363,7 +363,7 @@ function autoScale(ele) {
 	if($(window).width() >= 320 && $(window).width() <= 640) {
 		per = $(window).width() / 320;
 	}
-	if($(window).width() > 640) { 
+	if($(window).width() > 640) {
 		per = 2;
 	}
 	ele.css({

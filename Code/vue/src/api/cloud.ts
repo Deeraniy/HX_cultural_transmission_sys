@@ -3,16 +3,22 @@ import request from "@/utils/request";
 const DICT_BASE_URL = "";
 
 class CloudAPI {
-    static getCloudAPI(spot_name:string) {
+    static getCloudAPI(name: string, type: number) {
+        let urlPath = 'get_cloud';
+        if (type === 1) {
+            urlPath = 'spot_cloud';
+        } else if (type === 2) {
+            urlPath = 'lite_cloud';
+        }
+        
         return request({
-            url: `${DICT_BASE_URL}/get_cloud/`,
+            url: `${DICT_BASE_URL}/${urlPath}/`,
             method: "get",
             params: {
-                spot_name: spot_name
+                name: name
             }
         });
     }
-
 }
 
 export default CloudAPI;

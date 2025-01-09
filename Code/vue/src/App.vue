@@ -6,7 +6,7 @@ import HomePage from "@/components/Food/HomePage.vue";
 
 <template>
   <div id="app">
-  <HomePage />
+  <router-view/>
   </div>
 </template>
 

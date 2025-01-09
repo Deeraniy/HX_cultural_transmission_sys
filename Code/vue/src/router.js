@@ -15,6 +15,10 @@ const routes = [
         component:() => import('./components/InterestPlace/PlaceDetail.vue'),
     },
     {
+        path: '/detail',
+        component:() => import('./components/DetailPage.vue'),
+    },
+    {
         path: '/3d',
         component:() => import('./components/Three.vue')
     },
