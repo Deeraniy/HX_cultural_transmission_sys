@@ -2331,13 +2331,14 @@ display: block;width: 100%;height: 100%;
 }
 
 .home5 .map {
+    margin-top: 50px;
     position: absolute;
     top: 19.56%;
     right: 50%;
     margin-right: -180px;
     width: 891px;
     height: 641px;
-    background: url(https://www.ihchina.cn/Public/static/themes/image/temp/png77.png) no-repeat;
+    background: url(https://img95.699pic.com/photo/40196/0906.jpg_wh860.jpg) no-repeat;
     font-family: "微软雅黑";
     font-size: 12px;
     text-align: center;
