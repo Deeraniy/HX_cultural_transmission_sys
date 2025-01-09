@@ -30,8 +30,8 @@ const activeLink = ref(route.path);
 
 const navItems = [
   { name: '首页', link: '/food' },
-  { name: '传播效果分析', link: '/food/propagation' },
   { name: '美食专区', link: '/food/detail' },
+  { name: '传播效果分析', link: '/food/propagation' },
 ];
 
 const handleClick = (link) => {

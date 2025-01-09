@@ -33,14 +33,7 @@
         </el-sub-menu>
       </el-menu>
     </div>
-
-      <iframe
-          src="../../static/前端/www.ihchina.cn/index.html"
-          style="height: 1000px;width: 100%"
-      ></iframe>
-
-
-<!--          <FolkCustom/>-->
+          <FolkCustom/>
   </div>
 
 
@@ -58,6 +51,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 <style scoped>
 @import '@/assets/font/font.css';
+
 .total{
   background-image: url('@/assets/img_4.png');
   background-size: cover;
