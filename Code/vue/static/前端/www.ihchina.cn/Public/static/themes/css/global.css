@@ -28,6 +28,9 @@ hidefocus = "true"	//	ie a标签属性 超链接不显示周围的虚线
 }
 */
 
+
+
+
 @font-face { font-family: 'impact';
 	src: url('https://www.ihchina.cn/Public/static/themes/fonts/impact.eot');
 	src: url('https://www.ihchina.cn/Public/static/themes/fonts/impact.eot?#iefix') format('embedded-opentype'),
@@ -96,7 +99,7 @@ input[type=date]{ background-color:transparent; border: 0; filter: alpha(opacity
 .placeholder{ color: #333;}
 
 video {object-fit: fill; }
-video::-webkit-media-controls-enclosure { overflow:hidden; } 
+video::-webkit-media-controls-enclosure { overflow:hidden; }
 video::-webkit-media-controls-panel { width: calc(100% + 30px); }
 
 .xfont{
@@ -108,7 +111,7 @@ video::-webkit-media-controls-panel { width: calc(100% + 30px); }
 }
 a:focus, a:hover {color: inherit;}
 
-.h30, .h28, .h26, .h24, .h22, .h20, .h18,  .h16{ line-height: 1.2;} 
+.h30, .h28, .h26, .h24, .h22, .h20, .h18,  .h16{ line-height: 1.2;}
 .h30{ font-size: 30px;}
 .h28{ font-size: 28px;}
 .h26{ font-size: 26px;}
@@ -149,7 +152,7 @@ a:focus, a:hover {color: inherit;}
 	-webkit-font-smoothing: antialiased;
 	-webkit-text-stroke-width: 0.2px;
 	-moz-osx-font-smoothing: grayscale;
-	
+
 	-webkit-transition: color .3s, background .3s;
 	-moz-transition: color .3s, background .3s;
 	transition: color .3s, background .3s;
@@ -366,7 +369,7 @@ a:focus, a:hover {color: inherit;}
 	transform: rotate(0deg);
 	-webkit-transition: opacity .2s;
 	transition: opacity .2s;
-}	
+}
 .slick-prev{ left: 0; background-position: left;}
 .slick-next{ right: 0; background-position: right;}
 .slick-arrow:hover{ opacity: 1;}
@@ -393,8 +396,8 @@ a:focus, a:hover {color: inherit;}
 
 /* pc端分享 */
 #bdshare_weixin_qrcode_dialog{
-	-webkit-box-sizing: content-box;	
-	box-sizing: content-box;	
+	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
 }
 .share-mod{}
 .share-label{ display: inline-block;}
@@ -517,7 +520,7 @@ a:focus, a:hover {color: inherit;}
 @media screen and (min-width: 751px) {
     .share-box a.share-item:hover{ z-index: 1;color: #333 !important;opacity: 1;}
 	.m-show{ display: none;}
-	
+
 	.x-header, .x-footer, .x-container,.container{ min-width: 1250px;}
 	.x-wrap{ width: 1230px;}
 	.fullpage .x-header{ position: absolute; left: 0; top: 0; right: 0; background: url(https://www.ihchina.cn/Public/static/themes/image/opacity-b25.png);}
@@ -526,7 +529,7 @@ a:focus, a:hover {color: inherit;}
 	.fullpage .nav-mod .nav-lv2{ background: url(https://www.ihchina.cn/Public/static/themes/image/opacity-b25.png);}
 	.fullpage .nav-mod .nav-lv2:before{ content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: url(https://www.ihchina.cn/Public/static/themes/image/opacity-10.png) repeat-x;}
 	.fullpage .nav-mod .nav-lv2 .nav-item + .nav-item{ background-image: url(https://www.ihchina.cn/Public/static/themes/image/temp/png1.png);}
-	
+
 	.nav-mod{ position: absolute; left: 0; right: 0; bottom: 0; background: url(https://www.ihchina.cn/Public/static/themes/image/opacity-10.png) repeat-x; text-align: center; font-size: 0;}
 	.nav-mod:before{ content: ''; position: absolute; left: 0; right: 0; top: 0; border-top: 1px solid #dadada;}
 	.nav-mod .nav-link{ display: block; white-space: nowrap;}
@@ -564,7 +567,7 @@ a:focus, a:hover {color: inherit;}
 	.nav-mod .nav-item:hover > .nav-lv{ opacity: 1; visibility: visible;}
 	.nav-mod .nav-item.cur > .nav-tit .nav-link{}
 	.nav-mod .nav-grp{}
-	
+
 	.x-header.special .nav-lv2{ padding: 36px 0;}
 	.x-header.special .nav-grp{ margin: auto; padding-left: 105px; width: 1125px; box-sizing: content-box;}
 	.x-header.special .nav-grp .nav-item{ padding: 6px 0; width: 33%; background: url(https://www.ihchina.cn/Public/static/themes/image/temp/png1.png) left no-repeat; text-align: left;}
@@ -582,12 +585,12 @@ a:focus, a:hover {color: inherit;}
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
 	}
-	
+
 	body{ font-size: 0.26rem;
 		-webkit-overflow-scrolling: touch;
 		overflow-scrolling: touch;
 	}
-	
+
 	.h30{ font-size: 0.45rem;}
 	.h28{ font-size: 0.42rem;}
 	.h26{ font-size: 0.39rem;}
@@ -595,12 +598,12 @@ a:focus, a:hover {color: inherit;}
 	.h22{ font-size: 0.33rem;}
 	.h20, .h18{ font-size: 0.3rem;}
 	.h16{ font-size: 0.28rem;}
-	
+
 	.p-show{ display: none;}
-	
+
 	.middle-cont{ font-size: 0.26rem;}
 	.x-wrap{ width:100%; padding:0 0.25rem;}
-	
+
 	.x-header, .x-footer, .x-container,.container{ min-width: 320px;}
 	.x-header{ height: 1.5rem;}
 	.x-header .x-wrap{ padding: 0;}
@@ -613,7 +616,7 @@ a:focus, a:hover {color: inherit;}
 	.x-header .logo .txt{ margin-left: 0.1rem; font-size: 0.24rem; line-height: 1.1;}
 	.x-header .logo .dot{ display: inline; }
 	.x-header .logo .g_txt:last-child {display: block;}
-	
+
 	.x-footer .other-site{ padding: 1rem 0;}
 	.x-footer .other-site .h22{ margin-bottom: 0.3rem;}
 	.x-footer .left{ float: none; margin-right: 0; margin-bottom: 0.5rem; width: 100%;}
@@ -628,7 +631,7 @@ a:focus, a:hover {color: inherit;}
 	.x-footer .cont{ margin-bottom: 0.3rem;}
 	.x-footer .cont .s{ display: block;}
 	.x-footer .cont .s + .s{ margin-left: 0;}
-	
+
 	.fullpage .x-header{ position: absolute; left: 0; top: 0; right: 0; background: url(https://www.ihchina.cn/Public/static/themes/image/opacity-b25.png);}
 	.fullpage .x-header .menu-head{ background-color: transparent;}
 	.fullpage .x-header.menu-open .menu-head{ background-color: transparent;}
@@ -639,17 +642,17 @@ a:focus, a:hover {color: inherit;}
 	.fullpage .nav-mod .search-txt input::-webkit-input-placeholder {
 		color: #fff;
 	}
-	 
+
 	.fullpage .nav-mod .search-txt input::-moz-placeholder {
 	/* Mozilla Firefox 19+ */
 	color: #fff;
 	}
-	
+
 	.fullpage .nav-mod .search-txt input:-moz-placeholder {
 	/* Mozilla Firefox 4 to 18 */
 	color: #fff;
 	}
-	
+
 	.fullpage .nav-mod .search-txt input:-ms-input-placeholder {
 	/* Internet Explorer 10-11 */
 	color: #fff;
@@ -659,7 +662,7 @@ a:focus, a:hover {color: inherit;}
 		-webkit-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
-		
+
 	.menu-btn .line, .menu-btn .line:before, .menu-btn .line:after{ position: absolute; left: 0; right: 0; top: 0; bottom: 0; margin: auto; width: 0.5rem; height: 0; border-top: 2px solid; border-bottom: 2px solid; border-radius: 10px;}
 	.menu-btn .line{ top: 0; bottom: 0;
 		-webkit-transition: border 0.3s;
@@ -689,7 +692,7 @@ a:focus, a:hover {color: inherit;}
 		-webkit-transform: rotate(-45deg);
 		transform: rotate(-45deg);
 	}
-	
+
 /*	mobile navigation */
 	.nav-mod{ position: fixed; top: 0; bottom: 0; left: 0; right: 0; padding-top: 1.5rem; height: auto; background-color: #fff; overflow: hidden;
 		display: -webkit-box;
@@ -826,12 +829,12 @@ a:focus, a:hover {color: inherit;}
 	.nav-mod .nav-item.act > .nav-tit .arr:after{ content: '\e833';}
 	.nav-mod .nav-lv1 .nav-item.act{ background-color: #333; color: #fff;}
 	.nav-mod .nav-lv2 .nav-item.act{ background-color: #666; color: #fff;}
-	
+
 	.gotop{ right: 0.2rem; bottom: 0.2rem; padding: 0.2rem;}
-	
+
 	.page-mod .page-box{ display: none;}
 	.page-mod .page-more{ display:inline-block; border:1px solid; border-radius: 1rem; font-size: 0.28rem; padding: 0.1rem 0.3rem;}
-	
+
 	.pop-mod .pop-close{ right: 0.2rem; top: 0.2rem; width: 0.8rem; height: 0.8rem;}
 	.pop-mod .pop-close:after{ content: '\e842';}
 
@@ -857,18 +860,18 @@ a:focus, a:hover {color: inherit;}
 	.page-mod .next{ margin-left: 0.1rem;}
 	.page-mod .jump{ float: none; display: table; vertical-align: top; margin: 0 auto; padding-top: 0.2rem; clear: both;}
 	.page-mod .page-more{ display:inline-block; vertical-align: top; border:1px solid; border-radius: 1rem; padding: 0.1rem 0.3rem; font-family: "微软雅黑";}
-	
+
 	/* Slider */
-	.slick-arrow{ width: 1rem; height: 1rem; background-size: 200%;}	
+	.slick-arrow{ width: 1rem; height: 1rem; background-size: 200%;}
 	.slick-dots{ bottom: 0.2rem;}
 	.slick-dots li{ margin: 0 0.1rem; padding: 0.1rem;}
-	
+
 	/* 移动端面包屑 */
 	.bread-mod .bread-item + .bread-item:before{ padding: 0 0.1rem;}
-	
+
 	/* 移动端分享 */
 	.share-box a.share-item{ margin: 0 0.1rem; width: 0.75rem; font-size: 0.5rem;}
-	
+
 	.share-item .wechat-qrcode,
 	.share-item .code{ position: fixed; left: 0; top: 0; margin: 0; padding: 0; width: 100%; height: 100%; border-radius: 0; background-color: rgba(0,0,0,0.8); pointer-events: all;}
 	.share-item .wechat-qrcode::before, .share-item .wechat-qrcode::after,
@@ -879,5 +882,5 @@ a:focus, a:hover {color: inherit;}
 	.x-footer .ftbj {padding-left:0;}
 
 /*	*****************************************************  */
-	
+
 }

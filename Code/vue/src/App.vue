@@ -5,10 +5,9 @@ import HomePage from "@/components/Food/HomePage.vue";
 </script>
 
 <template>
-<!--  <div id="app">-->
-<!--  <HomePage />-->
-<!--  </div>-->
-  <router-view />
+  <div id="app">
+  <router-view/>
+  </div>
 </template>
 
 <style scoped>
