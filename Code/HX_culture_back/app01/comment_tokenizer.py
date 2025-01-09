@@ -166,7 +166,7 @@ def process_word_batch(words, spot_id):
 def get_word_frequency(request):
     """获取词语频率以及情感"""
     try:
-        spot_name = request.GET.get('spot_name')
+        spot_name = request.GET.get('name')
         if not spot_name:
             return JsonResponse({
                 'status': 'error',

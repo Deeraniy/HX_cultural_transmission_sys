@@ -49,12 +49,12 @@ def process_comments(comments_list):
     return results
 
 def sentiments_analyze(request):
-    spot_name = request.GET.get('spot_name')
+    name = request.GET.get('name')
     conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys',charset='utf8')
 
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(name))
     sql_query = "SELECT content FROM usercomment WHERE spot_id=%s"
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
@@ -177,14 +177,14 @@ def sentiment_month_analyze(sentiments):
 def sentiments_result_total_count(request):
     """获取景点的情感分析占比统计"""
     try:
-        spot_name = request.GET.get('spot_name', '').strip()
-        if not spot_name:
+        name = request.GET.get('name', '').strip()
+        if not name:
             return JsonResponse({
                 'status': 'error',
                 'message': '景点名称不能为空'
             }, status=400)
             
-        logger.info(f"正在查询景点: {spot_name}")
+        logger.info(f"正在查询景点: {name}")
             
         # 数据库连接
         conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
@@ -194,13 +194,13 @@ def sentiments_result_total_count(request):
 
         # 首先获取景点ID
         spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
-        cursor.execute(spot_sql, (spot_name,))
+        cursor.execute(spot_sql, (name,))
         spot_result = cursor.fetchone()
         
         if not spot_result:
             return JsonResponse({
                 'status': 'error',
-                'message': f'未找到景点: {spot_name}'
+                'message': f'未找到景点: {name}'
             }, status=404)
             
         spot_id = spot_result['spot_id']
@@ -258,14 +258,14 @@ def sentiments_result_total_count(request):
 def sentiments_result(request):
     """根据景点名称获取情感分析时间序列结果"""
     try:
-        spot_name = request.GET.get('spot_name', '').strip()
-        if not spot_name:
+        name = request.GET.get('name', '').strip()
+        if not name:
             return JsonResponse({
                 'status': 'error',
                 'message': '景点名称不能为空'
             }, status=400)
             
-        logger.info(f"正在查询景点: {spot_name}")
+        logger.info(f"正在查询景点: {name}")
             
         # 数据库连接
         conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
@@ -275,13 +275,13 @@ def sentiments_result(request):
         
         # 修正：使用正确的字段名 spot_name 而不是 name
         spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s LIMIT 1"
-        cursor.execute(spot_sql, (spot_name,))
+        cursor.execute(spot_sql, (name,))
         spot_result = cursor.fetchone()
         
         if not spot_result:
             return JsonResponse({
                 'status': 'error',
-                'message': f'未找到景点: {spot_name}'
+                'message': f'未找到景点: {name}'
             }, status=404)
             
         # 修正：使用正确的字段名 spot_id 而不是 id
@@ -308,7 +308,7 @@ def sentiments_result(request):
                 'status': 'success',
                 'data': [],
                 'spot_info': {
-                    'name': spot_name,
+                    'name': name,
                     'id': spot_id
                 },
                 'message': '该景点暂无评论数据'
@@ -349,13 +349,13 @@ def sentiments_result(request):
             'status': 'success',
             'data': analysis_results,
             'spot_info': {
-                'name': spot_name,
+                'name': name,
                 'id': spot_id
             }
         })
         
     except Exception as e:
-        logger.error(f"处理景点 {spot_name} 的情感分析时出错: {str(e)}")
+        logger.error(f"处理景点 {name} 的情感分析时出错: {str(e)}")
         return JsonResponse({
             'status': 'error',
             'message': str(e)
@@ -375,8 +375,8 @@ def generate_report(request):
     """
     try:
         # 获取景点名称
-        spot_name = request.GET.get('spot_name', '').strip()
-        if not spot_name:
+        name = request.GET.get('name', '').strip()
+        if not name:
             return JsonResponse({
                 'status': 'error',
                 'message': '景点名称不能为空'
@@ -469,7 +469,7 @@ def generate_report(request):
         return JsonResponse({
             'status': 'success',
             'report': report,
-            'spot_name': spot_name
+            'spot_name': name
         })
 
     except Exception as e:

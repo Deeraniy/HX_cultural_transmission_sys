@@ -117,7 +117,7 @@ def sentiments_all():
 
 def sentiments_analyze(request):
     """获取文学作品的评论情感分析"""
-    literature_name = request.GET.get('liter_name')
+    name = request.GET.get('name')
     try:
         conn = pymysql.connect(
             host='120.233.26.237', 
@@ -132,7 +132,7 @@ def sentiments_analyze(request):
         # 首先获取文学作品ID
         literature_id = cursor.execute(
             "SELECT liter_id FROM literature WHERE liter_name=%s",
-            (literature_name,)
+            (name,)
         )
         
         # 获取该文学作品的所有评论
