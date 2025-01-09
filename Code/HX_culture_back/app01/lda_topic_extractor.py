@@ -7,7 +7,7 @@ import logging
 from django.http import JsonResponse
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-from .sentiments_analyze import process_comments
+from .spot_sentiments_analyze import process_comments
 
 # 配置日志
 logger = logging.getLogger(__name__)
