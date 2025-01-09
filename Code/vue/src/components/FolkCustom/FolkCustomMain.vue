@@ -40,7 +40,7 @@
       ></iframe>
 
 
-          <FolkCustom/>
+<!--          <FolkCustom/>-->
   </div>
 
 
