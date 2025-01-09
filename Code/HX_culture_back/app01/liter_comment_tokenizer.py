@@ -215,7 +215,7 @@ def process_word_batch(words, liter_id):
 def get_word_frequency(request):
     """获取词语频率以及情感"""
     try:
-        liter_name = request.GET.get('liter_name')
+        liter_name = request.GET.get('name')
         if not liter_name:
             return JsonResponse({
                 'status': 'error',
