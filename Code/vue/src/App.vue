@@ -5,14 +5,15 @@ import HomePage from "@/components/Food/HomePage.vue";
 </script>
 
 <template>
-  <div id="app">
-  <HomePage />
-  </div>
+<!--  <div id="app">-->
+<!--  <HomePage />-->
+<!--  </div>-->
+  <router-view />
 </template>
 
 <style scoped>
 #app{
-  height: 100vh;
+
 }
 header {
   line-height: 1.5;
