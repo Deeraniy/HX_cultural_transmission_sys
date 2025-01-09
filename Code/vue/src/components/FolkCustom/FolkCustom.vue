@@ -1,26 +1,29 @@
 <template>
   <el-main>
     <div class="hunan-tourist-attractions">
+      <div>
+        <img src="http://whyimg.wentiyun.cn/feiyi/20230629/017cd4df-c763-4768-84a3-1b8165f603c5.png" style="width: 100%;max-height: 500px">
+      </div>
       <div class="attraction-container">
-        <img id="folkObject" :src="hoveredBook ? hoveredBook.image : 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png'" style="height: 400px;width: auto;"/>
-        <!-- 右侧详情区域 -->
-        <div class="location-box">
-          <div class="s-title w">
-            <span>名称</span>
-          </div>
-          <div class="p">详细描述</div>
-          <div class="ts nl2p">
-            <p v-if="hoveredBook">
-              主编：{{ hoveredBook.editor }}<br>
-              书号：{{ hoveredBook.isbn }}<br>
-              出版：{{ hoveredBook.publisher }}<br>
-              定价：{{ hoveredBook.price }}<br>
-              版次：{{ hoveredBook.category }}<br>
-              印张：{{ hoveredBook.content }}<br>
-              开本：{{ hoveredBook.format }}<br>
-            </p>
-          </div>
-        </div>
+<!--        <img id="folkObject" :src="hoveredBook ? hoveredBook.image : 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png'" style="height: 400px;width: auto;"/>-->
+<!--        &lt;!&ndash; 右侧详情区域 &ndash;&gt;-->
+<!--        <div class="location-box">-->
+<!--          <div class="s-title w">-->
+<!--            <span>名称</span>-->
+<!--          </div>-->
+<!--          <div class="p">详细描述</div>-->
+<!--          <div class="ts nl2p">-->
+<!--            <p v-if="hoveredBook">-->
+<!--              主编：{{ hoveredBook.editor }}<br>-->
+<!--              书号：{{ hoveredBook.isbn }}<br>-->
+<!--              出版：{{ hoveredBook.publisher }}<br>-->
+<!--              定价：{{ hoveredBook.price }}<br>-->
+<!--              版次：{{ hoveredBook.category }}<br>-->
+<!--              印张：{{ hoveredBook.content }}<br>-->
+<!--              开本：{{ hoveredBook.format }}<br>-->
+<!--            </p>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
 
       <div class="bookshelf-container">
@@ -270,7 +273,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   width: 1000px;
-  background-image: url('@/assets/wall-bookshelf.png'); /* 书架背景图 */
+
   background-size: 100% 100px; /* 保证书架完整显示 */
   background-repeat: no-repeat;
   background-position: bottom; /* 背景对齐底部 */
