@@ -1,11 +1,11 @@
 from django.urls import path
 from django.urls import re_path as url
-from app01 import view,city
+from app01 import spot_sentiments_analyze, view,city
 from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import sentiments_analyze,city,cloud,comment,spot,view,lda_topic_extractor,sentiments_analyze,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze
+from app01 import city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze
 urlpatterns = [
     
     url(r'^testdb/$', testdb.testdb),
@@ -27,13 +27,13 @@ urlpatterns = [
     url(r'^get_comment/',comment.get_comment_list),
     url(r'^get_literature_by_type/',literature.get_literature_by_type),
 
-    url(r'^spot_sentiments_analyze/',sentiments_analyze.sentiments_analyze),
+    url(r'^spot_sentiments_analyze/',spot_sentiments_analyze.sentiments_analyze),
     url(r'^liter_sentiments_analyze/',liter_sentiments_analyze.sentiments_analyze),
-    url(r'^spot_sentiments_result/',sentiments_analyze.sentiments_result),
+    url(r'^spot_sentiments_result/',spot_sentiments_analyze.sentiments_result),
     # url(r'^liter_sentiments_result/',liter_sentiments_analyze.sentiments_result),
-    url(r'^generate_report/',sentiments_analyze.generate_report),
+    url(r'^generate_report/',spot_sentiments_analyze.generate_report),
     # url(r'^liter_generate_report/',liter_sentiments_analyze.generate_report),
-    url(r'^spot_sentiments_count/',sentiments_analyze.sentiments_result_total_count),
+    url(r'^spot_sentiments_count/',spot_sentiments_analyze.sentiments_result_total_count),
     url(r'^spot_get_word_frequency/',comment_tokenizer.get_word_frequency),
     url(r'^liter_get_word_frequency/',liter_comment_tokenizer.get_word_frequency),
     url(r'^spot_lda_analyze/',lda_topic_extractor.lda_analyze),
@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^spot_get_comment_list/',comment.get_comment_list),
     # url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
     url(r'^spot_get_cloud/',cloud.get_cloud),
-    # url(r'^liter_get_cloud/',cloud.get_cloud_literature),
+    url(r'^liter_get_cloud/',cloud.get_cloud_literature),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
