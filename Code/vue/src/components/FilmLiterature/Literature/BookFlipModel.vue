@@ -21,7 +21,7 @@
             <div class="back" @click="handlePageClick(index, 'back')">
               <div v-if="index === 0">
                 <h2 class="centered-title" style="position: absolute; top: 40%; left: 35%; transform: translate(-50%, -50%);">{{ page.title }}</h2>
-                <button v-if="index === 0" class="jump-button" @click="analyze">情感分析</button>
+                <button v-if="index === 0" class="jump-button" @click="handlePageClick(index, 'button')">情感分析</button>
 
               </div>
               <div v-else>
@@ -90,31 +90,7 @@ pages.value[1].backText = backText;
 let touchStartX = 0;
 let touchEndX = 0;
 
-// 处理页面翻转
-const handlePageClick = (index, side) => {
-  const activePage = pages.value.find(page => page.isActive);
-  if (!activePage) return; // 如果没有活动页面，返回
 
-  const currentPageIndex = pages.value.indexOf(activePage);
-  const nextPage = pages.value[currentPageIndex + 1];
-  const prevPage = pages.value[currentPageIndex - 1];
-
-  if (side === 'front') {
-    // 点击正面，翻到上一页
-    if (!activePage.isFlipped) {
-      flipPageToBack(activePage);
-    } else {
-      flipPageToFront(activePage);
-    }
-  } else if (side === 'back') {
-    // 点击背面，翻到下一页
-    if (!activePage.isFlipped) {
-      flipPageToBack(activePage);
-    } else {
-      flipPageToFront(activePage);
-    }
-  }
-};
 
 // 翻转到背面
 const flipPageToBack = (page) => {
@@ -144,22 +120,46 @@ const closeModal = () => {
 };
 
 // 处理点击事件：判断点击位置
-const handleClick = (event) => {
-  const clickX = event.clientX; // 获取点击位置的X坐标
-  const screenWidth = window.innerWidth; // 获取窗口的宽度
-  const isLeftHalf = clickX < screenWidth / 2; // 判断是否在左半边
+const handlePageClick = (index, side) => {
+  const activePage = pages.value.find(page => page.isActive);
+  if (!activePage) return; // 如果没有活动页面，返回
 
-  if (isLeftHalf) {
-    goToPrevPage(); // 左半边点击翻到上一页
-  } else {
-    goToNextPage(); // 右半边点击翻到下一页
+  const currentPageIndex = pages.value.indexOf(activePage);
+  const nextPage = pages.value[currentPageIndex + 1];
+  const prevPage = pages.value[currentPageIndex - 1];
+
+  // 如果点击的是跳转按钮，执行跳转操作
+  if (side === 'button') {
+    analyze(); // 触发跳转逻辑
+    return;
+  }
+
+  if (side === 'front') {
+    // 点击正面，翻到上一页
+    if (!activePage.isFlipped) {
+      flipPageToBack(activePage);
+    } else {
+      flipPageToFront(activePage);
+    }
+  } else if (side === 'back') {
+    // 点击背面，翻到下一页
+    if (!activePage.isFlipped) {
+      flipPageToBack(activePage);
+    } else {
+      flipPageToFront(activePage);
+    }
   }
 };
 
+
 const analyze = () => {
-  // 跳转到 PlaceDetail 页面
-  router.push('/placeDetail'); // 直接使用路径进行跳转
+  // 跳转到 PlaceDetail 页面，带上书名和2的参数
+  router.push({
+    path: '/detail',
+    query: { name: props.book.liter_name, value: 2 ,theme:props.book.liter_id}
+  });
 };
+
 
 
 // 翻到下一页
