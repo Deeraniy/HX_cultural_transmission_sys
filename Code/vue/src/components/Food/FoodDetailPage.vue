@@ -12,7 +12,7 @@
     </div>
     <div class="sentiment-analysis">
       <h3>情感分析</h3>
-      <SentimentStats :table-data="tableData"/>
+
     </div>
   </div>
 </template>
@@ -27,7 +27,6 @@ import food2 from '@/assets/foodImg/food2.jpg';
 import food3 from '@/assets/foodImg/food3.jpg';
 import food4 from '@/assets/foodImg/food4.jpg';
 import food5 from '@/assets/foodImg/food5.jpg';
-import SentimentStats from "@/components/SentimentStats.vue";
 const route = useRoute();
 const router = useRouter();
 const tableData = [
