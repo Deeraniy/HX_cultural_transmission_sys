@@ -171,11 +171,7 @@ def lda_analyze_literature(request):
         comment_list = cursor.fetchall()
 
         if not comment_list:
-            return JsonResponse({
-                'status': 'success',
-                'message': '该文学作品暂无评论',
-                'data': []
-            })
+            return JsonResponse([])
 
         # 准备数据
         data = {
@@ -245,14 +241,7 @@ def lda_analyze_literature(request):
                 'sentiment': sentiment
             })
         
-        return JsonResponse({
-            'status': 'success',
-            'data': result,
-            'liter_info': {
-                'name': liter_name,
-                'id': liter_id
-            }
-        })
+        return JsonResponse(result, safe=False)
 
     except Exception as e:
         logger.error(f"处理文学作品 {liter_name} 的主题分析时出错: {str(e)}")
