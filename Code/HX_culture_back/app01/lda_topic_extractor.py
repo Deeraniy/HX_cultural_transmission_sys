@@ -38,7 +38,7 @@ n_top_words = 5  # 每个主题的主题词数量
 pattern = '[\\s\\d,.<>/?:;\'\"[\\]{}()\\|~!\t"@#$%^&*\\-_=+，。\n《》、？：；""''｛｝【】（）…￥！—┄－]+'
 
 def lda_analyze(request):
-    spot_name = request.GET.get('spot_name')
+    spot_name = request.GET.get('name')
     print(spot_name)
     conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys',charset='utf8')
@@ -142,7 +142,7 @@ def lda_analyze(request):
 def lda_analyze_literature(request):
     """对文学评论进行LDA主题分析"""
     try:
-        liter_name = request.GET.get('liter_name')
+        liter_name = request.GET.get('name')
         if not liter_name:
             return JsonResponse({
                 'status': 'error',
