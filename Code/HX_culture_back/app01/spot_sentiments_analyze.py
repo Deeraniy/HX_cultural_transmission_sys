@@ -69,7 +69,7 @@ def sentiments_analyze(request):
 
 
 def sentiments_all():
-    """对所有文学评论进行情感分析并更新数据库"""
+    """对所有景点评论进行情感分析并更新数据库"""
     try:
         # 建立数据库连接，添加超时设置
         conn = pymysql.connect(
@@ -90,19 +90,19 @@ def sentiments_all():
         conn.rollback()
         
         # 获取所有评论
-        cursor.execute("SELECT comment_id, comment_text FROM user_comment_literature WHERE sentiment IS NULL")
+        cursor.execute("SELECT comment_id, content FROM usercomment WHERE sentiment IS NULL")
         comments = cursor.fetchall()
         
         processed_count = 0
         
         for comment in comments:
             try:
-                sentiment_label, confidence = get_sentiment_label(comment['comment_text'])
+                sentiment_label, confidence = get_sentiment_label(comment['content'])
                 logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
                 
                 # 更新数据库
                 update_sql = """
-                    UPDATE user_comment_literature 
+                    UPDATE usercomment 
                     SET sentiment = %s, sentiment_confidence = %s 
                     WHERE comment_id = %s
                 """
@@ -133,7 +133,7 @@ def sentiments_all():
                 logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
                 continue
             
-        logger.info(f"所有文学评论的情感分析已完成，共处理 {processed_count} 条评论")
+        logger.info(f"所有景点评论的情感分析已完成，共处理 {processed_count} 条评论")
         
     except Exception as e:
         logger.error(f"情感分析过程中出错: {str(e)}")
