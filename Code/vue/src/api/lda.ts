@@ -3,17 +3,26 @@ import request from "@/utils/request";
 const DICT_BASE_URL = "";
 
 class LdaAPI {
-    static LdaAPI(spot_name:string) {
+    static LdaAPI(name: string, type: number) {
+        let urlPath = 'lda_analyze';
+        // 确保 type 是数字类型
+        if (typeof type === 'string') {
+            type = parseInt(type, 10);  // 如果是字符串类型，将其转化为数字
+        }
+        if (type === 1) {
+            urlPath = 'spot_lda_analyze';
+        } else if (type === 2) {
+            urlPath = 'liter_lda_analyze';
+        }
+
         return request({
-            url: `${DICT_BASE_URL}/lda_analyze/`,
+            url: `${DICT_BASE_URL}/${urlPath}/`,
             method: "get",
             params: {
-                spot_name: spot_name
+                name: name
             }
         });
     }
-
 }
 
 export default LdaAPI;
-

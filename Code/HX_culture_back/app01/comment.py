@@ -11,7 +11,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def get_comment_list(request):
-    spot_name = request.GET.get('spot_name')
+    spot_name = request.GET.get('name')
     
     # 创建连接
     conn = pymysql.connect(

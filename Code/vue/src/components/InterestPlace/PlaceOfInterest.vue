@@ -229,8 +229,17 @@ const onCitySelect = () => {
 };
 //const attractionName=ref('')//保存当前点击的景点的名字，并进行跳转，将景点名传给详情页
 const goToPlaceDetail = (attractionName) => {
-  router.push({ path: '/placeDetail', query: { name: attractionName } });
+  router.push({
+    path: '/detail',
+    query: {
+      name: attractionName,
+      value: 1,
+      theme: 1  // 新增 theme 参数
+    }
+  });
+
 }
+
 // 更新城市信息
 const updateCityInfo = () => {
   console.log('Selected City:', selectedCity.value); // 检查 selectedCity 的值

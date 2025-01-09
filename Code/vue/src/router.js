@@ -15,6 +15,10 @@ const routes = [
         component:() => import('./components/InterestPlace/PlaceDetail.vue'),
     },
     {
+        path: '/detail',
+        component:() => import('./components/DetailPage.vue'),
+    },
+    {
         path: '/3d',
         component:() => import('./components/Three.vue')
     },
@@ -44,8 +48,8 @@ const routes = [
     },
     {
         path: '/food',
-        name: 'HomePageMain',
-        component:()=>import('./components/Food/HomePageMain.vue'), // 美食文化主页组件
+        name: 'FoodShow',
+        component:()=>import('./components/Food/FoodShow.vue'), // 美食文化主页组件
     },
     {
         path: '/food/propagation',

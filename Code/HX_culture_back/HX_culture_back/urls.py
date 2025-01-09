@@ -15,8 +15,6 @@ urlpatterns = [
     url(r'^classes/',view.classes),
 
     url(r'^get_city/',city.get_city_list),
-    url(r'^get_cloud/',cloud.get_cloud),
-    url(r'^get_comment_list/',comment.get_comment_list),
     url(r'^get_average_score_by_bi_month/',comment.get_average_score_by_bi_month),
     url(r'^get_comment_list_recent/',comment.get_comment_list_recent),
     url(r'^get_comment_time_span/',comment.get_comment_time_span),
@@ -25,19 +23,25 @@ urlpatterns = [
     url(r'^get_spot/',spot.get_spot_list),
     url(r'^preview/',preview.preview),
 
-    url(r'^lda_analyze/',lda_topic_extractor.lda_analyze),
-    url(r'^lda_analyze_literature/',lda_topic_extractor.lda_analyze_literature),
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
     url(r'^get_comment/',comment.get_comment_list),
-    url(r'^sentiments_analyze/',sentiments_analyze.sentiments_analyze),
-    url(r'^liter_sentiments_analyze/',liter_sentiments_analyze.sentiments_analyze),
-    url(r'^sentiments_result/',sentiments_analyze.sentiments_result),
-    url(r'^generate_report/',sentiments_analyze.generate_report),
-    url(r'^sentiments_count/',sentiments_analyze.sentiments_result_total_count),
-    url(r'^get_word_frequency/',comment_tokenizer.get_word_frequency),
-    url(r'^get_word_frequency_literature/',liter_comment_tokenizer.get_word_frequency),
     url(r'^get_literature_by_type/',literature.get_literature_by_type),
 
+    url(r'^spot_sentiments_analyze/',sentiments_analyze.sentiments_analyze),
+    url(r'^liter_sentiments_analyze/',liter_sentiments_analyze.sentiments_analyze),
+    url(r'^spot_sentiments_result/',sentiments_analyze.sentiments_result),
+    # url(r'^liter_sentiments_result/',liter_sentiments_analyze.sentiments_result),
+    url(r'^generate_report/',sentiments_analyze.generate_report),
+    # url(r'^liter_generate_report/',liter_sentiments_analyze.generate_report),
+    url(r'^spot_sentiments_count/',sentiments_analyze.sentiments_result_total_count),
+    url(r'^spot_get_word_frequency/',comment_tokenizer.get_word_frequency),
+    url(r'^liter_get_word_frequency/',liter_comment_tokenizer.get_word_frequency),
+    url(r'^spot_lda_analyze/',lda_topic_extractor.lda_analyze),
+    url(r'^liter_lda_analyze/',lda_topic_extractor.lda_analyze_literature),
+    url(r'^spot_get_comment_list/',comment.get_comment_list),
+    # url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
+    url(r'^spot_get_cloud/',cloud.get_cloud),
+    # url(r'^liter_get_cloud/',cloud.get_cloud_literature),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

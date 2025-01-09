@@ -26,8 +26,9 @@
 </script>
 
 <style scoped>
+@import '@/assets/font/font.css';
 .culture-box {
-  width: 100%;
+  width: 95%;
   margin: 30px auto;
 }
 
@@ -39,29 +40,34 @@
 
 .food-image {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
 }
 
 .text-container {
   padding: 20px 30px;
   background-color: #f9f9f9;
-  border-radius: 8px;
+  border-radius: 12px;
   height: 100%;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-  font-size: 30px;
-  color: #da251c;
+  font-family: 'HelveticaNeue', serif;
+  font-size: 40px;
+  color: #b71c1c;
   font-weight: bold;
   line-height: 45px;
   margin-bottom: 10px;
+  position: relative;
+  left: 270px;  /* 向右移动 50px，数字根据需要调整 */
 }
 
+
 .text-container p {
-  font-size: 18px;
+  font-family: 'HelveticaNeue', serif;
+  margin-top: 10px;
+  font-size: 30px;
   line-height: 1.8;
   color: #333;
 }
