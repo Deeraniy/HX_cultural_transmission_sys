@@ -2,7 +2,11 @@
   <div class="common-layout">
     <el-container style="height: 100vh; overflow: auto;">
       <el-header class="header" style="height:90px;width: 100%">
-        <Header :title="nowName"/>
+        <Header
+            :title="nowName"
+            @update:type="handleTypeChange"
+            @update:search="handleSearchChange"
+        />
         <!--               {{attractionName}}-->
       </el-header>
       <el-main class="main">
@@ -64,14 +68,15 @@ import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
 import CommentAPI from "@/api/comment";
 import SentimentAPI from "@/api/sentiment";
+import { ElMessage } from 'element-plus';
 
 import FilmLiterature from "@/api/filmLiterature";
 const interestData = ref<any>(null);
 const bookData = ref<any>(null);
-
+import router from "@/router.js";
 const attractions = ref<any>({}); // 初始化为一个空对象
 const books = ref<any>({});
-
+const searchQuery = ref(''); // 新增：存储搜索内容
 const cloudUrl = ref('');
 const processedTimeData = ref<any>([]);
 const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
@@ -177,6 +182,130 @@ const fetchAttractionName = () => {
   console.log("name",route.query.name);
 };
 
+
+// 在父组件中添加以下方法
+const handleTypeChange = async (typeId) => {
+  pageType.value = parseInt(typeId);
+
+  // 检查搜索内容是否存在于对应数据中
+  if (searchQuery.value) {
+    checkContentAvailability();
+  }
+};
+
+const handleSearchChange = (searchText) => {
+  searchQuery.value = searchText;
+  if (pageType.value) {
+    checkContentAvailability();
+  }
+};
+
+const checkContentAvailability = async () => {
+  try {
+    // 根据类型加载对应数据
+    if (pageType.value === 1) {
+      // 如果景点数据还未加载，先加载数据
+      if (!interestData.value) {
+        const spotsResponse = await SpotsAPI.getSpotsAPI();
+        if (typeof spotsResponse === "string") {
+          const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+          const spotsArray = fixedResponse
+              .replace(/'/g, '"')
+              .match(/{[^}]+}/g)
+              .map((spot) => JSON.parse(spot));
+
+          interestData.value = spotsArray;
+          console.log("景点数据加载成功:", interestData.value);
+        }
+      }
+
+      // 检查名胜古迹
+      const spot = interestData.value?.find(
+          (item) => item.spot_name === searchQuery.value
+      );
+      if (spot) {
+        nowName.value = searchQuery.value;
+        loadAttractions(nowName);
+
+        // 更新 URL
+        router.push({
+          path: '/detail',
+          query: {
+            name: searchQuery.value,
+            value: '1', // 名胜古迹的 pageType 是 1
+            theme: '1'  // 名胜古迹的 theme 是 1
+          }
+        });
+
+        ElMessage.success('已找到相关景点信息');
+      } else {
+        ElMessage.warning('未找到相关名胜古迹信息');
+      }
+
+    } else if (pageType.value === 2) {
+      try {
+// 创建一个临时数组存储所有类型的书籍
+        let allBooks = [];
+        console.log("我在找书中……")
+// 加载所有类型的书籍数据
+        const typeIds = ['文学', '表演艺术', '新媒体艺术', '古诗词'];
+
+        try {
+          // 循环处理每一个类型的书籍数据
+          for (const type_id of typeIds) {
+            const booksResponse = await FilmLiterature.getBook(type_id);
+            console.log(`获取类型 ${type_id} 的书籍数据:`, booksResponse);
+
+            // 确保返回的是字符串格式
+            if (booksResponse.status === 'success' && Array.isArray(booksResponse.data)) {
+              // 从响应中提取 data 字段
+              const booksArray = booksResponse.data;
+              // 将当前类型的书籍加入到总的 allBooks 数组中
+              allBooks.push(...booksArray);
+            } else {
+              console.error(`获取类型 ${type_id} 的数据格式不正确`, booksResponse);
+            }
+          }
+
+          // 所有类型的书籍加载完成后，更新到响应式数据
+          bookData.value = allBooks;
+          console.log("所有类型书籍数据加载成功:", bookData.value);
+
+        } catch (error) {
+          console.error("加载书籍数据时发生错误:", error);
+        }
+        // 检查影视文学
+        const book = bookData.value?.find(
+            (item) => item.liter_name === searchQuery.value
+        );
+        if (book) {
+          nowName.value = searchQuery.value;
+          loadBooks(nowName);
+
+          // 更新 URL
+          router.push({
+            path: '/detail',
+            query: {
+              name: searchQuery.value,
+              value: '2', // 页面类型 2 为书籍相关
+              theme: book.type_id  // 书籍类型 theme 可以根据实际情况修改
+            }
+          });
+
+          ElMessage.success('已找到相关文学作品信息');
+        } else {
+          ElMessage.warning('未找到相关影视文学信息');
+        }
+      } catch (error) {
+        console.error("数据加载或检查过程中出错:", error);
+        ElMessage.error('数据加载失败，请稍后重试');
+      }
+    }
+  } catch (error) {
+    console.error("数据加载或检查过程中出错:", error);
+    ElMessage.error('数据加载失败，请稍后重试');
+  }
+};
 
 function getRandomColor() {
   const color = colorList.value[Math.floor(Math.random() * 8)];
