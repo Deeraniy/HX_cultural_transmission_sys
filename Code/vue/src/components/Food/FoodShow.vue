@@ -70,7 +70,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 /* 新增的菜单项横向布局样式 */
 .horizontal-submenu .el-menu-item {
   display: inline-block; /* 让菜单项横向排列 */
-  margin-right: 20px; /* 为子菜单项之间添加间距 */
+  margin-right: 180px; /* 为子菜单项之间添加间距 */
 }
 
 .horizontal-submenu .el-menu-item:last-child {
@@ -118,7 +118,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   font-family: 'HelveticaNeue', serif;
   font-size: 30px;
   color: #fff8f0;
-  margin-right: 510px;
+  margin-right: 810px;
 }
 
 .el-menu-demo {

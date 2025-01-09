@@ -91,7 +91,7 @@ class CommentAPI {
     }
 
     static getCommentIPCount(name: string, type: number) {
-        let urlPath = 'get_get_comment_ip_count';
+        let urlPath = 'get_comment_ip_count';
         // 确保 type 是数字类型
         if (typeof type === 'string') {
             type = parseInt(type, 10);  // 如果是字符串类型，将其转化为数字
