@@ -4,26 +4,49 @@
       <div>
         <img src="http://whyimg.wentiyun.cn/feiyi/20230629/017cd4df-c763-4768-84a3-1b8165f603c5.png" style="width: 100%;max-height: 500px">
       </div>
+      <div style="display: flex">
       <div class="attraction-container">
-<!--        <img id="folkObject" :src="hoveredBook ? hoveredBook.image : 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png'" style="height: 400px;width: auto;"/>-->
-<!--        &lt;!&ndash; 右侧详情区域 &ndash;&gt;-->
-<!--        <div class="location-box">-->
-<!--          <div class="s-title w">-->
-<!--            <span>名称</span>-->
-<!--          </div>-->
-<!--          <div class="p">详细描述</div>-->
-<!--          <div class="ts nl2p">-->
-<!--            <p v-if="hoveredBook">-->
-<!--              主编：{{ hoveredBook.editor }}<br>-->
-<!--              书号：{{ hoveredBook.isbn }}<br>-->
-<!--              出版：{{ hoveredBook.publisher }}<br>-->
-<!--              定价：{{ hoveredBook.price }}<br>-->
-<!--              版次：{{ hoveredBook.category }}<br>-->
-<!--              印张：{{ hoveredBook.content }}<br>-->
-<!--              开本：{{ hoveredBook.format }}<br>-->
-<!--            </p>-->
-<!--          </div>-->
-<!--        </div>-->
+        <el-row class="tac">
+          <el-col :span="12">
+            <h5 class="mb-2">Default colors</h5>
+            <el-menu
+                default-active="2"
+                class="el-menu-vertical-demo"
+                @open="handleOpen"
+                @close="handleClose"
+            >
+              <el-sub-menu index="1">
+                <template #title>
+                  <el-icon><location /></el-icon>
+                  <span>Navigator One</span>
+                </template>
+                <el-menu-item-group title="Group One">
+                  <el-menu-item index="1-1">item one</el-menu-item>
+                  <el-menu-item index="1-2">item two</el-menu-item>
+                </el-menu-item-group>
+                <el-menu-item-group title="Group Two">
+                  <el-menu-item index="1-3">item three</el-menu-item>
+                </el-menu-item-group>
+                <el-sub-menu index="1-4">
+                  <template #title>item four</template>
+                  <el-menu-item index="1-4-1">item one</el-menu-item>
+                </el-sub-menu>
+              </el-sub-menu>
+              <el-menu-item index="2">
+                <el-icon><icon-menu /></el-icon>
+                <span>Navigator Two</span>
+              </el-menu-item>
+              <el-menu-item index="3" disabled>
+                <el-icon><document /></el-icon>
+                <span>Navigator Three</span>
+              </el-menu-item>
+              <el-menu-item index="4">
+                <el-icon><setting /></el-icon>
+                <span>Navigator Four</span>
+              </el-menu-item>
+            </el-menu>
+          </el-col>
+        </el-row>
       </div>
 
       <div class="bookshelf-container">
@@ -73,6 +96,7 @@
           <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
         </div>
       </div>
+      </div>
     </div>
 
 
@@ -81,13 +105,24 @@
 
 <script lang="ts" setup>
 import {computed, nextTick, onMounted, ref, watch} from 'vue';
+import {
+  Document,
+  Menu as IconMenu,
+  Location,
+  Setting,
+} from '@element-plus/icons-vue'
 
 import $ from 'jquery'
 
 import turn from '@/utils/turn'
 import BookShelf from "./BookShelf.vue";
 // Carousel 数据
-
+const handleOpen = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+const handleClose = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
 const hoveredBook= ref(null);
 // 书籍数据
 const books = ref([
@@ -154,7 +189,7 @@ const shelves = computed(() => {
 
 // 分页控制
 const currentPage = ref(0);
-const booksPerPage = 3; // 每页最多显示3个书架
+const booksPerPage = 2; // 每页最多显示3个书架
 
 // 当前页书架
 const currentShelves = computed(() => {
