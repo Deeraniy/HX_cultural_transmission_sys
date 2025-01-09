@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <!-- 卡片容器 -->
     <el-card class="content-card" :body-style="{ padding: '20px' }">
       <div class="section-title">
@@ -10,11 +10,11 @@
       <!-- 使用 el-row 和 el-col 布局 -->
       <el-row gutter={30}>
         <!-- 第一列 -->
-        <el-col :span="8">
+        <el-col :span="8" :xs="24" :sm="12" :md="8">
           <el-card class="food-item">
             <el-image
                 class="image-container"
-                :src=food3
+                :src="food3"
                 alt="臭豆腐"
                 fit="contain"
             />
@@ -26,11 +26,11 @@
         </el-col>
 
         <!-- 第二列 -->
-        <el-col :span="8">
+        <el-col :span="8" :xs="24" :sm="12" :md="8">
           <el-card class="food-item">
             <el-image
                 class="image-container"
-                :src=food4
+                :src="food4"
                 alt="攸县香干"
                 fit="contain"
             />
@@ -42,11 +42,11 @@
         </el-col>
 
         <!-- 第三列 -->
-        <el-col :span="8">
+        <el-col :span="8" :xs="24" :sm="12" :md="8">
           <el-card class="food-item">
             <el-image
                 class="image-container"
-                :src=food1
+                :src="food1"
                 alt="糖油粑粑"
                 fit="contain"
             />
@@ -68,21 +68,28 @@ import food3 from "@/assets/foodImg/food3.jpg";
 </script>
 
 <style scoped>
+@import '@/assets/font/font.css';
+.main {
+  width: 96.5%;
+  display: flex;
+  margin-left: 25px;
+}
 
 .section-title {
+  margin-top: 10px;
+  font-family: 'HelveticaNeue', serif;
   font-size: 50px;
   font-weight: bolder;
   width: 100%;
   text-align: center;
-  line-height: 60px;
-  font-family: Verdana, Geneva, sans-serif;
+  line-height: 50px;
 }
 
 .section-title span {
   color: #8aaa3d;
   font-size: 16px;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 60px;
+  font-family: 'HelveticaNeue', serif;
+  line-height: 50px;
 }
 
 /* 卡片容器 */
@@ -94,13 +101,13 @@ import food3 from "@/assets/foodImg/food3.jpg";
 /* 图片容器样式 */
 .image-container {
   width: 100%;
-  height: 200px;
+  height: 210px;
   overflow: hidden;
   border-radius: 8px;
 }
 
 .description-container {
-  height: 250px;
+  height: 180px;
   background: #eeeeee;
   padding: 20px 30px;
   margin-top: 15px;
@@ -109,16 +116,18 @@ import food3 from "@/assets/foodImg/food3.jpg";
 
 .description-container .item-title {
   color: #80b50f;
-  font-size: 18px;
+  font-size: 40px;
   font-weight: bold;
   height: 60px;
+  font-family: 'HelveticaNeue', serif;
   border-bottom: #b9b9b9 1px solid;
   margin-bottom: 10px;
 }
 
 .description-container .item-title-secondary {
   color: #80b50f;
-  font-size: 18px;
+  font-size: 40px;
+  font-family: 'HelveticaNeue', serif;
   font-weight: bold;
   height: 60px;
   border-bottom: #b9b9b9 1px solid;
@@ -126,7 +135,8 @@ import food3 from "@/assets/foodImg/food3.jpg";
 }
 
 .description-container p {
-  font-size: 16px;
+  font-family: 'HelveticaNeue', serif;
+  font-size: 20px;
   line-height: 25px;
 }
 
@@ -135,9 +145,23 @@ import food3 from "@/assets/foodImg/food3.jpg";
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 30px;
 }
 
 .el-card {
-  margin-bottom: 30px;
+  margin: 10px;
+}
+
+/* 响应式设计 */
+@media (max-width: 700px) {
+  .section-title {
+    font-size: 40px;
+  }
+  .description-container {
+    height: 200px;
+  }
+  .food-item {
+    margin-bottom: 20px;
+  }
 }
 </style>

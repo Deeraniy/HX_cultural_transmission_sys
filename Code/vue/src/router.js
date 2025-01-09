@@ -48,8 +48,8 @@ const routes = [
     },
     {
         path: '/food',
-        name: 'HomePageMain',
-        component:()=>import('./components/Food/HomePageMain.vue'), // 美食文化主页组件
+        name: 'FoodShow',
+        component:()=>import('./components/Food/FoodShow.vue'), // 美食文化主页组件
     },
     {
         path: '/food/propagation',

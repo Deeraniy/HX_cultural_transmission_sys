@@ -80,7 +80,7 @@ onUnmounted(() => {
 .carousel {
   position: relative;
   width: 100%;
-  max-width: 1200px;
+
   height: 500px;
   margin: 0 auto;
   overflow: hidden;
