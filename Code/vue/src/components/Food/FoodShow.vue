@@ -14,42 +14,20 @@
           :ellipsis="false"
           @select="handleSelect"
       >
-        <!-- 作品总览菜单项 -->
-        <el-sub-menu index="2" class="horizontal-submenu">
-          <template #title>
-            作品总览
-          </template>
-          <el-menu-item index="2-1">文学</el-menu-item>
-          <el-menu-item index="2-2">古代文学</el-menu-item>
-          <el-menu-item index="2-3">新媒体艺术</el-menu-item>
-          <el-menu-item index="2-4">表演艺术</el-menu-item>
-        </el-sub-menu>
-        <el-menu-item index="3">知识图谱</el-menu-item>
-        <el-menu-item index="4">沉浸式故事体验</el-menu-item>
-        <el-menu-item index="5">全球传播情况</el-menu-item>
-        <el-sub-menu index="1">
-          <template #title>
-            <span class="work">工作台</span>
-          </template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-          <el-menu-item index="1-3">item three</el-menu-item>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-            <el-menu-item index="1-4-2">item two</el-menu-item>
-            <el-menu-item index="1-4-3">item three</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
+        <!-- 首页菜单项 -->
+        <el-menu-item index="1">首页</el-menu-item>
+        <!-- 美食专区菜单项 -->
+        <el-menu-item index="2">美食专区</el-menu-item>
+        <!-- 传播效果分析菜单项 -->
+        <el-menu-item index="3">传播效果分析</el-menu-item>
       </el-menu>
     </div>
 
     <el-main>
       <!-- 根据 activeIndex 显示不同的组件 -->
-      <HomePageMain v-if="activeIndex === '2-1'||activeIndex===null" />
-      <PoemDisplay v-if="activeIndex === '2-2'" />
-      <VideoDisplay v-if="activeIndex === '2-3'" />
-      <ShowDisplay v-if="activeIndex === '2-4'" />
+      <HomePageMain v-if="activeIndex === '1' || activeIndex === null" />
+      <FoodPage v-if="activeIndex === '2'" />
+      <PropagationPage v-if="activeIndex === '3'" />
     </el-main>
   </div>
 </template>
@@ -57,11 +35,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import HomePageMain from "@/components/Food/HomePageMain.vue";
-import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
-import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
-import ShowDisplay from "@/components/FilmLiterature/Literature/ShowDisplay.vue";
-// 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
-const activeIndex = ref<'2-1' | '2-2' | 'null' | string>(null);
+import FoodPage from "@/components/Food/FoodPage.vue"; // 这是美食专区组件
+import PropagationPage from "@/components/Food/PropagationPage.vue";// 这是传播效果分析组件
+
+// 设置 activeIndex 初始值为 '1'，这样组件会默认显示首页
+const activeIndex = ref('1')
 
 // 处理菜单选择
 const handleSelect = (key: string, keyPath: string[]) => {
@@ -71,28 +49,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 </script>
 
 <style>
-/* 全局样式覆盖 */
-.el-menu,
-.el-menu--horizontal,
-.el-menu--popup,
-.el-menu--popup-container,
-.el-popper,
-.el-sub-menu__popper {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
 
-.el-menu-item,
-.el-sub-menu,
-.el-sub-menu__title {
-  background: transparent !important;
-}
-
-.el-popper.is-light {
-  background: transparent !important;
-  border: none !important;
-}
 
 .el-menu--popup .el-menu-item,
 .el-menu .el-menu-item {
