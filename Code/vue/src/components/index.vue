@@ -4,7 +4,8 @@
 
 <template>
   <div style="height: 100%">
-    <iframe src="../../static/index.html" width="100%" height="100%" ref="iframeDom"></iframe>
+    <iframe src="../../static/index.html" width="100%" height="1000px" ref="iframeDom"></iframe>
+
   </div>
 </template>
 

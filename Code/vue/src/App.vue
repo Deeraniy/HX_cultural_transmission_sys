@@ -12,7 +12,7 @@ import HomePage from "@/components/Food/HomePage.vue";
 
 <style scoped>
 #app{
-  height: 100vh;
+
 }
 header {
   line-height: 1.5;
