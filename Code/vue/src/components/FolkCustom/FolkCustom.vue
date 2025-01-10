@@ -33,7 +33,7 @@
     </div>
 
     <!-- 弹窗 -->
-    <el-dialog v-model:visible="dialogVisible" title="民俗文化详情" width="600px">
+    <el-dialog v-model="dialogVisible" title="民俗文化详情" width="600px">
       <div v-if="selectedBook">
         <h3>{{ selectedBook.content }}</h3>
         <img :src="selectedBook.image" alt="详细图片" class="dialog-image" />
