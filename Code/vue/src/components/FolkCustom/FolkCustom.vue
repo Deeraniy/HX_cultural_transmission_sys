@@ -137,6 +137,11 @@
                 <div v-if="hoveredBook === book" class="book-content" style="text-align: center;color: white;font-family: 'Book Antiqua'">
                   {{ book.content }}
                 </div>
+                <!-- 新增的按钮部分 -->
+                <div class="book-actions">
+                  <button class="detail-button" @click="viewDetails(book)">查看详情</button>
+                  <button class="analysis-button" @click="analyzeSentiment(book)">情感分析</button>
+                </div>
               </div>
             </div>
           </div>
@@ -164,10 +169,6 @@ import {
   Setting,
 } from '@element-plus/icons-vue'
 
-import $ from 'jquery'
-
-import turn from '@/utils/turn'
-import BookShelf from "./BookShelf.vue";
 // Carousel 数据
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -178,13 +179,13 @@ const handleClose = (key: string, keyPath: string[]) => {
 const hoveredBook= ref(null);
 // 书籍数据
 const books = ref([
-  { image: '/src/assets/folkCustom/汨罗江端午习俗.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘昆.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘剧.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/皮影戏.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘绣.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/赶尸.png', content: 'Content for page 2', category: '民俗' },
-  { image: '/src/assets/folkCustom/湖南傩戏.jpg', content: 'Content for page 2', category: '民俗' },
+  { image: '/src/assets/folkCustom/汨罗江端午习俗.jpg', content: '汨罗江端午习俗', category: '非遗' },
+  { image: '/src/assets/folkCustom/湘昆.jpg', content: '湘昆', category: '非遗' },
+  { image: '/src/assets/folkCustom/湘剧.jpg', content: '湘剧', category: '非遗' },
+  { image: '/src/assets/folkCustom/皮影戏.jpg', content: '皮影戏', category: '非遗' },
+  { image: '/src/assets/folkCustom/湘绣.jpg', content: '湘绣', category: '非遗' },
+  { image: '/src/assets/folkCustom/赶尸.png', content: '赶尸', category: '民俗' },
+  { image: '/src/assets/folkCustom/湖南傩戏.jpg', content: '湖南傩戏', category: '民俗' },
 
   // 继续添加更多书籍
 ]);
@@ -686,6 +687,41 @@ onMounted(() => {
   margin-left: 20px;
   width: 500px;
   height: auto;
+}
+.book-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 180px;
+}
+
+.detail-button,
+.analysis-button {
+  font-family: 'HelveticaNeue', serif;
+  padding: 8px 16px;
+  background-color: #b71c1c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.detail-button:hover,
+.analysis-button:hover {
+  background-color: darkred; /* 悬停时的颜色 */
+}
+
+.detail-button:focus,
+.analysis-button:focus {
+  outline: none; /* 去除按钮的聚焦外框 */
+}
+
+.detail-button:disabled,
+.analysis-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 </style>
