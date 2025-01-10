@@ -86,13 +86,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import {ref, computed, onMounted} from 'vue';
 import { useRouter } from 'vue-router'; // 导入 useRouter 来进行跳转
 import food1 from '@/assets/foodImg/food1.jpg'
 import food2 from '@/assets/foodImg/food2.jpg'
 import food3 from '@/assets/foodImg/food3.jpg'
 import food4 from '@/assets/foodImg/food4.jpg'
 import food5 from '@/assets/foodImg/food5.jpg'
+import FoodAPI from '@/api/food';
 
 const searchQuery = ref('');
 const rotationAngle = ref(0); // 旋转角度
@@ -120,7 +121,7 @@ const closeFoodDetail = () => {
   foodDetail.visible = false;
 };
 
-// Food items data with unique descriptions for each dish
+/*// Food items data with unique descriptions for each dish
 const foodItems = [
   { name: "糖油粑粑", img: food1, description: "糖油粑粑是一种油炸甜点，外脆内软，甜美可口。" },
   { name: "毛家红烧肉", img: food2, description: "这道菜是湖南特色的红烧肉，色泽红亮，味道鲜美。" },
@@ -132,14 +133,38 @@ const foodItems = [
   { name: "臭豆腐", img: food3, description: "臭豆腐是湖南特色的街头小吃，外焦内嫩，臭味十足，令人上瘾。" },
   { name: "攸县香干", img: food4, description: "攸县香干有独特的风味，口感浓郁，富有烟熏味。" },
   { name: "辣椒炒肉", img: food5, description: "辣椒炒肉是一道麻辣可口的经典湘菜，味道香辣。" }
-];
+];*/
+const foodItems=ref([])
+async function fetchFoodData() {
+  try {
+    const response = await FoodAPI.getFoodAPI();
+    if (response && response.data) {
+      foodItems.value = response.data.map(item => ({
+        name: item.food_name,
+        img: item.image_url,
+        description: item.description || ''
+      }));
+    } else {
+      console.error('Unexpected response format:', response);
+    }
+  } catch (error) {
+    console.error('Error fetching food data:', error);
+    // 处理错误
+  }
+}
+
+onMounted(() => {
+  fetchFoodData();
+});
 
 // Filter food items
 const filteredFoodItems = computed(() => {
-  return foodItems.filter(item =>
+  if (!foodItems.value) return []; // 防止初始值为 null 时报错
+  return foodItems.value.filter(item =>
       item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
+
 
 // Paginate food items
 const paginatedFoodItems = computed(() => {

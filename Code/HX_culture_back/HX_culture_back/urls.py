@@ -42,8 +42,8 @@ urlpatterns = [
     url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
     url(r'^spot_get_cloud/',cloud.get_cloud),
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
-    url(r'^get_food/',food.get_food_list),
-#     get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
+    url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
+
 
 
 
