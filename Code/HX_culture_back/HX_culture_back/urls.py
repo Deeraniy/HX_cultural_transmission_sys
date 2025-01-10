@@ -7,7 +7,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from app01 import city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze
 urlpatterns = [
-    
+
     url(r'^testdb/$', testdb.testdb),
     url(r'^search-form/$', search.search_form),
     url(r'^search/$', search.search),
@@ -42,6 +42,11 @@ urlpatterns = [
     url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
     url(r'^spot_get_cloud/',cloud.get_cloud),
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
+
+#     get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
+
+
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
