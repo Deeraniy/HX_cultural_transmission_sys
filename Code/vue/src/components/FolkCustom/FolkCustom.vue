@@ -1,254 +1,89 @@
 <template>
   <el-main>
     <div class="hunan-tourist-attractions">
-      <div>
-        <img src="http://whyimg.wentiyun.cn/feiyi/20230629/017cd4df-c763-4768-84a3-1b8165f603c5.png" style="width: 100%;max-height: 500px">
+      <div class="title-container">
+        <h3>民俗文化展示</h3>
       </div>
-      <div style="display: flex">
-        <div class="attraction-container" style="width: 230px">
-          <el-row>
-            <el-col style="width: 200px">
-              <el-menu
-                  class="custom-menu"
-                  default-active="1"
-                  :collapse="false"
-                  unique-opened
-                  :default-openeds="['1', '1-1', '1-1-1', '1-1-2', '1-1-3', '1-1-4', '1-1-5', '1-1-6', '1-1-7', ]"
-              >
-                <!-- 一级菜单: 分类 -->
-                <el-sub-menu index="1">
-                  <template #title>
-                    <span style="color: white; font-family: 'Book Antiqua'"><b>分类</b></span>
-                  </template>
-                  <!-- 二级菜单: 艺术 -->
-                  <el-sub-menu index="1-1">
-                    <template #title><b>艺术</b></template>
-                    <el-menu-item index="1-1-1">
-                      <el-checkbox>传统医药</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-1-2">
-                      <el-checkbox>传统音乐</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-1-3">
-                      <el-checkbox>传统舞蹈</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-1-4">
-                      <el-checkbox>传统戏剧</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-1-5">
-                      <el-checkbox>曲艺</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-1-6">
-                      <el-checkbox>传统医药</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-1-7">
-                      <el-checkbox>传统技艺</el-checkbox>
-                    </el-menu-item>
-                  </el-sub-menu>
-                  <!-- 二级菜单: 民俗 -->
-                  <el-sub-menu index="1-2">
-                    <template #title><b>民俗</b></template>
-                    <el-menu-item index="1-2-1">
-                      <el-checkbox>民俗</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-2-2">
-                      <el-checkbox>传统体育、游艺与杂技</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="1-2-3">
-                      <el-checkbox>民间文学</el-checkbox>
-                    </el-menu-item>
-                  </el-sub-menu>
-                </el-sub-menu>
 
-                <!-- 一级菜单: 地域 -->
-                <el-sub-menu index="3">
-                  <template #title>
-                    <span style="color: white; font-family: 'Book Antiqua'">地域</span>
-                  </template>
-                  <!-- 二级菜单: 湖南 -->
-                  <el-sub-menu index="3-1">
-                    <template #title><b>湖南</b></template>
-                    <!-- 三级菜单: 中国的地区 -->
-                    <el-menu-item index="3-1-1">
-                      <el-checkbox>长沙</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="3-1-2">
-                      <el-checkbox>湘潭</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="3-1-3">
-                      <el-checkbox>株洲</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="3-1-4">
-                      <el-checkbox>永州</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="3-1-5">
-                      <el-checkbox>湘西</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="3-1-6">
-                      <el-checkbox>郴州</el-checkbox>
-                    </el-menu-item>
-                    <el-menu-item index="3-1-7">
-                      <el-checkbox>岳阳</el-checkbox>
-                    </el-menu-item>
-                  </el-sub-menu>
-                </el-sub-menu>
-              </el-menu>
-            </el-col>
-          </el-row>
-        </div>
-
-
-
-
-
-        <div class="bookshelf-container">
-        <!-- 搜索框 -->
-        <!-- 搜索框和分类选择器放一行 -->
-        <div class="search-category-container">
-          <input
-              type="text"
-              v-model="searchTerm"
-              placeholder="搜索非物质文化..."
-              class="search-input"
-          />
-          <select v-model="selectedCategory" class="category-select">
-            <option value="">所有分类</option>
-            <option v-for="category in categories" :key="category" :value="category">
-              {{ category }}
-            </option>
-          </select>
-          <!-- 触发过滤的按钮 -->
-          <button @click="applyFilters" class="search-button">搜索</button>
-        </div>
-
-        <!-- 动态生成书架 -->
-        <div v-for="(shelf, shelfIndex) in currentShelves" :key="'shelf-' + shelfIndex" class="bookshelf">
-          <div class="shelf">
-            <!-- 动态生成书籍行 -->
-            <div v-for="(row, rowIndex) in shelf" :key="'row-' + rowIndex" class="row">
-              <div
-                  v-for="(book, index) in row"
-                  :key="index"
-                  class="sample"
-                  :style="{backgroundImage: `url(${book.image})`}"
-                  @click="onBookClick(shelfIndex, rowIndex, index)"
-                  @mouseenter="hoveredBook = book"
-              >
-                <div v-if="hoveredBook === book" class="book-content" style="text-align: center;color: white;font-family: 'Book Antiqua'">
-                  {{ book.content }}
-                </div>
-                <!-- 新增的按钮部分 -->
-                <div class="book-actions">
-                  <button class="detail-button" @click="viewDetails(book)">查看详情</button>
-                  <button class="analysis-button" @click="analyzeSentiment(book)">情感分析</button>
-                </div>
+      <!-- 展示的内容 -->
+      <div class="folklore-container">
+        <div v-for="(book, index) in currentBooks" :key="index" class="card-container">
+          <div class="flip-card">
+            <div class="flip-card-inner" @click="showDetails(book)">
+              <div class="flip-card-front">
+                <p>{{ book.content }}</p>
+              </div>
+              <div class="flip-card-back">
+                <img :src="book.image" alt="图片" />
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- 翻页按钮 -->
-        <div class="pagination">
-          <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
-          <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
+          <!-- 在每个卡片下方放按钮 -->
+          <div class="card-buttons">
+            <button class="emotion-btn">情感分析</button>
+          </div>
         </div>
       </div>
+
+      <!-- 翻页按钮 -->
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
+        <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
       </div>
     </div>
 
+    <!-- 弹窗 -->
+    <el-dialog v-model="dialogVisible" title="民俗文化详情" width="600px">
+      <div v-if="selectedBook">
+        <h3>{{ selectedBook.content }}</h3>
+        <img :src="selectedBook.image" alt="详细图片" class="dialog-image" />
+        <p>这里可以展示更详细的民俗文化内容...</p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">关闭</el-button>
+  </span>
+    </el-dialog>
 
   </el-main>
 </template>
 
 <script lang="ts" setup>
-import {computed, nextTick, onMounted, ref, watch} from 'vue';
-import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting,
-} from '@element-plus/icons-vue'
+import { computed, ref } from 'vue';
+import { ElDialog, ElButton } from 'element-plus';
 
-// Carousel 数据
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const hoveredBook= ref(null);
-// 书籍数据
+// 民俗文化数据
 const books = ref([
-  { image: '/src/assets/folkCustom/汨罗江端午习俗.jpg', content: '汨罗江端午习俗', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘昆.jpg', content: '湘昆', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘剧.jpg', content: '湘剧', category: '非遗' },
-  { image: '/src/assets/folkCustom/皮影戏.jpg', content: '皮影戏', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘绣.jpg', content: '湘绣', category: '非遗' },
-  { image: '/src/assets/folkCustom/赶尸.png', content: '赶尸', category: '民俗' },
-  { image: '/src/assets/folkCustom/湖南傩戏.jpg', content: '湖南傩戏', category: '民俗' },
-
-  // 继续添加更多书籍
+  { content: '汨罗江端午习俗', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '湘昆', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '湘剧', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '皮影戏', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '湘绣', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '赶尸', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '湖南傩戏', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '龙船调', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
+  { content: '打铁花', image: '/assets/book9.jpg' },
+  { content: '毛笔字', image: '/assets/book10.jpg' },
+  { content: '竹编', image: '/assets/book11.jpg' },
+  { content: '糖画', image: '/assets/book12.jpg' },
+  { content: '湘绣', image: '/assets/book13.jpg' },
+  { content: '岳阳楼', image: '/assets/book14.jpg' },
+  { content: '橘子洲', image: '/assets/book15.jpg' },
 ]);
 
-// 总页数计算
-const totalPages = computed(() => Math.ceil(books.value.length / 2));  // 简单示例，总页数可以按实际规则计算
+// 每页显示15个条目（3行 * 5列）
+const booksPerPage = 15;
 
-// 搜索和分类
-const searchTerm = ref('');
-const selectedCategory = ref('');
-const categories = ['非遗', '民俗']; // 示例分类
+// 计算总页数
+const totalPages = computed(() => Math.ceil(books.value.length / booksPerPage));
 
-// 计算过滤后的书籍
-const filteredBooks = computed(() => {
-  let result = books.value;
-
-  // 搜索过滤
-  if (searchTerm.value) {
-    result = result.filter(book =>
-        book.content.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        book.category.toLowerCase().includes(searchTerm.value.toLowerCase())
-    );
-  }
-
-  // 分类过滤
-  if (selectedCategory.value) {
-    result = result.filter(book => book.category === selectedCategory.value);
-  }
-
-  return result;
-});
-
-// 每个书架最多显示5本书，动态计算每个书架的内容
-const shelves = computed(() => {
-  const booksPerShelf = 5; // 每个书架最多显示5本书
-  const rowsPerShelf = 1; // 每个书架只有一行书
-  const totalBooks = filteredBooks.value.length;  // 通过计算属性过滤的书籍
-
-  const result = [];
-  let currentBooks = [...filteredBooks.value];
-
-  // 按照每个书架显示5本书的规则，动态分配书架
-  while (currentBooks.length > 0) {
-    const shelf = [];
-    for (let i = 0; i < rowsPerShelf; i++) {
-      shelf.push(currentBooks.slice(0, booksPerShelf)); // 每行最多5本书
-      currentBooks = currentBooks.slice(booksPerShelf); // 更新剩余的书籍
-    }
-    result.push(shelf);
-  }
-
-  return result;
-});
-
-// 分页控制
+// 当前页
 const currentPage = ref(0);
-const booksPerPage = 2; // 每页最多显示3个书架
 
-// 当前页书架
-const currentShelves = computed(() => {
+// 获取当前页的书籍
+const currentBooks = computed(() => {
   const start = currentPage.value * booksPerPage;
   const end = start + booksPerPage;
-  return shelves.value.slice(start, end);
+  return books.value.slice(start, end);
 });
 
 // 翻页函数
@@ -264,219 +99,168 @@ const nextPage = () => {
   }
 };
 
-// 点击书籍翻页
-const onBookClick = (shelfIndex, rowIndex, bookIndex) => {
-  const book = filteredBooks.value[bookIndex];
-  console.log('Clicked on book:', book);
-};
-const carouselData = ref([
-  {
-    title: '故宫日历·2025年·汉英对照',
-    description: '2025年，乙巳年，生肖蛇，适逢故宫博物院建院一百周年。汉英对照版日历通过文物展示故宫百年来的发展历程。',
-    image: 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png',
-    editor: '陈丽华',
-    isbn: '978-7-5134-1668-9',
-    publisher: '故宫出版社',
-    price: '96元',
-    edition: '2024年11月第1版',
-    prints: '16',
-    format: '48开'
-  },
-  {
-    title: '汉代玉器研究',
-    description: '汉代是玉器发展史中的繁荣时代，玉器艺术进入高峰。',
-    image: 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉代玉器研究-FXpuCWAOK260.png',
-    editor: '徐琳',
-    isbn: '978-7-5134-1614-6',
-    publisher: '故宫出版社',
-    price: '236元',
-    edition: '2024年9月第1版',
-    prints: '34',
-    format: '16开'
-  },
-  {
-    title: '清代大运彩瓷（全二册）',
-    description: '清代大运瓷器是御窑厂每年烧制并送往清宫的基本任务。',
-    image: 'https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546清代大运彩瓷-QWGTJeobg260.png',
-    editor: '故宫博物院',
-    isbn: '978-7-5134-1653-5',
-    publisher: '故宫出版社',
-    price: '880元',
-    edition: '2024年8月第1版',
-    prints: '66.5',
-    format: '12开'
-  }
-]);
-const imageArray = carouselData.value.map(item => item.image);
-console.log(imageArray);
+// 弹窗相关
+const dialogVisible = ref(false);
+const selectedBook = ref(null);
 
-const currentIndex = ref(0);
-// 监听 currentIndex 的变化
-watch(currentIndex, (newIndex) => {
-  nextTick(() => {
-    console.log("currentIndex updated to:", newIndex);
-  });
-});
-// 轮播变化时手动更新
-const onCarouselChange = (index: number) => {
-  currentIndex.value = index;
-  console.log("Carousel changed to index:", index);
+// 显示详细信息的函数
+const showDetails = (book) => {
+  console.log("点击了卡片", book);  // 打印被点击的书籍信息
+  selectedBook.value = book;
+  dialogVisible.value = true;
+  console.log("弹窗是否可见", dialogVisible.value); // 额外打印弹窗状态
 };
-// 切换上一张
-const prevSlide = () => {
-  if (currentIndex.value > 0) {
-    currentIndex.value -= 1;
-  } else {
-    currentIndex.value = carouselData.value.length - 1;
-  }
-};
-
-// 切换下一张
-const nextSlide = () => {
-  if (currentIndex.value < carouselData.value.length - 1) {
-    currentIndex.value += 1;
-  } else {
-    currentIndex.value = 0;
-  }
-};
-onMounted(() => {
-  nextTick(() => {
-    console.log("Mounted, currentIndex:", currentIndex.value);
-  });
-});
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/font/font.css';
-.attraction-container {
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.custom-menu {
-
-  border-radius: 8px; /* 圆角 */
-  background-color: #0d7b6f; /* 翠绿色背景 */
-
-}
-.el-menu{
-  font-size: 14px; /* 设置字体大小 */
-  color: #ffffff; /* 菜单字体白色 */
-  font-family: 'Arial', 'Microsoft YaHei', sans-serif; /* 自定义字体 */
-
-}
+/* 添加上述CSS样式 */
+</style>
 
 
-
-.menu-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #3b5999;
-  margin-bottom: 12px;
-}
-
-.custom-menu {
-
-  border: none;
-}
-
-.custom-menu .el-sub-menu__title {
-  color: #ffffff; /* 一级菜单字体白色 */
-  font-weight: bold; /* 一级菜单字体加粗 */
-  padding: 10px 15px; /* 内边距增加用户体验 */
-  border-radius: 5px; /* 一级菜单标题的圆角 */
-  transition: all 0.3s ease; /* 平滑过渡效果 */
-}
-
-.custom-menu .el-menu-item {
-  font-size: 14px;
-  color: #333;
-  padding-left: 24px;
-
-}
-
-.custom-menu .el-checkbox {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.custom-menu .count {
-  color: #d9534f;
-  margin-left: 4px;
-}
-
-.custom-menu .total {
-  color: #888;
-  margin-left: 8px;
-}
-.bookshelf-container {
-  margin-top: 80px;
+<style scoped lang="scss">
+/* 总容器样式 */
+.hunan-tourist-attractions {
   display: flex;
   flex-direction: column;
-  gap: 40px; /* 每个书架之间的间距 */
   align-items: center;
+  margin-top: 50px;
 }
 
+/* 标题样式 */
+.title-container h3 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
 
+/* 民俗文化条目容器 */
+.folklore-container {
+  display: grid;  /* 使用 grid 布局 */
+  grid-template-columns: repeat(5, 1fr);  /* 每行 5 个 */
+  gap: 60px;  /* 增大条目之间的间距 */
+  justify-items: center; /* 居中显示条目 */
+  margin-top: 20px;
+}
 
+/* 单个卡片的容器 */
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px; /* 确保卡片和按钮之间有间隙 */
+}
 
+/* 翻牌效果 */
+.flip-card {
+  width: 150px; /* 控制每个卡片的宽度 */
+  height: 200px; /* 控制每个卡片的高度 */
+  perspective: 1000px;
+  border-radius: 10px; /* 卡片圆角 */
+  overflow: hidden; /* 确保圆角不被溢出 */
+  position: relative;  /* 给 flip-card 设置相对定位 */
+}
 
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+  transform-origin: center; /* 设置旋转的中心 */
+}
 
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
 
-
-.bookshelf {
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
   display: flex;
   justify-content: center;
-  width: 1000px;
-
-  background-size: 100% 100px; /* 保证书架完整显示 */
-  background-repeat: no-repeat;
-  background-position: bottom; /* 背景对齐底部 */
-  height: 240px; /* 设置每个书架的高度 */
+  align-items: center;
+  background-size: 100% 100%; /* 背景图拉伸至卡片的宽度和高度 */
+  background-position: center; /* 背景图居中显示 */
+}
+.el-dialog {
+  z-index: 9999 !important; /* 强制使弹窗在最上层 */
 }
 
-.shelf {
+/* 正面内容（去掉圆角） */
+.flip-card-front {
+  background-image: url("@/assets/FolkF.png");
+  color: #000;
+  font-size: 30px;
+  font-family: 'HelveticaNeue', serif;
+  writing-mode: vertical-rl; /* 设置文字竖排，从右到左 */
+  text-align: center; /* 文字居中对齐 */
+  white-space: normal; /* 允许文字换行 */
+  word-wrap: break-word; /* 长单词或长句子可以在需要的地方换行 */
+  width: 100%; /* 确保宽度适应容器 */
+  border-radius: 0; /* 正面没有圆角 */
+}
+
+/* 背面内容（设置圆角） */
+.flip-card-back {
+  background-image: url("@/assets/FolkF.png");
+  color: #333;
+  font-size: 14px;
+  font-family: 'HelveticaNeue', serif;
+  transform: rotateY(180deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  z-index: 1;  /* 确保背面被旋转后处于合适层级 */
+}
+
+.flip-card-back img {
   width: 100%;
-  max-width: 800px; /* 限制书架的最大宽度 */
+  height: 100%;
+  object-fit: cover; /* 确保图片完全填充 */
+}
+
+/* 按钮样式 */
+.card-buttons {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center; /* 中心对齐书架中的书籍 */
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
 }
 
-.row {
+.card-buttons button {
+  padding: 5px 10px;
+  background-color: #b71c1c;
+  color: white;
+  border: 1px solid #b71c1c; /* 给按钮添加边框，确保它们显现 */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.card-buttons button:hover {
+  background-color: #9b1e1e;
+}
+
+/* 翻页按钮样式 */
+.pagination {
+  margin-top: 30px;
   display: flex;
-  justify-content: center; /* 将书籍居中 */
-  gap: 60px; /* 每本书之间的间隔 */
-  width: 100%; /* 确保每行书籍占据满行 */
+  justify-content: center;
+  gap: 15px;
 }
-
-.sample {
-  width: 120px; /* 书本宽度 */
-  height: 160px; /* 书本高度 */
-  background-size: cover;
-  background-position: center;
-  transition: transform 0.3s ease-in-out;
-  border-radius: 4px; /* 书本四角略微圆角 */
-}
-
-.sample:hover {
-  transform: scale(1.1); /* 鼠标悬停时稍微放大书本 */
-}
-
-
 
 .pagination button {
-  font-family: 'HelveticaNeue', serif;
-  margin: 0 10px;
   padding: 10px 20px;
   background-color: #b71c1c;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -485,243 +269,11 @@ onMounted(() => {
   cursor: not-allowed;
 }
 
-.search-category-container {
-  display: flex;
-  justify-content: space-between; /* 分散布局，元素两端对齐 */
-  gap: 10px; /* 元素之间的间距 */
-  margin-bottom: 20px;
+/* 弹窗样式 */
+.dialog-image {
   width: 100%;
-  max-width: 700px; /* 限制最大宽度，使其适应屏幕 */
-}
-
-.search-input {
-  font-family: 'HelveticaNeue', serif;
-  padding: 10px;
-  font-size: 16px;
-  width: 250px;
-  border: 2px solid #ccc; /* 边框颜色 */
-  border-radius: 5px;
-  transition: border 0.3s ease;
-}
-
-.search-input:focus {
-  border-color:#b71c1c; /* 聚焦时的边框颜色 */
-  outline: none; /* 去除默认的焦点外框 */
-}
-
-.category-select {
-  font-family: 'HelveticaNeue', serif;
-
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  width: 180px; /* 设置分类选择器的宽度 */
-  background-color: #fff;
-  transition: border 0.3s ease;
-}
-
-.category-select:focus {
-  border-color: #b71c1c; /* 聚焦时的边框颜色 */
-  outline: none;
-}
-
-.search-button {
-  font-family: 'HelveticaNeue', serif;
-
-  padding: 10px 20px;
-  background-color: #b71c1c; /* 按钮背景为红色 */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-  background-color: darkred; /* 悬停时的颜色 */
-}
-
-.search-button:focus {
-  outline: none; /* 去除按钮的聚焦外框 */
-}
-
-
-#app {
-  height: 100vh;
-  margin: 0;
-}
-
-.el-main {
-  --el-main-padding:0;
-
-}
-
-.hunan-tourist-attractions {
-
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.attraction-container {
-  display: flex;
-  align-items: flex-start; /* 图片和文本在一行显示 */
-  justify-content: space-between;
-  width: 100%;
-}
-
-
-
-
-
-.centered-text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-
-
-.fancy-name {
-  font-family: 'ZhuanTi', serif; /* 使用纂体字体 */
-  font-size: 13px; /* 根据需要调整字体大小 */
-  color: #555; /* 设置字体颜色 */
-}
-
-
-.image-carousel {
-  width: 500px;
-  height: 500px; /* 允许容器根据内容自适应高度 */
-  margin-right: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.location-box {
-  font-family: 'HelveticaNeue', serif;
-  margin-top: 20px;
-  margin-left: 40px;
-  margin-right: 20px;
-  width: 650px;
-  height: 320px; /* 设置固定高度 */
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  overflow-y: auto; /* 内容超出时显示滚动条 */
-
-  /* 设置右下角背景图片 */
-  background-image: url('@/assets/水墨小人.png');
-  background-position: right 10px bottom -10px; /* 向下偏移一点 */
-  background-repeat: no-repeat;     /* 不重复显示背景 */
-  background-size: 200px 250px;     /* 将背景图大小调整为 100px */
-  //opacity: 0.3;
-}
-
-
-
-.carousel-image-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel-image-container img {
-  max-height: 100%;
-  width: auto;
-  object-fit: contain; /* 保证图片完整显示，避免裁剪 */
-}
-
-.pic img {
-  width: 100%; /* 让图片填满容器的宽度 */
-  height: 100%; /* 让图片填满容器的高度 */
-  object-fit: cover; /* 保证图片不变形，填充整个容器 */
-}
-
-
-.s-title {
-  margin-left: 10px;
-  margin-top: 8px;
-  font-size: 34px;
-  font-weight: bold;
-  color: #333;
-}
-
-.p {
-  margin-left: 10px;
-  font-size: 26px;
-  color: #666;
-  margin-top: 10px;
-}
-
-.ts {
-  margin-left: 10px;
-  font-size: 18px;
-  color: #999;
-}
-
-/* 使用 :deep() 来深度修改 el-carousel 的垂直指示器样式 */
-.hunan-tourist-attractions :deep(.el-carousel__indicators--vertical li button) {
-  width: 10px;          /* 设置指示器的宽度 */
-  height: 10px;         /* 设置指示器的高度 */
-  border-radius: 50%;   /* 使按钮变圆 */
-  background-color: #ccc; /* 设置默认颜色 */
-  margin: 4px 0;        /* 上下间距 */
-  transition: background-color 0.3s ease; /* 平滑过渡 */
-}
-
-/* 修改当前激活状态指示器的样式 */
-.hunan-tourist-attractions :deep(.el-carousel__indicators--vertical li.is-active button) {
-  background-color: #b71c1c; /* 激活时的颜色 */
-}
-
-
-/* 样式修改 */
-.el-carousel {
-  margin-left: 20px;
-  width: 500px;
   height: auto;
+  object-fit: cover;
+  margin-bottom: 20px;
 }
-.book-actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 180px;
-}
-
-.detail-button,
-.analysis-button {
-  font-family: 'HelveticaNeue', serif;
-  padding: 8px 16px;
-  background-color: #b71c1c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-}
-
-.detail-button:hover,
-.analysis-button:hover {
-  background-color: darkred; /* 悬停时的颜色 */
-}
-
-.detail-button:focus,
-.analysis-button:focus {
-  outline: none; /* 去除按钮的聚焦外框 */
-}
-
-.detail-button:disabled,
-.analysis-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
 </style>

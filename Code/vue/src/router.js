@@ -43,6 +43,10 @@ const routes = [
         component:() => import('./components/FolkCustom/FolkSentimentAnalyze.vue')
     },
     {
+        path: '/card',
+        component:() => import('./components/FolkCustom/CardTry.vue')
+    },
+    {
         path:'/page',
         component:() => import('./components/FilmLiterature/Literature/PageFlip.vue')
     },
