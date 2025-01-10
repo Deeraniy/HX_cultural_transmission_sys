@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,HttpResponse
 import pymysql
 from django.http import JsonResponse
-
+#修改
 def get_food_list(request):
     # pass
     # 访问美食专区展示美食
