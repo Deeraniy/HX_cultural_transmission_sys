@@ -138,21 +138,13 @@ const foodItems=ref([])
 async function fetchFoodData() {
   try {
     const response = await FoodAPI.getFoodAPI();
-    if (response && response.data) {
-      foodItems.value = response.data.map(item => ({
-        name: item.food_name,
-        img: item.image_url,
-        description: item.description || ''
-      }));
-    } else {
-      console.error('Unexpected response format:', response);
-    }
+    foodItems.value = response.data;
+    console.log('Food data:', foodItems.value);
   } catch (error) {
     console.error('Error fetching food data:', error);
     // 处理错误
   }
 }
-
 onMounted(() => {
   fetchFoodData();
 });
