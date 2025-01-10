@@ -36,7 +36,9 @@
 import { ref } from 'vue';
 import HomePageMain from "@/components/Food/HomePageMain.vue";
 import FoodPage from "@/components/Food/FoodPage.vue"; // 这是美食专区组件
-import PropagationPage from "@/components/Food/PropagationPage.vue";// 这是传播效果分析组件
+import PropagationPage from "@/components/Food/PropagationPage.vue";
+import FoodDetailPage from "@/components/Food/FoodDetailPage.vue";
+// 这是传播效果分析组件
 
 // 设置 activeIndex 初始值为 '1'，这样组件会默认显示首页
 const activeIndex = ref('1')
