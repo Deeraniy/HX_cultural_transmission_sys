@@ -95,7 +95,7 @@ const images = [
     style: {
       width: "95%", // 设置这张图片的宽度为85%
       height: "95%", // 设置这张图片的高度为75%
-      transform: "translateY(-50px) translateX(80px)", // 图片向上偏移20px
+      transform: "translateY(-50px) translateX(100px)", // 图片向上偏移20px
     },
     circleImage: tigerCircle, // 圆形图片路径
     isSpecial: true,  // 新增字段，用来标记湘绣
