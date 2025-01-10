@@ -15,13 +15,13 @@
       <el-table-column label="菜品名称" prop="dish"></el-table-column>
 
       <!-- 参与度列 -->
-      <el-table-column label="参与度" prop="participation"></el-table-column>
+      <el-table-column label="参与度" prop="participation" sortable></el-table-column>
 
       <!-- 讨论度列 -->
-      <el-table-column label="讨论度" prop="discussion"></el-table-column>
+      <el-table-column label="讨论度" prop="discussion" sortable></el-table-column>
 
       <!-- 知名度列 -->
-      <el-table-column label="知名度" prop="fame"></el-table-column>
+      <el-table-column label="知名度" prop="fame" sortable></el-table-column>
     </el-table>
 
     <!-- 分页组件 -->

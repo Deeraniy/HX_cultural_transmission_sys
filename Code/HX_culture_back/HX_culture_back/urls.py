@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
 
 #     get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
+#
 
 
 
