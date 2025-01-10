@@ -16,13 +16,14 @@
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="food-block" v-for="(item, index) in paginatedFoodItems" :key="index">
-          <el-card @click="goToFoodDetail(item.name)" class="food-card-sidebar">
+          <el-card @click="goToSentimentAnalysis(item.name)" class="food-card-sidebar">
             <div class="card-header">
               <img :src="item.img" :alt="item.name" class="food-image-sidebar" />
             </div>
             <div class="card-content">
               <h3>{{ item.name }}</h3>
             </div>
+
           </el-card>
         </div>
       </aside>
@@ -46,6 +47,7 @@
                 <div class="card-header">
                   <img :src="item.img" :alt="item.name" class="food-image" />
                 </div>
+
                 <div class="card-content">
                   <h3>{{ item.name }}</h3>
                   <div class="button-container">
@@ -80,7 +82,9 @@
     <div class="food-detail-dialog">
       <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
       <h2>{{ foodDetail.name }}</h2>
-      <p>{{ foodDetail.description }}</p>
+      <div v-if="foodDetail.description.startsWith('http')">
+        <a :href="foodDetail.description" target="_blank" rel="noopener noreferrer">{{ foodDetail.description }}</a>
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -173,8 +177,8 @@ const paginatedFoodItems = computed(() => {
 const router = useRouter();
 
 // Click event handler for navigating to food detail
-const goToFoodDetail = (foodName) => {
-  /*router.push(`/food/detail/${foodName}`);*/
+const goToSentimentAnalysis = (foodName) => {
+  router.push(`/food/detail/${foodName}`);
 };
 
 // Function to rotate carousel
