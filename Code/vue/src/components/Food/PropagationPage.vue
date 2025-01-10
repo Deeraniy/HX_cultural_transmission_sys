@@ -13,7 +13,15 @@
 
       <!-- 菜品名称列 -->
       <el-table-column label="菜品名称" prop="dish"></el-table-column>
+      <el-table-column
+          label="参与度"
+          prop="participation"
+          sortable
+          @sort-change="handleSortChange('participation')"
+      >
+      </el-table-column>
 
+<<<<<<< HEAD
       <!-- 参与度列 -->
       <el-table-column label="参与度" prop="participation" sortable></el-table-column>
 
@@ -22,6 +30,24 @@
 
       <!-- 知名度列 -->
       <el-table-column label="知名度" prop="fame" sortable></el-table-column>
+=======
+      <el-table-column
+          label="讨论度"
+          prop="discussion"
+          sortable
+          @sort-change="handleSortChange('discussion')"
+      >
+      </el-table-column>
+
+      <el-table-column
+          label="知名度"
+          prop="fame"
+          sortable
+          @sort-change="handleSortChange('fame')"
+      >
+      </el-table-column>
+
+>>>>>>> origin/main
     </el-table>
 
     <!-- 分页组件 -->
@@ -66,7 +92,7 @@ const tableData = ref([
     dish: '湘西外婆菜',
     img: food3,
     participation: '60%',
-    discussion: '800条评论',
+    discussion: '1000条评论',
     fame: '65%'
   },
   {
@@ -106,6 +132,39 @@ const handleSizeChange = (newSize) => {
   pageSize.value = newSize
   currentPage.value = 1  // 重置到第一页
 }
+// 处理排序变化
+const handleSortChange = (column) => {
+  let sortKey = column
+  const isDescending = sortOrders[column] === 'descending'
+  tableData.value.sort((a, b) => {
+    let valA = a[sortKey]
+    let valB = b[sortKey]
+    // 如果是参与度、讨论度、知名度这些是百分比或数字，进行转化处理
+    if (sortKey === 'participation' || sortKey === 'fame') {
+      valA = parseFloat(valA.replace('%', ''))
+      valB = parseFloat(valB.replace('%', ''))
+    } else if (sortKey === 'discussion') {
+      valA = parseInt(valA.replace('条评论', ''))
+      valB = parseInt(valB.replace('条评论', ''))
+    }
+
+    if (isDescending) {
+      return valB - valA
+    } else {
+      return valA - valB
+    }
+  })
+  // 更新排序方向
+  sortOrders[column] = isDescending ? 'ascending' : 'descending'
+}
+
+// 存储排序方向
+const sortOrders = {
+  participation: 'ascending',
+  discussion: 'ascending',
+  fame: 'ascending'
+}
+
 </script>
 
 <style scoped>
