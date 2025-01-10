@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="美食后端">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="美食文化前后端连接">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/food.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/food.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodDetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodDetailPage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -131,7 +132,7 @@
       <workItem from="1736385593939" duration="1015000" />
       <workItem from="1736387575471" duration="63000" />
       <workItem from="1736387665227" duration="617000" />
-      <workItem from="1736476100374" duration="10504000" />
+      <workItem from="1736476100374" duration="14717000" />
     </task>
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
       <option name="closed" value="true" />
@@ -293,7 +294,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736495409059</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="美食文化前后端连接">
+      <option name="closed" value="true" />
+      <created>1736496969130</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1736496969130</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,7 +332,8 @@
     <MESSAGE value="美食文化美化" />
     <MESSAGE value="美食传播效果排序" />
     <MESSAGE value="美食后端" />
-    <option name="LAST_COMMIT_MESSAGE" value="美食后端" />
+    <MESSAGE value="美食文化前后端连接" />
+    <option name="LAST_COMMIT_MESSAGE" value="美食文化前后端连接" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
