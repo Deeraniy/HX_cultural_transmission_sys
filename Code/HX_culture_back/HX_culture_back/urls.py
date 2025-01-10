@@ -1,11 +1,11 @@
 from django.urls import path
 from django.urls import re_path as url
-from app01 import spot_sentiments_analyze, view,city
+from app01 import spot_sentiments_analyze, view, city, food
 from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze
+from app01 import food,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
@@ -42,8 +42,8 @@ urlpatterns = [
     url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
     url(r'^spot_get_cloud/',cloud.get_cloud),
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
+    url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
 
-#     get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
 
 
 
