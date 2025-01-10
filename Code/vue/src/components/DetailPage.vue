@@ -13,7 +13,7 @@
         <div class="content">
           <!-- 图片和弹幕区域 -->
           <div class="image-danmu-container">
-            <img :src="attractions.image" alt="图片" class="city-image" />
+            <img :src="currentImageUrl" alt="当前展示的图片" class="city-image" />
             <img :src="cloudUrl" alt="词云图" class="wordcloud" />
             <div class="danmu">
               <danmaku ref="danmakuRef" v-model:danmus="danmus" :speeds="50" useSlot loop :channels="7" style="height:100%; width:100%;" :is-suspend="true">
@@ -81,6 +81,8 @@ const cloudUrl = ref('');
 const processedTimeData = ref<any>([]);
 const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
 const topic = ref<any>([]);
+const currentImageUrl = ref<string>(''); // 用于存储当前需要展示的图片 URL
+
 const data1 = [
   { name: '正面', value: 58.84 },
   { name: '中立', value: 7.28 },
@@ -101,6 +103,9 @@ const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | st
       image: spot.image_url,
       description: spot.description,
     };
+
+    // 更新图片 URL
+    currentImageUrl.value = spot.image_url;
     console.log("当前选中的景点:", attractions.name);
   } else {
     console.warn(`未找到名称为 "${spotName}" 的景点`);
@@ -125,6 +130,8 @@ const loadBooks = (bookName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>)
       image: book.image_url,
       description: book.text,
     };
+    // 更新图片 URL
+    currentImageUrl.value = book.image_url;
     console.log("当前选中的书籍:", books.name);
   } else {
     console.warn(`未找到名称为 "${bookName}" 的书`);
@@ -381,57 +388,31 @@ onMounted(async () => {
   }
 
   try {
-    const commentResponse = await CommentAPI.getCommentList(nowName.value,pageType.value);
-
+    const commentResponse = await CommentAPI.getCommentList(nowName.value, pageType.value);
+    // 评论改了格式，要记得修改
     console.log("原始评论数据:", commentResponse);
 
-    if (typeof commentResponse === "string") {
-      // 1. 修复常见的 JSON 格式问题
-      const fixedResponse = commentResponse
-          .replace(/None/g, 'null')
-          .replace(/Decimal\('([\d.]+)'\)/g, '$1')
-          .replace(/'/g, '"')
-          .replace(/\\(?!["\\/bfnrtu])/g, '');
+    // 确保返回的数据包含 comments 数组
+    if (commentResponse && commentResponse.comments && Array.isArray(commentResponse.comments)) {
+      const commentsArray = commentResponse.comments;
 
-      console.log("修复后的评论数据:", fixedResponse);
-
-      // 2. 提取每个 JSON 对象
-      const matches = fixedResponse.match(/{[^}]+}/g); // 匹配每个 JSON 对象
-
-      if (matches) {
-        const commentsArray = [];
-
-        for (const match of matches) {
-          try {
-            const comment = JSON.parse(match); // 逐个解析 JSON 对象
-            commentsArray.push(comment);
-          } catch (jsonError) {
-            console.warn("跳过无法解析的 JSON 对象:", match, jsonError); // 输出无法解析的对象
-          }
-        }
-
-        console.log("成功解析的评论数组:", commentsArray);
-
-        // 映射到弹幕数据
-        danmus.value = commentsArray.map(comment => ({
-          name: comment.user_id || '匿名用户',
-          text: comment.content || '',
-        }));
-      } else {
-        console.warn("未找到有效的 JSON 对象。");
-      }
-    } else if (Array.isArray(commentResponse)) {
-      // 直接处理对象数组
-      danmus.value = commentResponse.map(comment => ({
+      // 映射到弹幕数据
+      danmus.value = commentsArray.map(comment => ({
         name: comment.user_id || '匿名用户',
-        text: comment.content || '',
+        text: comment.comment_text || '',  // 使用新的字段 comment_text
+        sentiment: comment.sentiment || '',  // 如果需要，可以把情感分析加入
+        sentiment_confidence: comment.sentiment_confidence || '',  // 情感分析置信度
+        platform: comment.platform || ''  // 评论平台
       }));
+
+      console.log("成功解析的评论数组:", commentsArray);
     } else {
-      throw new Error("评论数据格式不正确");
+      throw new Error("返回的数据格式不正确，未找到有效的评论数组。");
     }
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+
 
 
   try {
@@ -441,6 +422,8 @@ onMounted(async () => {
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+
+
   try {
     const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value,pageType.value);
 

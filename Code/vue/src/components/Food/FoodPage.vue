@@ -2,8 +2,6 @@
   <div class="food-section">
     <!-- Header -->
     <header class="header">
-      <div class="logo">湘菜韵味</div>
-      <span>The Essence of Hunan Cuisine</span>
       <div class="search-container">
         <el-input
             v-model="searchQuery"
@@ -17,40 +15,56 @@
     <div class="main-container">
       <!-- Sidebar -->
       <aside class="sidebar">
-        <el-menu
-            default-active="0"
-            class="el-menu-vertical-demo"
-            @select="handleSelect"
-            background-color="#ffffff"
-            text-color="#333"
-            active-text-color="var(--theme-color)"
-        >
-          <el-menu-item v-for="(item, index) in foodItems" :key="index" :index="index.toString()">
-            <template #title>
-              <router-link :to="`/food/detail/${item.name}`" class="menu-link">{{ item.name }}</router-link>
-            </template>
-          </el-menu-item>
-        </el-menu>
+        <div class="food-block" v-for="(item, index) in paginatedFoodItems" :key="index">
+          <el-card @click="goToFoodDetail(item.name)" class="food-card-sidebar">
+            <div class="card-header">
+              <img :src="item.img" :alt="item.name" class="food-image-sidebar" />
+            </div>
+            <div class="card-content">
+              <h3>{{ item.name }}</h3>
+            </div>
+          </el-card>
+        </div>
       </aside>
 
       <!-- Main content -->
       <main class="content">
-        <h2>湖南菜经典美食</h2>
-        <!-- Filtered food items based on search query -->
-        <el-card
-            v-for="item in filteredFoodItems"
-            :key="item.name"
-            class="food-card"
-            @click="goToFoodDetail(item.name)"
-        >
-          <div class="card-header">
-            <img :src="item.img" :alt="item.name" class="food-image" />
+        <h2 class="titleH">湖南菜经典美食</h2>
+        <!-- Carousel -->
+        <div class="carousel-container">
+          <div
+              class="carousel"
+              :style="{ transform: `rotateY(${rotationAngle}deg) rotateX(${tiltAngle}deg)` }"
+          >
+            <div
+                class="carousel-item"
+                v-for="(item, index) in paginatedFoodItems"
+                :key="index"
+                :style="getItemStyle(index)"
+            >
+              <el-card class="food-card" @click="rotateRight">
+                <div class="card-header">
+                  <img :src="item.img" :alt="item.name" class="food-image" />
+                </div>
+                <div class="card-content">
+                  <h3>{{ item.name }}</h3>
+                  <el-button @click.stop="goToFoodDetail(item.name)" size="small">查看详情</el-button>
+                </div>
+              </el-card>
+            </div>
           </div>
-          <div class="card-content">
-            <h3>{{ item.name }}</h3>
-            <p>{{ item.description }}</p>
-          </div>
-        </el-card>
+        </div>
+
+        <!-- Control Buttons (Bottom) -->
+        <div class="control-buttons">
+          <el-pagination
+              :current-page="currentPage"
+              :page-size="8"
+              :total="filteredFoodItems.length"
+              @current-change="handlePageChange"
+              layout="prev, pager, next"
+          />
+        </div>
       </main>
     </div>
   </div>
@@ -66,41 +80,35 @@ import food4 from '@/assets/foodImg/food4.jpg'
 import food5 from '@/assets/foodImg/food5.jpg'
 
 const searchQuery = ref('');
+const rotationAngle = ref(0); // 旋转角度
+const tiltAngle = ref(0); // 俯视仰视角度
+const currentPage = ref(1); // 当前页码
 
 // Food items data
 const foodItems = [
-  {
-    name: "糖油粑粑",
-    img: food1,
-    description: "糖油粑粑是一道湖南传统的甜点，外皮酥脆，内心软糯，香甜的糖浆包裹其中，口感独特，甜而不腻。每一口都能感受到浓郁的糯米香和糖浆的甜美，是一道深受欢迎的小吃。"
-  },
-  {
-    name: "毛家红烧肉",
-    img: food2,
-    description: "毛家红烧肉是湖南省的传统经典菜肴，以猪肉为主料，采用独特的烹饪技法慢炖，猪肉酥软入味，色泽红亮。酱香浓郁，味道鲜美，入口即化。此菜深受毛泽东故乡人民的喜爱，成为湖南菜的代表之一。"
-  },
-  {
-    name: "臭豆腐",
-    img: food3,
-    description: "臭豆腐是湖南街头小吃的代表之一，外脆内嫩，色泽金黄。它的独特之处在于其发酵的豆腐味道，虽然外面闻起来可能有些许“臭”，但吃上一口却香味扑鼻，味道醇厚。搭配上辣椒酱，更是让人欲罢不能。"
-  },
-  {
-    name: "攸县香干",
-    img: food4,
-    description: "攸县香干是湖南省攸县的传统美食，选用本地优质黄豆制成豆腐，经过熏制后具有独特的香味。香干口感紧实，有嚼劲，通常与辣椒、蒜末、花生等配料一同炒制，色香味俱佳，是一道非常下饭的菜肴。"
-  },
-  {
-    name: "辣椒炒肉",
-    img: food5,
-    description: "辣椒炒肉是湖南省的经典家常菜之一，选用猪肉作为主料，配以新鲜的辣椒和蒜末炒制而成。猪肉鲜嫩，辣椒脆爽，口感丰富。菜肴味道辛辣刺激，酱汁浓郁，辣味和肉香交织在一起，十分下饭"
-  }
+  { name: "糖油粑粑", img: food1 },
+  { name: "毛家红烧肉", img: food2 },
+  { name: "臭豆腐", img: food3 },
+  { name: "攸县香干", img: food4 },
+  { name: "辣椒炒肉", img: food5 },
+  { name: "糖油粑粑", img: food1 },
+  { name: "毛家红烧肉", img: food2 },
+  { name: "臭豆腐", img: food3 },
+  { name: "攸县香干", img: food4 },
+  { name: "辣椒炒肉", img: food5 }
 ];
 
-// Filter food items based on search query
+// Filter food items
 const filteredFoodItems = computed(() => {
   return foodItems.filter(item =>
       item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
+});
+
+// Paginate food items
+const paginatedFoodItems = computed(() => {
+  const startIndex = (currentPage.value - 1) * 6;
+  return filteredFoodItems.value.slice(startIndex, startIndex + 6);
 });
 
 // Get the router instance to navigate
@@ -111,18 +119,32 @@ const goToFoodDetail = (foodName) => {
   router.push(`/food/detail/${foodName}`);
 };
 
-const handleSelect = (index) => {
-  // 处理菜单选择事件
-  console.log(`Selected: ${foodItems[index].name}`);
+// Function to rotate carousel
+const rotateLeft = () => {
+  rotationAngle.value -= 45;
+};
+
+const rotateRight = () => {
+  rotationAngle.value += 45;
+};
+
+// Function to tilt carousel view (仰视/俯视)
+const handlePageChange = (page) => {
+  currentPage.value = page;
+};
+
+// Get the individual item style
+const getItemStyle = (index) => {
+  const angle = (360 / paginatedFoodItems.value.length) * index;
+  const translateZ = 250; // Adjust distance from center for 3D effect
+  return {
+    transform: `rotateY(${angle}deg) translateZ(${translateZ}px)`
+  };
 };
 </script>
 
 <style scoped>
-/* 根主题色 */
-*{
-  --theme-color: #da251c; /* 主题色 红色 */
-}
-
+@import '@/assets/font/font.css';
 /* 整体布局 */
 .food-section {
   display: flex;
@@ -132,29 +154,46 @@ const handleSelect = (index) => {
 
 /* Header 样式 */
 .header {
-  background-color: var(--theme-color);
+  font-family: 'HelveticaNeue', serif;
   color: #fff;
-  padding: 20px;
   text-align: center;
-  font-size: 28px;
+  font-size: 38px;
   font-weight: bold;
-  position: relative;
+  position: relative; /* 让子元素可以使用绝对定位 */
+  display: flex; /* 使用 flex 布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  height: 30px; /* 可以根据需要调整 */
 }
 
-.header .logo {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 10px;
+.titleH {
+  position: absolute; /* 绝对定位 */
+  right: 0; /* 放在最右边 */
+  top: 220px; /* 距离顶部20px，调整可根据需求 */
+  writing-mode: vertical-rl; /* 竖直从右到左 */
+  white-space: nowrap; /* 防止文字换行 */
+  margin: 0; /* 去除默认的上下边距 */
+  font-family: 'HelveticaNeue', serif;
+  margin-right: 150px;
 }
 
+/* 搜索框容器样式 */
 .search-container {
+  display: flex;
+
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
   position: absolute;
+  top: 20px; /* 根据需要调整距离 */
   right: 20px;
-  top: 20px;
+  width: 100%; /* 让它撑满宽度 */
 }
 
+/* 搜索框样式 */
 .search-input {
   width: 200px;
+  font-family: 'HelveticaNeue', serif;
+  margin: 0 auto; /* 自动调整左右外边距，实现居中 */
 }
 
 /* 主体部分布局 */
@@ -163,6 +202,7 @@ const handleSelect = (index) => {
   flex: 1;
   margin-top: 20px;
   padding: 20px;
+  height: calc(100vh - 140px); /* 高度撑满屏幕，减去 header 的高度 */
 }
 
 /* Sidebar 样式 */
@@ -172,78 +212,140 @@ const handleSelect = (index) => {
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: sticky;
+  font-family: 'HelveticaNeue', serif;
   top: 20px;
+  height: 522px; /* 高度撑满父容器 */
+  overflow-y: auto; /* 超出部分滚动 */
 }
 
-.el-menu-vertical-demo {
-  border-right: none;
+.food-block {
+  margin-bottom: 20px;
 }
 
-.el-menu-item {
-  background-color: #fff;
+.food-card-sidebar {
+  width: 100%;
+  cursor: pointer;
 }
 
-.el-menu-item:hover {
-  background-color: #f0f0f0;
+.food-image-sidebar {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
 }
 
-.menu-link {
-  color: var(--theme-color);
-  text-decoration: none;
-  font-size: 18px;
+.food-card-sidebar .card-content {
+  padding: 0px;
+  text-align: center;
 }
 
-.menu-link:hover {
-  text-decoration: underline;
+.food-card-sidebar h3 {
+  font-size: 28px;
+  margin: 0;
 }
 
 /* Main content 样式 */
 .content {
+  background-image: url("@/assets/FoodF.png");
   flex: 1;
-  padding: 20px;
+
+  padding-top:  80px;
+  padding-bottom: 20px;
   background-color: #ffffff;
+  height: 100%; /* 高度撑满父容器 */
+  overflow-y: auto; /* 超出部分滚动 */
 }
 
 .content h2 {
-  color: var(--theme-color);
-  font-size: 28px;
+  color: #fff8f0;
+  font-size: 58px;
   margin-bottom: 20px;
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.4); /* 添加阴影 */
 }
 
-/* 每个美食项 */
+
+/* Carousel 样式 */
+.carousel-container {
+  position: relative;
+  width: 90%;
+  height: 400px;
+  perspective: 1200px;
+}
+
+.carousel {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1s ease;
+}
+
+/* 每个卡片项 */
+.carousel-item {
+  position: absolute;
+  width: 220px;
+  height: 330px;
+  font-family: 'HelveticaNeue', serif;
+  font-size: 30px;
+  transform-origin: center center;
+  transition: transform 1s ease;
+}
+
 .food-card {
   width: 100%;
-  margin-bottom: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
-.card-header {
-  display: flex;
-  justify-content: left;
-  align-items: center;
-}
-
-.food-image {
-  width: 200px;
+.food-card .card-header img {
+  width: 100%;
   height: 150px;
   object-fit: cover;
-  border-radius: 8px;
 }
 
-.card-content {
-  padding: 20px;
+.food-card .card-content {
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中 */
+  align-items: center; /* 水平居中 */
+  height: 100%;
+  text-align: center;
 }
 
-.card-content h3 {
-  font-size: 22px;
-  color: var(--theme-color);
-  margin: 0;
-  margin-bottom: 10px;
+/* 控制按钮 */
+.control-buttons {
+  margin-top: 30px;
+  margin-left:400px;
+  text-align: center;
+  background-color: transparent !important; /* 背景透明 */
 }
 
-.card-content p {
-  font-size: 16px;
-  line-height: 1.5;
+/* 强制修改 .el-button 和 .el-pagination 的文字和箭头颜色 */
+.control-buttons :deep(.el-button),
+.control-buttons :deep(.el-pagination) {
+  background-color: transparent!important; /* 按钮背景透明 */
+  color: #fff8f0; /* 默认文字颜色 */
+  transition: color 0.3s ease, border-color 0.3s ease; /* 文字和边框颜色变化的过渡效果 */
+}
+
+/* 控制按钮点击时文字和箭头颜色变红 */
+.control-buttons :deep(.el-button:active),
+.control-buttons :deep(.el-pagination:active) {
+  color: #da251c; /* 点击时文字颜色变红 */
+  border-color: #da251c; /* 点击时边框颜色变红 */
+}
+
+/* 控制按钮点击时图标颜色变红 */
+.control-buttons :deep(.el-button:active .el-icon),
+.control-buttons :deep(.el-pagination:active .el-icon) {
+  color: #da251c; /* 点击时图标颜色变红 */
+}
+
+
+.el-button {
+  margin: 0 10px;
 }
 </style>
