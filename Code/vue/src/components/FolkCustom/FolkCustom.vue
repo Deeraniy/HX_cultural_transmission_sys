@@ -5,51 +5,103 @@
         <img src="http://whyimg.wentiyun.cn/feiyi/20230629/017cd4df-c763-4768-84a3-1b8165f603c5.png" style="width: 100%;max-height: 500px">
       </div>
       <div style="display: flex">
-      <div class="attraction-container">
-        <el-row class="tac">
-          <el-col :span="12">
-            <h5 class="mb-2">Default colors</h5>
-            <el-menu
-                default-active="2"
-                class="el-menu-vertical-demo"
-                @open="handleOpen"
-                @close="handleClose"
-            >
-              <el-sub-menu index="1">
-                <template #title>
-                  <el-icon><location /></el-icon>
-                  <span>Navigator One</span>
-                </template>
-                <el-menu-item-group title="Group One">
-                  <el-menu-item index="1-1">item one</el-menu-item>
-                  <el-menu-item index="1-2">item two</el-menu-item>
-                </el-menu-item-group>
-                <el-menu-item-group title="Group Two">
-                  <el-menu-item index="1-3">item three</el-menu-item>
-                </el-menu-item-group>
-                <el-sub-menu index="1-4">
-                  <template #title>item four</template>
-                  <el-menu-item index="1-4-1">item one</el-menu-item>
+        <div class="attraction-container" style="width: 230px">
+          <el-row>
+            <el-col style="width: 200px">
+              <el-menu
+                  class="custom-menu"
+                  default-active="1"
+                  :collapse="false"
+                  unique-opened
+                  :default-openeds="['1', '1-1', '1-1-1', '1-1-2', '1-1-3', '1-1-4', '1-1-5', '1-1-6', '1-1-7', ]"
+              >
+                <!-- 一级菜单: 分类 -->
+                <el-sub-menu index="1">
+                  <template #title>
+                    <span style="color: white; font-family: 'Book Antiqua'"><b>分类</b></span>
+                  </template>
+                  <!-- 二级菜单: 艺术 -->
+                  <el-sub-menu index="1-1">
+                    <template #title><b>艺术</b></template>
+                    <el-menu-item index="1-1-1">
+                      <el-checkbox>传统医药</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-1-2">
+                      <el-checkbox>传统音乐</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-1-3">
+                      <el-checkbox>传统舞蹈</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-1-4">
+                      <el-checkbox>传统戏剧</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-1-5">
+                      <el-checkbox>曲艺</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-1-6">
+                      <el-checkbox>传统医药</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-1-7">
+                      <el-checkbox>传统技艺</el-checkbox>
+                    </el-menu-item>
+                  </el-sub-menu>
+                  <!-- 二级菜单: 民俗 -->
+                  <el-sub-menu index="1-2">
+                    <template #title><b>民俗</b></template>
+                    <el-menu-item index="1-2-1">
+                      <el-checkbox>民俗</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-2-2">
+                      <el-checkbox>传统体育、游艺与杂技</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="1-2-3">
+                      <el-checkbox>民间文学</el-checkbox>
+                    </el-menu-item>
+                  </el-sub-menu>
                 </el-sub-menu>
-              </el-sub-menu>
-              <el-menu-item index="2">
-                <el-icon><icon-menu /></el-icon>
-                <span>Navigator Two</span>
-              </el-menu-item>
-              <el-menu-item index="3" disabled>
-                <el-icon><document /></el-icon>
-                <span>Navigator Three</span>
-              </el-menu-item>
-              <el-menu-item index="4">
-                <el-icon><setting /></el-icon>
-                <span>Navigator Four</span>
-              </el-menu-item>
-            </el-menu>
-          </el-col>
-        </el-row>
-      </div>
 
-      <div class="bookshelf-container">
+                <!-- 一级菜单: 地域 -->
+                <el-sub-menu index="3">
+                  <template #title>
+                    <span style="color: white; font-family: 'Book Antiqua'">地域</span>
+                  </template>
+                  <!-- 二级菜单: 湖南 -->
+                  <el-sub-menu index="3-1">
+                    <template #title><b>湖南</b></template>
+                    <!-- 三级菜单: 中国的地区 -->
+                    <el-menu-item index="3-1-1">
+                      <el-checkbox>长沙</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="3-1-2">
+                      <el-checkbox>湘潭</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="3-1-3">
+                      <el-checkbox>株洲</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="3-1-4">
+                      <el-checkbox>永州</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="3-1-5">
+                      <el-checkbox>湘西</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="3-1-6">
+                      <el-checkbox>郴州</el-checkbox>
+                    </el-menu-item>
+                    <el-menu-item index="3-1-7">
+                      <el-checkbox>岳阳</el-checkbox>
+                    </el-menu-item>
+                  </el-sub-menu>
+                </el-sub-menu>
+              </el-menu>
+            </el-col>
+          </el-row>
+        </div>
+
+
+
+
+
+        <div class="bookshelf-container">
         <!-- 搜索框 -->
         <!-- 搜索框和分类选择器放一行 -->
         <div class="search-category-container">
@@ -295,7 +347,70 @@ onMounted(() => {
 
 <style scoped lang="scss">
 @import '@/assets/font/font.css';
+.attraction-container {
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
+.custom-menu {
+
+  border-radius: 8px; /* 圆角 */
+  background-color: #0d7b6f; /* 翠绿色背景 */
+
+}
+.el-menu{
+  font-size: 14px; /* 设置字体大小 */
+  color: #ffffff; /* 菜单字体白色 */
+  font-family: 'Arial', 'Microsoft YaHei', sans-serif; /* 自定义字体 */
+
+}
+
+
+
+.menu-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #3b5999;
+  margin-bottom: 12px;
+}
+
+.custom-menu {
+
+  border: none;
+}
+
+.custom-menu .el-sub-menu__title {
+  color: #ffffff; /* 一级菜单字体白色 */
+  font-weight: bold; /* 一级菜单字体加粗 */
+  padding: 10px 15px; /* 内边距增加用户体验 */
+  border-radius: 5px; /* 一级菜单标题的圆角 */
+  transition: all 0.3s ease; /* 平滑过渡效果 */
+}
+
+.custom-menu .el-menu-item {
+  font-size: 14px;
+  color: #333;
+  padding-left: 24px;
+
+}
+
+.custom-menu .el-checkbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.custom-menu .count {
+  color: #d9534f;
+  margin-left: 4px;
+}
+
+.custom-menu .total {
+  color: #888;
+  margin-left: 8px;
+}
 .bookshelf-container {
   margin-top: 80px;
   display: flex;
@@ -303,6 +418,13 @@ onMounted(() => {
   gap: 40px; /* 每个书架之间的间距 */
   align-items: center;
 }
+
+
+
+
+
+
+
 
 .bookshelf {
   display: flex;
