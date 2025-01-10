@@ -44,7 +44,7 @@ const routes = [
     },
     {
         path: '/card',
-        component:() => import('./components/FolkCustom/CardTry.vue')
+        component:() => import('./components/FolkCustom/LunBo.vue')
     },
     {
         path:'/page',
