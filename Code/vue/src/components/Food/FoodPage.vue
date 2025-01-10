@@ -70,7 +70,6 @@
       </main>
     </div>
   </div>
-
   <!-- Food Detail Dialog -->
   <el-dialog
       v-model="foodDetail.visible"
@@ -83,9 +82,6 @@
       <h2>{{ foodDetail.name }}</h2>
       <p>{{ foodDetail.description }}</p>
     </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="closeFoodDetail">关闭</el-button>
-    </span>
   </el-dialog>
 </template>
 
@@ -353,7 +349,6 @@ const getItemStyle = (index) => {
   top: 220px; /* 距离顶部20px，调整可根据需求 */
   writing-mode: vertical-rl; /* 竖直从右到左 */
   white-space: nowrap; /* 防止文字换行 */
-  margin: 0; /* 去除默认的上下边距 */
   font-family: 'HelveticaNeue', serif;
   margin-right: 150px;
 }
@@ -361,7 +356,6 @@ const getItemStyle = (index) => {
 /* 搜索框容器样式 */
 .search-container {
   display: flex;
-
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   position: absolute;
