@@ -206,20 +206,69 @@ onMounted(() => {
   align-items: center;
 }
 
+/* 修改按钮样式 */
 .generate-report-btn {
   font-size: 16px;
+  border: 2px solid #d4af37;  /* 添加金色边框 */
   padding: 12px 24px;
   border-radius: 25px;  /* 增加圆角 */
-  background: #409EFF;
-  border: none;
-  color: white;
+  background: #fff8f0;  /* 金色背景 */
+  color: black;
+  font-family: 'HelveticaNeue', serif;  /* 设置字体为更有质感的字体 */
   transition: all 0.3s;
 }
 
 .generate-report-btn:hover {
-  background: #66b1ff;
+  background: #FFC107;  /* 金色的 hover 状态 */
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
   border-radius: 25px;  /* hover 状态也保持圆角 */
+}
+
+.generate-report-btn:focus {
+  outline: none;  /* 去掉焦点时的边框 */
+}
+/* 修改下拉按钮样式 */
+.el-dropdown .el-button {
+  background-color: #fff8f0;  /* 金色背景 */
+  border: 2px solid #d4af37;  /* 添加金色边框 */
+  color: black;
+  font-family: 'HelveticaNeue', serif;  /* 修改字体 */
+  font-size: 16px;
+}
+
+.el-dropdown .el-button .el-icon--right {
+  color: black !important;  /* 强制将下拉符号的颜色设置为黑色 */
+}
+
+
+.el-dropdown .el-button:hover {
+  background-color: #FFC107;  /* 金色的 hover 状态 */
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.el-dropdown .el-button .el-icon--right {
+  color: white;  /* 确保右侧箭头图标颜色也为白色 */
+}
+
+/* 修改下拉菜单样式 */
+.el-dropdown-menu {
+  background-color: rgba(255, 248, 240, 0.8);  /* 设置背景色为透明的米黄色 */
+  color: black;  /* 设置文字颜色为白色 */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;  /* 修改字体 */
+}
+
+.el-dropdown-item {
+  padding: 10px 20px;
+  color: white;  /* 白色字体 */
+  font-size: 16px;
+  font-family: 'Georgia', serif;  /* 修改字体 */
+}
+
+.el-dropdown-item:hover {
+  background-color: #FFC107;  /* 金色 hover 状态 */
+  color: black;  /* 高亮显示时字体颜色为黑色 */
 }
 </style>

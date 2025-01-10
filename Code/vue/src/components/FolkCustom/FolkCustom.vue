@@ -2,13 +2,15 @@
   <el-main>
     <Lunbo/>
     <div class="hunan-tourist-attractions">
-      <div class="title-container">
-        <h3>民俗文化展示</h3>
+
+      <!-- 搜索框 -->
+      <div class="search-container">
+        <input v-model="searchQuery" type="text" placeholder="搜索民俗文化..." class="search-box" />
       </div>
 
       <!-- 展示的内容 -->
       <div class="folklore-container">
-        <div v-for="(book, index) in currentBooks" :key="index" class="card-container">
+        <div v-for="(book, index) in filteredBooks" :key="index" class="card-container">
           <div class="flip-card">
             <div class="flip-card-inner" @click="showDetails(book)">
               <div class="flip-card-front">
@@ -41,12 +43,13 @@
         <p>这里可以展示更详细的民俗文化内容...</p>
       </div>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">关闭</el-button>
-  </span>
+        <el-button @click="dialogVisible = false">关闭</el-button>
+      </span>
     </el-dialog>
 
   </el-main>
 </template>
+
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
@@ -72,11 +75,21 @@ const books = ref([
   { content: '橘子洲', image: '/assets/book15.jpg' },
 ]);
 
+// 搜索查询
+const searchQuery = ref('');
+
+// 计算筛选后的书籍
+const filteredBooks = computed(() => {
+  return books.value.filter(book =>
+      book.content.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
 // 每页显示15个条目（3行 * 5列）
 const booksPerPage = 15;
 
 // 计算总页数
-const totalPages = computed(() => Math.ceil(books.value.length / booksPerPage));
+const totalPages = computed(() => Math.ceil(filteredBooks.value.length / booksPerPage));
 
 // 当前页
 const currentPage = ref(0);
@@ -85,7 +98,7 @@ const currentPage = ref(0);
 const currentBooks = computed(() => {
   const start = currentPage.value * booksPerPage;
   const end = start + booksPerPage;
-  return books.value.slice(start, end);
+  return filteredBooks.value.slice(start, end);
 });
 
 // 翻页函数
@@ -107,16 +120,11 @@ const selectedBook = ref(null);
 
 // 显示详细信息的函数
 const showDetails = (book) => {
-  console.log("点击了卡片", book);  // 打印被点击的书籍信息
   selectedBook.value = book;
   dialogVisible.value = true;
-  console.log("弹窗是否可见", dialogVisible.value); // 额外打印弹窗状态
 };
 </script>
 
-<style scoped lang="scss">
-/* 添加上述CSS样式 */
-</style>
 
 
 <style scoped lang="scss">
@@ -277,5 +285,25 @@ const showDetails = (book) => {
   height: auto;
   object-fit: cover;
   margin-bottom: 20px;
+}
+
+.search-container {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* 居中对齐 */
+  margin-bottom: 20px;
+}
+
+.search-box {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-box:focus {
+  border-color: #b71c1c;
 }
 </style>
