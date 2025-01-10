@@ -1,5 +1,6 @@
 <template>
   <el-main>
+    <Lunbo/>
     <div class="hunan-tourist-attractions">
       <div class="title-container">
         <h3>民俗文化展示</h3>
@@ -50,6 +51,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { ElDialog, ElButton } from 'element-plus';
+import Lunbo from './LunBo.vue'
 
 // 民俗文化数据
 const books = ref([
