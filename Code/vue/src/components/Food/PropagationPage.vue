@@ -21,7 +21,7 @@
       >
       </el-table-column>
 
-<<<<<<< HEAD
+
       <!-- 参与度列 -->
       <el-table-column label="参与度" prop="participation" sortable></el-table-column>
 
@@ -30,7 +30,7 @@
 
       <!-- 知名度列 -->
       <el-table-column label="知名度" prop="fame" sortable></el-table-column>
-=======
+
       <el-table-column
           label="讨论度"
           prop="discussion"
@@ -46,8 +46,6 @@
           @sort-change="handleSortChange('fame')"
       >
       </el-table-column>
-
->>>>>>> origin/main
     </el-table>
 
     <!-- 分页组件 -->
