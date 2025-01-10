@@ -138,7 +138,11 @@ const foodItems=ref([])
 async function fetchFoodData() {
   try {
     const response = await FoodAPI.getFoodAPI();
-    foodItems.value = response.data;
+    foodItems.value = response.data.map(item => ({
+      name: item.food_name,
+      img: item.image_url|| '',
+      description: item.description || ''
+    }));
     console.log('Food data:', foodItems.value);
   } catch (error) {
     console.error('Error fetching food data:', error);
@@ -151,7 +155,6 @@ onMounted(() => {
 
 // Filter food items
 const filteredFoodItems = computed(() => {
-  if (!foodItems.value) return []; // 防止初始值为 null 时报错
   return foodItems.value.filter(item =>
       item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
