@@ -138,12 +138,11 @@ const foodItems=ref([])
 async function fetchFoodData() {
   try {
     const response = await FoodAPI.getFoodAPI();
-    if (response && response.data) {
-      foodItems.value = response.data.map(item => ({
-        name: item.food_name,
-        img: item.image_url,
-        description: item.description || ''
-      }));
+    console.log('Food data:', response);
+    console.log('Food data:', response.data);
+    if (response ) {
+      foodItems.value = response;
+      // console.log('Food data:', foodItems)
     } else {
       console.error('Unexpected response format:', response);
     }
