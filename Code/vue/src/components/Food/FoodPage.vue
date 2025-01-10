@@ -149,12 +149,14 @@ async function fetchFoodData() {
     // 处理错误
   }
 }
+
 onMounted(() => {
   fetchFoodData();
 });
 
 // Filter food items
 const filteredFoodItems = computed(() => {
+  if (!foodItems.value) return []; // 防止初始值为 null 时报错
   return foodItems.value.filter(item =>
       item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );

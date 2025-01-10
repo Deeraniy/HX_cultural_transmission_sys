@@ -5,7 +5,7 @@ from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze
+from app01 import food,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
