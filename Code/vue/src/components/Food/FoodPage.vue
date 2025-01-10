@@ -48,8 +48,10 @@
                 </div>
                 <div class="card-content">
                   <h3>{{ item.name }}</h3>
-                  <el-button @click.stop="goToFoodDetail(item.name)" size="small">查看详情</el-button>
-                </div>
+                  <div class="button-container">
+                    <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
+                    <el-button @click.stop="sentimentAnalysis(item)" size="small">情感分析</el-button>
+                  </div></div>
               </el-card>
             </div>
           </div>
@@ -68,6 +70,23 @@
       </main>
     </div>
   </div>
+
+  <!-- Food Detail Dialog -->
+  <el-dialog
+      v-model="foodDetail.visible"
+      title="菜品详情"
+      width="50%"
+      :before-close="closeFoodDetail"
+  >
+    <div class="food-detail-dialog">
+      <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
+      <h2>{{ foodDetail.name }}</h2>
+      <p>{{ foodDetail.description }}</p>
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="closeFoodDetail">关闭</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -83,19 +102,40 @@ const searchQuery = ref('');
 const rotationAngle = ref(0); // 旋转角度
 const tiltAngle = ref(0); // 俯视仰视角度
 const currentPage = ref(1); // 当前页码
+import { reactive } from 'vue';
 
-// Food items data
+const foodDetail = reactive({
+  visible: false,
+  name: '',
+  img: '',
+  description: '', // 菜品描述
+});
+
+// 打开详情弹窗
+const showFoodDetail = (food) => {
+  foodDetail.visible = true;
+  foodDetail.name = food.name;
+  foodDetail.img = food.img;
+  foodDetail.description = food.description; // 动态显示每个菜品的独特描述
+};
+
+// 关闭详情弹窗
+const closeFoodDetail = () => {
+  foodDetail.visible = false;
+};
+
+// Food items data with unique descriptions for each dish
 const foodItems = [
-  { name: "糖油粑粑", img: food1 },
-  { name: "毛家红烧肉", img: food2 },
-  { name: "臭豆腐", img: food3 },
-  { name: "攸县香干", img: food4 },
-  { name: "辣椒炒肉", img: food5 },
-  { name: "糖油粑粑", img: food1 },
-  { name: "毛家红烧肉", img: food2 },
-  { name: "臭豆腐", img: food3 },
-  { name: "攸县香干", img: food4 },
-  { name: "辣椒炒肉", img: food5 }
+  { name: "糖油粑粑", img: food1, description: "糖油粑粑是一种油炸甜点，外脆内软，甜美可口。" },
+  { name: "毛家红烧肉", img: food2, description: "这道菜是湖南特色的红烧肉，色泽红亮，味道鲜美。" },
+  { name: "臭豆腐", img: food3, description: "臭豆腐是湖南特色的街头小吃，外焦内嫩，臭味十足，令人上瘾。" },
+  { name: "攸县香干", img: food4, description: "攸县香干有独特的风味，口感浓郁，富有烟熏味。" },
+  { name: "辣椒炒肉", img: food5, description: "辣椒炒肉是一道麻辣可口的经典湘菜，味道香辣。" },
+  { name: "糖油粑粑", img: food1, description: "糖油粑粑是一种油炸甜点，外脆内软，甜美可口。" },
+  { name: "毛家红烧肉", img: food2, description: "这道菜是湖南特色的红烧肉，色泽红亮，味道鲜美。" },
+  { name: "臭豆腐", img: food3, description: "臭豆腐是湖南特色的街头小吃，外焦内嫩，臭味十足，令人上瘾。" },
+  { name: "攸县香干", img: food4, description: "攸县香干有独特的风味，口感浓郁，富有烟熏味。" },
+  { name: "辣椒炒肉", img: food5, description: "辣椒炒肉是一道麻辣可口的经典湘菜，味道香辣。" }
 ];
 
 // Filter food items
@@ -116,7 +156,7 @@ const router = useRouter();
 
 // Click event handler for navigating to food detail
 const goToFoodDetail = (foodName) => {
-  router.push(`/food/detail/${foodName}`);
+  /*router.push(`/food/detail/${foodName}`);*/
 };
 
 // Function to rotate carousel
@@ -144,6 +184,147 @@ const getItemStyle = (index) => {
 </script>
 
 <style scoped>
+/* 统一标题字体样式 */
+.el-dialog__header {
+  font-family: 'HelveticaNeue', serif  !important;;  /* 与其他部分保持一致的字体 */
+  font-size: 28px ;  /* 标题大小 */
+  font-weight: bold; /* 加粗 */
+  color: #333 ; /* 字体颜色 */
+  text-align: center; /* 让标题居中 */
+}
+
+/* 按钮样式 */
+.el-button {
+  font-family: 'HelveticaNeue', serif; /* 保持统一字体 */
+  background-color: #da251c; /* 主题色 */
+  color: white;
+  border-radius: 20px; /* 圆角按钮 */
+
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 16px; /* 按钮文字大小 */
+}
+
+/* 按钮悬浮和点击效果 */
+.el-button:hover {
+  background-color: #b81f17;
+  border-color: #b81f17;
+}
+
+.el-button:active {
+  background-color: #9e1914;
+  border-color: #9e1914;
+}
+
+/* 控制按钮内的图标颜色 */
+.el-button .el-icon {
+  color: white;
+}
+
+/* 控制按钮区域 */
+.control-buttons {
+  margin-top: 30px;
+  margin-left: 400px;
+  text-align: center;
+  background-color: transparent !important; /* 背景透明 */
+}
+
+.control-buttons :deep(.el-button) {
+  background-color: transparent!important; /* 按钮背景透明 */
+  color: #fff8f0; /* 默认文字颜色 */
+  transition: color 0.3s ease, border-color 0.3s ease; /* 文字和边框颜色变化的过渡效果 */
+}
+
+/* 控制按钮点击时文字和箭头颜色变红 */
+.control-buttons :deep(.el-button:active),
+.control-buttons :deep(.el-pagination:active) {
+  color: #da251c; /* 点击时文字颜色变红 */
+  border-color: #da251c; /* 点击时边框颜色变红 */
+}
+
+/* 食品详情弹窗样式 */
+.food-detail-dialog {
+  text-align: center;
+  font-family: 'HelveticaNeue', serif; /* 保持一致的字体 */
+  padding: 20px;
+}
+
+.detail-image {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 20px;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border: 2px solid #f1f1f1; /* 为图片添加边框 */
+}
+
+/* 标题样式 */
+.food-detail-dialog h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* 描述样式 */
+.food-detail-dialog p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* 自定义按钮样式 */
+.dialog-footer .el-button {
+  font-family: 'HelveticaNeue', serif;
+  background-color: #da251c; /* 使用统一的主题色 */
+  border-color: #da251c;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px; /* 弹窗按钮圆角 */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dialog-footer .el-button:hover {
+  background-color: #b81f17; /* 按钮悬浮时变暗 */
+  border-color: #b81f17;
+}
+
+.dialog-footer .el-button:active {
+  background-color: #9e1914;
+  border-color: #9e1914;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between; /* 使按钮分布在左右两边 */
+  width: 100%;
+}
+.food-detail-dialog {
+  text-align: center;
+}
+
+.detail-image {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 20px;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.food-detail-dialog h2 {
+  margin: 10px 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.food-detail-dialog p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
+
 @import '@/assets/font/font.css';
 /* 整体布局 */
 .food-section {
