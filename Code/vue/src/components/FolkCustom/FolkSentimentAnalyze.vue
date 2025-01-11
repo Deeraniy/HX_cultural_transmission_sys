@@ -40,10 +40,10 @@
             我是文化作品名称
           </div>
 
-          <div v-show="activeIndex === '2'" class="评分图" id="scoreChart" style="width: 100%; height: 300px;"></div>
-          <div v-show="activeIndex === '1'" class="词云图" id="wordCloudChart" style="width: 100%; height: 300px;"></div>
-          <div v-show="activeIndex === '3'" class="情感占比图" id="emotionRatioChart" style="width: 100%; height: 300px;"></div>
-          <div v-show="activeIndex === '4'" class="情感变化趋势图" id="emotionTrendChart" style="width: 100%; height: 300px;"></div>
+          <div v-show="activeIndex === '2'" class="评分图" id="scoreChart" ></div>
+          <div v-show="activeIndex === '1'" class="词云图" id="wordCloudChart" ></div>
+          <div v-show="activeIndex === '3'" class="情感占比图" id="emotionRatioChart" ></div>
+          <div v-show="activeIndex === '4'" class="情感变化趋势图" id="emotionTrendChart" ></div>
 
           <div v-show="activeIndex === '5'" class="热门评论">
             <h3>热门评论</h3>
@@ -187,6 +187,7 @@ onMounted(() => {
 
 <style scoped>
 @import '@/assets/font/font.css';
+
 .total{
   background-image: url('@/assets/img_4.png');
   background-size: cover;
@@ -207,10 +208,11 @@ onMounted(() => {
 #wordCloudChart,
 #emotionRatioChart,
 #emotionTrendChart {
-  width: 600px;
-  height: 400px;
-  margin-left:50px;
+  width: 800px;
+  height: 600px;
+  margin-left: 50px;
 }
+
 /* 固定标题样式 */
 .fixed-title {
   color: #fff8f0;
