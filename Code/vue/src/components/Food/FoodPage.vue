@@ -1,8 +1,6 @@
 <template>
   <div class="food-section">
     <!-- Header -->
-
-
     <div class="main-container">
       <!-- Sidebar -->
       <aside class="sidebar">
