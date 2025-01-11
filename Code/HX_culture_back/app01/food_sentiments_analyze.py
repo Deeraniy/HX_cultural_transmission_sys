@@ -144,6 +144,33 @@ def sentiments_analyze(request):
             'message': str(e)
         }, status=500)
 
+def sentiment_month_analyze(sentiments):
+    """
+    计算每月的情感得分和主导情感
+    sentiments: 包含 sentiment 和 confidence 的列表
+    """
+    score = 0
+    total_comments = len(sentiments)
+    
+    for sent, conf in sentiments:
+        if sent == 'positive':
+            score += conf * 1
+        elif sent == 'neutral':
+            score += conf * 0.5
+        elif sent == 'negative':
+            score += conf * 0
+    
+    avg_score = score / total_comments if total_comments > 0 else 0
+    
+    if avg_score > 0.7:
+        dominant_sentiment = 'positive'
+    elif avg_score < 0.3:
+        dominant_sentiment = 'negative'
+    else:
+        dominant_sentiment = 'neutral'
+        
+    return avg_score, dominant_sentiment
+
 def sentiments_result_total_count(request):
     """根据食品名称获取情感分析结果总数"""
     try:
