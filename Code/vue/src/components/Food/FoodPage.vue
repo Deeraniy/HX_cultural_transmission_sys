@@ -22,6 +22,10 @@
             </div>
             <div class="card-content">
               <h3>{{ item.name }}</h3>
+              <div class="button-container">
+                <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
+                <el-button @click.stop="sentimentAnalysis(item)" size="small">情感分析</el-button>
+              </div>
             </div>
 
           </el-card>
@@ -177,9 +181,9 @@ const paginatedFoodItems = computed(() => {
 const router = useRouter();
 
 // Click event handler for navigating to food detail
-const goToSentimentAnalysis = (foodName) => {
+/*const goToSentimentAnalysis = (foodName) => {
   router.push(`/food/detail/${foodName}`);
-};
+};*/
 
 // Function to rotate carousel
 const rotateLeft = () => {
