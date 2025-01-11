@@ -80,11 +80,12 @@
       width="50%"
       :before-close="closeFoodDetail"
   >
-    <div class="food-detail-dialog">
-      <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
-      <h2>{{ foodDetail.name }}</h2>
+    <div class="food-detail-dialog" >
       <div v-if="foodDetail.description.startsWith('http')">
-        <a :href="foodDetail.description" target="_blank" rel="noopener noreferrer">{{ foodDetail.description }}</a>
+        <a :href="foodDetail.description" target="_blank" rel="noopener noreferrer">
+          <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
+          <h2>{{ foodDetail.name }}</h2>
+        </a>
       </div>
     </div>
   </el-dialog>
