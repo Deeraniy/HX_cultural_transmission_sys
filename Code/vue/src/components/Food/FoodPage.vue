@@ -1,8 +1,6 @@
 <template>
   <div class="food-section">
     <!-- Header -->
-
-
     <div class="main-container">
       <!-- Sidebar -->
       <aside class="sidebar">
@@ -15,7 +13,7 @@
               <h3>{{ item.name }}</h3>
               <div class="button-container">
                 <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
-                <el-button @click.stop="sentimentAnalysis(item)" size="small">情感分析</el-button>
+                <el-button @click.stop="goToSentimentAnalysis(item.name)" size="small">情感分析</el-button>
               </div>
             </div>
 
@@ -55,7 +53,7 @@
                   <h3>{{ item.name }}</h3>
                   <div class="button-container">
                     <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
-                    <el-button @click.stop="sentimentAnalysis(item)" size="small">情感分析</el-button>
+                    <el-button @click.stop="goToSentimentAnalysis(item.name)" size="small">情感分析</el-button>
                   </div></div>
               </el-card>
             </div>
@@ -82,11 +80,12 @@
       width="50%"
       :before-close="closeFoodDetail"
   >
-    <div class="food-detail-dialog">
-      <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
-      <h2>{{ foodDetail.name }}</h2>
+    <div class="food-detail-dialog" >
       <div v-if="foodDetail.description.startsWith('http')">
-        <a :href="foodDetail.description" target="_blank" rel="noopener noreferrer">{{ foodDetail.description }}</a>
+        <a :href="foodDetail.description" target="_blank" rel="noopener noreferrer">
+          <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
+          <h2>{{ foodDetail.name }}</h2>
+        </a>
       </div>
     </div>
   </el-dialog>
@@ -106,7 +105,7 @@ const searchQuery = ref('');
 const rotationAngle = ref(0); // 旋转角度
 const tiltAngle = ref(0); // 俯视仰视角度
 const currentPage = ref(1); // 当前页码
-const selectedIndex = ref(null); // 选中的菜品索引
+const selectedIndex = ref(0);
 import { reactive } from 'vue';
 
 // 情感分析按钮点击事件
@@ -200,9 +199,9 @@ const paginatedFoodItems = computed(() => {
 const router = useRouter();
 
 // Click event handler for navigating to food detail
-/*const goToSentimentAnalysis = (foodName) => {
+const goToSentimentAnalysis = (foodName) => {
   router.push(`/food/detail/${foodName}`);
-};*/
+};
 
 // Function to rotate carousel
 const rotateLeft = () => {

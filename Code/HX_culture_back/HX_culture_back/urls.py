@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^generate_report/',spot_sentiments_analyze.generate_report),
     url(r'^liter_generate_report/',liter_sentiments_analyze.generate_report),
     url(r'^spot_sentiments_count/',spot_sentiments_analyze.sentiments_result_total_count),
+    url(r'^liter_sentiments_count/',liter_sentiments_analyze.sentiments_result_total_count),
     url(r'^spot_get_word_frequency/',comment_tokenizer.get_word_frequency),
     url(r'^liter_get_word_frequency/',liter_comment_tokenizer.get_word_frequency),
     url(r'^spot_lda_analyze/',lda_topic_extractor.lda_analyze),
