@@ -1,11 +1,10 @@
 <template>
   <div class="whole">
     <div class="total">
-      <!-- 左侧大标题 -->
-      <div class="menu-title">
-        <h2>影视文学分析</h2>
+      <!-- 左侧Logo -->
+      <div class="logo">
+        <img src="@/assets/111.png" alt="Logo" class="logo-image" />
       </div>
-
       <!-- 菜单区域 -->
       <el-menu
           :default-active="activeIndex"
@@ -17,16 +16,20 @@
         <!-- 作品总览菜单项 -->
         <el-sub-menu index="2" class="horizontal-submenu">
           <template #title>
-            作品总览
+            首页
           </template>
           <el-menu-item index="2-1">文学</el-menu-item>
           <el-menu-item index="2-2">古代文学</el-menu-item>
           <el-menu-item index="2-3">新媒体艺术</el-menu-item>
           <el-menu-item index="2-4">表演艺术</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="3">知识图谱</el-menu-item>
-        <el-menu-item index="4">沉浸式故事体验</el-menu-item>
-        <el-menu-item index="5">全球传播情况</el-menu-item>
+        <el-menu-item index="3">名胜古迹</el-menu-item>
+        <el-menu-item index="4">影视文学</el-menu-item>
+        <el-menu-item index="5">美食文化</el-menu-item>
+        <el-menu-item index="6">非遗民俗</el-menu-item>
+        <el-menu-item index="7">红色文化</el-menu-item>
+        <el-menu-item index="8">情感分析</el-menu-item>
+        <el-menu-item index="9">全球传播情况</el-menu-item>
         <el-sub-menu index="1">
           <template #title>
             <span class="work">工作台</span>
@@ -42,6 +45,28 @@
           </el-sub-menu>
         </el-sub-menu>
       </el-menu>
+      <!-- 右侧用户信息 -->
+      <div class="user-info">
+        <!-- 语言选择 -->
+        <el-dropdown trigger="click" >
+          <el-button type="primary">
+            {{ language || '语言' }} <el-icon class="el-icon--right"><arrow-down /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="1">中文</el-dropdown-item>
+              <el-dropdown-item command="2">English</el-dropdown-item>
+              <el-dropdown-item command="3">日本語</el-dropdown-item>
+              <el-dropdown-item command="4">일본어</el-dropdown-item>
+              <el-dropdown-item command="5">Japonais</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <!-- 用户头像 -->
+        <div class="user-avatar">
+          <img src="@/assets/Video1.jpg" alt="User Avatar" />
+        </div>
+      </div>
     </div>
 
     <el-main>
@@ -60,9 +85,10 @@ import Index from "@/components/index.vue";
 import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
 import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
 import ShowDisplay from "@/components/FilmLiterature/Literature/ShowDisplay.vue";
+import {ArrowDown} from "@element-plus/icons-vue";
 // 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
 const activeIndex = ref<'2-1' | '2-2' | 'null' | string>(null);
-
+const language = ref('中文');
 // 处理菜单选择
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
@@ -145,7 +171,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 .whole {
-  margin-top: -70px;
+  margin-top: 0px;
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   background-size: cover;
@@ -159,13 +185,13 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .menu-title {
   transform: translateY(25px);
   font-family: 'HelveticaNeue', serif;
-  font-size: 30px;
+  font-size: 40px;
   color: #fff8f0;
   margin-right: 510px;
 }
 
 .el-menu-demo {
-  margin-right: 0px;
+  margin-left: 50px;
   display: flex;
   justify-content: flex-end;
   background-color: transparent !important;
@@ -180,7 +206,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   margin-right: 0px;
   background-color: #B71C1C64 !important;
   color: #fff8f0 !important;
-  font-size: 20px;
+  font-size: 25px;
   font-family: 'HelveticaNeue', serif !important;
   border-bottom: none !important;
 }
@@ -195,7 +221,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   color: #fff8f0 !important;
   background-color: #B71C1C64 !important;
   font-family: 'HelveticaNeue', serif !important;
-  font-size: 20px;
+  font-size: 25px;
   padding: 0 10px;
   white-space: nowrap;
   overflow: hidden;
@@ -215,5 +241,53 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 :deep(.el-sub-menu) {
   background-color: transparent !important;
+}/* 左侧Logo样式 */
+.logo {
+  flex: 0 0 40px;
 }
+
+.logo-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+/* 右侧用户信息 */
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-bottom: 8px;
+}
+
+.user-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+
+}
+
+.language-select {
+  margin-right: 10px;
+  width: 120px;
+}
+/* 修改下拉按钮样式 */
+.el-dropdown .el-button {
+  background-color: transparent;  /* 金色背景 */
+  color: #fff8f0;
+  border: none;
+  font-family: 'HelveticaNeue', serif;  /* 修改字体 */
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.el-dropdown .el-button .el-icon--right {
+  color: #fff8f0 !important;  /* 强制将下拉符号的颜色设置为黑色 */
+}
+
+.el-dropdown .el-button .el-icon--right {
+  color: white;  /* 确保右侧箭头图标颜色也为白色 */
+}
+
 </style>
