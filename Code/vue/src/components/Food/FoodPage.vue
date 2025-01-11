@@ -104,6 +104,7 @@ const searchQuery = ref('');
 const rotationAngle = ref(0); // 旋转角度
 const tiltAngle = ref(0); // 俯视仰视角度
 const currentPage = ref(1); // 当前页码
+const selectedIndex = ref(0);
 import { reactive } from 'vue';
 
 const foodDetail = reactive({
