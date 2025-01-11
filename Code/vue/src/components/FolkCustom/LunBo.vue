@@ -46,7 +46,7 @@ import boat from "@/assets/folkCustom/boat.png";
 import tiger from "@/assets/folkCustom/tiger.png";
 
 // 添加底部圆形图像路径
-import dragonCircle from "@/assets/folkCustom/dragon-back(1).png";
+import dragonCircle from "@/assets/folkCustom/dragon-back.png";
 import boatCircle from "@/assets/folkCustom/boat-back.png";
 import tigerCircle from "@/assets/folkCustom/tiger-back.png";
 
@@ -63,7 +63,7 @@ const images = [
     style: {
       width: "100%", // 设置这张图片的宽度为100%
       height: "100%", // 设置这张图片的高度为100%
-      transform: "translateY(-30px)", // 图片向上偏移20px
+      transform: "translateY(-140px)", // 图片向上偏移20px
     },
     circleImage: dragonCircle, // 圆形图片路径
   },
@@ -78,7 +78,7 @@ const images = [
     style: {
       width: "100%", // 设置这张图片的宽度为90%
       height: "100%" ,// 设置这张图片的高度为80%
-      transform: "translateY(-30px)", // 图片向上偏移20px
+      transform: "translateY(-120px)", // 图片向上偏移20px
     },
     circleImage: boatCircle, // 圆形图片路径
   },
@@ -95,7 +95,7 @@ const images = [
     style: {
       width: "95%", // 设置这张图片的宽度为85%
       height: "95%", // 设置这张图片的高度为75%
-      transform: "translateY(60px) translateX(80px)", // 图片向上偏移20px
+      transform: "translateY(-50px) translateX(100px)", // 图片向上偏移20px
     },
     circleImage: tigerCircle, // 圆形图片路径
     isSpecial: true,  // 新增字段，用来标记湘绣
@@ -164,7 +164,7 @@ onUnmounted(() => stopAutoPlay());
 
 .text-container h2 {
   font-family: 'HelveticaNeue', serif;
-margin-top: 0;
+margin-top: -110px;
   margin-bottom: 0;
   font-size: 3rem;
 }
@@ -176,6 +176,7 @@ margin-top: 0;
 }
 
 .text-container.special-text {
+  margin-top: 135px;
   width: 60%; /* 湘绣文字部分的宽度增加到40% */
 }
 .image-container {

@@ -8,7 +8,7 @@ const routes = [
     },
     {
         path: '/index',
-        component:() => import('./components/index.vue'),
+        component:() => import('./components/IndexHeader.vue'),
     },
     {
         path: '/placeDetail',
