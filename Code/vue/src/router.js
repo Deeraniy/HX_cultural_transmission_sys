@@ -31,6 +31,10 @@ const routes = [
         component:() => import('./components/MaoZedongSeries.vue')
     },
     {
+        path: '/red',
+        component:() => import('./components/RedCulture/RedCultureHeader.vue')
+    },
+    {
         path: '/folkCustom',
         component:() => import('./components/FolkCustom/FolkCustomMain.vue')
     },
