@@ -109,6 +109,19 @@ const currentPage = ref(1); // 当前页码
 const selectedIndex = ref(null); // 选中的菜品索引
 import { reactive } from 'vue';
 
+// 情感分析按钮点击事件
+const sentimentAnalysis = (item) => {
+  console.log('点击了情感分析按钮',item.name);
+  // 使用 router.push 进行页面跳转，并传递美食名字
+  router.push({
+    path: '/detail',
+    query: {
+      name: item.name, // 传递菜品名字
+      value: 1,  // 这里的 1 可以根据需要设置，如果是固定值，可以保留
+      theme: 1  // 可以在这里添加额外的参数，例如 theme
+    }
+  });
+};
 const foodDetail = reactive({
   visible: false,
   name: '',
