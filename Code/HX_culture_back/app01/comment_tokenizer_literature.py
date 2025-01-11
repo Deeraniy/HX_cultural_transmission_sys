@@ -22,6 +22,32 @@ def filter_words(word, min_length=2):
     
     return len(word) >= min_length and word not in stopwords
 
+def get_db_connection():
+    """获取数据库连接"""
+    return pymysql.connect(
+        host='120.233.26.237', 
+        port=15320, 
+        user='root', 
+        passwd='kissme77', 
+        db='hx_cultural_transmission_sys', 
+        charset='utf8',
+        connect_timeout=10,
+        read_timeout=30,
+        write_timeout=30
+    )
+
+def has_processed_tokens(liter_id):
+    """检查liter_id是否已经处理过"""
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+    try:
+        cursor.execute("SELECT COUNT(*) as count FROM liter_token WHERE liter_id = %s", (liter_id,))
+        result = cursor.fetchone()
+        return result['count'] > 0
+    finally:
+        cursor.close()
+        conn.close()
+
 def process_literature_tokens(literature_name):
     """处理文学作品评论分词并更新数据库"""
     try:
@@ -38,9 +64,6 @@ def process_literature_tokens(literature_name):
         cursor.execute(liter_sql, (literature_name,))
         liter_result = cursor.fetchone()
         
-        cursor.close()
-        conn.close()
-        
         if not liter_result:
             logger.error(f'未找到文学作品: {literature_name}')
             return False
@@ -48,21 +71,18 @@ def process_literature_tokens(literature_name):
         liter_id = liter_result['liter_id']
         logger.info(f"处理文学作品: {literature_name} (ID: {liter_id})")
 
-        # 获取评论的连接
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        # 检查是否已经处理过
+        if has_processed_tokens(liter_id):
+            logger.info(f"文学作品 {literature_name} (ID: {liter_id}) 已经处理过，跳过。")
+            return True
 
-        # 获取所有评论
+        # 获取评论的连接
         comment_sql = "SELECT comment_text FROM user_comment_literature WHERE liter_id = %s"
         cursor.execute(comment_sql, (liter_id,))
         comments = cursor.fetchall()
-        
-        cursor.close()
-        conn.close()
 
         # 每100条评论提交一次事务
         batch_size = 100
-        current_batch = 0
         total_words = 0
         word_batch = []
 
@@ -93,20 +113,30 @@ def process_literature_tokens(literature_name):
     except Exception as e:
         logger.error(f"处理分词时出错: {str(e)}")
         return False
+    finally:
+        cursor.close()
+        conn.close()
 
-def get_db_connection():
-    """获取数据库连接"""
-    return pymysql.connect(
-        host='120.233.26.237', 
-        port=15320, 
-        user='root', 
-        passwd='kissme77', 
-        db='hx_cultural_transmission_sys', 
-        charset='utf8',
-        connect_timeout=10,
-        read_timeout=30,
-        write_timeout=30
-    )
+def process_all_literatures():
+    """处理所有文学作品"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+        # 查询所有文学作品
+        cursor.execute("SELECT liter_name FROM literature")
+        literatures = cursor.fetchall()
+
+        for liter in literatures:
+            literature_name = liter['liter_name']
+            logger.info(f"正在处理文学作品: {literature_name}")
+            process_literature_tokens(literature_name)
+
+    except Exception as e:
+        logger.error(f"处理文学作品时出错: {str(e)}")
+    finally:
+        cursor.close()
+        conn.close()
 
 def process_word_batch(words, liter_id):
     """处理一批词语"""
@@ -216,37 +246,4 @@ def get_word_frequency(request):
             conn.close()
 
 if __name__ == "__main__":
-    try:
-        # 连接数据库获取所有文学作品
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
-                             charset='utf8')
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
-        # 获取所有文学作品
-        literatures_sql = "SELECT liter_name FROM literature"
-        cursor.execute(literatures_sql)
-        literatures = [row['liter_name'] for row in cursor.fetchall()]
-        
-        logger.info(f"共找到 {len(literatures)} 个文学作品待处理")
-        
-        # 处理每个文学作品
-        success_count = 0
-        for i, liter_name in enumerate(literatures, 1):
-            logger.info(f"正在处理第 {i}/{len(literatures)} 个文学作品: {liter_name}")
-            if process_literature_tokens(liter_name):
-                success_count += 1
-                logger.info(f"文学作品 {liter_name} 处理成功")
-            else:
-                logger.error(f"文学作品 {liter_name} 处理失败")
-        
-        # 输出总结
-        logger.info(f"处理完成！成功: {success_count}, 失败: {len(literatures)-success_count}")
-        
-    except Exception as e:
-        logger.error(f"获取文学作品列表时出错: {str(e)}")
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conn' in locals():
-            conn.close()
+    process_all_literatures()
