@@ -2,6 +2,7 @@
   <div class="food-section">
     <!-- Header -->
     <header class="header">
+
       <div class="search-container">
         <el-input
             v-model="searchQuery"
@@ -16,7 +17,7 @@
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="food-block" v-for="(item, index) in paginatedFoodItems" :key="index">
-          <el-card @click="goToSentimentAnalysis(item.name)" class="food-card-sidebar">
+          <el-card  class="food-card-sidebar"><!--@click="goToSentimentAnalysis(item.name)"-->
             <div class="card-header">
               <img :src="item.img" :alt="item.name" class="food-image-sidebar" />
             </div>
@@ -24,7 +25,7 @@
               <h3>{{ item.name }}</h3>
               <div class="button-container">
                 <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
-                <el-button @click.stop="sentimentAnalysis(item)" size="small">情感分析</el-button>
+                <el-button @click.stop="goToSentimentAnalysis(item.name)" size="small">情感分析</el-button>
               </div>
             </div>
 
@@ -56,7 +57,7 @@
                   <h3>{{ item.name }}</h3>
                   <div class="button-container">
                     <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
-                    <el-button @click.stop="sentimentAnalysis(item)" size="small">情感分析</el-button>
+                    <el-button @click.stop="goToSentimentAnalysis(item.name)" size="small">情感分析</el-button>
                   </div></div>
               </el-card>
             </div>
@@ -181,9 +182,9 @@ const paginatedFoodItems = computed(() => {
 const router = useRouter();
 
 // Click event handler for navigating to food detail
-/*const goToSentimentAnalysis = (foodName) => {
+const goToSentimentAnalysis = (foodName) => {
   router.push(`/food/detail/${foodName}`);
-};*/
+};
 
 // Function to rotate carousel
 const rotateLeft = () => {

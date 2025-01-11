@@ -24,10 +24,9 @@
     </div>
 
     <el-main>
-      <!-- 根据 activeIndex 显示不同的组件 -->
+<!--       根据 activeIndex 显示不同的组件 -->
       <HomePageMain v-if="activeIndex === '1' || activeIndex === null" />
-      <FoodPage v-if="activeIndex === '2'" />
-      <PropagationPage v-if="activeIndex === '3'" />
+
     </el-main>
   </div>
 </template>
@@ -42,11 +41,17 @@ import FoodDetailPage from "@/components/Food/FoodDetailPage.vue";
 
 // 设置 activeIndex 初始值为 '1'，这样组件会默认显示首页
 const activeIndex = ref('1')
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const navItems = [
+  { index: '1', link: '/food' },
+  { index: '2', link: '/food/detail' },
+  { index: '3', link: '/food/propagation' },
+];
 // 处理菜单选择
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-  activeIndex.value = key;  // 更新选中的菜单项
+const handleSelect = (key: string) => {
+  activeIndex.value = key;
+  router.push(navItems[Number(key) - 1].link)// 更新选中的菜单项
 };
 </script>
 
