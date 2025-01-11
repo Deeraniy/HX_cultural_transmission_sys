@@ -35,13 +35,12 @@ def get_food_influence(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
 
-    effect_row = cursor.execute("select * from food_influence")
-    food_list =cursor.fetchall()
-    print(food_list)
+    effect_row = cursor.execute("select * from food_influence left join food on food_influence.food_id=food.food_id")
+    food_influence_list =cursor.fetchall()
 
     # 关闭游标
     cursor.close()
     # 关闭连接
     conn.close()
-    return HttpResponse(food_list)
+    return JsonResponse({"status": "ok", "data": food_influence_list})
     # 将查询得到的数据放在food_list列表中
