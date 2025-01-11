@@ -26,7 +26,8 @@
     <el-main>
 <!--       根据 activeIndex 显示不同的组件 -->
       <HomePageMain v-if="activeIndex === '1' || activeIndex === null" />
-
+      <FoodPage v-if="activeIndex === '2'" />
+      <PropagationPage v-if="activeIndex === '3'" />
     </el-main>
   </div>
 </template>
@@ -51,7 +52,7 @@ const navItems = [
 // 处理菜单选择
 const handleSelect = (key: string) => {
   activeIndex.value = key;
-  router.push(navItems[Number(key) - 1].link)// 更新选中的菜单项
+ /* router.push(navItems[Number(key) - 1].link)// 更新选中的菜单项*/
 };
 </script>
 
