@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="美食文化前后端连接" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="首页美化">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,19 +54,14 @@
     &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/vue/HX_cultural_transmission_sys/Code/HX_culture_back&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/spring_boot_content/HX_cultural_sys/Code/vue/src/assets&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\IntelliJ IDEA 2024.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -70,37 +72,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\static\img\img_hx" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
+      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets\folkCustom" />
+      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\static\img\img_hx" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets\models" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
-      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets\cursor" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components\FilmLiterature\Literature" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src" />
     </key>
-  </component>
-  <component name="RunManager">
-    <configuration name="dev" type="js.build_tools.npm" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/Code/vue/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -127,7 +110,9 @@
       <workItem from="1736385593939" duration="1015000" />
       <workItem from="1736387575471" duration="63000" />
       <workItem from="1736387665227" duration="617000" />
-      <workItem from="1736476100374" duration="10504000" />
+      <workItem from="1736391193427" duration="30161000" />
+      <workItem from="1736469344910" duration="37069000" />
+      <workItem from="1736555277985" duration="3081000" />
     </task>
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
       <option name="closed" value="true" />
@@ -193,127 +178,87 @@
       <option name="project" value="LOCAL" />
       <updated>1736323233739</updated>
     </task>
-    <task id="LOCAL-00009" summary="影视艺术页面(前后端连接完成)">
+    <task id="LOCAL-00009" summary="美食文化页面嵌入">
       <option name="closed" value="true" />
-      <created>1736404662100</created>
+      <created>1736404049460</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1736404662100</updated>
+      <updated>1736404049460</updated>
     </task>
-    <task id="LOCAL-00010" summary="美食文化菜单美化及路由">
+    <task id="LOCAL-00010" summary="情感分析页面搜索功能实现">
       <option name="closed" value="true" />
-      <created>1736406580727</created>
+      <created>1736410611162</created>
       <option name="number" value="00010" />
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1736406580727</updated>
+      <updated>1736410611162</updated>
     </task>
-    <task id="LOCAL-00011" summary="美食文化菜单美化及路由">
+    <task id="LOCAL-00011" summary="美食页面优化">
       <option name="closed" value="true" />
-      <created>1736407766552</created>
+      <created>1736436050164</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1736407766552</updated>
+      <updated>1736436050164</updated>
     </task>
-    <task id="LOCAL-00012" summary="美食文化菜单美化及路由">
+    <task id="LOCAL-00012" summary="民俗页面优化">
       <option name="closed" value="true" />
-      <created>1736412724766</created>
+      <created>1736477962747</created>
       <option name="number" value="00012" />
       <option name="presentableId" value="LOCAL-00012" />
       <option name="project" value="LOCAL" />
-      <updated>1736412724766</updated>
+      <updated>1736477962747</updated>
     </task>
-    <task id="LOCAL-00013" summary="美食文化菜单美化及路由">
+    <task id="LOCAL-00013" summary="民俗页面优化">
       <option name="closed" value="true" />
-      <created>1736412834225</created>
+      <created>1736479271000</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1736412834225</updated>
+      <updated>1736479271000</updated>
     </task>
-    <task id="LOCAL-00014" summary="美食文化美化">
+    <task id="LOCAL-00014" summary="民俗页面轮播图">
       <option name="closed" value="true" />
-      <created>1736477132555</created>
+      <created>1736497203308</created>
       <option name="number" value="00014" />
       <option name="presentableId" value="LOCAL-00014" />
       <option name="project" value="LOCAL" />
-      <updated>1736477132555</updated>
+      <updated>1736497203308</updated>
     </task>
-    <task id="LOCAL-00015" summary="美食传播效果排序">
+    <task id="LOCAL-00015" summary="民俗页面轮播图">
       <option name="closed" value="true" />
-      <created>1736478216705</created>
+      <created>1736497324724</created>
       <option name="number" value="00015" />
       <option name="presentableId" value="LOCAL-00015" />
       <option name="project" value="LOCAL" />
-      <updated>1736478216705</updated>
+      <updated>1736497324724</updated>
     </task>
-    <task id="LOCAL-00016" summary="美食后端">
+    <task id="LOCAL-00016" summary="情感分析页面刷新问题解决">
       <option name="closed" value="true" />
-      <created>1736479416988</created>
+      <created>1736514185220</created>
       <option name="number" value="00016" />
       <option name="presentableId" value="LOCAL-00016" />
       <option name="project" value="LOCAL" />
-      <updated>1736479416988</updated>
+      <updated>1736514185220</updated>
     </task>
-    <task id="LOCAL-00017" summary="美食后端">
+    <task id="LOCAL-00017" summary="民俗轮播图微调">
       <option name="closed" value="true" />
-      <created>1736492210010</created>
+      <created>1736514293199</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1736492210010</updated>
+      <updated>1736514293199</updated>
     </task>
-    <task id="LOCAL-00018" summary="美食后端">
+    <task id="LOCAL-00018" summary="首页美化">
       <option name="closed" value="true" />
-      <created>1736492685729</created>
+      <created>1736523355250</created>
       <option name="number" value="00018" />
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
-      <updated>1736492685729</updated>
+      <updated>1736523355250</updated>
     </task>
-    <task id="LOCAL-00019" summary="美食后端">
-      <option name="closed" value="true" />
-      <created>1736492950099</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1736492950099</updated>
-    </task>
-    <task id="LOCAL-00020" summary="美食后端">
-      <option name="closed" value="true" />
-      <created>1736495409059</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1736495409059</updated>
-    </task>
-    <task id="LOCAL-00021" summary="美食文化前后端连接">
-      <option name="closed" value="true" />
-      <created>1736555731176</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1736555731176</updated>
-    </task>
-    <task id="LOCAL-00022" summary="美食文化前后端连接">
-      <option name="closed" value="true" />
-      <created>1736555968841</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1736555968841</updated>
-    </task>
-    <task id="LOCAL-00023" summary="美食文化前后端连接">
-      <option name="closed" value="true" />
-      <created>1736556281466</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1736556281466</updated>
-    </task>
-    <option name="localTasksCounter" value="24" />
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,14 +282,16 @@
     <MESSAGE value="影视艺术页面——古代文学页面+新媒体艺术页面" />
     <MESSAGE value="影视艺术页面——古代文学页面+新媒体艺术页面（图片）" />
     <MESSAGE value="影视艺术页面(前端完成)" />
-    <MESSAGE value="food router.js" />
     <MESSAGE value="影视艺术页面(前后端连接完成)" />
-    <MESSAGE value="美食文化菜单美化及路由" />
-    <MESSAGE value="美食文化美化" />
-    <MESSAGE value="美食传播效果排序" />
-    <MESSAGE value="美食后端" />
-    <MESSAGE value="美食文化前后端连接" />
-    <option name="LAST_COMMIT_MESSAGE" value="美食文化前后端连接" />
+    <MESSAGE value="美食文化页面嵌入" />
+    <MESSAGE value="情感分析页面搜索功能实现" />
+    <MESSAGE value="美食页面优化" />
+    <MESSAGE value="民俗页面优化" />
+    <MESSAGE value="民俗页面轮播图" />
+    <MESSAGE value="情感分析页面刷新问题解决" />
+    <MESSAGE value="民俗轮播图微调" />
+    <MESSAGE value="首页美化" />
+    <option name="LAST_COMMIT_MESSAGE" value="首页美化" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -353,10 +300,6 @@
           <url>file://$PROJECT_DIR$/Code/vue/src/utils/turn.js</url>
           <line>864</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustom.vue</url>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
