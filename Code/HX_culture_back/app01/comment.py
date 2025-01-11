@@ -299,3 +299,59 @@ def get_comment_list_literature(request):
     conn.close()
     
     return JsonResponse({"comments": formatted_comments})
+
+def get_comment_list_food(request):
+    """根据食品名称获取评论列表"""
+    food_name = request.GET.get('name')
+    
+    if not food_name:
+        return JsonResponse({"status": "error", "message": "食品名称不能为空"}, status=400)
+
+    # 创建连接
+    conn = pymysql.connect(
+        host='120.233.26.237', 
+        port=15320, 
+        user='root', 
+        passwd='kissme77',
+        db='hx_cultural_transmission_sys',
+        charset='utf8'
+    )
+    
+    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+    try:
+        # 查询food_id
+        cursor.execute("SELECT food_id FROM food WHERE food_name=%s", (food_name,))
+        food_result = cursor.fetchone()
+
+        if not food_result:
+            logger.error(f"未找到食品: {food_name}")
+            return JsonResponse({"status": "error", "message": "未找到食品"}, status=404)
+
+        food_id = food_result['food_id']
+        logger.info(f"查到的food_id: {food_id}")
+
+        # 查询评论
+        cursor.execute("SELECT comment_text, sentiment, sentiment_confidence FROM user_comment_food WHERE food_id=%s", (food_id,))
+        comments = cursor.fetchall()
+
+        # 格式化返回的评论
+        formatted_comments = [
+            {
+                'comment_text': comment['comment_text'],
+                'sentiment': comment['sentiment'],
+                'sentiment_confidence': comment['sentiment_confidence']
+            }
+            for comment in comments
+        ]
+
+        logger.info(f"查到的评论数: {len(formatted_comments)}")
+        return JsonResponse({"status": "success", "comments": formatted_comments})
+
+    except Exception as e:
+        logger.error(f"获取食品评论时出错: {str(e)}")
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    finally:
+        cursor.close()
+        conn.close()
