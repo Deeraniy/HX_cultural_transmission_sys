@@ -8,46 +8,29 @@
 
       <!-- 菜单区域 -->
       <el-menu
-          :default-active="activeIndex"
           class="el-menu-demo"
           mode="horizontal"
           :ellipsis="false"
-          @select="handleSelect"
-      >
+          :router="true"
+      ><!--开启vue-router模式-->
+
         <!-- 首页菜单项 -->
-        <el-menu-item index="1">首页</el-menu-item>
+        <el-menu-item index="/food/home">首页</el-menu-item> <!--index配置跳转路径-->
         <!-- 美食专区菜单项 -->
-        <el-menu-item index="2">美食专区</el-menu-item>
+        <el-menu-item index="/food/detail">美食专区</el-menu-item>
         <!-- 传播效果分析菜单项 -->
-        <el-menu-item index="3">传播效果分析</el-menu-item>
+        <el-menu-item index="/food/propagation">传播效果分析</el-menu-item>
       </el-menu>
     </div>
 
     <el-main>
-      <!-- 根据 activeIndex 显示不同的组件 -->
-      <HomePageMain v-if="activeIndex === '1' || activeIndex === null" />
-      <FoodPage v-if="activeIndex === '2'" />
-      <PropagationPage v-if="activeIndex === '3'" />
+      <router-view/>
     </el-main>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import HomePageMain from "@/components/Food/HomePageMain.vue";
-import FoodPage from "@/components/Food/FoodPage.vue"; // 这是美食专区组件
-import PropagationPage from "@/components/Food/PropagationPage.vue";
-import FoodDetailPage from "@/components/Food/FoodDetailPage.vue";
 // 这是传播效果分析组件
-
-// 设置 activeIndex 初始值为 '1'，这样组件会默认显示首页
-const activeIndex = ref('1')
-
-// 处理菜单选择
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-  activeIndex.value = key;  // 更新选中的菜单项
-};
 </script>
 
 <style>

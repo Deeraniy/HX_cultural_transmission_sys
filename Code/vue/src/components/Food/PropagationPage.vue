@@ -165,8 +165,8 @@ const sortOrders = {
   --el-table-header-text-color: #fffffff;
   --el-table-row-hover-bg-color: transparent;
   --el-table-current-row-bg-color: transparent;
+  --el-table-bg-color: rgba(255, 255, 255, 0.4); /* 表格背景半透明黑色 */
   --el-table-header-bg-color: transparent;
-  --el-table-bg-color: transparent;
   --el-table-tr-bg-color: transparent;
   --el-table-expanded-cell-bg-color: transparent;
 }
