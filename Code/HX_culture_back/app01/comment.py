@@ -331,16 +331,37 @@ def get_comment_list_food(request):
         food_id = food_result['food_id']
         logger.info(f"查到的food_id: {food_id}")
 
-        # 查询评论
-        cursor.execute("SELECT comment_text, sentiment, sentiment_confidence FROM user_comment_food WHERE food_id=%s", (food_id,))
+        # 查询评论，获取所有相关字段
+        cursor.execute("""
+            SELECT 
+                user_id, 
+                ip_location, 
+                comment_id, 
+                comment_text, 
+                like_count, 
+                food_id AS liter_id, 
+                comment_time, 
+                sentiment, 
+                sentiment_confidence, 
+                platform 
+            FROM user_comment_food 
+            WHERE food_id=%s
+        """, (food_id,))
         comments = cursor.fetchall()
 
         # 格式化返回的评论
         formatted_comments = [
             {
+                'user_id': comment['user_id'],
+                'ip_location': comment['ip_location'],
+                'comment_id': comment['comment_id'],
                 'comment_text': comment['comment_text'],
+                'like_count': comment['like_count'],
+                'liter_id': comment['liter_id'],  # 这里使用 food_id 作为 liter_id
+                'comment_time': comment['comment_time'],
                 'sentiment': comment['sentiment'],
-                'sentiment_confidence': comment['sentiment_confidence']
+                'sentiment_confidence': str(comment['sentiment_confidence']),  # 转换为字符串
+                'platform': comment['platform']
             }
             for comment in comments
         ]
