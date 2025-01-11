@@ -4,22 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="民俗页面优化">
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/assets/folkCustom/boat-back.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/assets/folkCustom/boat.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/assets/folkCustom/dragon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/assets/folkCustom/tiger.png" afterDir="false" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="首页美化">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/CardTry.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/CardTry.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/LunBo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/LunBo.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,38 +47,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/spring_boot_content/HX_cultural_sys/Code/vue/src/assets/folkCustom",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/spring_boot_content/HX_cultural_sys/Code/vue/src/assets&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "vue.recent.templates": [
-      "Vue Composition API Component"
+  &quot;keyToStringList&quot;: {
+    &quot;vue.recent.templates&quot;: [
+      &quot;Vue Composition API Component&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets\folkCustom" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
+      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets\folkCustom" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\static\img\img_hx" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets\models" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components\FilmLiterature\Literature" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src" />
@@ -119,7 +111,8 @@
       <workItem from="1736387575471" duration="63000" />
       <workItem from="1736387665227" duration="617000" />
       <workItem from="1736391193427" duration="30161000" />
-      <workItem from="1736469344910" duration="20461000" />
+      <workItem from="1736469344910" duration="37069000" />
+      <workItem from="1736555277985" duration="3081000" />
     </task>
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
       <option name="closed" value="true" />
@@ -225,7 +218,47 @@
       <option name="project" value="LOCAL" />
       <updated>1736479271000</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="民俗页面轮播图">
+      <option name="closed" value="true" />
+      <created>1736497203308</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1736497203308</updated>
+    </task>
+    <task id="LOCAL-00015" summary="民俗页面轮播图">
+      <option name="closed" value="true" />
+      <created>1736497324724</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1736497324724</updated>
+    </task>
+    <task id="LOCAL-00016" summary="情感分析页面刷新问题解决">
+      <option name="closed" value="true" />
+      <created>1736514185220</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1736514185220</updated>
+    </task>
+    <task id="LOCAL-00017" summary="民俗轮播图微调">
+      <option name="closed" value="true" />
+      <created>1736514293199</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1736514293199</updated>
+    </task>
+    <task id="LOCAL-00018" summary="首页美化">
+      <option name="closed" value="true" />
+      <created>1736523355250</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1736523355250</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -254,7 +287,11 @@
     <MESSAGE value="情感分析页面搜索功能实现" />
     <MESSAGE value="美食页面优化" />
     <MESSAGE value="民俗页面优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="民俗页面优化" />
+    <MESSAGE value="民俗页面轮播图" />
+    <MESSAGE value="情感分析页面刷新问题解决" />
+    <MESSAGE value="民俗轮播图微调" />
+    <MESSAGE value="首页美化" />
+    <option name="LAST_COMMIT_MESSAGE" value="首页美化" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -263,11 +300,6 @@
           <url>file://$PROJECT_DIR$/Code/vue/src/utils/turn.js</url>
           <line>864</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue</url>
-          <line>15</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
