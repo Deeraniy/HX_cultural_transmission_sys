@@ -5,33 +5,7 @@
       <h2 class="fixed-title">非遗民俗分析界面</h2>
 
       <!-- 菜单区域 -->
-      <el-menu
-          :default-active="activeIndex"
-          class="el-menu-demo"
-          mode="horizontal"
-          :ellipsis="false"
-          @select="handleSelect"
-      >
-        <el-menu-item index="2">情感分析与预测</el-menu-item>
-        <el-menu-item index="3">传播策略生成</el-menu-item>
-        <el-menu-item index="4">风景名胜3D展示</el-menu-item>
-        <el-menu-item index="5">社交分享信息展示</el-menu-item>
-        <el-menu-item index="6">沉浸式故事叙述</el-menu-item>
-        <el-sub-menu index="1">
-          <template #title>
-            <span class="work">工作台</span>
-          </template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-          <el-menu-item index="1-3">item three</el-menu-item>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-            <el-menu-item index="1-4-2">item two</el-menu-item>
-            <el-menu-item index="1-4-3">item three</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
-      </el-menu>
+      <Header :activeIndex="Index"/>
     </div>
     <el-main>
       <div style="display: flex;height: 100% ">
@@ -109,7 +83,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import * as echarts from 'echarts';
-
+import Header from "@/components/FolkCustom/header.vue";
+const Index = ref('3');
 const hotComments = ref([
   { user: '用户A', content: '这部作品让我印象深刻！' },
   { user: '用户B', content: '文化与现代的结合非常新颖！' },

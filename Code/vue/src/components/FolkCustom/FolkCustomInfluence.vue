@@ -5,33 +5,7 @@
       <h2 class="fixed-title">非遗民俗分析界面</h2>
 
       <!-- 菜单区域 -->
-      <el-menu
-          :default-active="activeIndex"
-          class="el-menu-demo"
-          mode="horizontal"
-          :ellipsis="false"
-          @select="handleSelect"
-      >
-        <el-menu-item index="2">情感分析与预测</el-menu-item>
-        <el-menu-item index="3">传播策略生成</el-menu-item>
-        <el-menu-item index="4">风景名胜3D展示</el-menu-item>
-        <el-menu-item index="5">社交分享信息展示</el-menu-item>
-        <el-menu-item index="6">沉浸式故事叙述</el-menu-item>
-        <el-sub-menu index="1">
-          <template #title>
-            <span class="work">工作台</span>
-          </template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-          <el-menu-item index="1-3">item three</el-menu-item>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-            <el-menu-item index="1-4-2">item two</el-menu-item>
-            <el-menu-item index="1-4-3">item three</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
-      </el-menu>
+      <Header :activeIndex="activeIndex"/>
     </div>
     <el-main>
       <img src="@/assets/folkCustom/湖湘非遗.png" style="width: 100%;height: 500px;opacity: 0.6;"/>
@@ -89,6 +63,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 import { h } from 'vue'
 import type { VNode } from 'vue'
 import type {ComponentSize, TableColumnCtx} from 'element-plus'
+import Header from "@/components/FolkCustom/header.vue";
 
 interface Product {
   id: string
@@ -104,7 +79,7 @@ interface SummaryMethodProps<T = Product> {
 }
 const background = ref(false)
 const disabled = ref(false)
-const currentPage3 = ref(5)
+const currentPage3 = ref(1)
 const pageSize3 = ref(15)
 const size = ref<ComponentSize>('default')
 
@@ -203,7 +178,7 @@ const tableData = ref([
   --el-table-row-hover-bg-color: transparent;
   --el-table-current-row-bg-color: transparent;
   --el-table-header-bg-color: transparent;
-  --el-table-bg-color: transparent;
+  --el-table-bg-color: rgba(255, 255, 255, 0.4);
   --el-table-tr-bg-color: transparent;
   --el-table-expanded-cell-bg-color: transparent;
 }
