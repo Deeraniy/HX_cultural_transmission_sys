@@ -4,6 +4,10 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 const routes = [
     {
         path: '/',
+        component:() => import('./components/IndexHeader.vue'),
+    },
+    {
+        path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
     {

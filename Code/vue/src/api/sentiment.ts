@@ -77,7 +77,7 @@ class SentimentAPI {
         } else if (type === 2) {
             urlPath = 'liter_sentiments_count';
         }
-
+        console.log("俺不中嘞")
         return request({
             url: `${DICT_BASE_URL}/${urlPath}/`,
             method: "get",
