@@ -70,7 +70,14 @@ const routes = [
         name: 'FoodDetailPage',
         component:()=>import('./components/Food/FoodDetailPage.vue'), // 美食详情页面
         props: true, // Pass the `foodName` as a prop to the component
-    }
+    },
+    {
+        path: '/header',
+        name: 'header',
+        component:()=>import('./components/FolkCustom/header.vue'), // 美食详情页面
+
+    },
+
 ];
 
 // 创建路由器实例
