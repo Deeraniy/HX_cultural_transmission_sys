@@ -9,6 +9,13 @@ class FoodAPI {
             method: "get",
         });
     }
+
+    static getFoodInfluence(){
+        return request({
+            url: `${DICT_BASE_URL}/get_food_influence/`,
+            method: "get",
+        });
+    }
 }
 
 export default FoodAPI;
