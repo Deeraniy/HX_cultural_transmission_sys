@@ -24,7 +24,7 @@
     </div>
 
     <el-main>
-      <!-- 根据 activeIndex 显示不同的组件 -->
+<!--       根据 activeIndex 显示不同的组件 -->
       <HomePageMain v-if="activeIndex === '1' || activeIndex === null" />
       <FoodPage v-if="activeIndex === '2'" />
       <PropagationPage v-if="activeIndex === '3'" />
@@ -36,15 +36,23 @@
 import { ref } from 'vue';
 import HomePageMain from "@/components/Food/HomePageMain.vue";
 import FoodPage from "@/components/Food/FoodPage.vue"; // 这是美食专区组件
-import PropagationPage from "@/components/Food/PropagationPage.vue";// 这是传播效果分析组件
+import PropagationPage from "@/components/Food/PropagationPage.vue";
+import FoodDetailPage from "@/components/Food/FoodDetailPage.vue";
+// 这是传播效果分析组件
 
 // 设置 activeIndex 初始值为 '1'，这样组件会默认显示首页
 const activeIndex = ref('1')
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const navItems = [
+  { index: '1', link: '/food' },
+  { index: '2', link: '/food/detail' },
+  { index: '3', link: '/food/propagation' },
+];
 // 处理菜单选择
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-  activeIndex.value = key;  // 更新选中的菜单项
+const handleSelect = (key: string) => {
+  activeIndex.value = key;
+ /* router.push(navItems[Number(key) - 1].link)// 更新选中的菜单项*/
 };
 </script>
 
@@ -70,7 +78,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 /* 新增的菜单项横向布局样式 */
 .horizontal-submenu .el-menu-item {
   display: inline-block; /* 让菜单项横向排列 */
-  margin-right: 20px; /* 为子菜单项之间添加间距 */
+  margin-right: 180px; /* 为子菜单项之间添加间距 */
 }
 
 .horizontal-submenu .el-menu-item:last-child {
@@ -118,7 +126,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   font-family: 'HelveticaNeue', serif;
   font-size: 30px;
   color: #fff8f0;
-  margin-right: 510px;
+  margin-right: 810px;
 }
 
 .el-menu-demo {

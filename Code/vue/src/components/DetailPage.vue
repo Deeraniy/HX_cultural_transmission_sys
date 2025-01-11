@@ -13,7 +13,7 @@
         <div class="content">
           <!-- 图片和弹幕区域 -->
           <div class="image-danmu-container">
-            <img :src="attractions.image" alt="图片" class="city-image" />
+            <img :src="currentImageUrl" alt="当前展示的图片" class="city-image" />
             <img :src="cloudUrl" alt="词云图" class="wordcloud" />
             <div class="danmu">
               <danmaku ref="danmakuRef" v-model:danmus="danmus" :speeds="50" useSlot loop :channels="7" style="height:100%; width:100%;" :is-suspend="true">
@@ -81,6 +81,8 @@ const cloudUrl = ref('');
 const processedTimeData = ref<any>([]);
 const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
 const topic = ref<any>([]);
+const currentImageUrl = ref<string>(''); // 用于存储当前需要展示的图片 URL
+
 const data1 = [
   { name: '正面', value: 58.84 },
   { name: '中立', value: 7.28 },
@@ -101,6 +103,10 @@ const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | st
       image: spot.image_url,
       description: spot.description,
     };
+
+    // 更新图片 URL
+    currentImageUrl.value = spot.image_url;
+    console.log("currentImgUrl:", currentImageUrl.value)
     console.log("当前选中的景点:", attractions.name);
   } else {
     console.warn(`未找到名称为 "${spotName}" 的景点`);
@@ -116,18 +122,21 @@ const loadBooks = (bookName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>)
     return;
   }
 
-  console.log("书籍数据（未处理）:", bookName.value);
+  console.log("书籍数据（未处理）1111:", bookName.value);
   // 查找匹配的单个书籍
-  const book =bookData.value.find((book: any) => book.book_name === bookName.value);
+  const book =bookData.value.find((book: any) => book.liter_name === bookName.value);
   if (book) {
     books.value = {
       name: book.liter_name,
       image: book.image_url,
       description: book.text,
     };
+    // 更新图片 URL
+    currentImageUrl.value = book.image_url;
+    console.log("currentImgUrl:", currentImageUrl.value)
     console.log("当前选中的书籍:", books.name);
   } else {
-    console.warn(`未找到名称为 "${bookName}" 的书`);
+    console.warn(`未找到名称为 "${bookName.value}" 的书`);
     books.value = null;
   }
 
@@ -141,45 +150,63 @@ import {ref, onMounted, watch, Ref, UnwrapRef} from 'vue';
 import { useRoute } from 'vue-router';
 import {marked} from "marked";
 import theme from "echarts/types/src/theme/dark";
+import { onUpdated } from 'vue';
 const route = useRoute();
 const nowName = ref<string>('');
 const themeType = ref(null);
 const pageType = ref(null);
-watch(() => route.query.name, (newName) => {
-  if (typeof newName === 'string') {
-    nowName.value = newName;
-    console.log("name2", nowName.value)
-  } else {
-    console.warn('路由参数 "name" 不是字符串:', newName);
-    nowName.value = '';
-  }
-}, { immediate: true });
-watch(() => route.query.value, (newPageType) => {
-  if (newPageType) {
-    pageType.value = newPageType;
-    console.log("Page Type:", pageType.value); // 你可以根据 pageType 做相应的操作
-  } else {
-    console.warn('路由参数 "value" 不存在');
-    pageType.value = null;
-  }
-}, { immediate: true });
-watch(() => route.query.value, (newThemeType) => {
-  if (newThemeType) {
-    themeType.value = newThemeType;
-    console.log("Page Type:", pageType.value); // 你可以根据 pageType 做相应的操作
-  } else {
-    console.warn('路由参数 "value" 不存在');
-    themeType.value = null;
-  }
-}, { immediate: true });
+// 删除之前的三个单独的 watch
+// 删除这些：
+// watch(() => route.query.name, ...)
+// watch(() => route.query.value, ...)
+// watch(() => route.query.theme, ...)
 
-onMounted(() => {
-  fetchAttractionName();
-});
+// 只保留一个统一的 watch
+watch(
+    () => route.query, // 直接监听整个 query 对象
+    async (newQuery, oldQuery) => {
+      console.log("路由参数变化检测：", newQuery, oldQuery);
+
+      // 更新各个响应式变量
+      if (typeof newQuery.name === 'string') {
+        nowName.value = newQuery.name;
+      }
+
+      if (newQuery.value) {
+        pageType.value = newQuery.value;
+      }
+
+      if (newQuery.theme) {
+        themeType.value = newQuery.theme;
+      }
+
+      // 如果任何相关参数发生变化，则重新加载数据
+      if (newQuery.name !== oldQuery?.name ||
+          newQuery.value !== oldQuery?.value ||
+          newQuery.theme !== oldQuery?.theme) {
+        console.log("参数发生变化，准备重新加载数据");
+
+        // 清空之前的数据
+        sentiment.value = [];
+        topic.value = [];
+        processedTimeData.value = [];
+        danmus.value = [];
+        cloudUrl.value = '';
+        data1.value = [];
+
+        // 重新加载数据
+        await loadAllData();
+      }
+    },
+    {
+      immediate: true,
+      deep: true
+    }
+);
 
 const fetchAttractionName = () => {
   nowName.value = <string>route.query.name;
-  console.log("name",route.query.name);
+  console.log("hhhhhname",route.query.name);
 };
 
 
@@ -238,6 +265,7 @@ const checkContentAvailability = async () => {
         });
 
         ElMessage.success('已找到相关景点信息');
+        await loadAllData();
       } else {
         ElMessage.warning('未找到相关名胜古迹信息');
       }
@@ -293,6 +321,7 @@ const checkContentAvailability = async () => {
           });
 
           ElMessage.success('已找到相关文学作品信息');
+          await loadAllData();
         } else {
           ElMessage.warning('未找到相关影视文学信息');
         }
@@ -311,12 +340,15 @@ function getRandomColor() {
   const color = colorList.value[Math.floor(Math.random() * 8)];
   return color;
 }
+const loadAllData = async () => {
+  fetchAttractionName();
+  const pageTypeNum = Number(pageType.value);
+  console.log("这里pageType", pageTypeNum);
 
-onMounted(async () => {
-  if(pageType===1){
+  if(pageTypeNum === 1){
     try {
       const spotsResponse = await SpotsAPI.getSpotsAPI();
-
+      console.log("我不叫喂！")
       if (typeof spotsResponse === "string") {
         const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
         const spotsArray = fixedResponse
@@ -338,41 +370,48 @@ onMounted(async () => {
     } catch (error) {
       console.error("加载景点数据时出错:",error);
     }
-  }else if(pageType===2){
+  }else if(pageTypeNum===2){
+    console.log("我叫喂！")
     try {
-
+      console.log("我不叫喂！")
       // 根据 themeType 设置 type_id
       let type_id = '';
-      if (themeType === 1) {
+      const pageTheme = Number(themeType.value);
+      if (pageTheme === 1) {
         type_id = '文学';
-      } else if (themeType === 2) {
+      } else if (pageTheme === 2) {
         type_id = '表演艺术';
-      } else if (themeType === 3) {
+      } else if (pageTheme === 3) {
         type_id = '新媒体艺术';
-      } else if (themeType === 4) {
+      } else if (pageTheme === 4) {
         type_id = '古诗词';
       }
-
-     // 调用 getBook 并传递 type_id
+      console.log("ThemeType",pageTheme)
+      console.log("Type_id", type_id)
+      // 调用 getBook 并传递 type_id
       const booksResponse = await FilmLiterature.getBook(type_id);
       console.log("书籍数据（未处理）:", type_id);
 
-      if (typeof booksResponse === "string") {
-        const fixedResponse = booksResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-        const booksArray = fixedResponse
-            .replace(/'/g, '"')
-            .match(/{[^}]+}/g)
-            .map((spot) => JSON.parse(spot));
+      if (Array.isArray(booksResponse.data)) {
+        const booksArray = booksResponse.data.map((book) => {
+          // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+          if (typeof book.someDecimalField === "string") {
+            book.someDecimalField = book.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+          }
+          return book;
+        });
 
         bookData.value = booksArray;
 
         console.log("书籍数据（处理后）:", bookData.value);
+
         if (bookData.value.length > 0) {
           loadBooks(nowName);
         } else {
           console.warn("书籍数据为空");
         }
-      } else {
+      }else {
+        console.log("bookResponse", booksResponse.data)
         console.error("书籍数据格式错误，期望为字符串形式");
       }
     } catch (error) {
@@ -381,57 +420,31 @@ onMounted(async () => {
   }
 
   try {
-    const commentResponse = await CommentAPI.getCommentList(nowName.value,pageType.value);
-
+    const commentResponse = await CommentAPI.getCommentList(nowName.value, pageType.value);
+    // 评论改了格式，要记得修改
     console.log("原始评论数据:", commentResponse);
 
-    if (typeof commentResponse === "string") {
-      // 1. 修复常见的 JSON 格式问题
-      const fixedResponse = commentResponse
-          .replace(/None/g, 'null')
-          .replace(/Decimal\('([\d.]+)'\)/g, '$1')
-          .replace(/'/g, '"')
-          .replace(/\\(?!["\\/bfnrtu])/g, '');
+    // 确保返回的数据包含 comments 数组
+    if (commentResponse && commentResponse.comments && Array.isArray(commentResponse.comments)) {
+      const commentsArray = commentResponse.comments;
 
-      console.log("修复后的评论数据:", fixedResponse);
-
-      // 2. 提取每个 JSON 对象
-      const matches = fixedResponse.match(/{[^}]+}/g); // 匹配每个 JSON 对象
-
-      if (matches) {
-        const commentsArray = [];
-
-        for (const match of matches) {
-          try {
-            const comment = JSON.parse(match); // 逐个解析 JSON 对象
-            commentsArray.push(comment);
-          } catch (jsonError) {
-            console.warn("跳过无法解析的 JSON 对象:", match, jsonError); // 输出无法解析的对象
-          }
-        }
-
-        console.log("成功解析的评论数组:", commentsArray);
-
-        // 映射到弹幕数据
-        danmus.value = commentsArray.map(comment => ({
-          name: comment.user_id || '匿名用户',
-          text: comment.content || '',
-        }));
-      } else {
-        console.warn("未找到有效的 JSON 对象。");
-      }
-    } else if (Array.isArray(commentResponse)) {
-      // 直接处理对象数组
-      danmus.value = commentResponse.map(comment => ({
+      // 映射到弹幕数据
+      danmus.value = commentsArray.map(comment => ({
         name: comment.user_id || '匿名用户',
-        text: comment.content || '',
+        text: comment.comment_text || '',  // 使用新的字段 comment_text
+        sentiment: comment.sentiment || '',  // 如果需要，可以把情感分析加入
+        sentiment_confidence: comment.sentiment_confidence || '',  // 情感分析置信度
+        platform: comment.platform || ''  // 评论平台
       }));
+
+      console.log("成功解析的评论数组:", commentsArray);
     } else {
-      throw new Error("评论数据格式不正确");
+      throw new Error("返回的数据格式不正确，未找到有效的评论数组。");
     }
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+
 
 
   try {
@@ -441,6 +454,8 @@ onMounted(async () => {
   } catch (error) {
     console.error("加载评论数据时出错:", error);
   }
+
+
   try {
     const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value,pageType.value);
 
@@ -507,7 +522,7 @@ onMounted(async () => {
     if (timeResponse && typeof timeResponse === "object" && Array.isArray(timeResponse.data)) {
       processedTimeData.value = timeResponse.data.map(item => {
         const paddedMonth = item.month < 10 ? '0' + item.month : item.month;
-        console.log("你好！！！" + parseFloat(item.sentiment_score));
+        //console.log("你好！！！" + parseFloat(item.sentiment_score));
         return {
           date: `${item.year}-${paddedMonth}`,
           sentimentScore: parseFloat(item.sentiment_score) || 0,
@@ -522,6 +537,9 @@ onMounted(async () => {
     console.error("加载时间情感数据时出错:", error);
   }
 
+}
+onMounted(async () => {
+  await loadAllData();
 
 });
 
@@ -561,7 +579,7 @@ onMounted(async () => {
 .city-image{
   width: 400px; /* 设置图片和词云图的宽度一致 */
   height: 305px; /* 设置图片和词云图的高度一致 */
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 8px;
 }
 

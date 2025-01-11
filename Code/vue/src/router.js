@@ -8,7 +8,7 @@ const routes = [
     },
     {
         path: '/index',
-        component:() => import('./components/index.vue'),
+        component:() => import('./components/IndexHeader.vue'),
     },
     {
         path: '/placeDetail',
@@ -43,6 +43,10 @@ const routes = [
         component:() => import('./components/FolkCustom/FolkSentimentAnalyze.vue')
     },
     {
+        path: '/card',
+        component:() => import('./components/FolkCustom/LunBo.vue')
+    },
+    {
         path:'/page',
         component:() => import('./components/FilmLiterature/Literature/PageFlip.vue')
     },
@@ -66,7 +70,14 @@ const routes = [
         name: 'FoodDetailPage',
         component:()=>import('./components/Food/FoodDetailPage.vue'), // 美食详情页面
         props: true, // Pass the `foodName` as a prop to the component
-    }
+    },
+    {
+        path: '/header',
+        name: 'header',
+        component:()=>import('./components/FolkCustom/header.vue'), // 美食详情页面
+
+    },
+
 ];
 
 // 创建路由器实例
