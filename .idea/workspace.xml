@@ -305,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736555968841</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="美食文化前后端连接">
+      <option name="closed" value="true" />
+      <created>1736556281466</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1736556281466</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
