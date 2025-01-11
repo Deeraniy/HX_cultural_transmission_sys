@@ -1,6 +1,5 @@
 <script setup>
 import router from "@/router.js";
-import HomePage from "@/components/Food/HomePage.vue";
 
 </script>
 
@@ -14,6 +13,7 @@ import HomePage from "@/components/Food/HomePage.vue";
 #app{
 
 }
+
 header {
   line-height: 1.5;
 }
