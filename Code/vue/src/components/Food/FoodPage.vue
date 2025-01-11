@@ -1,22 +1,13 @@
 <template>
   <div class="food-section">
     <!-- Header -->
-    <header class="header">
-      <div class="search-container">
-        <el-input
-            v-model="searchQuery"
-            placeholder="搜索美食..."
-            class="search-input"
-            prefix-icon="el-icon-search"
-        />
-      </div>
-    </header>
+
 
     <div class="main-container">
       <!-- Sidebar -->
       <aside class="sidebar">
         <div class="food-block" v-for="(item, index) in paginatedFoodItems" :key="index">
-          <el-card @click="goToSentimentAnalysis(item.name)" class="food-card-sidebar">
+          <el-card @click="selectFoodItem(index)" class="food-card-sidebar">
             <div class="card-header">
               <img :src="item.img" :alt="item.name" class="food-image-sidebar" />
             </div>
@@ -34,6 +25,14 @@
 
       <!-- Main content -->
       <main class="content">
+        <div class="search-container">
+          <el-input
+              v-model="searchQuery"
+              placeholder="搜索美食..."
+              class="search-input"
+              prefix-icon="el-icon-search"
+          />
+        </div>
         <h2 class="titleH">湖南菜经典美食</h2>
         <!-- Carousel -->
         <div class="carousel-container">
@@ -107,6 +106,7 @@ const searchQuery = ref('');
 const rotationAngle = ref(0); // 旋转角度
 const tiltAngle = ref(0); // 俯视仰视角度
 const currentPage = ref(1); // 当前页码
+const selectedIndex = ref(null); // 选中的菜品索引
 import { reactive } from 'vue';
 
 const foodDetail = reactive({
@@ -115,6 +115,12 @@ const foodDetail = reactive({
   img: '',
   description: '', // 菜品描述
 });
+// 点击左侧菜品，更新右侧展示的菜品
+const selectFoodItem = (index) => {
+  selectedIndex.value = index;
+  const angle = (360 / paginatedFoodItems.value.length) * index;
+  rotationAngle.value = angle; // 通过旋转角度更新 Carousel
+};
 
 // 打开详情弹窗
 const showFoodDetail = (food) => {
@@ -187,11 +193,11 @@ const router = useRouter();
 
 // Function to rotate carousel
 const rotateLeft = () => {
-  rotationAngle.value -= 45;
+  rotationAngle.value += 45;
 };
 
 const rotateRight = () => {
-  rotationAngle.value += 45;
+  rotationAngle.value -= 45;
 };
 
 // Function to tilt carousel view (仰视/俯视)
@@ -203,14 +209,21 @@ const handlePageChange = (page) => {
 const getItemStyle = (index) => {
   const angle = (360 / paginatedFoodItems.value.length) * index;
   const translateZ = 250; // Adjust distance from center for 3D effect
+  // 根据选中的菜品，设置旋转角度
+  if (selectedIndex.value === index) {
+    return {
+      transform: `rotateY(-${angle}deg) translateZ(${translateZ}px) scale(1.2)` // 选中的菜品放大显示
+    };
+  }
   return {
-    transform: `rotateY(${angle}deg) translateZ(${translateZ}px)`
+    transform: `rotateY(-${angle}deg) translateZ(${translateZ}px)`
   };
 };
 </script>
 
 <style scoped>
 /* 统一标题字体样式 */
+
 .el-dialog__header {
   font-family: 'HelveticaNeue', serif  !important;;  /* 与其他部分保持一致的字体 */
   font-size: 28px ;  /* 标题大小 */
@@ -338,7 +351,6 @@ const getItemStyle = (index) => {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-
 .food-detail-dialog h2 {
   margin: 10px 0;
   font-size: 24px;
@@ -356,7 +368,6 @@ const getItemStyle = (index) => {
 .food-section {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 /* Header 样式 */
@@ -389,9 +400,8 @@ const getItemStyle = (index) => {
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   position: absolute;
-  top: 20px; /* 根据需要调整距离 */
-  right: 20px;
-  width: 100%; /* 让它撑满宽度 */
+margin-left: 390px;
+  margin-top: -45px;
 }
 
 /* 搜索框样式 */
@@ -405,9 +415,8 @@ const getItemStyle = (index) => {
 .main-container {
   display: flex;
   flex: 1;
-  margin-top: 20px;
+  margin-top: 0px;
   padding: 20px;
-  height: calc(100vh - 140px); /* 高度撑满屏幕，减去 header 的高度 */
 }
 
 /* Sidebar 样式 */
@@ -419,7 +428,7 @@ const getItemStyle = (index) => {
   position: sticky;
   font-family: 'HelveticaNeue', serif;
   top: 20px;
-  height: 522px; /* 高度撑满父容器 */
+  height: 630px; /* 高度撑满父容器 */
   overflow-y: auto; /* 超出部分滚动 */
 }
 
@@ -456,7 +465,7 @@ const getItemStyle = (index) => {
   padding-top:  80px;
   padding-bottom: 20px;
   background-color: #ffffff;
-  height: 100%; /* 高度撑满父容器 */
+  height: 570px; /* 高度撑满父容器 */
   overflow-y: auto; /* 超出部分滚动 */
 }
 
@@ -471,6 +480,7 @@ const getItemStyle = (index) => {
 /* Carousel 样式 */
 .carousel-container {
   position: relative;
+  margin-top: 50px;
   width: 90%;
   height: 400px;
   perspective: 1200px;
@@ -522,7 +532,7 @@ const getItemStyle = (index) => {
 
 /* 控制按钮 */
 .control-buttons {
-  margin-top: 30px;
+  margin-top: 80px;
   margin-left:400px;
   text-align: center;
   background-color: transparent !important; /* 背景透明 */
