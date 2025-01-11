@@ -404,6 +404,112 @@ def generate_report(request):
             'message': str(e)
         }, status=500)
 
+def sentiments_result_total_count(request):
+    """根据文学作品名称获取情感分析时间序列结果"""
+    try:
+        name = request.GET.get('name', '').strip()
+        if not name:
+            return JsonResponse({
+                'status': 'error',
+                'message': '文学作品名称不能为空'
+            }, status=400)
+            
+        logger.info(f"正在查询文学作品: {name}")
+            
+        # 数据库连接
+        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
+                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+                             charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        
+        # 获取文学作品ID
+        cursor.execute("SELECT liter_id FROM literature WHERE liter_name = %s LIMIT 1", (name,))
+        liter_result = cursor.fetchone()
+        
+        if not liter_result:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'未找到文学作品: {name}'
+            }, status=404)
+            
+        liter_id = liter_result['liter_id']
+        logger.info(f"找到文学作品ID: {liter_id}")
+        
+        # 查询评论数据
+        comment_sql = """
+            SELECT 
+                sentiment, 
+                sentiment_confidence, 
+                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
+                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
+            FROM user_comment_literature 
+            WHERE liter_id = %s AND sentiment IS NOT NULL
+            ORDER BY comment_time
+        """
+        cursor.execute(comment_sql, (liter_id,))
+        results = cursor.fetchall()
+        
+        if not results:
+            return JsonResponse({
+                'status': 'success',
+                'data': [],
+                'literature_info': {
+                    'name': name,
+                    'id': liter_id
+                },
+                'message': '该文学作品暂无评论数据'
+            })
+        
+        # 按年月分组数据
+        monthly_data = {}
+        for row in results:
+            date_key = f"{row['year']}-{row['month']}"
+            if date_key not in monthly_data:
+                monthly_data[date_key] = []
+            
+            if row['sentiment'] and row['sentiment_confidence']:
+                monthly_data[date_key].append(
+                    (row['sentiment'], float(row['sentiment_confidence']))
+                )
+        
+        # 计算每月的情感分析结果
+        analysis_results = []
+        for year_month, sentiments in monthly_data.items():
+            year, month = map(int, year_month.split('-'))
+            sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
+            
+            analysis_results.append({
+                'year': year,
+                'month': month,
+                'sentiment_score': round(sentiment_score, 3),
+                'sentiment': dominant_sentiment,
+                'comment_count': len(sentiments)
+            })
+        
+        # 按时间排序
+        analysis_results.sort(key=lambda x: (x['year'], x['month']))
+        
+        return JsonResponse({
+            'status': 'success',
+            'data': analysis_results,
+            'literature_info': {
+                'name': name,
+                'id': liter_id
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"处理文学作品 {name} 的情感分析时出错: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+
 # 使用示例
 if __name__ == "__main__":
     # 民俗文学相关评论示例
