@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="非遗民俗前后端连接" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="非遗民俗路由">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/FilmLiterature.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/FilmLiterature.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/PoemDisplay.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/PoemDisplay.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/ShowDisplay.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/ShowDisplay.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/VideoDisplay.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/VideoDisplay.vue" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,7 +61,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
+    "npm.dev.executor": "Debug",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "D:\\IntelliJ IDEA 2024.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
@@ -129,7 +136,7 @@
       <workItem from="1736469344910" duration="37069000" />
       <workItem from="1736555277985" duration="3081000" />
       <workItem from="1736585232397" duration="2117000" />
-      <workItem from="1736642216877" duration="10355000" />
+      <workItem from="1736642216877" duration="13042000" />
     </task>
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
       <option name="closed" value="true" />
@@ -283,7 +290,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736665439305</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="非遗民俗路由">
+      <option name="closed" value="true" />
+      <created>1736665741967</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1736665741967</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -317,7 +332,8 @@
     <MESSAGE value="民俗轮播图微调" />
     <MESSAGE value="首页美化" />
     <MESSAGE value="非遗民俗前后端连接" />
-    <option name="LAST_COMMIT_MESSAGE" value="非遗民俗前后端连接" />
+    <MESSAGE value="非遗民俗路由" />
+    <option name="LAST_COMMIT_MESSAGE" value="非遗民俗路由" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
