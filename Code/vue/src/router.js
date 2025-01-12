@@ -4,6 +4,10 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 const routes = [
     {
         path: '/',
+        component:() => import('./components/IndexHeader.vue'),
+    },
+    {
+        path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
     {
@@ -29,6 +33,10 @@ const routes = [
     {
         path: '/model',
         component:() => import('./components/MaoZedongSeries.vue')
+    },
+    {
+        path: '/red',
+        component:() => import('./components/RedCulture/RedCultureHeader.vue')
     },
     {
         path: '/folkCustom',
