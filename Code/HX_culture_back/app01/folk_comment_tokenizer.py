@@ -221,7 +221,7 @@ def get_word_frequency(request):
             FROM folk_token 
             WHERE folk_id = %s 
             ORDER BY count DESC 
-            LIMIT 30 OFFSET 40
+            LIMIT 30
         """
         cursor.execute(frequency_sql, (folk_id,))
         words = cursor.fetchall()
