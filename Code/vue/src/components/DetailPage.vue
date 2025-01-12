@@ -66,6 +66,7 @@ import LdaAPI from "@/api/lda";
 import danmuData from '@/json/danmuData.json';
 import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
+import FoodAPI from "@/api/food";
 import CommentAPI from "@/api/comment";
 import SentimentAPI from "@/api/sentiment";
 import { ElMessage } from 'element-plus';
@@ -73,9 +74,12 @@ import { ElMessage } from 'element-plus';
 import FilmLiterature from "@/api/filmLiterature";
 const interestData = ref<any>(null);
 const bookData = ref<any>(null);
+const foodData = ref<any>(null);
 import router from "@/router.js";
 const attractions = ref<any>({}); // 初始化为一个空对象
 const books = ref<any>({});
+const food = ref<any>({});
+
 const searchQuery = ref(''); // 新增：存储搜索内容
 const cloudUrl = ref('');
 const processedTimeData = ref<any>([]);
@@ -140,7 +144,34 @@ const loadBooks = (bookName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>)
     books.value = null;
   }
 
-  console.log("当前选中的景点:", attractions);
+  console.log("当前选中的书籍:", book);
+};
+const loadFood = (foodName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
+  if (!foodData.value || !Array.isArray(foodData.value)) {
+    console.warn("美食数据未加载或格式错误");
+    return;
+  }
+
+  console.log("美食数据（未处理）:", foodName.value);
+  // 查找匹配的单个景点
+  const foods = foodData.value.find((foods: any) => foods.food_name === foodName.value);
+  if (foods) {
+    food.value = {
+      name: foods.spot_name,
+      image: foods.image_url,
+      description: foods.description,
+    };
+
+    // 更新图片 URL
+    currentImageUrl.value = foods.image_url;
+    console.log("currentImgUrl:", currentImageUrl.value)
+    console.log("当前选中的美食:", food.name);
+  } else {
+    console.warn(`未找到名称为 "${foodName}" 的美食`);
+    food.value = null;
+  }
+
+  console.log("当前选中的美食:", food);
 };
 
 const danmus = ref([]);
@@ -329,6 +360,46 @@ const checkContentAvailability = async () => {
         console.error("数据加载或检查过程中出错:", error);
         ElMessage.error('数据加载失败，请稍后重试');
       }
+    }else if (pageType.value === 3) {
+      // 如果景点数据还未加载，先加载数据
+      if (!foodData.value) {
+        const foodResponse = await SpotsAPI.getSpotsAPI();
+        if (typeof foodResponse === "string") {
+          const fixedResponse = foodResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+          const foodArray = fixedResponse
+              .replace(/'/g, '"')
+              .match(/{[^}]+}/g)
+              .map((spot) => JSON.parse(spot));
+
+          foodData.value = foodArray;
+          console.log("景点数据加载成功:", foodData.value);
+        }
+      }
+
+      // 检查名胜古迹
+      const foods = foodData.value?.find(
+          (item) => item.food_name === searchQuery.value
+      );
+      if (foods) {
+        nowName.value = searchQuery.value;
+        loadFood(nowName);
+
+        // 更新 URL
+        router.push({
+          path: '/detail',
+          query: {
+            name: searchQuery.value,
+            value: '3', // 名胜古迹的 pageType 是 1
+            theme: '1'  // 名胜古迹的 theme 是 1
+          }
+        });
+
+        ElMessage.success('已找到相关美食信息');
+        await loadAllData();
+      } else {
+        ElMessage.warning('未找到相关美食信息');
+      }
+
     }
   } catch (error) {
     console.error("数据加载或检查过程中出错:", error);
@@ -416,6 +487,35 @@ const loadAllData = async () => {
       }
     } catch (error) {
       console.error("加载书籍数据时出错:", error);
+    }
+  }else   if(pageTypeNum === 3){
+    try {
+      const foodResponse = await FoodAPI.getFoodAPI();
+      console.log("我不叫喂！",foodResponse)
+      if (Array.isArray(foodResponse.data)) {
+        const foodArray = foodResponse.data.map((food) => {
+          // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+          if (typeof food.someDecimalField === "string") {
+            food.someDecimalField = food.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+          }
+          return food;
+        });
+
+        foodData.value = foodArray;
+
+        console.log("美食数据（处理后）:", foodData.value);
+
+        if (foodData.value.length > 0) {
+          loadFood(nowName);
+        } else {
+          console.warn("美食数据为空");
+        }
+      }else {
+        console.log("foodResponse", foodResponse.data)
+        console.error("美食数据格式错误，期望为字符串形式");
+      }
+    } catch (error) {
+      console.error("加载美食数据时出错:",error);
     }
   }
 
@@ -567,7 +667,7 @@ onMounted(async () => {
 .image-danmu-container {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 20px;
 }
 .wordcloud {
   object-fit: contain; /* 确保图片不裁剪 */
@@ -629,7 +729,8 @@ onMounted(async () => {
 
 .main {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
   overflow-y: auto;
 }
+
 </style>
