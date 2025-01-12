@@ -15,11 +15,11 @@
       ><!--开启vue-router模式-->
 
         <!-- 首页菜单项 -->
-        <el-menu-item index="/food/home">首页</el-menu-item> <!--index配置跳转路径-->
+        <el-menu-item index="/folkCustom">首页</el-menu-item> <!--index配置跳转路径-->
         <!-- 美食专区菜单项 -->
-        <el-menu-item index="/food/detail">传播效果</el-menu-item>
+        <el-menu-item index="/folkCustomInfluence">传播效果</el-menu-item>
         <!-- 传播效果分析菜单项 -->
-        <el-menu-item index="/food/propagation">情感分析</el-menu-item>
+        <el-menu-item index="/folkSentimentAnalyze">情感分析</el-menu-item>
       </el-menu>
     </div>
 
