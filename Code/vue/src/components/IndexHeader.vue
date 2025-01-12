@@ -126,6 +126,12 @@ const handleSelect = (key: string, keyPath: string[]) => {
     case '6':
       router.push('/folkCustom'); // 美食文化
       break;
+    case '7':
+      router.push('/red'); // 美食文化
+      break;
+    case '8':
+      router.push('/detail'); // 美食文化
+      break;
       // Add more cases for other menu items if needed
     default:
       break;
@@ -236,7 +242,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
   padding-top: 0;
   padding-bottom: 0;
   border-bottom: none;
-  border-radius: 0;
 }
 
 .el-menu-item {

@@ -1,7 +1,8 @@
 <template>
     <div class="whole">
       <div class="total">
-        <h2 class="fixed-title">名胜古迹分析界面</h2>
+        <h2 class="fixed-title">红色文化展示界面</h2>
+        <el-button class="back-btn" @click="goBack">|返回</el-button>
         <el-menu
             :default-active="activeIndex"
             class="el-menu-demo"
@@ -30,7 +31,7 @@
       <el-main>
         <!-- 判断是否显示 Carousel 或 RedCultureMain -->
         <Carousel v-if="activeIndex === '2'" class="carousel-container" />
-        <RedCultureMain v-else class="red-culture-main" />
+        <RedCultureMain v-if="activeIndex === '3'" class="red-culture-main" />
       </el-main>
     </div>
   </template>
@@ -39,13 +40,30 @@
   import { ref } from 'vue'
   import RedCultureMain from './RedCultureMain.vue';
   import Carousel from "@/components/RedCulture/Carousel.vue";
+  import router from '@/router'
+  const goBack = () => {
+    router.go(-1);  // 返回上一页
+  }
   const activeIndex = ref('2')
   const handleSelect = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
+    activeIndex.value = key;  // 更新 activeIndex
   }
   </script>
 
   <style>
+  .back-btn {
+    font-family: 'HelveticaNeue', serif;
+    background-color: transparent !important;
+    color: #fff8f0 !important;
+    margin-bottom: 15px;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 720px; /* 给按钮添加右边距 */
+    margin-top: 10px;
+  }
   /* 全局样式覆盖 */
   .el-menu,
   .el-menu--horizontal,
