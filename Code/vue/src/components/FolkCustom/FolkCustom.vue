@@ -162,7 +162,7 @@ const showDetails = (book) => {
   font-size: 32px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 /* 民俗文化条目容器 */
