@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls import re_path as url
-from app01 import spot_sentiments_analyze, view, city, food
+from app01 import spot_sentiments_analyze, view, city, food, folk
 from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
@@ -54,8 +54,8 @@ urlpatterns = [
     
     url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_food_influence/',food.get_food_influence),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
-
-
+    url(r'^get_folkcustom/',folk.get_folkcustom_list),# get_folkcustom_list获取 folkcustom全部详细信息，把名称和图片等展示
+    url(r'^get_folk_influence/',folk.get_folk_influence)
 
 
 

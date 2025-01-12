@@ -68,7 +68,7 @@ const routes = [
         path: '/food',
         redirect: '/food/home',
         name: 'FoodShow',
-        component:()=>import('./components/Food/FoodShow.vue'), // 美食文化主页组件
+        component:()=>import('./components/Food/FoodShow.vue'), // 美食文化主页组件 foodshow里面有router-view,用子路由实现
         children: [
             {
                 path: 'home',
