@@ -1,162 +1,237 @@
 <template>
-  <div class="container">
-    <!-- 时间线容器 -->
-    <div class="time-line-container" :style="{ left: `${-scrollPosition}px` }">
-      <!-- 时间节点 -->
+  <div class="walk-modal">
+    <!-- 点击背景关闭弹窗 -->
+    <div class="overlay" @click="closeModal"></div>
+
+    <!-- 弹窗内容 -->
+    <div class="walk-container">
+      <!-- 小人 -->
       <div
-          v-for="(item, index) in timeLine"
-          :key="index"
-          class="time-node"
-          :style="{ left: `${index * nodeSpacing}px` }"
+          ref="sprite"
+          class="sprite"
+          :class="{ 'walk-right': walkingRight, 'walk-left': walkingLeft }"
+          :style="{ left: `${spritePosition}px` }"
       >
+        <!-- 气泡 -->
+        <div v-if="showBubble" class="speech-bubble">
+          {{ bubbleMessage }}
+        </div>
+      </div>
+
+      <!-- 时间线 -->
+      <div class="time-line-container" :style="{ left: `${-scrollPosition}px`, width: `${timeLine.length * nodeSpacing}px` }">
+        <div
+            v-for="(item, index) in timeLine"
+            :key="index"
+            class="time-node"
+            :style="{ left: `${index * nodeSpacing}px` }"
+        >
         <div class="circle"></div>
         <div class="label">{{ item.year }}</div>
       </div>
     </div>
 
-    <!-- 小人 -->
-    <div
-        ref="sprite"
-        class="sprite"
-        :class="{ 'walk-right': key.right, 'walk-left': key.left }"
-        :style="{ left: `${spritePosition}px` }"
-    ></div>
-
-    <!-- 显示的事件信息 -->
+    <!-- 当前事件信息 -->
     <div v-if="currentMessage" class="message-box">{{ currentMessage }}</div>
+
+    <!-- 关闭按钮 -->
+    <button @click="closeModal" class="close-btn">X</button>
+  </div>
   </div>
 </template>
 
 <script>
-// 直接引入 JSON 文件
-import maoTimeLine from "@/json/毛泽东时间顺序.json";
+import maoTimeLine from "@/json/毛泽东.json";
 
 export default {
-  name: "TimeLineGame",
+  name: "Walk",
+  props: {
+    human: Object, // 获取人物信息
+  },
   data() {
     return {
       timeLine: maoTimeLine, // 时间节点数据
       nodeSpacing: 200, // 时间节点间距
-      spritePosition: 0, // 小人的水平位置
+      spritePosition: 0, // 小人当前位置
       scrollPosition: 0, // 时间线滚动位置
       stepSize: 10, // 小人移动步长
-      containerWidth: 800, // 可视区域宽度（画布宽度）
+      containerWidth: 800, // 可视区域宽度
       currentMessage: "", // 当前显示的事件信息
-      key: { left: false, right: false }, // 记录左右移动状态
+      walkingRight: false, // 是否向右走
+      walkingLeft: false, // 是否向左走
+      showBubble: false, // 是否显示气泡
+      bubbleMessage: "", // 气泡内容
+      randomTargetIndex: null, // 随机目标时间点的索引
+      key: { left: false, right: false }, // 键盘左右方向
     };
   },
   mounted() {
-    // 监听键盘事件
+    this.setRandomTarget(); // 设置随机目标时间点
+    this.loadTimeLineData(); // 初始加载时间线
     window.addEventListener("keydown", this.handleKeyDown);
     window.addEventListener("keyup", this.handleKeyUp);
   },
   beforeDestroy() {
-    // 移除键盘事件监听
     window.removeEventListener("keydown", this.handleKeyDown);
     window.removeEventListener("keyup", this.handleKeyUp);
   },
   methods: {
-    // 处理键盘按下事件
+    // 加载时间线数据
+    async loadTimeLineData() {
+      try {
+        const timeLineModule = await import(`@/json/${this.human.name}.json`);
+        this.timeLine = timeLineModule.default;
+      } catch (error) {
+        console.error("Failed to load time line data:", error);
+      }
+    },
+
+    // 设置随机目标时间点
+    setRandomTarget() {
+      this.randomTargetIndex =10;
+    },
+    // 键盘按下事件
     handleKeyDown(event) {
       const key = event.key;
 
       if (key === "ArrowRight") {
         this.key.right = true;
-        this.moveRight();
+        this.walkingRight = true;
+        this.walkRight();
       }
 
       if (key === "ArrowLeft") {
         this.key.left = true;
-        this.moveLeft();
+        this.walkingLeft = true;
+        this.walkLeft();
       }
     },
 
-    // 处理键盘松开事件
+    // 键盘松开事件
     handleKeyUp(event) {
       const key = event.key;
 
       if (key === "ArrowRight") {
         this.key.right = false;
+        this.walkingRight = false;
       }
 
       if (key === "ArrowLeft") {
         this.key.left = false;
+        this.walkingLeft = false;
       }
     },
 
-    // 向右移动
-    moveRight() {
+    // 向右走
+    walkRight() {
       const maxScroll = this.timeLine.length * this.nodeSpacing - this.containerWidth;
 
       if (this.scrollPosition < maxScroll) {
-        // 如果时间线还能滚动，则优先滚动时间线
         this.scrollPosition += this.stepSize;
         if (this.scrollPosition > maxScroll) {
-          this.scrollPosition = maxScroll; // 限制滚动到最右
+          this.scrollPosition = maxScroll;
         }
       } else {
-        // 时间线不能滚动时，小人移动
         this.spritePosition += this.stepSize;
-        const maxSpritePosition = this.containerWidth - 50; // 小人不能超出画布范围
+        const maxSpritePosition = this.containerWidth - 50;
         if (this.spritePosition > maxSpritePosition) {
           this.spritePosition = maxSpritePosition;
         }
       }
 
-      // 检查是否触碰到时间节点
       this.checkCollisionWithNodes();
     },
 
-    // 向左移动
-    moveLeft() {
+    // 向左走
+    walkLeft() {
       if (this.scrollPosition > 0) {
-        // 如果时间线还能滚动，则优先滚动时间线
         this.scrollPosition -= this.stepSize;
         if (this.scrollPosition < 0) {
-          this.scrollPosition = 0; // 限制滚动到最左
+          this.scrollPosition = 0;
         }
       } else {
-        // 时间线不能滚动时，小人移动
         this.spritePosition -= this.stepSize;
         if (this.spritePosition < 0) {
-          this.spritePosition = 0; // 小人不能超出画布范围
+          this.spritePosition = 0;
         }
       }
 
-      // 检查是否触碰到时间节点
       this.checkCollisionWithNodes();
     },
 
-    // 检查是否触碰到时间节点
+    // 检查是否碰撞到时间节点
     checkCollisionWithNodes() {
-      const spriteAbsolutePosition = this.scrollPosition + this.spritePosition; // 小人在时间线上的绝对位置
+      const spriteAbsolutePosition = this.scrollPosition + this.spritePosition;
+
       this.timeLine.forEach((node, index) => {
         const nodePosition = index * this.nodeSpacing;
 
-        // 判断小人是否触碰到节点（简单范围判断）
+        // 小人和时间节点的位置差
         if (Math.abs(spriteAbsolutePosition - nodePosition) < 20) {
           this.currentMessage = `${node.year}: ${node.event}`;
+          // 检查是否是随机目标时间点
+          if (index === this.randomTargetIndex && !this.showBubble) {
+            this.triggerBubble(node);
+          }
         }
       });
+    },
+    triggerBubble(node) {
+      this.bubbleMessage = `原来，这就是“${this.human.name}”的一生`;
+      this.showBubble = true;
+
+      setTimeout(() => {
+        this.showBubble = false; // 气泡显示 3 秒后隐藏
+        this.setRandomTarget(); // 重置随机目标
+      }, 3000);
+    },
+    // 关闭弹窗的方法
+    closeModal() {
+      this.$emit("close"); // 向父组件发送关闭事件
     },
   },
 };
 </script>
 
 <style scoped>
-.container {
+@import '@/assets/font/font.css';
+.walk-modal {
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* 弹窗层级 */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.walk-container {
   position: relative;
-  width: 800px; /* 可视区域宽度 */
-  height: 600px;
-  overflow: hidden; /* 超出部分隐藏 */
-  border: 2px solid #ddd;
-  margin: 50px auto;
-  background-color: #f8f8f8;
+  background: url('@/assets/RedR.jpg') no-repeat center center;
+  padding: 20px;
+  border-radius: 10px;
+  width: 800px;
+  height: 400px;
+  z-index: 1; /* 保证内容显示在弹窗背景层上方 */
+  overflow: hidden; /* 确保内容不会溢出 */
 }
 
 .time-line-container {
   position: absolute;
-  top: 500px; /* 时间线居中 */
+  top: 400px; /* 时间线垂直居中 */
   height: 2px;
   background-color: black;
   white-space: nowrap;
@@ -164,17 +239,17 @@ export default {
 
 .time-node {
   position: absolute;
-  top: -10px; /* 调整节点位置 */
+  top: -10px;
   width: 10px;
   height: 10px;
-  background-color: red;
+  background-color: #b71c1c;
   border-radius: 50%;
 }
 
 .circle {
   width: 15px;
   height: 15px;
-  background-color: red;
+  background-color: #b71c1c;
   border-radius: 50%;
   border: 2px solid white;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -188,10 +263,9 @@ export default {
   text-align: center;
 }
 
-/* 小人 */
 .sprite {
   position: absolute;
-  bottom: 98px; /* 小人踩在线上 */
+  bottom: 50px;
   width: 102px;
   height: 148px;
   background-image: url(https://atomicrobotdesign.com/blog_media/css-sprite/standing-right.png);
@@ -218,14 +292,41 @@ export default {
 }
 
 .message-box {
+  font-family: 'HelveticaNeue', serif;
   position: fixed;
-  bottom: 20px;
+  top: 200px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: black;
   padding: 10px 20px;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: transparent;
+  color: #b71c1c;
+  border: none;
+  border-radius: 5px;
+}
+.speech-bubble {
+  position: absolute;
+  top: -50px; /* 气泡在小人头上方 */
+  left: 50%;
+  transform: translateX(-20%);
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+  border: 0.5px solid black;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 14px;
+  white-space: nowrap;
+  z-index: 2;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
