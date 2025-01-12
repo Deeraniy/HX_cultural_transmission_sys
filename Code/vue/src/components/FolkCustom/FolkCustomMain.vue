@@ -5,7 +5,7 @@
       <div class="menu-title">
         <h2>非遗民俗分析</h2>
       </div>
-
+      <el-button class="back-btn" @click="goBack">|返回</el-button>
       <!-- 菜单区域 -->
       <el-menu
           class="el-menu-demo"
@@ -31,11 +31,25 @@
 
 <script lang="ts" setup>
 import FolkCustom from "@/components/FolkCustom/FolkCustom.vue";
+import router from '@/router'
+const goBack = () => {
+  router.go(-1);  // 返回上一页
+}
 </script>
 
 <style>
 
-
+.back-btn {
+  font-family: 'HelveticaNeue', serif;
+  background-color: transparent !important;
+  color: #fff8f0 !important;
+  margin-bottom: 15px;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 720px; /* 给按钮添加右边距 */
+}
 .el-menu--popup .el-menu-item,
 .el-menu .el-menu-item {
   background: rgba(255, 255, 255, 0.2) !important;
@@ -104,7 +118,7 @@ import FolkCustom from "@/components/FolkCustom/FolkCustom.vue";
   font-family: 'HelveticaNeue', serif;
   font-size: 30px;
   color: #fff8f0;
-  margin-right: 810px;
+  margin-right: 50px;
 }
 
 .el-menu-demo {
