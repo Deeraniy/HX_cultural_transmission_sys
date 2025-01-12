@@ -12,19 +12,22 @@
 
       <div id="table" >
         <div style=" color: #333; white-space: pre-wrap;">
-          <p style="text-align: center">
-            城市传播指数
-
+          <p style="text-align: center;font-size: 28px">
+            <b>非遗民俗传播指数</b>
             <br/>
-            Urban Communication Index
-          </p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该模块主要通过跟踪各个城市在国外社交媒体的官方账号所发布的信息（包括视频、文章的阅读转发点赞等数据），从而通过这些信息用特定的方法计算出一个可以反映该城市在国际上传播的效果和影响力的指数。
-          This module mainly tracks the information published by each city's official accounts on foreign social media (including videos, tweetss, reads, forwards, likes, etc.), so as to calculate an index that can reflect the city's international communication effect and influence through this information.
+            <b>Folk Intangible Cultural Heritage Communication Index</b>
 
+          </p>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该模块主要通过跟踪各个非遗民俗项目在国内社交媒体的官方账号所发布的信息（包括视频、文章的阅读转发点赞等数据），从而通过这些信息用特定的方法计算出一个可以反映该非遗民俗项目在国际上传播的效果和影响力的非遗民俗传播指数。
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This module mainly tracks the information published by the official accounts of various Intangible Cultural Heritage folk projects on domestic social media (including videos, tweets, reads, forwards, likes, etc.), and calculates the Folk Intangible Cultural Heritage Communication Index, which reflects the international communication effect and influence of these projects through this information.</p>
         </div>
       <el-table :data="paginatedData" border style="width: 100%;">
-        <el-table-column prop="id" label="ID" width="180" />
-        <el-table-column prop="img" label="PIC" width="180">
+        <el-table-column   label="id" width="180">
+        <template v-slot="scope">
+          {{scope.$index + 1 + (currentPage - 1) * pageSize }}
+        </template>
+        </el-table-column>
+        <el-table-column prop="img" label="img" width="180">
           <template #default="scope">
             <img :src="scope.row.img" alt="image" style="width: 100px; height: auto;" />
           </template>
@@ -35,13 +38,13 @@
         <el-table-column prop="socialMediaScore" sortable label="社交媒体综合评分" />
       </el-table>
       <el-pagination
-          v-model:current-page="currentPage3"
-          v-model:page-size="pageSize3"
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
           :size="size"
           :disabled="disabled"
           :background="background"
           layout="prev, pager, next, jumper"
-          :total="1000"
+          :total="tableData.length"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           style="margin-left: 500px"
@@ -55,7 +58,6 @@
 
 <script lang="ts" setup>
 import {ref, onMounted, computed} from 'vue'
-import FolkCustom from './FolkCustom.vue'
 const activeIndex = ref('2')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -64,6 +66,7 @@ import { h } from 'vue'
 import type { VNode } from 'vue'
 import type {ComponentSize, TableColumnCtx} from 'element-plus'
 import Header from "@/components/FolkCustom/header.vue";
+import FolkAPI from "@/api/folk";
 
 interface Product {
   id: string
@@ -79,13 +82,34 @@ interface SummaryMethodProps<T = Product> {
 }
 const background = ref(false)
 const disabled = ref(false)
-const currentPage3 = ref(1)
-const pageSize3 = ref(15)
+const currentPage = ref(1)
+const pageSize = ref(15)
 const size = ref<ComponentSize>('default')
 
+const tableData=ref([])
+async function fetchFolkCustomData() {
+  try {
+    const response = await FolkAPI.getFolkInfluence();
+    tableData.value = response.data.map(item => ({
+      name: item.folk_name||'',
+      img: item.image_url|| '',
+      internationalIndex: item.propagation,
+      externalPromotion: item.publicity,
+      socialMediaScore: item.social_media,
+    }));
+    console.log('Folk Influence data:', tableData.value);
+  } catch (error) {
+    console.error('Error fetching folk influence data:', error);
+    // 处理错误
+  }
+}
+
+onMounted(() => {
+  fetchFolkCustomData();
+});
 const paginatedData = computed(() => {
-  const start = (currentPage3.value - 1) * pageSize3.value
-  const end = currentPage3.value * pageSize3.value
+  const start = (currentPage.value - 1) * pageSize.value
+  const end = currentPage.value * pageSize.value
   return tableData.value.slice(start, end)
 })
 
@@ -123,7 +147,7 @@ const getSummaries = (param: SummaryMethodProps) => {
 
   return sums
 }
-
+/*
 const tableData = ref([
   {
     id: "1",
@@ -165,7 +189,7 @@ const tableData = ref([
     externalPromotion: 74.5,
     socialMediaScore: 78.6,
   },
-])
+])*/
 </script>
 
 <style lang="scss" scoped>
