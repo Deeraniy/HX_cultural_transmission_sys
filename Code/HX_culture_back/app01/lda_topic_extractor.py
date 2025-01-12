@@ -373,3 +373,119 @@ def lda_analyze_food(request):
             cursor.close()
         if 'conn' in locals():
             conn.close()
+            
+def lda_analyze_folk(request):
+    """对食品评论进行LDA主题分析"""
+    try:
+        folk_name = request.GET.get('name')
+        if not folk_name:
+            return JsonResponse({
+                'status': 'error',
+                'message': '非遗民俗名称不能为空'
+            }, status=400)
+
+        # 数据库连接
+        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+                             db='hx_cultural_transmission_sys', charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+        # 获取文学作品ID
+        cursor.execute("SELECT folk_id FROM folk WHERE folk_name=%s", (folk_name,))
+        result = cursor.fetchone()
+        if not result:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'未找到非遗民俗: {folk_name}'
+            }, status=404)
+        
+        folk_id = result['folk_id']
+
+        # 获取该食品的所有评论
+        sql_query = "SELECT comment_text FROM user_comment_folk WHERE folk_id=%s"
+        cursor.execute(sql_query, (folk_id,))
+        comment_list = cursor.fetchall()
+
+        if not comment_list:
+            return JsonResponse([])
+
+        # 准备数据
+        data = {
+            '评论内容': [comment['comment_text'] for comment in comment_list]
+        }
+
+        df = pd.DataFrame(data).drop_duplicates().rename(columns={
+            '评论内容': 'text'
+        })
+
+        # 设置停用词
+        stop_words_set = set(['你', '我'])
+        
+        # 文本预处理：去重、去缺失、分词
+        df['cut'] = (
+            df['text']
+            .apply(lambda x: str(x))
+            .apply(lambda x: re.sub(pattern, ' ', x))
+            .apply(lambda x: " ".join([word for word in jieba.lcut(x) if word not in stop_words_set]))
+        )
+
+        # 构造 tf-idf
+        tf_idf_vectorizer = TfidfVectorizer()
+        tf_idf = tf_idf_vectorizer.fit_transform(df['cut'])
+
+        # LDA 模型
+        lda = LatentDirichletAllocation(
+            n_components=n_topics,
+            max_iter=50,
+            learning_method='online',
+            learning_offset=50,
+            random_state=0
+        )
+
+        # 训练 LDA 模型
+        lda.fit(tf_idf)
+
+        # 获取主题词
+        top_words_df = top_words_data_frame(lda, tf_idf_vectorizer, n_top_words)
+        top_words_array = top_words_df.values
+
+        # 对主题词进行情感分析
+        json_data = []
+        for topic_words in top_words_array:
+            json_item = process_comments(topic_words)
+            json_data.append(json_item)
+
+        # 计算词频
+        X = tf_idf.toarray()
+        frequency_data = {}
+        for topic_words in top_words_array:
+            freq = calculate_word_frequency(df['text'].tolist(), topic_words)
+            frequency_data.update(freq)
+
+        # 准备返回结果
+        keys_list = list(frequency_data.keys())
+        values_list = list(frequency_data.values())
+        sentiments_json = process_comments(keys_list)
+        data = sentiments_json
+        sentiments_list = [result['sentiment'] for result in data]
+        
+        result = []
+        for key, value, sentiment in zip(keys_list, values_list, sentiments_list):
+            result.append({
+                'topic': key,
+                'frequency': value,
+                'sentiment': sentiment
+            })
+        
+        return JsonResponse(result, safe=False)
+
+    except Exception as e:
+        logger.error(f"处理非遗民俗 {folk_name} 的主题分析时出错: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
