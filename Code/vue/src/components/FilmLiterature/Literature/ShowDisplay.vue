@@ -4,8 +4,7 @@
       <div class="attraction-container">
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">2024美国总统hello8</span>
-          <span class="scroll-bar-text">2025美国总统hello9</span>
+          <span class="scroll-bar-text">湖湘表演艺术是湖南省文化的重要组成部分，融合了湖南的历史、风俗、民间传统及地方特色，涵盖了多种表现形式，如戏曲、舞蹈、曲艺、民间艺术等。湖湘表演艺术不仅承载了丰富的文化内涵，还在历史的长河中形成了独特的艺术风格。</span>
         </div>
         <!-- 图片轮播（垂直方向） -->
         <el-carousel height="400px" direction="vertical" :autoplay="false" v-model:active-index="currentIndex" @change="onCarouselChange">
@@ -146,7 +145,7 @@ onMounted(() => {
   white-space: nowrap; /* 防止文本换行 */
   display: inline-block;
   padding-right: 100%; /* 保证文本宽度足够 */
-  animation: scroll-text 20s linear infinite; /* 文字滚动动画 */
+  animation: scroll-text 30s linear infinite; /* 文字滚动动画 */
 }
 
 /* 滚动条的动画效果 */
