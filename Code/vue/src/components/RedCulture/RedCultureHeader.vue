@@ -9,11 +9,8 @@
             :ellipsis="false"
             @select="handleSelect"
         >
-          <el-menu-item index="2">情感分析与预测</el-menu-item>
-          <el-menu-item index="3">传播策略生成</el-menu-item>
-          <el-menu-item index="4">风景名胜3D展示</el-menu-item>
-          <el-menu-item index="5">社交分享信息展示</el-menu-item>
-          <el-menu-item index="6">沉浸式故事叙述</el-menu-item>
+          <el-menu-item index="2">红色人物展示</el-menu-item>
+          <el-menu-item index="3">智问智答</el-menu-item>
           <el-sub-menu index="1">
             <template #title>
               <span class="work">工作台</span>
@@ -31,7 +28,9 @@
         </el-menu>
       </div>
       <el-main>
-        <Carousel class="carousel-container"/>
+        <!-- 判断是否显示 Carousel 或 RedCultureMain -->
+        <Carousel v-if="activeIndex === '2'" class="carousel-container" />
+        <RedCultureMain v-else class="red-culture-main" />
       </el-main>
     </div>
   </template>

@@ -27,6 +27,12 @@ const routes = [
         component:() => import('./components/Three.vue')
     },
     {
+        path: '/walk/:title',
+        name: 'Walk',
+        component:() => import('./components/RedCulture/Walk.vue'),
+        props: true // 使得路由参数自动作为 prop 传递给组件
+    },
+    {
         path: '/filmLiterature',
         component:() => import('./components/FilmLiterature/FilmLiteratureMain.vue')
     },

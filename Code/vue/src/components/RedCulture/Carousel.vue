@@ -9,16 +9,19 @@
     </div>
     <!-- 第二排图片 -->
     <div class="images-leaning">
-      <div v-for="(image, index) in currentImages" :key="index" :style="getImageStyle(index)">
+      <div v-for="(image, index) in currentImages" :key="index" :style="getImageStyle(index)" @click="openWalkModal(image)">
         <img :src="image.src" :alt="image.title" />
       </div>
       <p class="quote">可以强天下而保中国者，莫湘人若也</p>
     </div>
+    <!-- WalkModal 弹窗 -->
+    <Walk v-if="showWalkModal" :human="selectedHuman" @close="closeWalkModal" />
   </div>
 </template>
 
 <script>
 import Slider from './Slider.vue';
+import Walk from './Walk.vue';
 import 任弼时 from '@/assets/Red/任弼时.jpg';
 import 何叔衡 from '@/assets/Red/何叔衡.jpg';
 import 刘少奇 from '@/assets/Red/刘少奇.jpg';
@@ -29,9 +32,10 @@ import 毛泽东 from '@/assets/Red/毛泽东.jpg';
 import 罗荣桓 from '@/assets/Red/罗荣桓.jpg';
 import 贺龙 from '@/assets/Red/贺龙.jpg';
 import 雷锋 from '@/assets/Red/雷锋.jpg';
+import BookFlipModal from "@/components/FilmLiterature/Literature/BookFlipModel.vue";
 
 export default {
-  components: { Slider },
+  components: { BookFlipModal, Slider, Walk },
   data() {
     return {
       // 轮播图的图片内容
@@ -56,7 +60,10 @@ export default {
         { src: 雷锋, title: '雷锋' }
       ],
       currentPage: 0, // 当前页
-      pageSize: 5 // 每页显示五个
+      pageSize: 5, // 每页显示五个
+      // 控制 Walk 弹窗
+      showWalkModal: false,
+      selectedHuman: null
     };
   },
   computed: {
@@ -80,6 +87,25 @@ export default {
         image: image.src,
         title: image.title
       }));
+    },
+    // 跳转到 Walk.vue 并传递图片的名字
+    openWalkModal(image) {
+      const humanData = {
+        name: image.title,
+        image: image.src,
+        bio: `${image.title} 的简要介绍内容。`, // 你可以根据实际需求替换为详细的历史内容
+        timeline: [
+          { year: '1921', event: '中国共产党成立' },
+          { year: '1931', event: '中国工农红军长征' },
+          { year: '1949', event: '中华人民共和国成立' }
+        ]
+      };
+      this.selectedHuman = humanData;
+      this.showWalkModal = true; // 显示 Walk 弹窗
+    },
+    // 关闭 Walk 弹窗
+    closeWalkModal() {
+      this.showWalkModal = false;
     },
     // 计算图片样式
     getImageStyle(index) {
@@ -129,7 +155,6 @@ export default {
   }
 };
 </script>
-
 
 <style>
 @import '@/assets/font/font.css';

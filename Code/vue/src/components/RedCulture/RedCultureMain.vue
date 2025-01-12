@@ -4,13 +4,13 @@
       <iframe src="http://127.0.0.1:7860" class="custom-iframe"></iframe>
     </div>
     </el-main>
-    
+
   </template>
-    
+
   <script lang="ts" setup>
   import { ref } from 'vue'
   </script>
-    
+
   <style>
   /* 使用 flexbox 实现居中 */
   .iframe-container {
@@ -21,7 +21,7 @@
     height: 100vh; /* 设置容器高度为视口高度 */
     margin: 0;
   }
-  
+
   /* 自定义 iframe 样式 */
   .custom-iframe {
     width: 1000px;
@@ -85,4 +85,3 @@ html, body {
   flex-direction: column;
 }
   </style>
-  
