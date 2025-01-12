@@ -4,26 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="红色文化界面">
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/json/任弼时.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/json/何叔衡.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/json/刘少奇.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/json/向警予.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/json/彭德怀.json" afterDir="false" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="所有导航栏“返回”按钮添加">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/Carousel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/Carousel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/Walk.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/Walk.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/json/林伯渠时间顺序.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/json/林伯渠.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/json/毛泽东时间顺序.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/json/毛泽东.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/json/罗荣恒时间顺序.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/json/罗荣桓.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/json/贺龙时间顺序.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/json/贺龙.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/json/雷锋时间顺序.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/json/雷锋.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +115,7 @@
       <workItem from="1736469344910" duration="37069000" />
       <workItem from="1736555277985" duration="12653000" />
       <workItem from="1736605608675" duration="3140000" />
-      <workItem from="1736642065952" duration="23267000" />
+      <workItem from="1736642065952" duration="27021000" />
     </task>
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
       <option name="closed" value="true" />
@@ -322,7 +309,39 @@
       <option name="project" value="LOCAL" />
       <updated>1736662769937</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="红色文化展示界面">
+      <option name="closed" value="true" />
+      <created>1736668893379</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1736668893379</updated>
+    </task>
+    <task id="LOCAL-00026" summary="红色文化展示界面">
+      <option name="closed" value="true" />
+      <created>1736668917792</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1736668917792</updated>
+    </task>
+    <task id="LOCAL-00027" summary="红色文化菜单">
+      <option name="closed" value="true" />
+      <created>1736669370297</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1736669370297</updated>
+    </task>
+    <task id="LOCAL-00028" summary="所有导航栏“返回”按钮添加">
+      <option name="closed" value="true" />
+      <created>1736674490869</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1736674490869</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,7 +379,10 @@
     <MESSAGE value="首页路由" />
     <MESSAGE value="非遗民俗菜单栏" />
     <MESSAGE value="红色文化界面" />
-    <option name="LAST_COMMIT_MESSAGE" value="红色文化界面" />
+    <MESSAGE value="红色文化展示界面" />
+    <MESSAGE value="红色文化菜单" />
+    <MESSAGE value="所有导航栏“返回”按钮添加" />
+    <option name="LAST_COMMIT_MESSAGE" value="所有导航栏“返回”按钮添加" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
