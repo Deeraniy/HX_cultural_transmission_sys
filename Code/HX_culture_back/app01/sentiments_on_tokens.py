@@ -82,7 +82,7 @@ def process_single_token(token, conn, cursor, max_retries=3):
             if sentiment_label and confidence:
                 # 更新数据库
                 update_sql = """
-                    UPDATE liter_token 
+                    UPDATE food_token 
                     SET sentiment = %s, sentiment_confidence = %s 
                     WHERE token_id = %s
                 """
@@ -112,7 +112,7 @@ def process_single_token(token, conn, cursor, max_retries=3):
     return False
 
 def analyze_token_sentiments():
-    """对liter_token表中的词语进行情感分析"""
+    """对food_token表中的词语进行情感分析"""
     try:
         conn = pymysql.connect(
             host='120.233.26.237', 
@@ -127,7 +127,7 @@ def analyze_token_sentiments():
 
         cursor.execute("""
             SELECT token_id, token_name 
-            FROM liter_token 
+            FROM food_token 
             WHERE sentiment IS NULL
         """)
         tokens = cursor.fetchall()
