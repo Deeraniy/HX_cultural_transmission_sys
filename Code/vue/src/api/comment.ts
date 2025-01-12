@@ -16,6 +16,8 @@ class CommentAPI {
             urlPath = 'spot_get_comment_list';
         } else if (type === 2) {
             urlPath = 'liter_get_comment_list';
+        } else if (type === 3) {
+            urlPath = 'food_get_comment_list';
         }
         console.log("urlPath after logic:", urlPath);  // 确保 urlPath 被正确赋值
         return request({
@@ -37,6 +39,8 @@ class CommentAPI {
             urlPath = 'spot_get_comment_list_recent';
         } else if (type === 2) {
             urlPath = 'liter_get_comment_list_recent';
+        } else if (type === 3) {
+            urlPath = 'food_get_comment_list_recent';
         }
 
         return request({
@@ -58,6 +62,8 @@ class CommentAPI {
             urlPath = 'spot_get_comment_time_span';
         } else if (type === 2) {
             urlPath = 'liter_get_comment_time_span';
+        } else if (type === 3) {
+            urlPath = 'food_get_comment_time_span';
         }
 
         return request({
@@ -79,6 +85,8 @@ class CommentAPI {
             urlPath = 'spot_get_comment_count_last_12_months';
         } else if (type === 2) {
             urlPath = 'liter_get_comment_count_last_12_months';
+        } else if (type === 3) {
+            urlPath = 'food_get_comment_count_last_12_months';
         }
 
         return request({
@@ -100,6 +108,8 @@ class CommentAPI {
             urlPath = 'spot_get_comment_ip_count';
         } else if (type === 2) {
             urlPath = 'liter_get_comment_ip_count';
+        }else if (type === 3) {
+            urlPath = 'food_get_comment_ip_count';
         }
 
         return request({
@@ -121,6 +131,8 @@ class CommentAPI {
             urlPath = 'spot_get_average_score_by_bi_month';
         } else if (type === 2) {
             urlPath = 'liter_get_average_score_by_bi_month';
+        } else if (type === 3) {
+            urlPath = 'food_get_average_score_by_bi_month';
         }
 
         return request({
