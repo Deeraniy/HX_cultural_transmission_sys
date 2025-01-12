@@ -2,7 +2,6 @@
   <el-main>
     <Lunbo/>
     <div class="hunan-tourist-attractions">
-
       <!-- 搜索框 -->
       <div class="search-container">
         <input v-model="searchQuery" type="text" placeholder="搜索民俗文化..." class="search-box" />
@@ -23,7 +22,7 @@
           </div>
           <!-- 在每个卡片下方放按钮 -->
           <div class="card-buttons">
-            <button class="emotion-btn">情感分析</button>
+            <button class="emotion-btn" @click="goToPlaceDetail(book.name)">情感分析</button>
           </div>
         </div>
       </div>
@@ -47,54 +46,50 @@
         <el-button @click="dialogVisible = false">关闭</el-button>
       </span>
     </el-dialog>
-
   </el-main>
 </template>
 
-
 <script lang="ts" setup>
-import {computed, onMounted, ref} from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router'; // 导入 useRouter
 import { ElDialog, ElButton } from 'element-plus';
-import Lunbo from './LunBo.vue'
+import Lunbo from './LunBo.vue';
 import FolkAPI from "@/api/folk";
+
 // 民俗文化数据
-/*const books = ref([
-  { name: '汨罗江端午习俗', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '湘昆', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '湘剧', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '皮影戏', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '湘绣', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '赶尸', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '湖南傩戏', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '龙船调', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { name: '打铁花', image: '/assets/book9.jpg' },
-  { name: '毛笔字', image: '/assets/book10.jpg' },
-  { name: '竹编', image: '/assets/book11.jpg' },
-  { name: '糖画', image: '/assets/book12.jpg' },
-  { name: '湘绣', image: '/assets/book13.jpg' },
-  { name: '岳阳楼', image: '/assets/book14.jpg' },
-  { name: '橘子洲', image: '/assets/book15.jpg' },
-]);*/
-const books=ref([])
+const books = ref([]);
+
 async function fetchFolkCustomData() {
   try {
     const response = await FolkAPI.getFolkCustomAPI();
     books.value = response.data.map(item => ({
-      name: item.folk_name||'',
-      image: item.image_url|| '',
-      description: item.description|| '',
-      rank:item.folk_rank||''
+      name: item.folk_name || '',
+      image: item.image_url || '',
+      description: item.description || '',
+      rank: item.folk_rank || ''
     }));
     console.log('FolkCustom data:', books.value);
   } catch (error) {
     console.error('Error fetching folk data:', error);
-    // 处理错误
   }
 }
 
 onMounted(() => {
   fetchFolkCustomData();
 });
+
+// 跳转到详细页面并传递参数
+const router = useRouter();
+const goToPlaceDetail = (attractionName) => {
+  router.push({
+    path: '/detail',
+    query: {
+      name: attractionName,
+      value: 4, // 这里是你要求的值
+      theme: 1  // 新增 theme 参数
+    }
+  });
+};
 
 // 搜索查询
 const searchQuery = ref('');
@@ -145,6 +140,7 @@ const showDetails = (book) => {
   dialogVisible.value = true;
 };
 </script>
+
 
 
 
