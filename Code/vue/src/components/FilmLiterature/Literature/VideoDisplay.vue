@@ -4,8 +4,7 @@
       <div class="attraction-container">
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">2024美国总统hello8</span>
-          <span class="scroll-bar-text">2025美国总统hello9</span>
+          <span class="scroll-bar-text">湖湘新媒体艺术作为湖湘文化与现代科技的结合体，展现了湖南地区在当代艺术领域的创新与活力。它不仅是湖湘文化的新表达方式，也是现代艺术在地方文化中的重要实践。随着技术的不断进步和艺术形式的多元化，湖湘新媒体艺术的未来充满了无限的可能性，必将在全球艺术舞台上占据一席之地。</span>
         </div>
         <!-- 图片轮播（垂直方向） -->
         <el-carousel height="400px" direction="vertical" :autoplay="false" v-model:active-index="currentIndex" @change="onCarouselChange" class="carousel-right">
