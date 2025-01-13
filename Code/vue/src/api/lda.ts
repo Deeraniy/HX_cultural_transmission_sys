@@ -13,6 +13,10 @@ class LdaAPI {
             urlPath = 'spot_lda_analyze';
         } else if (type === 2) {
             urlPath = 'liter_lda_analyze';
+        } else if (type === 3) {
+            urlPath = 'food_lda_analyze';
+        } else if (type === 4) {
+            urlPath = 'folk_lda_analyze';
         }
 
         return request({

@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="首页美化">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="所有导航栏“返回”按钮添加">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +79,7 @@
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components\FilmLiterature\Literature" />
@@ -112,7 +113,9 @@
       <workItem from="1736387665227" duration="617000" />
       <workItem from="1736391193427" duration="30161000" />
       <workItem from="1736469344910" duration="37069000" />
-      <workItem from="1736555277985" duration="3081000" />
+      <workItem from="1736555277985" duration="12653000" />
+      <workItem from="1736605608675" duration="3140000" />
+      <workItem from="1736642065952" duration="27021000" />
     </task>
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
       <option name="closed" value="true" />
@@ -258,7 +261,87 @@
       <option name="project" value="LOCAL" />
       <updated>1736523355250</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="首页导航栏美化">
+      <option name="closed" value="true" />
+      <created>1736558932952</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1736558932952</updated>
+    </task>
+    <task id="LOCAL-00020" summary="首页导航栏美化">
+      <option name="closed" value="true" />
+      <created>1736558976473</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1736558976473</updated>
+    </task>
+    <task id="LOCAL-00021" summary="美食旋转木马微调">
+      <option name="closed" value="true" />
+      <created>1736562407355</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1736562407355</updated>
+    </task>
+    <task id="LOCAL-00022" summary="首页路由">
+      <option name="closed" value="true" />
+      <created>1736566803707</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1736566803707</updated>
+    </task>
+    <task id="LOCAL-00023" summary="非遗民俗菜单栏">
+      <option name="closed" value="true" />
+      <created>1736568411437</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1736568411437</updated>
+    </task>
+    <task id="LOCAL-00024" summary="红色文化界面">
+      <option name="closed" value="true" />
+      <created>1736662769936</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1736662769937</updated>
+    </task>
+    <task id="LOCAL-00025" summary="红色文化展示界面">
+      <option name="closed" value="true" />
+      <created>1736668893379</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1736668893379</updated>
+    </task>
+    <task id="LOCAL-00026" summary="红色文化展示界面">
+      <option name="closed" value="true" />
+      <created>1736668917792</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1736668917792</updated>
+    </task>
+    <task id="LOCAL-00027" summary="红色文化菜单">
+      <option name="closed" value="true" />
+      <created>1736669370297</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1736669370297</updated>
+    </task>
+    <task id="LOCAL-00028" summary="所有导航栏“返回”按钮添加">
+      <option name="closed" value="true" />
+      <created>1736674490869</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1736674490869</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -291,7 +374,15 @@
     <MESSAGE value="情感分析页面刷新问题解决" />
     <MESSAGE value="民俗轮播图微调" />
     <MESSAGE value="首页美化" />
-    <option name="LAST_COMMIT_MESSAGE" value="首页美化" />
+    <MESSAGE value="首页导航栏美化" />
+    <MESSAGE value="美食旋转木马微调" />
+    <MESSAGE value="首页路由" />
+    <MESSAGE value="非遗民俗菜单栏" />
+    <MESSAGE value="红色文化界面" />
+    <MESSAGE value="红色文化展示界面" />
+    <MESSAGE value="红色文化菜单" />
+    <MESSAGE value="所有导航栏“返回”按钮添加" />
+    <option name="LAST_COMMIT_MESSAGE" value="所有导航栏“返回”按钮添加" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

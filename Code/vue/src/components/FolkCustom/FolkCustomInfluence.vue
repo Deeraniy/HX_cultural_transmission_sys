@@ -1,47 +1,48 @@
 <template>
   <div class="whole">
     <div class="total">
-      <!-- 固定显示的标题，不作为菜单项 -->
-      <h2 class="fixed-title">非遗民俗分析界面</h2>
-
-      <!-- 菜单区域 -->
-      <Header :activeIndex="activeIndex"/>
     </div>
     <el-main>
-      <img src="@/assets/folkCustom/湖湘非遗.png" style="width: 100%;height: 500px;opacity: 0.6;"/>
-
+      <img src="@/assets/folkCustom/湖湘非遗.png" style="width: 100%;height: 700px;opacity: 0.6;"/>
+      <!-- 左右图片叠加 -->
+      <img src="@/assets/folkCustom/left.png" class="left-image" />
+      <img src="@/assets/folkCustom/right.png" class="right-image" />
       <div id="table" >
-        <div style=" color: #333; white-space: pre-wrap;">
-          <p style="text-align: center">
-            城市传播指数
-
+        <div style=" color: #333; white-space: pre-wrap;margin-left: 20px;margin-right: 20px;">
+          <p style="text-align: center;font-size: 38px">
+            <b>非遗民俗传播指数</b>
             <br/>
-            Urban Communication Index
-          </p>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该模块主要通过跟踪各个城市在国外社交媒体的官方账号所发布的信息（包括视频、文章的阅读转发点赞等数据），从而通过这些信息用特定的方法计算出一个可以反映该城市在国际上传播的效果和影响力的指数。
-          This module mainly tracks the information published by each city's official accounts on foreign social media (including videos, tweetss, reads, forwards, likes, etc.), so as to calculate an index that can reflect the city's international communication effect and influence through this information.
+            <b>Folk Intangible Cultural Heritage Communication Index</b>
 
+          </p>
+          <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;该模块主要通过跟踪各个非遗民俗项目在国内社交媒体的官方账号所发布的信息（包括视频、文章的阅读转发点赞等数据），从而通过这些信息用特定的方法计算出一个可以反映该非遗民俗项目在国际上传播的效果和影响力的非遗民俗传播指数。</p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This module mainly tracks the information published by the official accounts of various Intangible Cultural Heritage folk projects on domestic social media (including videos, tweets, reads, forwards, likes, etc.), and calculates the Folk Intangible Cultural Heritage Communication Index, which reflects the international communication effect and influence of these projects through this information.</p>
         </div>
-      <el-table :data="paginatedData" border style="width: 100%;">
-        <el-table-column prop="id" label="ID" width="180" />
-        <el-table-column prop="img" label="PIC" width="180">
-          <template #default="scope">
-            <img :src="scope.row.img" alt="image" style="width: 100px; height: auto;" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="民俗" />
-        <el-table-column prop="internationalIndex" sortable label="国际传播系数" />
-        <el-table-column prop="externalPromotion" sortable label="对外宣传报道力度" />
-        <el-table-column prop="socialMediaScore" sortable label="社交媒体综合评分" />
-      </el-table>
+        <el-table :data="paginatedData" border style="width: 80%; margin: 0 auto; font-size: 18px;">
+          <el-table-column label="id" width="180">
+            <template v-slot="scope">
+              {{ scope.$index + 1 + (currentPage - 1) * pageSize }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="img" label="img" width="180">
+            <template #default="scope">
+              <img :src="scope.row.img" alt="image" style="width: 100px; height: auto;" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="name" label="民俗" />
+          <el-table-column prop="internationalIndex" sortable label="国际传播系数" />
+          <el-table-column prop="externalPromotion" sortable label="对外宣传报道力度" />
+          <el-table-column prop="socialMediaScore" sortable label="社交媒体综合评分" />
+        </el-table>
+
       <el-pagination
-          v-model:current-page="currentPage3"
-          v-model:page-size="pageSize3"
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
           :size="size"
           :disabled="disabled"
           :background="background"
           layout="prev, pager, next, jumper"
-          :total="1000"
+          :total="tableData.length"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           style="margin-left: 500px"
@@ -55,7 +56,6 @@
 
 <script lang="ts" setup>
 import {ref, onMounted, computed} from 'vue'
-import FolkCustom from './FolkCustom.vue'
 const activeIndex = ref('2')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -63,7 +63,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 import { h } from 'vue'
 import type { VNode } from 'vue'
 import type {ComponentSize, TableColumnCtx} from 'element-plus'
-import Header from "@/components/FolkCustom/header.vue";
+import FolkAPI from "@/api/folk";
 
 interface Product {
   id: string
@@ -79,13 +79,34 @@ interface SummaryMethodProps<T = Product> {
 }
 const background = ref(false)
 const disabled = ref(false)
-const currentPage3 = ref(1)
-const pageSize3 = ref(15)
+const currentPage = ref(1)
+const pageSize = ref(15)
 const size = ref<ComponentSize>('default')
 
+const tableData=ref([])
+async function fetchFolkCustomData() {
+  try {
+    const response = await FolkAPI.getFolkInfluence();
+    tableData.value = response.data.map(item => ({
+      name: item.folk_name||'',
+      img: item.image_url|| '',
+      internationalIndex: item.propagation,
+      externalPromotion: item.publicity,
+      socialMediaScore: item.social_media,
+    }));
+    console.log('Folk Influence data:', tableData.value);
+  } catch (error) {
+    console.error('Error fetching folk influence data:', error);
+    // 处理错误
+  }
+}
+
+onMounted(() => {
+  fetchFolkCustomData();
+});
 const paginatedData = computed(() => {
-  const start = (currentPage3.value - 1) * pageSize3.value
-  const end = currentPage3.value * pageSize3.value
+  const start = (currentPage.value - 1) * pageSize.value
+  const end = currentPage.value * pageSize.value
   return tableData.value.slice(start, end)
 })
 
@@ -123,7 +144,7 @@ const getSummaries = (param: SummaryMethodProps) => {
 
   return sums
 }
-
+/*
 const tableData = ref([
   {
     id: "1",
@@ -165,7 +186,7 @@ const tableData = ref([
     externalPromotion: 74.5,
     socialMediaScore: 78.6,
   },
-])
+])*/
 </script>
 
 <style lang="scss" scoped>
@@ -183,9 +204,9 @@ const tableData = ref([
   --el-table-expanded-cell-bg-color: transparent;
 }
 #table {
-  background-image: url('@/assets/纹理5.jpg');
 }
 .total{
+  font-family: 'HelveticaNeue', serif !important;
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
@@ -193,6 +214,7 @@ const tableData = ref([
   border-bottom-right-radius: 30px; /* 右下圆角 */
 }
 .whole{
+  font-family: 'HelveticaNeue', serif !important;
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   background-size: cover;
@@ -205,7 +227,7 @@ const tableData = ref([
 .fixed-title {
   color: #fff8f0;
   font-family: 'HelveticaNeue', serif;
-  font-size: 45px;
+  font-size: 55px;
   margin: 0 16px;
 }
 
@@ -224,7 +246,7 @@ const tableData = ref([
 /* 覆盖菜单项文字样式 */
 .el-menu-item {
   color: #fff8f0 !important;
-  font-size: 20px;
+  font-size: 30px;
   font-family: 'HelveticaNeue', serif !important;
 }
 
@@ -247,5 +269,26 @@ const tableData = ref([
 .el-sub-menu__title.is-active {
   color: #ffd700 !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 新增样式：图片容器 */
+.image-container {
+  position: relative;
+}
+
+.left-image,
+.right-image {
+  position: absolute;
+  top: 60px; /* 上部距离 */
+  width: 380px; /* 图片宽度 */
+  height: auto; /* 保持图片比例 */
+}
+
+.left-image {
+  left: 20px; /* 左侧距离 */
+}
+
+.right-image {
+  right: 20px; /* 右侧距离 */
 }
 </style>

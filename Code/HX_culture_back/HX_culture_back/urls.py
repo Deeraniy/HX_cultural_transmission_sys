@@ -1,11 +1,11 @@
 from django.urls import path
 from django.urls import re_path as url
-from app01 import spot_sentiments_analyze, view, city, food
+from app01 import spot_sentiments_analyze, view, city, food, folk
 from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer
+from app01 import food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
@@ -30,32 +30,39 @@ urlpatterns = [
     url(r'^spot_sentiments_analyze/',spot_sentiments_analyze.sentiments_analyze),
     url(r'^liter_sentiments_analyze/',liter_sentiments_analyze.sentiments_analyze),
     url(r'^food_sentiments_analyze/',food_sentiments_analyze.sentiments_analyze),
+    url(r'^folk_sentiments_analyze/',folk_sentiments_analyze.sentiments_analyze),
     url(r'^spot_sentiments_result/',spot_sentiments_analyze.sentiments_result),
     url(r'^liter_sentiments_result/',liter_sentiments_analyze.sentiments_result),
     url(r'^food_sentiments_result/',food_sentiments_analyze.sentiments_result),
+    url(r'^folk_sentiments_result/',folk_sentiments_analyze.sentiments_result),
     url(r'^spot_generate_report/',spot_sentiments_analyze.generate_report),
     url(r'^liter_generate_report/',liter_sentiments_analyze.generate_report),
     url(r'^food_generate_report/',food_sentiments_analyze.generate_report),
+    url(r'^folk_generate_report/',folk_sentiments_analyze.generate_report),
     url(r'^spot_sentiments_count/',spot_sentiments_analyze.sentiments_result_total_count),
     url(r'^liter_sentiments_count/',liter_sentiments_analyze.sentiments_result_total_count),
     url(r'^food_sentiments_count/',food_sentiments_analyze.sentiments_result_total_count),
+    url(r'^folk_sentiments_count/',folk_sentiments_analyze.sentiments_result_total_count),
     url(r'^spot_get_word_frequency/',comment_tokenizer.get_word_frequency),
     url(r'^liter_get_word_frequency/',liter_comment_tokenizer.get_word_frequency),
     url(r'^food_get_word_frequency/',food_comment_tokenizer.get_word_frequency),
+    url(r'^folk_get_word_frequency/',folk_comment_tokenizer.get_word_frequency),
     url(r'^spot_lda_analyze/',lda_topic_extractor.lda_analyze),
     url(r'^liter_lda_analyze/',lda_topic_extractor.lda_analyze_literature),
     url(r'^food_lda_analyze/',lda_topic_extractor.lda_analyze_food),
+    url(r'^folk_lda_analyze/',lda_topic_extractor.lda_analyze_folk),
     url(r'^spot_get_comment_list/',comment.get_comment_list),
     url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
     url(r'^food_get_comment_list/',comment.get_comment_list_food),
+    url(r'^folk_get_comment_list/',comment.get_comment_list_folk),
     url(r'^spot_get_cloud/',cloud.get_cloud),
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
     url(r'^food_get_cloud/',cloud.get_cloud_food),
-
     url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_food_influence/',food.get_food_influence),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
+    url(r'^get_folkcustom/',folk.get_folkcustom_list),# get_folkcustom_list获取 folkcustom全部详细信息，把名称和图片等展示
+    url(r'^get_folk_influence/',folk.get_folk_influence)
     url(r'^get_all_node/',search.get_all_node)
-
 
 
 

@@ -4,8 +4,7 @@
       <div class="attraction-container">
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">2024美国总统hello8</span>
-          <span class="scroll-bar-text">2025美国总统hello9</span>
+          <span class="scroll-bar-text">湖湘文学以其丰富的文化内涵、浓郁的地方风情和鲜明的精神追求，成为中国文学的重要组成部分。它不仅是湖南人民文化身份的象征，也是中华文化多样性和丰富性的体现。湖湘文学承载着湖湘文化的悠久历史，并继续影响着当代中国文学的创作与发展。</span>
         </div>
         <!-- 图片轮播（垂直方向） -->
         <el-carousel height="400px" direction="vertical" :autoplay="false" v-model:active-index="currentIndex" @change="onCarouselChange">

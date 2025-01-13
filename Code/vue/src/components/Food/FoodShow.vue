@@ -4,6 +4,8 @@
       <!-- 左侧大标题 -->
       <div class="menu-title">
         <h2>美食文化分析</h2>
+        <!-- 返回按钮 -->
+        <el-button class="back-btn" @click="goBack">| 返回</el-button>
       </div>
 
       <!-- 菜单区域 -->
@@ -12,10 +14,9 @@
           mode="horizontal"
           :ellipsis="false"
           :router="true"
-      ><!--开启vue-router模式-->
-
+      >
         <!-- 首页菜单项 -->
-        <el-menu-item index="/food/home">首页</el-menu-item> <!--index配置跳转路径-->
+        <el-menu-item index="/food/home">首页</el-menu-item>
         <!-- 美食专区菜单项 -->
         <el-menu-item index="/food/detail">美食专区</el-menu-item>
         <!-- 传播效果分析菜单项 -->
@@ -24,55 +25,22 @@
     </div>
 
     <el-main>
-      <router-view/>
+      <router-view />
     </el-main>
   </div>
 </template>
 
 <script lang="ts" setup>
-// 这是传播效果分析组件
+// 引入 vue-router
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// 返回上一页的方法
+const goBack = () => {
+  router.go(-1)  // 返回上一页
+}
 </script>
-
-<style>
-
-
-.el-menu--popup .el-menu-item,
-.el-menu .el-menu-item {
-  background: rgba(255, 255, 255, 0.2) !important;
-  color: #fff8f0 !important;
-}
-
-.el-menu--popup .el-menu-item:hover,
-.el-menu .el-menu-item:hover {
-  background: rgba(255, 255, 255, 0.3) !important;
-  color: #ffd700 !important;
-}
-
-.el-popper__arrow {
-  display: none !important;
-}
-
-/* 新增的菜单项横向布局样式 */
-.horizontal-submenu .el-menu-item {
-  display: inline-block; /* 让菜单项横向排列 */
-  margin-right: 180px; /* 为子菜单项之间添加间距 */
-}
-
-.horizontal-submenu .el-menu-item:last-child {
-  margin-right: 0; /* 最后一个子项去除右边距 */
-}
-
-.horizontal-submenu .el-sub-menu__title {
-  padding: 0 10px; /* 子菜单标题内边距 */
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-/* 子菜单的弹出框样式 */
-.horizontal-submenu .el-sub-menu__popper {
-  display: none; /* 去除子菜单下拉显示 */
-}
-</style>
 
 <style scoped>
 @import '@/assets/font/font.css';
@@ -103,7 +71,11 @@
   font-family: 'HelveticaNeue', serif;
   font-size: 30px;
   color: #fff8f0;
-  margin-right: 810px;
+  margin-right: 730px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .el-menu-demo {
@@ -158,4 +130,17 @@
 :deep(.el-sub-menu) {
   background-color: transparent !important;
 }
+
+/* 返回按钮样式 */
+.back-btn {
+  font-family: 'HelveticaNeue', serif;
+  background-color: transparent !important;
+  color: #fff8f0 !important;
+  border: none;
+  font-size: 25px;
+
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
 </style>
