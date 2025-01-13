@@ -50,16 +50,87 @@
           </div>
         </el-carousel-item>
       </el-carousel>
-      <div class="iframe-section">
+      <div class="iframe-section" style="max-height: 1440px">
         <iframe
             src="../../static/index.html"
             width="100%"
             frameborder="0"
             scrolling="no"
-            sandbox="allow-scripts allow-popups"
+            sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-top-navigation"
 
         ></iframe>
       </div>
+
+      <div class="block4" style="display: flex;">
+        <div class="scrolllist">
+          <ul style="display: flex; list-style-type: none; padding: 0; margin: 0;">
+            <li class="sHoverItem" style="margin-right: 10px;">
+              <a id="myLink" target="_self" href="/#/folkcustom">
+                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                  <img src="@/assets/img/i1.jpg" />
+                  <div class="mask m2"></div>
+                  <div class="cont" style="position: absolute; text-align: center;">
+                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/图书馆.png">
+                    <p>非遗博物馆</p>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li class="sHoverItem" style="margin-right: 10px;">
+              <a target="_blank" href="/#/placeOfInterest">
+                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                  <img src="@/assets/img/i2.jpg" />
+                  <div class="mask m2"></div>
+                  <div class="cont" style="position: absolute; text-align: center;">
+                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/视听馆.png">
+                    <p>风景区</p>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li class="sHoverItem" style="margin-right: 10px;">
+              <a target="_blank" href="/#/red">
+                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                  <img src="@/assets/img/i3.jpg" />
+                  <div class="mask m2"></div>
+                  <div class="cont" style="position: absolute; text-align: center;">
+                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/数字文库.png">
+                    <p>红色文化走廊</p>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li class="sHoverItem" style="margin-right: 10px;">
+              <a id="bdclick_btn3" target="_blank" href="/#/filmLiterature">
+                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                  <img src="@/assets/img/i4.jpg" />
+                  <div class="mask m2"></div>
+                  <div class="cont" style="position: absolute; text-align: center;">
+                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/全景故宫.png">
+                    <p>影视文学库</p>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li class="sHoverItem" style="margin-right: 10px;">
+              <a id="bdclick_btn4" target="_blank" href="/#/food">
+                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
+                  <img src="@/assets/img/i5.jpg" />
+                  <div class="mask m2"></div>
+                  <div class="cont" style="position: absolute; text-align: center;">
+                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/V故宫.png">
+                    <p>美食街</p>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
+
+
     </div>
   </el-main>
 
@@ -119,7 +190,7 @@ onMounted(() => {
       try {
         // 获取 iframe 内容的实际高度
         const height = iframeRef.value.contentWindow.document.documentElement.scrollHeight;
-        iframeRef.value.style.height = `${height}px`;
+        iframeRef.value.style.height = `1800px`;
       } catch (e) {
         console.error('设置 iframe 高度失败:', e);
       }
@@ -273,4 +344,13 @@ html, body {
   -ms-overflow-style: none;  /* IE 和 Edge */
   scrollbar-width: none;  /* Firefox */
 }
+.cont{
+  color: white;
+  max-width: 100px;
+  max-height: 100px;
+}
+.sHoverItem:hover .cont p {
+  color: purple;
+}
+
 </style>
