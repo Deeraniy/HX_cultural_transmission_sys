@@ -1,7 +1,6 @@
 <template>
   <div class="analysis-table" >
     <h2>湖南饮食各菜传播效果分析</h2>
-
     <el-table :data="pagedData" border style="width: 100%;font-size: 20px;font-family: 'Bell MT'" :fit="true" >
       <!-- 菜品图片列 -->
       <el-table-column label="菜品图片">

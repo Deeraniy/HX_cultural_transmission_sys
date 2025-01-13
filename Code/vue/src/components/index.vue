@@ -56,6 +56,8 @@
             width="100%"
             frameborder="0"
             scrolling="no"
+            sandbox="allow-scripts allow-popups"
+
         ></iframe>
       </div>
     </div>
