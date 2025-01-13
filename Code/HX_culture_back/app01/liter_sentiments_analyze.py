@@ -405,7 +405,7 @@ def generate_report(request):
         }, status=500)
 
 def sentiments_result_total_count(request):
-    """根据文学作品名称获取情感分析时间序列结果"""
+    """获取文学作品的情感分析占比统计"""
     try:
         name = request.GET.get('name', '').strip()
         if not name:
@@ -421,9 +421,10 @@ def sentiments_result_total_count(request):
                              passwd='kissme77', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
-        # 获取文学作品ID
-        cursor.execute("SELECT liter_id FROM literature WHERE liter_name = %s LIMIT 1", (name,))
+
+        # 首先获取文学作品ID
+        liter_sql = "SELECT liter_id FROM literature WHERE liter_name = %s"
+        cursor.execute(liter_sql, (name,))
         liter_result = cursor.fetchone()
         
         if not liter_result:
@@ -433,73 +434,46 @@ def sentiments_result_total_count(request):
             }, status=404)
             
         liter_id = liter_result['liter_id']
-        logger.info(f"找到文学作品ID: {liter_id}")
         
-        # 查询评论数据
-        comment_sql = """
+        # 查询各情感类型的评论数量和占比
+        sentiment_sql = """
             SELECT 
-                sentiment, 
-                sentiment_confidence, 
-                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
-                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
+                sentiment,
+                COUNT(*) as count,
+                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
             FROM user_comment_literature 
             WHERE liter_id = %s AND sentiment IS NOT NULL
-            ORDER BY comment_time
+            GROUP BY sentiment
         """
-        cursor.execute(comment_sql, (liter_id,))
+        cursor.execute(sentiment_sql, (liter_id,))
         results = cursor.fetchall()
         
-        if not results:
-            return JsonResponse({
-                'status': 'success',
-                'data': [],
-                'literature_info': {
-                    'name': name,
-                    'id': liter_id
-                },
-                'message': '该文学作品暂无评论数据'
-            })
+        # 初始化结果字典
+        sentiment_stats = {
+            'positive': 0,
+            'neutral': 0,
+            'negative': 0,
+            'total_count': 0
+        }
         
-        # 按年月分组数据
-        monthly_data = {}
+        # 处理查询结果
         for row in results:
-            date_key = f"{row['year']}-{row['month']}"
-            if date_key not in monthly_data:
-                monthly_data[date_key] = []
-            
-            if row['sentiment'] and row['sentiment_confidence']:
-                monthly_data[date_key].append(
-                    (row['sentiment'], float(row['sentiment_confidence']))
-                )
-        
-        # 计算每月的情感分析结果
-        analysis_results = []
-        for year_month, sentiments in monthly_data.items():
-            year, month = map(int, year_month.split('-'))
-            sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
-            
-            analysis_results.append({
-                'year': year,
-                'month': month,
-                'sentiment_score': round(sentiment_score, 3),
-                'sentiment': dominant_sentiment,
-                'comment_count': len(sentiments)
-            })
-        
-        # 按时间排序
-        analysis_results.sort(key=lambda x: (x['year'], x['month']))
-        
+            if row['sentiment'] in sentiment_stats:
+                sentiment_stats[row['sentiment']] = round(row['percentage'], 2)
+                sentiment_stats['total_count'] += row['count']
+
         return JsonResponse({
             'status': 'success',
-            'data': analysis_results,
-            'literature_info': {
-                'name': name,
-                'id': liter_id
+            'data': {
+                'positive_percentage': sentiment_stats['positive'],
+                'neutral_percentage': sentiment_stats['neutral'],
+                'negative_percentage': sentiment_stats['negative'],
+                'total_comments': sentiment_stats['total_count']
             }
         })
-        
+
     except Exception as e:
-        logger.error(f"处理文学作品 {name} 的情感分析时出错: {str(e)}")
+        logger.error(f"获取情感统计时出错: {str(e)}")
         return JsonResponse({
             'status': 'error',
             'message': str(e)

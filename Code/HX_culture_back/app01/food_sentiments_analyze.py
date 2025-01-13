@@ -172,7 +172,7 @@ def sentiment_month_analyze(sentiments):
     return avg_score, dominant_sentiment
 
 def sentiments_result_total_count(request):
-    """根据食品名称获取情感分析结果总数"""
+    """获取食品的情感分析占比统计"""
     try:
         name = request.GET.get('name', '').strip()
         if not name:
@@ -183,12 +183,15 @@ def sentiments_result_total_count(request):
             
         logger.info(f"正在查询食品: {name}")
             
+        # 数据库连接
         conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
                              passwd='kissme77', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
-        cursor.execute("SELECT food_id FROM food WHERE food_name = %s LIMIT 1", (name,))
+
+        # 首先获取食品ID
+        food_sql = "SELECT food_id FROM food WHERE food_name = %s"
+        cursor.execute(food_sql, (name,))
         food_result = cursor.fetchone()
         
         if not food_result:
@@ -198,71 +201,46 @@ def sentiments_result_total_count(request):
             }, status=404)
             
         food_id = food_result['food_id']
-        logger.info(f"找到食品ID: {food_id}")
         
-        comment_sql = """
+        # 查询各情感类型的评论数量和占比
+        sentiment_sql = """
             SELECT 
-                sentiment, 
-                sentiment_confidence, 
-                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
-                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
+                sentiment,
+                COUNT(*) as count,
+                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
             FROM user_comment_food 
             WHERE food_id = %s AND sentiment IS NOT NULL
-            ORDER BY comment_time
+            GROUP BY sentiment
         """
-        cursor.execute(comment_sql, (food_id,))
+        cursor.execute(sentiment_sql, (food_id,))
         results = cursor.fetchall()
         
-        if not results:
-            return JsonResponse({
-                'status': 'success',
-                'data': [],
-                'food_info': {
-                    'name': name,
-                    'id': food_id
-                },
-                'message': '该食品暂无评论数据'
-            })
+        # 初始化结果字典
+        sentiment_stats = {
+            'positive': 0,
+            'neutral': 0,
+            'negative': 0,
+            'total_count': 0
+        }
         
-        # 按年月分组数据
-        monthly_data = {}
+        # 处理查询结果
         for row in results:
-            date_key = f"{row['year']}-{row['month']}"
-            if date_key not in monthly_data:
-                monthly_data[date_key] = []
-            
-            if row['sentiment'] and row['sentiment_confidence']:
-                monthly_data[date_key].append(
-                    (row['sentiment'], float(row['sentiment_confidence']))
-                )
-        
-        # 计算每月的情感分析结果
-        analysis_results = []
-        for year_month, sentiments in monthly_data.items():
-            year, month = map(int, year_month.split('-'))
-            sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
-            
-            analysis_results.append({
-                'year': year,
-                'month': month,
-                'sentiment_score': round(sentiment_score, 3),
-                'sentiment': dominant_sentiment,
-                'comment_count': len(sentiments)
-            })
-        
-        analysis_results.sort(key=lambda x: (x['year'], x['month']))
-        
+            if row['sentiment'] in sentiment_stats:
+                sentiment_stats[row['sentiment']] = round(row['percentage'], 2)
+                sentiment_stats['total_count'] += row['count']
+
         return JsonResponse({
             'status': 'success',
-            'data': analysis_results,
-            'food_info': {
-                'name': name,
-                'id': food_id
+            'data': {
+                'positive_percentage': sentiment_stats['positive'],
+                'neutral_percentage': sentiment_stats['neutral'],
+                'negative_percentage': sentiment_stats['negative'],
+                'total_comments': sentiment_stats['total_count']
             }
         })
-        
+
     except Exception as e:
-        logger.error(f"处理食品 {name} 的情感分析时出错: {str(e)}")
+        logger.error(f"获取情感统计时出错: {str(e)}")
         return JsonResponse({
             'status': 'error',
             'message': str(e)
