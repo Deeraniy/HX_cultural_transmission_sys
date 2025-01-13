@@ -66,18 +66,8 @@
 :deep(.el-main::-webkit-scrollbar-thumb:hover) {
   background-color: rgba(0, 0, 0, 0.2); /* 鼠标悬停时滚动条滑块颜色 */
 }
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden !important; /* 强制禁止滚动 */
-  height: 100% !important;
-  width: 100% !important;
-}
 
-* {
-  -ms-overflow-style: none;  /* IE 和 Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+
 .main-container {
   width: 100%;
   display: flex;

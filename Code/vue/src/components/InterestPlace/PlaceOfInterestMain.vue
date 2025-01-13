@@ -1,7 +1,10 @@
 <template>
   <div class="whole">
     <div class="total">
+      <!-- 返回按钮 -->
+
       <h2 class="fixed-title">名胜古迹分析界面</h2>
+      <el-button class="back-btn" @click="goBack">| 返回</el-button>
       <el-menu
           :default-active="activeIndex"
           class="el-menu-demo"
@@ -38,70 +41,37 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
 import PlaceOfInterest from "@/components/InterestPlace/PlaceOfInterest.vue";
 
 const activeIndex = ref('2')
+const router = useRouter();
+
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
+};
+
+// 返回上一页
+const goBack = () => {
+  router.go(-1);  // 返回上一页
 }
 </script>
 
 <style>
-/* 全局样式覆盖 */
-.el-menu,
-.el-menu--horizontal,
-.el-menu--popup,
-.el-menu--popup-container,
-.el-popper,
-.el-sub-menu__popper {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.el-menu-item,
-.el-sub-menu,
-.el-sub-menu__title {
-  background: transparent !important;
-}
-
-.el-popper.is-light {
-  background: transparent !important;
-  border: none !important;
-}
-
-.el-menu--popup .el-menu-item,
-.el-menu .el-menu-item {
-  background: rgba(255, 255, 255, 0.2) !important;
+/* 返回按钮样式 */
+.back-btn {
+  font-family: 'HelveticaNeue', serif;
+  background-color: transparent !important;
   color: #fff8f0 !important;
-  min-width: 120px !important;
-  padding: 0 15px !important;
+  border: none;
+  font-size: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 20px; /* 给按钮添加右边距 */
+  margin-top: 10px;
 }
 
-.el-menu--popup .el-menu-item:hover,
-.el-menu .el-menu-item:hover {
-  background: rgba(255, 255, 255, 0.3) !important;
-  color: #ffd700 !important;
-}
-
-.el-popper__arrow {
-  display: none !important;
-}
-
-/* 控制菜单宽度 */
-.el-menu--horizontal > .el-menu-item,
-.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
-  min-width: auto !important;
-  padding: 0 15px !important;
-}
-
-.el-menu--popup {
-  min-width: 120px !important;
-}
-</style>
-
-<style scoped>
-@import '@/assets/font/font.css';
 
 .total {
   display: flex;

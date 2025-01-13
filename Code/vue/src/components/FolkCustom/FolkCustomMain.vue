@@ -5,37 +5,65 @@
       <div class="menu-title">
         <h2>非遗民俗分析</h2>
       </div>
-
+      <el-button class="back-btn" @click="goBack">|返回</el-button>
       <!-- 菜单区域 -->
       <el-menu
+          :default-active="activeIndex"
           class="el-menu-demo"
           mode="horizontal"
           :ellipsis="false"
-          :router="true"
+          @select="handleSelect"
       ><!--开启vue-router模式-->
 
         <!-- 首页菜单项 -->
-        <el-menu-item index="/folkCustom">首页</el-menu-item> <!--index配置跳转路径-->
+        <el-menu-item index="2">首页</el-menu-item> <!--index配置跳转路径-->
         <!-- 美食专区菜单项 -->
-        <el-menu-item index="/folkCustomInfluence">传播效果</el-menu-item>
+        <el-menu-item index="3">传播效果</el-menu-item>
         <!-- 传播效果分析菜单项 -->
-        <el-menu-item index="/folkSentimentAnalyze">情感分析</el-menu-item>
+        <el-menu-item index="4">情感分析</el-menu-item>
       </el-menu>
     </div>
 
     <el-main>
-      <FolkCustom/>
+      <FolkCustom v-if="activeIndex === '2'" class="carousel-container" />
+      <FolkCustomInfluence v-if="activeIndex === '3'" class="red-culture-main" />
+      <FolkSentimentAnalyze v-if="activeIndex === '4'" class="red-culture-main" />
     </el-main>
   </div>
 </template>
 
 <script lang="ts" setup>
 import FolkCustom from "@/components/FolkCustom/FolkCustom.vue";
+import FolkCustomInfluence from "@/components/FolkCustom/FolkCustomInfluence.vue";
+import FolkSentimentAnalyze from "@/components/FolkCustom/FolkSentimentAnalyze.vue";
+import router from '@/router'
+import Carousel from "@/components/RedCulture/Carousel.vue";
+import RedCultureMain from "@/components/RedCulture/RedCultureMain.vue";
+import { ref } from 'vue'
+const goBack = () => {
+  router.go(-1);  // 返回上一页
+}
+const activeIndex = ref('2')
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+  activeIndex.value = key;  // 更新 activeIndex
+}
+
 </script>
 
 <style>
 
-
+.back-btn {
+  font-family: 'HelveticaNeue', serif;
+  background-color: transparent !important;
+  color: #fff8f0 !important;
+  margin-bottom: 15px;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 720px; /* 给按钮添加右边距 */
+}
 .el-menu--popup .el-menu-item,
 .el-menu .el-menu-item {
   background: rgba(255, 255, 255, 0.2) !important;
@@ -83,7 +111,6 @@ import FolkCustom from "@/components/FolkCustom/FolkCustom.vue";
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
-  border-radius: 30px;
   padding-left: 20px;
 }
 
@@ -104,7 +131,7 @@ import FolkCustom from "@/components/FolkCustom/FolkCustom.vue";
   font-family: 'HelveticaNeue', serif;
   font-size: 30px;
   color: #fff8f0;
-  margin-right: 810px;
+  margin-right: 50px;
 }
 
 .el-menu-demo {
