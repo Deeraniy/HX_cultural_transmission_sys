@@ -1,6 +1,6 @@
 <template>
   <el-main>
-    <Lunbo/>
+    <Lunbo />
     <div class="hunan-tourist-attractions">
       <!-- 搜索框 -->
       <div class="search-container">
@@ -9,7 +9,7 @@
 
       <!-- 展示的内容 -->
       <div class="folklore-container">
-        <div v-for="(book, index) in filteredBooks" :key="index" class="card-container">
+        <div v-for="(book, index) in currentBooks" :key="index" class="card-container">
           <div class="flip-card">
             <div class="flip-card-inner" @click="showDetails(book)">
               <div class="flip-card-front">
@@ -140,9 +140,6 @@ const showDetails = (book) => {
   dialogVisible.value = true;
 };
 </script>
-
-
-
 
 <style scoped lang="scss">
 /* 总容器样式 */
