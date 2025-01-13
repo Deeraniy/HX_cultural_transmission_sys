@@ -1,12 +1,6 @@
 <template>
   <div class="whole">
-    <div class="total">
-      <!-- 固定显示的标题，不作为菜单项 -->
-      <h2 class="fixed-title">非遗民俗分析界面</h2>
 
-      <!-- 菜单区域 -->
-      <Header :activeIndex="Index"/>
-    </div>
     <el-main>
       <div style="display: flex;height: 100% ">
         <div style="flex-grow: 1; justify-content: center; align-items: center;width: 100%">

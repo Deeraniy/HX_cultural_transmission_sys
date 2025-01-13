@@ -8,33 +8,47 @@
       <el-button class="back-btn" @click="goBack">|返回</el-button>
       <!-- 菜单区域 -->
       <el-menu
+          :default-active="activeIndex"
           class="el-menu-demo"
           mode="horizontal"
           :ellipsis="false"
-          :router="true"
+          @select="handleSelect"
       ><!--开启vue-router模式-->
 
         <!-- 首页菜单项 -->
-        <el-menu-item index="/folkCustom">首页</el-menu-item> <!--index配置跳转路径-->
+        <el-menu-item index="2">首页</el-menu-item> <!--index配置跳转路径-->
         <!-- 美食专区菜单项 -->
-        <el-menu-item index="/folkCustomInfluence">传播效果</el-menu-item>
+        <el-menu-item index="3">传播效果</el-menu-item>
         <!-- 传播效果分析菜单项 -->
-        <el-menu-item index="/folkSentimentAnalyze">情感分析</el-menu-item>
+        <el-menu-item index="4">情感分析</el-menu-item>
       </el-menu>
     </div>
 
     <el-main>
-      <FolkCustom/>
+      <FolkCustom v-if="activeIndex === '2'" class="carousel-container" />
+      <FolkCustomInfluence v-if="activeIndex === '3'" class="red-culture-main" />
+      <FolkSentimentAnalyze v-if="activeIndex === '4'" class="red-culture-main" />
     </el-main>
   </div>
 </template>
 
 <script lang="ts" setup>
 import FolkCustom from "@/components/FolkCustom/FolkCustom.vue";
+import FolkCustomInfluence from "@/components/FolkCustom/FolkCustomInfluence.vue";
+import FolkSentimentAnalyze from "@/components/FolkCustom/FolkSentimentAnalyze.vue";
 import router from '@/router'
+import Carousel from "@/components/RedCulture/Carousel.vue";
+import RedCultureMain from "@/components/RedCulture/RedCultureMain.vue";
+import { ref } from 'vue'
 const goBack = () => {
   router.go(-1);  // 返回上一页
 }
+const activeIndex = ref('2')
+const handleSelect = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+  activeIndex.value = key;  // 更新 activeIndex
+}
+
 </script>
 
 <style>
@@ -97,7 +111,6 @@ const goBack = () => {
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
-  border-radius: 30px;
   padding-left: 20px;
 }
 

@@ -395,18 +395,19 @@ const checkContentAvailability = async () => {
     }else if (pageType.value === 3) {
       // 如果景点数据还未加载，先加载数据
       if (!foodData.value) {
-        const foodResponse = await SpotsAPI.getSpotsAPI();
-        if (typeof foodResponse === "string") {
-          const fixedResponse = foodResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-          const foodArray = fixedResponse
-              .replace(/'/g, '"')
-              .match(/{[^}]+}/g)
-              .map((food) => JSON.parse(food));
+        const foodResponse = await FoodAPI.getFoodAPI();
+        console.log("我在找美食中……");
 
+        // 确保 foodResponse 是一个对象，并且包含有效的 status 和 data
+        if (foodResponse && foodResponse.status === "ok" && Array.isArray(foodResponse.data)) {
+          const foodArray = foodResponse.data;
           foodData.value = foodArray;
-          console.log("景点数据加载成功:", foodData.value);
+          console.log("美食数据加载成功:", foodData.value);
+        } else {
+          console.error("美食数据加载失败，响应格式不正确:", foodResponse);
         }
       }
+
 
       // 检查名胜古迹
       const foods = foodData.value?.find(
@@ -414,6 +415,7 @@ const checkContentAvailability = async () => {
       );
       if (foods) {
         nowName.value = searchQuery.value;
+        console.log("现在是美食的天下！",nowName)
         loadFood(nowName);
 
         // 更新 URL
