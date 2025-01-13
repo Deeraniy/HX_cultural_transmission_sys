@@ -61,7 +61,7 @@ urlpatterns = [
     url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_food_influence/',food.get_food_influence),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_folkcustom/',folk.get_folkcustom_list),# get_folkcustom_list获取 folkcustom全部详细信息，把名称和图片等展示
-    url(r'^get_folk_influence/',folk.get_folk_influence)
+    url(r'^get_folk_influence/',folk.get_folk_influence),
     url(r'^get_all_node/',search.get_all_node)
 
 
