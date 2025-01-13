@@ -20,8 +20,15 @@
                   v-if="!isImageLoading"
                   :src="currentImageUrl"
                   alt="当前展示的图片"
+                  :style="{
+    height: '300px',
+    width: '100%',
+    objectFit:  'cover'
+  }"
                   class="city-image"
               />
+
+
             </div>
 
             <!-- 词云图和加载动画的区域 -->
@@ -904,6 +911,7 @@ onMounted(async () => {
   object-fit: contain;
   width: 100%;
   height: 100%;
+  border-radius: 10px;
 }
 
 .danmu {
