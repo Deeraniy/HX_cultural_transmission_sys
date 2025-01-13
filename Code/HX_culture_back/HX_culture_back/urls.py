@@ -5,13 +5,13 @@ from app01 import spot
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import food,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze
+from app01 import food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
-    url(r'^search-form/$', search.search_form),
-    url(r'^search/$', search.search),
-    url(r'^search-post/$', search2.search_post),
+#     url(r'^search-form/$', search.search_form),
+#     url(r'^search/$', search.search),
+#     url(r'^search-post/$', search2.search_post),
     url(r'^classes/',view.classes),
 
     url(r'^get_city/',city.get_city_list),
@@ -58,11 +58,11 @@ urlpatterns = [
     url(r'^spot_get_cloud/',cloud.get_cloud),
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
     url(r'^food_get_cloud/',cloud.get_cloud_food),
-    url(r'^folk_get_cloud/',cloud.get_cloud_folk),
     url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_food_influence/',food.get_food_influence),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_folkcustom/',folk.get_folkcustom_list),# get_folkcustom_list获取 folkcustom全部详细信息，把名称和图片等展示
     url(r'^get_folk_influence/',folk.get_folk_influence)
+    url(r'^get_all_node/',search.get_all_node)
 
 
 
