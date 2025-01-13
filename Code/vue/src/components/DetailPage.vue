@@ -1,50 +1,116 @@
 <template>
   <div class="common-layout">
     <el-container style="height: 100vh; overflow: auto;">
+      <!-- Header 和主内容区域 -->
       <el-header class="header" style="height:90px;width: 100%">
         <Header
             :title="nowName"
             @update:type="handleTypeChange"
             @update:search="handleSearchChange"
         />
-        <!--               {{attractionName}}-->
       </el-header>
       <el-main class="main">
         <div class="content">
           <!-- 图片和弹幕区域 -->
           <div class="image-danmu-container">
-            <img :src="currentImageUrl" alt="当前展示的图片" class="city-image" />
-            <img :src="cloudUrl" alt="词云图" class="wordcloud" />
-            <div class="danmu">
-              <danmaku ref="danmakuRef" v-model:danmus="danmus" :speeds="50" useSlot loop :channels="7" style="height:100%; width:100%;" :is-suspend="true">
-                <template v-slot:dm="{ danmu }">
-                  <div class="danmu-item">
-                    <span class="bullet-item" :style="{ color: getRandomColor() }">
-                      {{ danmu.name }}：{{ danmu.text }}
-                    </span>
-                  </div>
-                </template>
-              </danmaku>
+            <!-- 左边加载图 -->
+            <div class="city-image-container" style="position: relative; width: 400px; height: 305px;">
+              <Loader v-if="isImageLoading" class="loader" />
+              <img
+                  v-if="!isImageLoading"
+                  :src="currentImageUrl"
+                  alt="当前展示的图片"
+                  class="city-image"
+              />
+            </div>
+
+            <!-- 词云图和加载动画的区域 -->
+            <div class="wordcloud-container" style="position: relative; width: 300px; height: 300px;">
+              <Loader v-if="isWordCloudLoading" class="loader" />
+              <img
+                  v-if="!isWordCloudLoading"
+                  :src="cloudUrl"
+                  alt="词云图"
+                  class="wordcloud"
+              />
+            </div>
+
+            <!-- 弹幕加载动画 -->
+            <div class="danmu-container" style="position: relative; width: 600px; height: 305px;">
+              <Loader v-if="isDanmuLoading" class="loader" />
+              <div v-if="!isDanmuLoading" class="danmu">
+                <danmaku
+                    ref="danmakuRef"
+                    v-model:danmus="danmus"
+                    :speeds="50"
+                    useSlot
+                    loop
+                    :channels="7"
+                    style="height: 100%; width: 100%;"
+                    :is-suspend="true"
+                >
+                  <template v-slot:dm="{ danmu }">
+                    <div class="danmu-item">
+                      <span class="bullet-item" :style="{ color: getRandomColor() }">
+                        {{ danmu.name }}：{{ danmu.text }}
+                      </span>
+                    </div>
+                  </template>
+                </danmaku>
+              </div>
             </div>
           </div>
 
-          <!-- BarChart和SentimentStats在同一行 -->
+          <!-- BarChart 和 SentimentStats -->
           <div class="charts-row">
-            <BarChart :chartData="sentiment" style="width: 70%; height: 400px;" />
-            <PieChart :chartData="data1" style="width: 30%; height: 400px;" />
+            <div class="chart-container" style="position: relative; width: 70%; height: 400px;">
+              <Loader v-if="isBarChartLoading" class="loader" />
+              <BarChart
+                  v-if="!isBarChartLoading"
+                  :chartData="sentiment"
+                  style="width: 100%; height: 100%;"
+              />
+            </div>
+            <div class="chart-container" style="position: relative; width: 30%; height: 400px;">
+              <Loader v-if="isPieChartLoading" class="loader" />
+              <PieChart
+                  v-if="!isPieChartLoading"
+                  :chartData="data1"
+                  style="width: 100%; height: 100%;"
+              />
+            </div>
           </div>
 
-          <!-- PieChart和WordCloud上下并列，与TopicCluster同一行 -->
+          <!-- PieChart 和 WordCloud -->
           <div class="mixed-charts-row">
-            <SentimentStats :tableData="topic" style="width: 50%; height: 500px; border: 15px" />
-            <TopicCluster :tableData="sentiment" style="width: 50%; height: 500px; justify-self: right;" />
+            <div class="chart-container" style="position: relative; width: 50%; height: 500px;">
+              <Loader v-if="isSentimentStatsLoading" class="loader" />
+              <SentimentStats
+                  v-if="!isSentimentStatsLoading"
+                  :tableData="topic"
+                  style="width: 100%; height: 100%;"
+              />
+            </div>
+            <div class="chart-container" style="position: relative; width: 50%; height: 500px;">
+              <Loader v-if="isTopicClusterLoading" class="loader" />
+              <TopicCluster
+                  v-if="!isTopicClusterLoading"
+                  :tableData="sentiment"
+                  style="width: 100%; height: 100%;"
+              />
+            </div>
           </div>
         </div>
-        <LineRace v-if="processedTimeData.length > 0" :timeData="processedTimeData"  style="margin-top: 30px"/>
+        <LineRace
+            v-if="processedTimeData.length > 0"
+            :timeData="processedTimeData"
+            style="margin-top: 30px"
+        />
       </el-main>
     </el-container>
   </div>
 </template>
+
 
 <script lang="ts" setup>
 import Header from "@/components/InterestPlace/subcomponent/Header.vue";
@@ -54,6 +120,7 @@ import TopicCluster from "@/components/InterestPlace/subcomponent/TopicCluster.v
 import LineChart from "@/components/InterestPlace/subcomponent/LineChart.vue";
 import WordCloud from "@/components/InterestPlace/subcomponent/WordCloud.vue";
 import SentimentStats from "@/components/InterestPlace/subcomponent/SentimentStats.vue";
+import Loader from '@/components/Loader.vue';  // 导入 Loader 组件
 //import data1 from "@/json/data1.json";
 import data2 from "@/json/data2.json";
 import time from "@/json/time.json"
@@ -91,11 +158,22 @@ const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
 const topic = ref<any>([]);
 const currentImageUrl = ref<string>(''); // 用于存储当前需要展示的图片 URL
 
-const data1 = [
+const isLoading = ref(true);  // 控制加载状态
+const isImageLoading = ref(true);
+const isWordCloudLoading = ref(true);
+const isDanmuLoading = ref(true);
+const isBarChartLoading = ref(true);
+const isPieChartLoading = ref(true);
+const isSentimentStatsLoading = ref(true);
+const isTopicClusterLoading = ref(true);
+const isLineRaceLoading = ref(true);
+
+const data1 = ref([  // 将 data1 用 ref 包装成响应式数据
   { name: '正面', value: 58.84 },
   { name: '中立', value: 7.28 },
   { name: '负面', value: 33.73 }
-]
+]);
+
 const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
   if (!interestData.value || !Array.isArray(interestData.value)) {
     console.warn("景点数据未加载或格式错误");
@@ -116,6 +194,7 @@ const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | st
     currentImageUrl.value = spot.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
     console.log("当前选中的景点:", attractions.name);
+    isImageLoading.value=false;
   } else {
     console.warn(`未找到名称为 "${spotName}" 的景点`);
     attractions.value = null;
@@ -143,6 +222,7 @@ const loadBooks = (bookName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>)
     currentImageUrl.value = book.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
     console.log("当前选中的书籍:", books.name);
+    isImageLoading.value=false;
   } else {
     console.warn(`未找到名称为 "${bookName.value}" 的书`);
     books.value = null;
@@ -170,6 +250,7 @@ const loadFood = (foodName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) 
     currentImageUrl.value = foods.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
     console.log("当前选中的美食:", food.name);
+    isImageLoading.value=false;
   } else {
     console.warn(`未找到名称为 "${foodName}" 的美食`);
     food.value = null;
@@ -198,6 +279,8 @@ const loadFolk = (folkName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) 
     currentImageUrl.value = folks.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
     console.log("当前选中的民俗:", folk.name);
+    isImageLoading.value=false;
+
   } else {
     console.warn(`未找到名称为 "${folkName}" 的民俗`);
     folk.value = null;
@@ -229,7 +312,14 @@ watch(
     () => route.query, // 直接监听整个 query 对象
     async (newQuery, oldQuery) => {
       console.log("路由参数变化检测：", newQuery, oldQuery);
-
+      // 重置加载状态
+      isWordCloudLoading.value = true;
+      isDanmuLoading.value = true;
+      isBarChartLoading.value = true;
+      isPieChartLoading.value = true;
+      isSentimentStatsLoading.value = true;
+      isTopicClusterLoading.value = true;
+      isImageLoading.value = true;
       // 更新各个响应式变量
       if (typeof newQuery.name === 'string') {
         nowName.value = newQuery.name;
@@ -504,6 +594,7 @@ const loadAllData = async () => {
         interestData.value = spotsArray;
 
         console.log("景点数据（处理后）:", interestData.value);
+
         if (interestData.value.length > 0) {
           loadAttractions(nowName);
         } else {
@@ -639,7 +730,7 @@ const loadAllData = async () => {
         sentiment_confidence: comment.sentiment_confidence || '',  // 情感分析置信度
         platform: comment.platform || ''  // 评论平台
       }));
-
+      isDanmuLoading.value=false;
       console.log("成功解析的评论数组:", commentsArray);
     } else {
       throw new Error("返回的数据格式不正确，未找到有效的评论数组。");
@@ -653,6 +744,7 @@ const loadAllData = async () => {
   try {
     const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageType.value);
     console.log("词云地址:", cloudResponse.wordcloud_url);
+    isWordCloudLoading.value=false;
     cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
   } catch (error) {
     console.error("加载评论数据时出错:", error);
@@ -669,7 +761,7 @@ const loadAllData = async () => {
         { name: '中立', value: parseFloat(pieResponse.data.neutral_percentage) },
         { name: '负面', value: parseFloat(pieResponse.data.negative_percentage) }
       ];
-
+      isPieChartLoading.value=false;
       console.log("饼图数据（处理后）:", data1.value);
     } else {
       console.warn("饼图数据格式不正确:", pieResponse);
@@ -691,6 +783,8 @@ const loadAllData = async () => {
         sentiment: item.sentiment, // 情感
       }));
       console.log("LDA 数据加载成功:", sentiment.value);
+      isTopicClusterLoading.value=false;
+      isBarChartLoading.value=false;
     } else {
       console.warn("LDA 数据格式不正确:", ldaResponse);
     }
@@ -710,6 +804,7 @@ const loadAllData = async () => {
         sentiment: item.sentiment, // 情感
       }));
       console.log("Word 数据加载成功:", topic.value);
+      isSentimentStatsLoading.value=false;
     } else {
       console.warn("Word 数据格式不正确:", wordResponse);
     }
@@ -733,7 +828,7 @@ const loadAllData = async () => {
           commentCount: item.comment_count,
         };
       });
-
+      isLineRaceLoading.value=false;
       console.log("时间情感数据（处理后）:", processedTimeData.value);
     }
   } catch (error) {
@@ -780,32 +875,45 @@ onMounted(async () => {
 
 .image-danmu-container {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 20px;
+  position: relative;
 }
+
+.wordcloud-container,
+.city-image-container,
+.danmu-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.city-image,
 .wordcloud {
-  object-fit: contain; /* 确保图片不裁剪 */
-  width: 300px;
-}
-.el-header{
-  padding: 0;
-}
-.city-image{
-  width: 400px; /* 设置图片和词云图的宽度一致 */
-  height: 305px; /* 设置图片和词云图的高度一致 */
   object-fit: contain;
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
 }
 
 .danmu {
   flex: 1;
-  height: 285px;
+  height: 100%;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: rgba(0, 0, 0, 0.5);
   position: relative;
-  padding: 10px;
 }
 
 .danmu-item {
@@ -825,26 +933,10 @@ onMounted(async () => {
   gap: 10px;
 }
 
-/* 新增的混合布局，包含PieChart和WordCloud的容器，并与TopicCluster同一行 */
 .mixed-charts-row {
   display: flex;
   width: 100%;
   margin-top: 20px;
   gap: 20px;
 }
-
-.pie-wordcloud-container {
-  display: flex;
-  flex-direction: column;
-  width: 49%; /* 调整宽度使得与TopicCluster并列 */
-  gap: 10px;
-}
-
-
-.main {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-}
-
 </style>

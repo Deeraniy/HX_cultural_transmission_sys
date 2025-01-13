@@ -80,6 +80,7 @@ const updateChart = (chart, data) => {
 }
 
 onMounted(() => {
+  console.log('子组件接收到的 chartData:', props.chartData)
   // 初始化图表实例
   chartInstance = echarts.init(pieChart.value)
 
