@@ -15,6 +15,8 @@ class CloudAPI {
             urlPath = 'liter_get_cloud';
         } else if (type === 3) {
             urlPath = 'food_get_cloud';
+        } else if (type === 4) {
+            urlPath = 'folk_get_cloud';
         }
 
         return request({
