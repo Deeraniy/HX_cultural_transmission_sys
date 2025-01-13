@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 jieba.setLogLevel(logging.INFO)
 
 def filter_words(word, min_length=2):
-    """过滤词语"""
+    """过滤食品相关词语"""
     with open("stopwords.txt", 'r', encoding='utf-8') as f:
         stopwords = set([line.strip() for line in f])
     
@@ -37,7 +37,7 @@ def get_db_connection():
     )
 
 def has_processed_tokens(food_id):
-    """检查food_id是否已经处理过"""
+    """检查food_id是否已经处理过食品相关的词语"""
     conn = get_db_connection()
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     try:
@@ -139,7 +139,7 @@ def process_all_foods():
         conn.close()
 
 def process_word_batch(words, food_id):
-    """处理一批词语"""
+    """处理一批食品相关词语"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -188,7 +188,7 @@ def process_word_batch(words, food_id):
             conn.close()
 
 def get_word_frequency(request):
-    """获取词语频率以及情感"""
+    """获取食品相关词语频率以及情感"""
     try:
         food_name = request.GET.get('name')
         if not food_name:
@@ -221,14 +221,17 @@ def get_word_frequency(request):
             FROM food_token 
             WHERE food_id = %s 
             ORDER BY count DESC 
-            LIMIT 30 OFFSET 40
+            LIMIT 30
         """
         cursor.execute(frequency_sql, (food_id,))
         words = cursor.fetchall()
 
         logger.info(f"找到 {len(words)} 个高频词")
 
-        return JsonResponse(words, safe=False)
+        return JsonResponse({
+            'status': 'success',
+            'data': words
+        }, safe=False)
 
     except Exception as e:
         logger.error(f"获取词频时出错: {str(e)}")

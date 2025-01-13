@@ -4,8 +4,7 @@
       <div class="attraction-container" >
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">2024美国总统hello8</span>
-          <span class="scroll-bar-text">2025美国总统hello9</span>
+          <span class="scroll-bar-text">湖湘古代文学是中国文学宝库中的一颗璀璨明珠，其浪漫主义情怀、家国情怀与地方特色至今仍在影响着中国文学的发展。湖湘文学不仅是湖南文化的象征，也为中华文化的多样性和丰富性增添了独特的色彩。</span>
         </div>
 
         <!-- 文字轮播（水平方向） -->
@@ -121,7 +120,7 @@ const onCarouselChange = (index: number) => {
   white-space: nowrap; /* 防止文本换行 */
   display: inline-block;
   padding-right: 100%; /* 保证文本宽度足够 */
-  animation: scroll-text 20s linear infinite; /* 文字滚动动画 */
+  animation: scroll-text 30s linear infinite; /* 文字滚动动画 */
 }
 
 /* 滚动条的动画效果 */

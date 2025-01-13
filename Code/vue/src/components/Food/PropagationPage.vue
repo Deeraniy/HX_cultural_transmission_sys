@@ -1,7 +1,8 @@
 <template>
   <div class="analysis-table" >
     <h2>湖南饮食各菜传播效果分析</h2>
-    <el-table :data="pagedData" border style="width: 100%;font-size: 20px;font-family: 'Bell MT'" :fit="true" >
+
+    <el-table :data="pagedData" border style="width: 97%;font-size: 20px;  font-family: 'HelveticaNeue', serif;margin: 20px" :fit="true" >
       <!-- 菜品图片列 -->
       <el-table-column label="菜品图片">
         <template #default="{ row }">
@@ -156,8 +157,9 @@ const sortOrders = {
 </script>
 
 <style scoped>
-
+@import '@/assets/font/font.css';
 .el-table {
+  font-family: 'HelveticaNeue', serif;
   --el-table-border-color: transparent;
   --el-table-border: none;
   --el-table-text-color: #fffffff;
@@ -171,10 +173,12 @@ const sortOrders = {
 }
 
 .analysis-table {
-  padding: 20px;
+  font-family: 'HelveticaNeue', serif;
+font-size: 20px;
 }
 
 h2 {
+  font-family: 'HelveticaNeue', serif;
   text-align: center;
   margin-bottom: 20px;
 }

@@ -4,13 +4,13 @@
       <iframe src="http://127.0.0.1:7860" class="custom-iframe"></iframe>
     </div>
     </el-main>
-    
+
   </template>
-    
+
   <script lang="ts" setup>
   import { ref } from 'vue'
   </script>
-    
+
   <style>
   /* 使用 flexbox 实现居中 */
   .iframe-container {
@@ -21,7 +21,7 @@
     height: 100vh; /* 设置容器高度为视口高度 */
     margin: 0;
   }
-  
+
   /* 自定义 iframe 样式 */
   .custom-iframe {
     width: 1000px;
@@ -66,18 +66,8 @@
 :deep(.el-main::-webkit-scrollbar-thumb:hover) {
   background-color: rgba(0, 0, 0, 0.2); /* 鼠标悬停时滚动条滑块颜色 */
 }
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden !important; /* 强制禁止滚动 */
-  height: 100% !important;
-  width: 100% !important;
-}
 
-* {
-  -ms-overflow-style: none;  /* IE 和 Edge */
-  scrollbar-width: none;  /* Firefox */
-}
+
 .main-container {
   width: 100%;
   display: flex;
@@ -85,4 +75,3 @@ html, body {
   flex-direction: column;
 }
   </style>
-  

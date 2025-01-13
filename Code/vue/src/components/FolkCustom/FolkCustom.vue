@@ -1,8 +1,7 @@
 <template>
   <el-main>
-    <Lunbo/>
+    <Lunbo />
     <div class="hunan-tourist-attractions">
-
       <!-- 搜索框 -->
       <div class="search-container">
         <input v-model="searchQuery" type="text" placeholder="搜索民俗文化..." class="search-box" />
@@ -10,11 +9,11 @@
 
       <!-- 展示的内容 -->
       <div class="folklore-container">
-        <div v-for="(book, index) in filteredBooks" :key="index" class="card-container">
+        <div v-for="(book, index) in currentBooks" :key="index" class="card-container">
           <div class="flip-card">
             <div class="flip-card-inner" @click="showDetails(book)">
               <div class="flip-card-front">
-                <p>{{ book.content }}</p>
+                <p>{{ book.name }}</p>
               </div>
               <div class="flip-card-back">
                 <img :src="book.image" alt="图片" />
@@ -23,7 +22,7 @@
           </div>
           <!-- 在每个卡片下方放按钮 -->
           <div class="card-buttons">
-            <button class="emotion-btn">情感分析</button>
+            <button class="emotion-btn" @click="goToPlaceDetail(book.name)">情感分析</button>
           </div>
         </div>
       </div>
@@ -38,42 +37,59 @@
     <!-- 弹窗 -->
     <el-dialog v-model="dialogVisible" title="民俗文化详情" width="600px">
       <div v-if="selectedBook">
-        <h3>{{ selectedBook.content }}</h3>
+        <h2>{{ selectedBook.name }}</h2>
+        <h3>级别：{{selectedBook.rank}}</h3> <!--非遗民俗级别-->
         <img :src="selectedBook.image" alt="详细图片" class="dialog-image" />
-        <p>这里可以展示更详细的民俗文化内容...</p>
+        <p>{{ selectedBook.description }}</p>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">关闭</el-button>
       </span>
     </el-dialog>
-
   </el-main>
 </template>
 
-
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router'; // 导入 useRouter
 import { ElDialog, ElButton } from 'element-plus';
-import Lunbo from './LunBo.vue'
+import Lunbo from './LunBo.vue';
+import FolkAPI from "@/api/folk";
 
 // 民俗文化数据
-const books = ref([
-  { content: '汨罗江端午习俗', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '湘昆', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '湘剧', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '皮影戏', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '湘绣', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '赶尸', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '湖南傩戏', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '龙船调', image: 'https://th.bing.com/th/id/OIP.R_51sqcxCcrFxLag7A_yTQHaLH?rs=1&pid=ImgDetMain' },
-  { content: '打铁花', image: '/assets/book9.jpg' },
-  { content: '毛笔字', image: '/assets/book10.jpg' },
-  { content: '竹编', image: '/assets/book11.jpg' },
-  { content: '糖画', image: '/assets/book12.jpg' },
-  { content: '湘绣', image: '/assets/book13.jpg' },
-  { content: '岳阳楼', image: '/assets/book14.jpg' },
-  { content: '橘子洲', image: '/assets/book15.jpg' },
-]);
+const books = ref([]);
+
+async function fetchFolkCustomData() {
+  try {
+    const response = await FolkAPI.getFolkCustomAPI();
+    books.value = response.data.map(item => ({
+      name: item.folk_name || '',
+      image: item.image_url || '',
+      description: item.description || '',
+      rank: item.folk_rank || ''
+    }));
+    console.log('FolkCustom data:', books.value);
+  } catch (error) {
+    console.error('Error fetching folk data:', error);
+  }
+}
+
+onMounted(() => {
+  fetchFolkCustomData();
+});
+
+// 跳转到详细页面并传递参数
+const router = useRouter();
+const goToPlaceDetail = (attractionName) => {
+  router.push({
+    path: '/detail',
+    query: {
+      name: attractionName,
+      value: 4, // 这里是你要求的值
+      theme: 1  // 新增 theme 参数
+    }
+  });
+};
 
 // 搜索查询
 const searchQuery = ref('');
@@ -81,7 +97,7 @@ const searchQuery = ref('');
 // 计算筛选后的书籍
 const filteredBooks = computed(() => {
   return books.value.filter(book =>
-      book.content.toLowerCase().includes(searchQuery.value.toLowerCase())
+      book.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
@@ -125,8 +141,6 @@ const showDetails = (book) => {
 };
 </script>
 
-
-
 <style scoped lang="scss">
 /* 总容器样式 */
 .hunan-tourist-attractions {
@@ -141,7 +155,7 @@ const showDetails = (book) => {
   font-size: 32px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 /* 民俗文化条目容器 */

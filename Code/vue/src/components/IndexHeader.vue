@@ -18,10 +18,10 @@
           <template #title>
             首页
           </template>
-          <el-menu-item index="2-1">文学</el-menu-item>
-          <el-menu-item index="2-2">古代文学</el-menu-item>
-          <el-menu-item index="2-3">新媒体艺术</el-menu-item>
-          <el-menu-item index="2-4">表演艺术</el-menu-item>
+<!--          <el-menu-item index="2-1">文学</el-menu-item>-->
+<!--          <el-menu-item index="2-2">古代文学</el-menu-item>-->
+<!--          <el-menu-item index="2-3">新媒体艺术</el-menu-item>-->
+<!--          <el-menu-item index="2-4">表演艺术</el-menu-item>-->
         </el-sub-menu>
         <el-menu-item index="3">名胜古迹</el-menu-item>
         <el-menu-item index="4">影视文学</el-menu-item>
@@ -71,28 +71,71 @@
 
     <el-main>
       <!-- 根据 activeIndex 显示不同的组件 -->
-      <index v-if="activeIndex === '2-1'||activeIndex===null" />
-      <PoemDisplay v-if="activeIndex === '2-2'" />
-      <VideoDisplay v-if="activeIndex === '2-3'" />
-      <ShowDisplay v-if="activeIndex === '2-4'" />
+      <index v-if="activeIndex===null" />
     </el-main>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import {ref, watch} from 'vue';
 import Index from "@/components/index.vue";
 import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
+import router from '@/router'
 import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
 import ShowDisplay from "@/components/FilmLiterature/Literature/ShowDisplay.vue";
 import {ArrowDown} from "@element-plus/icons-vue";
 // 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
-const activeIndex = ref<'2-1' | '2-2' | 'null' | string>(null);
+// Sync the activeIndex with the route path
+const activeIndex = ref<string | null>(null);
+
+// Watch for route changes and update activeIndex
+watch(
+    () => router,
+    (newPath) => {
+      console.log("newPath", newPath)
+      if (newPath === '/placeOfInterest') activeIndex.value = '3';
+      else if (newPath === '/filmLiterature') activeIndex.value = '4';
+      else if (newPath === '/food') activeIndex.value = '5';
+      else activeIndex.value = null; // default value if no match
+    }
+);
+
+// Set the initial activeIndex based on the current route
+if (router.currentRoute === '/placeOfInterest') activeIndex.value = '3';
+else if (router.currentRoute === '/filmLiterature') activeIndex.value = '4';
+else if (router.currentRoute === '/food') activeIndex.value = '5';
 const language = ref('中文');
 // 处理菜单选择
+// Handle menu item select and navigate accordingly
 const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-  activeIndex.value = key;  // 更新选中的菜单项
+  activeIndex.value = key;
+
+  switch (key) {
+    case '2':
+      router.push('/index'); // 名胜古迹
+      break;
+    case '3':
+      router.push('/placeOfInterest'); // 名胜古迹
+      break;
+    case '4':
+      router.push('/filmLiterature'); // 影视文学
+      break;
+    case '5':
+      router.push('/food'); // 美食文化
+      break;
+    case '6':
+      router.push('/folkCustom'); // 美食文化
+      break;
+    case '7':
+      router.push('/red'); // 美食文化
+      break;
+    case '8':
+      router.push('/detail'); // 美食文化
+      break;
+      // Add more cases for other menu items if needed
+    default:
+      break;
+  }
 };
 </script>
 
@@ -191,7 +234,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 .el-menu-demo {
-  margin-left: 50px;
+  margin-left: 90px;
   display: flex;
   justify-content: flex-end;
   background-color: transparent !important;
@@ -199,7 +242,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
   padding-top: 0;
   padding-bottom: 0;
   border-bottom: none;
-  border-radius: 0;
 }
 
 .el-menu-item {

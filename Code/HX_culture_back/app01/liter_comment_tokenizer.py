@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 jieba.setLogLevel(logging.INFO)
 
 def filter_words(word, min_length=2):
-    """过滤词语"""
+    """过滤文学相关词语"""
     with open("stopwords.txt", 'r', encoding='utf-8') as f:
         stopwords = set([line.strip() for line in f])
     
@@ -37,7 +37,7 @@ def get_db_connection():
     )
 
 def has_processed_tokens(liter_id):
-    """检查liter_id是否已经处理过"""
+    """检查liter_id是否已经处理过文学相关的词语"""
     conn = get_db_connection()
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     try:
@@ -48,7 +48,7 @@ def has_processed_tokens(liter_id):
         cursor.close()
         conn.close()
 
-def process_literature_tokens(literature_name):
+def process_liter_tokens(literature_name):
     """处理文学作品评论分词并更新数据库"""
     try:
         if not literature_name:
@@ -110,6 +110,9 @@ def process_literature_tokens(literature_name):
         logger.info(f"处理完成，共处理 {len(comments)} 条评论，{total_words} 个词语")
         return True
 
+    except pymysql.Error as db_error:
+        logger.error(f"数据库操作时出错: {str(db_error)}")
+        return False
     except Exception as e:
         logger.error(f"处理分词时出错: {str(e)}")
         return False
@@ -130,8 +133,10 @@ def process_all_literatures():
         for liter in literatures:
             literature_name = liter['liter_name']
             logger.info(f"正在处理文学作品: {literature_name}")
-            process_literature_tokens(literature_name)
+            process_liter_tokens(literature_name)
 
+    except pymysql.Error as db_error:
+        logger.error(f"数据库操作时出错: {str(db_error)}")
     except Exception as e:
         logger.error(f"处理文学作品时出错: {str(e)}")
     finally:
@@ -139,7 +144,7 @@ def process_all_literatures():
         conn.close()
 
 def process_word_batch(words, liter_id):
-    """处理一批词语"""
+    """处理一批文学相关词语"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -149,7 +154,7 @@ def process_word_batch(words, liter_id):
                 # 检查词语是否存在
                 check_sql = """
                     SELECT token_id, count 
-                    FROM liter_token_test 
+                    FROM liter_token 
                     WHERE token_name = %s AND liter_id = %s
                 """
                 cursor.execute(check_sql, (word, liter_id))
@@ -158,7 +163,7 @@ def process_word_batch(words, liter_id):
                 if token_result:
                     # 更新计数
                     update_sql = """
-                        UPDATE liter_token_test 
+                        UPDATE liter_token 
                         SET count = count + 1 
                         WHERE token_id = %s
                     """
@@ -166,21 +171,26 @@ def process_word_batch(words, liter_id):
                 else:
                     # 插入新词
                     insert_sql = """
-                        INSERT INTO liter_token_test (token_name, count, liter_id) 
+                        INSERT INTO liter_token (token_name, count, liter_id) 
                         VALUES (%s, 1, %s)
                     """
                     cursor.execute(insert_sql, (word, liter_id))
                     
+            except pymysql.Error as db_error:
+                logger.error(f"数据库操作时出错 (词语: {word}): {str(db_error)}")
+                continue
             except Exception as e:
                 logger.error(f"处理词语 {word} 时出错: {str(e)}")
                 continue
                 
         conn.commit()
         
-    except Exception as e:
-        logger.error(f"处理词语批次时出错: {str(e)}")
+    except pymysql.Error as db_error:
+        logger.error(f"处理词语批次时出错: {str(db_error)}")
         if 'conn' in locals():
             conn.rollback()
+    except Exception as e:
+        logger.error(f"处理词语批次时出错: {str(e)}")
     finally:
         if 'cursor' in locals():
             cursor.close()
@@ -188,14 +198,17 @@ def process_word_batch(words, liter_id):
             conn.close()
 
 def get_word_frequency(request):
-    """获取词语频率以及情感"""
+    """获取文学相关词语频率以及情感"""
     try:
-        liter_name = request.GET.get('name')
-        if not liter_name:
+        literature_name = request.GET.get('name')
+        if not literature_name:
+            logger.error("文学作品名称不能为空")
             return JsonResponse({
                 'status': 'error',
                 'message': '文学作品名称不能为空'
             }, status=400)
+
+        logger.info(f"请求获取文学作品 '{literature_name}' 的词频")
 
         # 获取数据库连接
         conn = get_db_connection()
@@ -203,22 +216,23 @@ def get_word_frequency(request):
 
         # 获取liter_id
         liter_sql = "SELECT liter_id FROM literature WHERE liter_name = %s"
-        cursor.execute(liter_sql, (liter_name,))
+        cursor.execute(liter_sql, (literature_name,))
         liter_result = cursor.fetchone()
 
         if not liter_result:
+            logger.error(f"未找到文学作品: {literature_name}")
             return JsonResponse({
                 'status': 'error',
-                'message': f'未找到文学作品: {liter_name}'
+                'message': f'未找到文学作品: {literature_name}'
             }, status=404)
 
         liter_id = liter_result['liter_id']
-        logger.info(f"查询文学作品 {liter_name} (ID: {liter_id}) 的词频")
+        logger.info(f"查询文学作品 {literature_name} (ID: {liter_id}) 的词频")
 
         # 查询中间40个高频词
         frequency_sql = """
             SELECT token_name as word, count as frequency, sentiment
-            FROM token 
+            FROM liter_token 
             WHERE liter_id = %s 
             ORDER BY count DESC 
             LIMIT 30 OFFSET 40
@@ -231,8 +245,14 @@ def get_word_frequency(request):
         return JsonResponse({
             'status': 'success',
             'data': words
-        })
+        }, safe=False)
 
+    except pymysql.Error as db_error:
+        logger.error(f"获取词频时数据库操作出错: {str(db_error)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': '数据库操作出错'
+        }, status=500)
     except Exception as e:
         logger.error(f"获取词频时出错: {str(e)}")
         return JsonResponse({

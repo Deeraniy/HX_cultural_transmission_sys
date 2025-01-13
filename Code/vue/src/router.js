@@ -4,6 +4,10 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 const routes = [
     {
         path: '/',
+        component:() => import('./components/IndexHeader.vue'),
+    },
+    {
+        path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
     {
@@ -21,6 +25,12 @@ const routes = [
     {
         path: '/3d',
         component:() => import('./components/Three.vue')
+    },
+    {
+        path: '/walk/:title',
+        name: 'Walk',
+        component:() => import('./components/RedCulture/Walk.vue'),
+        props: true // 使得路由参数自动作为 prop 传递给组件
     },
     {
         path: '/filmLiterature',
@@ -58,7 +68,7 @@ const routes = [
         path: '/food',
         redirect: '/food/home',
         name: 'FoodShow',
-        component:()=>import('./components/Food/FoodShow.vue'), // 美食文化主页组件
+        component:()=>import('./components/Food/FoodShow.vue'), // 美食文化主页组件 foodshow里面有router-view,用子路由实现
         children: [
             {
                 path: 'home',
