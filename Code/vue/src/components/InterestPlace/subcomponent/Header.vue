@@ -64,12 +64,13 @@ import { ref, onMounted, watch } from 'vue';
 import router from "@/router.js";
 import { marked } from 'marked';
 import SentimentAPI from "@/api/sentiment.ts";
-import { ArrowDown } from '@element-plus/icons-vue'  // 添加这行
+import { ArrowDown } from '@element-plus/icons-vue'
+import {useRoute} from "vue-router";  // 添加这行
 const drawer = ref(false);
 const searchQuery = ref(''); // 搜索框的绑定变量
 const markdownContent = ref(''); // 存储转换后的 HTML 内容
 const props = defineProps({title: String});
-
+const route = useRoute()
 const selectedType = ref('');
 
 const emit = defineEmits(['update:type', 'update:search']);
@@ -98,17 +99,17 @@ const handleSearch = () => {
   }
 };
 
-
-
-
 const onBack = () => {
   router.go(-1);
   console.log("返回按钮被点击");
 };
 
 onMounted(() => {
-  SentimentAPI.getSentimentReportAPI(props.title)
+  console.log("Header组件被加载",route.query.value);
+  SentimentAPI.getSentimentReportAPI(props.title, route.query.value)
+
       .then((res) => {
+        console.log("AI报告：",props.title)
         console.log("AI 报告原始 Markdown:", res);
 
         if (res && res.report) {

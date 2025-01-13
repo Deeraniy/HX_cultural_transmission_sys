@@ -15,6 +15,8 @@ class SentimentAPI {
             urlPath = 'liter_sentiments_analyze';
         } else if (type === 3) {
             urlPath = 'food_sentiments_analyze';
+        } else if (type === 4) {
+            urlPath = 'folk_sentiments_analyze';
         }
 
         return request({
@@ -38,6 +40,8 @@ class SentimentAPI {
             urlPath = 'liter_sentiments_result';
         } else if (type === 3) {
             urlPath = 'food_sentiments_result';
+        } else if (type === 4) {
+            urlPath = 'folk_sentiments_result';
         }
 
         return request({
@@ -61,6 +65,8 @@ class SentimentAPI {
             urlPath = 'liter_generate_report';
         } else if (type === 3) {
             urlPath = 'food_generate_report';
+        } else if (type === 4) {
+            urlPath = 'folk_generate_report';
         }
 
         return request({
@@ -84,6 +90,8 @@ class SentimentAPI {
             urlPath = 'liter_sentiments_count';
         } else if (type === 3) {
             urlPath = 'food_sentiments_count';
+        } else if (type === 4) {
+            urlPath = 'folk_sentiments_count';
         }
         console.log("俺不中嘞")
         return request({
@@ -107,6 +115,8 @@ class SentimentAPI {
             urlPath = 'liter_get_word_frequency';
         } else if (type === 3) {
             urlPath = 'food_get_word_frequency';
+        } else if (type === 4) {
+            urlPath = 'folk_get_word_frequency';
         }
 
         return request({
@@ -120,4 +130,3 @@ class SentimentAPI {
 }
 
 export default SentimentAPI;
-

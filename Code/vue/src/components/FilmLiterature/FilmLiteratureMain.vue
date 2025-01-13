@@ -5,7 +5,7 @@
       <div class="menu-title">
         <h2>影视文学分析</h2>
       </div>
-
+      <el-button class="back-btn" @click="goBack">|返回</el-button>
       <!-- 菜单区域 -->
       <el-menu
           :default-active="activeIndex"
@@ -56,6 +56,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import router from '@/router'
 import FilmLiterature from "@/components/FilmLiterature/Literature/FilmLiterature.vue";
 import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
 import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
@@ -68,6 +69,9 @@ const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
   activeIndex.value = key;  // 更新选中的菜单项
 };
+const goBack = () => {
+  router.go(-1);  // 返回上一页
+}
 </script>
 
 <style>
@@ -134,6 +138,17 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 <style scoped>
 @import '@/assets/font/font.css';
+.back-btn {
+  font-family: 'HelveticaNeue', serif;
+  background-color: transparent !important;
+  color: #fff8f0 !important;
+  margin-bottom: 15px;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 320px; /* 给按钮添加右边距 */
+}
 
 .total {
   display: flex;
@@ -161,7 +176,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   font-family: 'HelveticaNeue', serif;
   font-size: 30px;
   color: #fff8f0;
-  margin-right: 510px;
+  margin-right: 50px;
 }
 
 .el-menu-demo {
