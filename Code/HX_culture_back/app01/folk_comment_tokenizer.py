@@ -228,7 +228,10 @@ def get_word_frequency(request):
 
         logger.info(f"找到 {len(words)} 个高频词")
 
-        return JsonResponse(words, safe=False)
+        return JsonResponse({
+            'status': 'success',
+            'data': words
+        }, safe=False)
 
     except Exception as e:
         logger.error(f"获取词频时出错: {str(e)}")
