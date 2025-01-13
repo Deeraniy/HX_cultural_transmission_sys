@@ -9,6 +9,7 @@
         <link rel="stylesheet" type="text/css" href="css/hx.css" />
         <script src="//unpkg.com/layui@2.9.21/dist/layui.js"><script type="text/javascript"
                     src="https://cdn.jsdelivr.net/npm/echarts@4.5.0/dist/echarts.min.js"></script>
+        <script src="js/axios.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
         <script src="https://unpkg.com/vue"></script>
@@ -39,8 +40,6 @@
         <style>
             /* 为页面添加顶部空间，避免头部和下方内容重叠 */
 
-
-            /* 如果有其他固定定位的元素，可以清除固定定位 */
             .sidebar {
                 position: relative;  /* 取消固定定位，确保正常流式布局 */
             }
@@ -49,8 +48,6 @@
 	<body >
     <!-- 方法1：使用空div + margin -->
     <div style="height: 20px; margin: 20px 0;"></div>
-
-
 		<div class="sc_cg" style="display:none;">
 			<div class="c">
 				<i class="close"></i>
@@ -143,23 +140,24 @@
 <!--                        操作知识图谱模块-->
                         <div style="">
                             <div style="padding-top: 20px;display: flex">
-                            <p style="margin-top: 10px;color: white;font-weight: bold">请输入查询节点    :</p>
-                            <input type="text" name="" placeholder="查询节点" class="layui-input" style="width: auto;margin-left: 30px">
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-radius" style="margin-left: 30px;background-image: url(img/img_hx/纹理2.jpg)">查询</button>
+                                <p style="margin-top: 10px;color: white;font-weight: bold">请输入查询节点：</p>
+                                <input type="text" id="nodeInput" placeholder="查询节点" class="layui-input" style="width: auto;margin-left: 30px">
+                                <button onclick="searchNode()" type="button" class="layui-btn layui-btn-primary layui-btn-radius" style="margin-left: 30px;background-image: url(img/img_hx/纹理2.jpg)">查询</button>
                             </div>
                         </div>
                         <div style="display: flex;margin-top: 30px">
-                            <div style="display: inline-block;color: white">
-                                节点名称节点名称节点名称节点名称
+                            <div id="nodeName" style="display: inline-block;color: white">
+                                节点名称：
                             </div>
                         </div>
                         <div style="display: flex;display: flex;margin-top: 30px">
-                            <div style="margin-top: 30px; height: 300px; overflow-y: auto;color: white">
-                                <p>节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述节点描述</p>
-                                <!-- 这里可以添加更多的内容 -->
+                            <div id="nodeDescription" style="margin-top: 30px; height: 300px; overflow-y: auto;color: white">
+                                节点描述：
                             </div>
                         </div>
-                        <button type="button" class="layui-btn layui-btn-primary layui-btn-radius" style="margin-left: 30px;background-image: url(img/img_hx/纹理2.jpg);width: 400px">查看详情</button>
+                        <button id="detailsButton" type="button" class="layui-btn layui-btn-primary layui-btn-radius"
+                                style="margin-left: 30px; background-image: url(img/img_hx/纹理2.jpg); width: 400px"
+                                onclick="viewDetails()">查看详情</button>
 
                     </div>
                 </div>
@@ -179,7 +177,7 @@
 							</div>
 
 							<div class="num">
-								<b>114514个</b>
+								<b>28个</b>
 							</div>
 
 							<div class="tip" style="cursor:pointer;" onClick="openAlert('.pop-type')"><span>湖湘<b></b>美食查询</span></div>
@@ -441,173 +439,210 @@
 		<!--轮播结束-->
 
 		<script>
+            // 添加一个函数用于查询节点
+            function searchNode() {
+                // 获取输入的节点名称
+                const nodeName = document.getElementById('nodeInput').value.trim();
+
+                // 找到包含输入字符串的节点（模糊查询）
+                const node = data.find(item => item.name && item.name.toLowerCase().includes(nodeName.toLowerCase()));
 
 
-            //知识图谱
-            data = [
-                {name:'苹果',category:1,id:0},
-                {name:'梨子',catagory:1,id:1},
-                {name:'水果',category:2,id:2}
-            ]
-            links = [
-                {source:0,target:2,category:0,value:'属于',symbolSize:10},
-                {source:1,target:2,category:0,value:'属于',symbolSize:10}
-            ]
+                // 显示节点信息
+                if (node) {
+                    // 更新节点名称
+                    document.getElementById('nodeName').textContent = `节点名称：${node.name}`;
+
+                    // 更新节点描述
+                    document.getElementById('nodeDescription').textContent = `节点描述：${node.properties.text}`;
+
+                    // 存储节点 ID 以便查看详情时使用
+                    document.getElementById('detailsButton').setAttribute('data-node-id', node.id);
+                    // 使用 echarts API 使得该节点居中
+
+                } else {
+                    // 如果没有找到节点
+                    alert('没有找到相关节点！');
+                }
+            }
+
+            // 为查询按钮添加点击事件监听器
+            function viewDetails() {
+                console.log("调用查看详情功能")
+                const nodeId = document.getElementById('detailsButton').getAttribute('data-node-id');
+                const node = data.find(item => item.id === nodeId);
+
+                if (node) {
+                    console.log(node.id)
+                    // 判断节点是否有描述链接（describe_url），如果没有则打开图像链接（img_url）
+                    const urlToOpen = node.properties.description_url || node.properties.img_url;
+
+                    if (urlToOpen) {
+                        // 打开链接
+                        window.open(urlToOpen, '_blank');
+                    } else {
+                        alert('该节点没有可用的详细信息链接！');
+                    }
+                } else {
+                    alert('节点信息不存在！');
+                }
+            }
+            let data = [];
+            let links = [];
+
+            async function loadData() {
+                try {
+                    // 使用 await 等待 fetch 完成
+                    const response = await fetch('data.json');
+                    const json = await response.json();
+
+                    // 将数据赋值
+                    data = json.data;
+                    links = json.links;
+                    initChart();
+                    // 输出加载的数据
+                    // console.log(data);
+                    // console.log(links);
+                } catch (error) {
+                    console.error('Error loading the JSON file:', error);
+                }
+            }
+            // 初始化图表
+            function initChart() {
+                var myChart = echarts.init(document.getElementById('graph'));
+
+                var option = {
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {},
+                    animationDurationUpdate: 1500,
+                    animationEasingUpdate: 'quinticInOut',
+                    label: {
+                        normal: {
+                            show: true, // 确保标签显示
+                            textStyle: {
+                                fontSize: 12,
+                            },
+                        }
+                    },
+                    legend: {
+                        x: "center",
+                        show: false
+                    },
+                    series: [
+                        {
+                            type: 'graph',
+                            layout: 'force',
+                            symbolSize: 45,
+                            focusNodeAdjacency: true,
+                            roam: true,
+                            edgeSymbol: ['none', 'none'],
+                            categories: [{
+                                name: 'Spot',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#009800",
+                                    }
+                                }
+                            }, {
+                                name: 'Literature',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#4592FF",
+                                    }
+                                }
+                            }, {
+                                name: 'Food',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#C71585",
+                                    }
+                                }
+                            }, {
+                                name: 'Folk',
+                                itemStyle: {
+                                    normal: {
+                                        color: "#ffb6c1",
+                                    }
+                                }
+                            }], label: {
+                                normal: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: 12,
+                                    },
+                                }
+                            },
+                            force: {
+                                repulsion: 1000
+                            },
+                            edgeSymbolSize: [4, 50],
+                            edgeLabel: {
+                                normal: {
+                                    show: true,
+                                    textStyle: {
+                                        fontSize: 10
+                                    },
+                                    formatter: function (params) {
+                                        // 使用链接数据中的 name 字段
+                                        return params.data.name || '从属';  // 如果没有 name，显示“连接”
+                                    }
+                                }
+                            },
+                            data: data.map(function (node) {
+                                // 确保在节点数据中为每个节点设置正确的 `category` 索引
+                                if (node.categories === 'Spot') {
+                                    node.category = 0;  // Spot -> category 0
+                                } else if (node.categories === 'Literature') {
+                                    node.category = 1;  // Literature -> category 1
+                                } else if (node.categories === 'Food') {
+                                    node.category = 2;  // Food -> category 2
+                                } else if (node.categories === 'Folk') {
+                                    node.category = 3;  // Folk -> category 3
+                                }
+                                return node;
+                            }),
+                            links: links,
+                            lineStyle: {
+                                normal: {
+                                    opacity: 0.9,
+                                    width: 1.3,
+                                    curveness: 0,
+                                    color: "#262626",
+                                }
+                            },
+
+                        }
+                    ]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+                myChart.on('click', function (params) {
+                    if (params.data && params.data.id) {
+                        // 获取被点击节点的信息
+                        const node = data.find(item => item.id === params.data.id);
+                        if (node) {
+                            // 更新右侧显示的信息
+                            document.getElementById('nodeName').textContent = `节点名称：${node.name}`;
+                            document.getElementById('nodeDescription').textContent = `节点描述：${node.properties.text}`;
+                            document.getElementById('detailsButton').setAttribute('data-node-id', node.id);
+                        }
+                    }
+                });
+
+            }
+
+
+            // 调用异步函数来加载数据
+            loadData();
 
             var myChart = echarts.init(document.getElementById('graph'));
 
-            option = {
-                title: {
-                    text: ''
-                },
-                tooltip: {},
-                animationDurationUpdate: 1500,
-                animationEasingUpdate: 'quinticInOut',
-                label: {
-                    normal: {
-                        show: true,
-                        textStyle: {
-                            fontSize: 12
-                        },
-                    }
-                },
-                legend: {
-                    x: "center",
-                    show: false
-                },
-                series: [
 
-                    {
-                        type: 'graph',
-                        layout: 'force',
-                        symbolSize: 45,
-                        focusNodeAdjacency: true,
-                        roam: true,
-                        edgeSymbol: ['none', 'arrow'],
-                        categories: [{
-                            name: '查询实体',
-                            itemStyle: {
-                                normal: {
-                                    color: "#009800",
-                                }
-                            }
-                        }, {
-                            name: 'instance',
-                            itemStyle: {
-                                normal: {
-                                    color: "#4592FF",
-                                }
-                            }
-                        }, {
-                            name: 'class',
-                            itemStyle: {
-                                normal: {
-                                    color: "#C71585",
-                                }
-                            }
-                        }],
-                        label: {
-                            normal: {
-                                show: true,
-                                textStyle: {
-                                    fontSize: 12,
-                                },
-                            }
-                        },
-                        force: {
-                            repulsion: 1000
-                        },
-                        edgeSymbolSize: [4, 50],
-                        edgeLabel: {
-                            normal: {
-                                show: true,
-                                textStyle: {
-                                    fontSize: 10
-                                },
-                                formatter: "{c}"
-                            }
-                        },
-                        data: data,
-                        links: links,
-                        lineStyle: {
-                            normal: {
-                                opacity: 0.9,
-                                width: 1.3,
-                                curveness: 0,
-                                color:"#262626",
-                            }
-                        }
-                    }
-                ]
-            };
-            // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option);
 
-            //四季皮肤变化效果的开始
-			$('.season i').bind('click', function(e) {
-				var _that = $(this),
-					text = _that.text(),
-					$span = $('.season').find('span').eq(0);
-				$span.text(text);
-				$('#container').removeClass();
-				var seasonal = '';
-				$('.block1 .right .box3 .i1').show();
-				if(text == "博") {
-					$('.skin_common').hide();
-					$('.skin_518').show();
-				} else {
-					$('.skin_common').show();
-					$('.skin_518').hide();
-				}
-				switch(text) {
-					case "年":
-						$('#container').addClass('home newyear2019');
-						seasonal = '年';
-						$('.block1 .right .box3 .i1').hide();
-						$('.newyear2019.home .block1 .box4 .list .last h1').css('background-image', 'none');
-						break;
-					case "庆":
-						$('#container').addClass('home years93');
-						seasonal = '庆';
-						break;
-					case "博":
 
-						$('#container').addClass('home ');
-						seasonal = '博';
-						break;
-					case "春":
-						$('#container').addClass('home spring');
-						seasonal = '春';
-						break;
-					case "夏":
-						$('#container').addClass('home summer');
-						seasonal = '夏';
-						break;
-					case "秋":
-						$('#container').addClass('home fall');
-						seasonal = '秋';
-						break;
-					case "冬":
-						$('#container').addClass('home winter');
-						seasonal = '冬';
-						break;
-					case "常":
-						$('#container').addClass('home normal');
-						seasonal = 'normal';
-						break;
-				}
-				setTimeout(function() {
-					$(".scrolllist .img img").each(function() {
-						if(!$(this).is(":hidden")) {
-							$('.block4 .caroufredsel_wrapper,.block4 .caroufredsel_wrapper ul').css('height', $(this).height());
-						}
-					});
-				}, 500);
-
-				CONFIG.setSeasonal(seasonal);
-				return false;
-			});
-			//四季皮肤变化效果的结束
 
 			$('.focus').height($(window).height())
 
@@ -718,34 +753,8 @@
 				<i>9</i>
 			</span>
 		</div>
-				<div>
-					<div class="code2d">
-						<a></a><img src="img/erweima.jpg">
-					</div>
-				</div>
-				<div>
-					<div class="nav_foot">
-						<a href=""> 网站地图</a>&nbsp;&nbsp;
-						<a href=""> 相关链接</a>&nbsp;&nbsp;
-						<a href="" target="_blank"> 影像授权</a>&nbsp;&nbsp;
-						<a href="" target="_blank"> 隐私政策</a>&nbsp;&nbsp;
-						<a href="" target="_blank"> 版权声明</a>&nbsp;&nbsp;
-						<a href=""> 常见问题</a>&nbsp;&nbsp;
-						<a href=""> 联系我们</a>&nbsp;&nbsp;
-						<a href="" target="_blank"> 关于我们</a>&nbsp;&nbsp;</div>
-				</div>
-				<div>
-					<div class="copyright">
 
-						© 2001- 现在 故宫博物院 &nbsp;&nbsp;　京ICP备05067311号-1 &nbsp;&nbsp;&nbsp;
-						<a href="" target="_blank">网站建设</a>：
-						<a href="" target="_blank">北京分形科技</a>
-					</div>
-
-					<div class="btns">
-						<a href="javascript:;">浏览建议</a>
-					</div>
-				</div>
+				<div>
 			</div>
 
 		</div>
