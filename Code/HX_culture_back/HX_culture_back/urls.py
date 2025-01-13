@@ -42,6 +42,7 @@ urlpatterns = [
     url(r'^spot_sentiments_count/',spot_sentiments_analyze.sentiments_result_total_count),
     url(r'^liter_sentiments_count/',liter_sentiments_analyze.sentiments_result_total_count),
     url(r'^food_sentiments_count/',food_sentiments_analyze.sentiments_result_total_count),
+    url(r'^folk_sentiments_count/',folk_sentiments_analyze.sentiments_result_total_count),
     url(r'^spot_get_word_frequency/',comment_tokenizer.get_word_frequency),
     url(r'^liter_get_word_frequency/',liter_comment_tokenizer.get_word_frequency),
     url(r'^food_get_word_frequency/',food_comment_tokenizer.get_word_frequency),
