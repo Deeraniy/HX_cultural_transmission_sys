@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="所有导航栏“返回”按钮添加">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面+民俗展示界面bug修复">
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/components/Loader.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/subcomponent/PieChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/subcomponent/PieChart.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +118,8 @@
       <workItem from="1736469344910" duration="37069000" />
       <workItem from="1736555277985" duration="12653000" />
       <workItem from="1736605608675" duration="3140000" />
-      <workItem from="1736642065952" duration="27021000" />
+      <workItem from="1736642065952" duration="33753000" />
+      <workItem from="1736728785393" duration="10448000" />
     </task>
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
       <option name="closed" value="true" />
@@ -341,7 +345,39 @@
       <option name="project" value="LOCAL" />
       <updated>1736674490869</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="所有导航栏“返回”按钮添加">
+      <option name="closed" value="true" />
+      <created>1736674536903</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1736674536903</updated>
+    </task>
+    <task id="LOCAL-00030" summary="非遗民俗情感分析前后端连接">
+      <option name="closed" value="true" />
+      <created>1736684931015</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1736684931015</updated>
+    </task>
+    <task id="LOCAL-00031" summary="非遗民俗界面优化+图片刷新">
+      <option name="closed" value="true" />
+      <created>1736688842141</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1736688842141</updated>
+    </task>
+    <task id="LOCAL-00032" summary="情感分析界面+民俗展示界面bug修复">
+      <option name="closed" value="true" />
+      <created>1736732687699</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1736732687699</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -359,7 +395,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="影视艺术页面——文学页面（轮播图）" />
     <MESSAGE value="影视艺术页面——文学页面（前端完成）" />
     <MESSAGE value="影视艺术页面——文学页面（前端美化）" />
     <MESSAGE value="影视艺术页面——古代文学页面+新媒体艺术页面" />
@@ -382,7 +417,10 @@
     <MESSAGE value="红色文化展示界面" />
     <MESSAGE value="红色文化菜单" />
     <MESSAGE value="所有导航栏“返回”按钮添加" />
-    <option name="LAST_COMMIT_MESSAGE" value="所有导航栏“返回”按钮添加" />
+    <MESSAGE value="非遗民俗情感分析前后端连接" />
+    <MESSAGE value="非遗民俗界面优化+图片刷新" />
+    <MESSAGE value="情感分析界面+民俗展示界面bug修复" />
+    <option name="LAST_COMMIT_MESSAGE" value="情感分析界面+民俗展示界面bug修复" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
