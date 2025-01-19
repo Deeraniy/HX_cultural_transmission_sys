@@ -23,6 +23,10 @@ const routes = [
         component:() => import('./components/DetailPage.vue'),
     },
     {
+        path: '/platform',
+        component:() => import('./components/EntireAnalysis/PlatformAnalysisHeader.vue'),
+    },
+    {
         path: '/3d',
         component:() => import('./components/Three.vue')
     },
