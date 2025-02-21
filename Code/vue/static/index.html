@@ -576,96 +576,164 @@
 
 
 
-			$('.focus').height($(window).height())
 
-			$('.home .focus li').mChange({
-				auto: 1, //是否自动播放,1为自动,0为手动
-				arrow: 1, //是否反转箭头,1为点击左侧向右滚动,0则相反
-				speed: 1000, //效果速度,大于0.3
-				time: 5000, //周期时间，大于1
-				nav: $('.home .focus .nav i'), //导航
-				nave: "click", //导航事件
-				navs: 0, //导航滚动
-				prev: ".home .focus .prev a", //上一个
-				next: ".home .focus .next a", //下一个
-				cycle: 1, //是否循环
-				mousestop: 0, //是否鼠标划入停止
-				mousewheel: 0, //是否开启滚轮事件
-				animates: function(idx) {} //自定义函数
-			});
-			//底部图书馆-视听馆这一块的效果
-			$(window).on('load', function() {
-				var smask = new sHover("sHoverItem", "mask");
-				$('.block4 ul').carouFredSel({
-					auto: false,
-					responsive: true,
-					circular: false,
-					infinite: false,
-					items: 6,
-					onCreate: function(items, sizes) {
-						setTimeout(function() {
-							$(".scrolllist .img").eq(0).find("img").each(function(i) {
-								if(!$(this).is(":hidden")) {
-									$('.block4 .caroufredsel_wrapper,.block4 .caroufredsel_wrapper ul').css('height', $(this).height());
-								}
-							});
+            //四季皮肤变化效果的开始
+            $('.season i').bind('click', function(e) {
+                var _that = $(this),
+                    text = _that.text(),
+                    $span = $('.season').find('span').eq(0);
+                $span.text(text);
+                $('#container').removeClass();
+                var seasonal = '';
+                $('.block1 .right .box3 .i1').show();
+                if(text == "博") {
+                    $('.skin_common').hide();
+                    $('.skin_518').show();
+                } else {
+                    $('.skin_common').show();
+                    $('.skin_518').hide();
+                }
+                switch(text) {
+                    case "年":
+                        $('#container').addClass('home newyear2019');
+                        seasonal = '年';
+                        $('.block1 .right .box3 .i1').hide();
+                        $('.newyear2019.home .block1 .box4 .list .last h1').css('background-image', 'none');
+                        break;
+                    case "庆":
+                        $('#container').addClass('home years93');
+                        seasonal = '庆';
+                        break;
+                    case "博":
 
-						}, 800);
-					}
-				});
+                        $('#container').addClass('home ');
+                        seasonal = '博';
+                        break;
+                    case "春":
+                        $('#container').addClass('home spring');
+                        seasonal = '春';
+                        break;
+                    case "夏":
+                        $('#container').addClass('home summer');
+                        seasonal = '夏';
+                        break;
+                    case "秋":
+                        $('#container').addClass('home fall');
+                        seasonal = '秋';
+                        break;
+                    case "冬":
+                        $('#container').addClass('home winter');
+                        seasonal = '冬';
+                        break;
+                    case "常":
+                        $('#container').addClass('home normal');
+                        seasonal = 'normal';
+                        break;
+                }
+                setTimeout(function() {
+                    $(".scrolllist .img img").each(function() {
+                        if(!$(this).is(":hidden")) {
+                            $('.block4 .caroufredsel_wrapper,.block4 .caroufredsel_wrapper ul').css('height', $(this).height());
+                        }
+                    });
+                }, 500);
+
+                CONFIG.setSeasonal(seasonal);
+                return false;
+            });
+            //四季皮肤变化效果的结束
+
+            $('.focus').height($(window).height())
+
+            $('.home .focus li').mChange({
+                auto: 1, //是否自动播放,1为自动,0为手动
+                arrow: 1, //是否反转箭头,1为点击左侧向右滚动,0则相反
+                speed: 1000, //效果速度,大于0.3
+                time: 5000, //周期时间，大于1
+                nav: $('.home .focus .nav i'), //导航
+                nave: "click", //导航事件
+                navs: 0, //导航滚动
+                prev: ".home .focus .prev a", //上一个
+                next: ".home .focus .next a", //下一个
+                cycle: 1, //是否循环
+                mousestop: 0, //是否鼠标划入停止
+                mousewheel: 0, //是否开启滚轮事件
+                animates: function(idx) {} //自定义函数
+            });
+            //底部图书馆-视听馆这一块的效果
+            $(window).on('load', function() {
+                var smask = new sHover("sHoverItem", "mask");
+                $('.block4 ul').carouFredSel({
+                    auto: false,
+                    responsive: true,
+                    circular: false,
+                    infinite: false,
+                    items: 6,
+                    onCreate: function(items, sizes) {
+                        setTimeout(function() {
+                            $(".scrolllist .img").eq(0).find("img").each(function(i) {
+                                if(!$(this).is(":hidden")) {
+                                    $('.block4 .caroufredsel_wrapper,.block4 .caroufredsel_wrapper ul').css('height', $(this).height());
+                                }
+                            });
+
+                        }, 800);
+                    }
+                });
 
 
-				$('a.link').each(function(index, element) {
-					var lineWrap = '<div id="line' + index + '"></div>';
-					$(this).append(lineWrap);
-					$(this).children('div').css({
-						'position': 'absolute',
-						'left': 0,
-						'top': 0,
-						'right': 0,
-						'bottom': 0
-					});
-					cline('line' + index);
-				});
+                $('a.link').each(function(index, element) {
+                    var lineWrap = '<div id="line' + index + '"></div>';
+                    $(this).append(lineWrap);
+                    $(this).children('div').css({
+                        'position': 'absolute',
+                        'left': 0,
+                        'top': 0,
+                        'right': 0,
+                        'bottom': 0
+                    });
+                    cline('line' + index);
+                });
 
-				function cline(obj) {
-					var elm = document.getElementById(obj);
-					var paper = Raphael(elm);
-					var lw = $(elm).width() - 10;
-					var lh = $(elm).height() - 10;
-					var line = paper.path("M0, 5L5, 5L5, 0L" + (lw + 5) + ",0L" + (lw + 5) + ",5L" + (lw + 10) + ",5L" + (lw + 10) + "," + (lh + 5) + "L" + (lw + 5) + "," + (lh + 5) + "L" + (lw + 5) + "," + (lh + 10) + "L5," + (lh + 10) + "L5," + (
-						lh + 5) + "L0," + (lh + 5) + "L0, 5").attr({
-						stroke: '#fff',
-						'stroke-width': 2
-					});
+                function cline(obj) {
+                    var elm = document.getElementById(obj);
+                    var paper = Raphael(elm);
+                    var lw = $(elm).width() - 10;
+                    var lh = $(elm).height() - 10;
+                    var line = paper.path("M0, 5L5, 5L5, 0L" + (lw + 5) + ",0L" + (lw + 5) + ",5L" + (lw + 10) + ",5L" + (lw + 10) + "," + (lh + 5) + "L" + (lw + 5) + "," + (lh + 5) + "L" + (lw + 5) + "," + (lh + 10) + "L5," + (lh + 10) + "L5," + (
+                        lh + 5) + "L0," + (lh + 5) + "L0, 5").attr({
+                        stroke: '#fff',
+                        'stroke-width': 2
+                    });
 
-					$('.block3 path').attr('stroke', '#ab8181');
+                    $('.block3 path').attr('stroke', '#ab8181');
 
-					$(elm).find('svg').css('left', 0);
-					$('path').attr('stroke-dasharray', '1000,1000');
-					$(elm).hover(function() {
-						$(this).find('path').stop(true, true).transition({
-							'stroke-dashoffset': -1000,
-							'stroke-dasharray': '500,500'
-						}, 500);
-					}, function() {
-						$(this).find('path').transition({
-							'stroke-dashoffset': 0
-						}, 500);
-					});
-				};
+                    $(elm).find('svg').css('left', 0);
+                    $('path').attr('stroke-dasharray', '1000,1000');
+                    $(elm).hover(function() {
+                        $(this).find('path').stop(true, true).transition({
+                            'stroke-dashoffset': -1000,
+                            'stroke-dasharray': '500,500'
+                        }, 500);
+                    }, function() {
+                        $(this).find('path').transition({
+                            'stroke-dashoffset': 0
+                        }, 500);
+                    });
+                };
 
-			});
-			//右侧导航条回到顶部的效果
-			$('.sidebar .close').click(function() {
-				if(!$(this).hasClass('up')) {
-					$(this).addClass('up');
-					$('.sidebar ul').slideUp(300);
-				} else {
-					$(this).removeClass('up');
-					$('.sidebar ul').slideDown(300);
-				}
-			});
-		</script>
+            });
+            //右侧导航条回到顶部的效果
+            $('.sidebar .close').click(function() {
+                if(!$(this).hasClass('up')) {
+                    $(this).addClass('up');
+                    $('.sidebar ul').slideUp(300);
+                } else {
+                    $(this).removeClass('up');
+                    $('.sidebar ul').slideDown(300);
+                }
+            });
+
+        </script>
 	</body>
 </html>
