@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="所有导航栏“返回”按钮添加">
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/assets/login/city.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/assets/login/hunan.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/components/login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_1_12_下午5_20_取消提交了更改_[更改]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/index.html" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,13 +50,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Run&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "ts.external.directory.path": "D:\\IntelliJ IDEA 2024.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "vue.recent.templates": [
+      "Vue Composition API Component"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
@@ -60,11 +77,11 @@
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\vue\HX_cultural_transmission_sys\Code\vue\src\assets\login" />
+      <recent name="D:\vue\HX_cultural_transmission_sys\Code\vue\src\components" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
-      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components\FilmLiterature\Literature" />
-      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src" />
     </key>
   </component>
   <component name="RunManager">
@@ -79,6 +96,14 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
@@ -91,6 +116,7 @@
     </task>
     <task active="true" id="Default" summary="Default task">
       <changelist id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="" />
+      <changelist id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
       <created>1731041273818</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -117,6 +143,8 @@
       <workItem from="1736555277985" duration="12653000" />
       <workItem from="1736605608675" duration="3140000" />
       <workItem from="1736642065952" duration="27021000" />
+      <workItem from="1736759679072" duration="1506000" />
+      <workItem from="1740115400323" duration="4057000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
@@ -334,8 +362,19 @@
       <option name="project" value="LOCAL" />
       <updated>1736674490869</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="所有导航栏“返回”按钮添加">
+      <option name="closed" value="true" />
+      <created>1736756855718</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1736756855718</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="影视艺术页面——文学页面（轮播图）" />
@@ -360,9 +399,9 @@
     <MESSAGE value="红色文化界面" />
     <MESSAGE value="红色文化展示界面" />
     <MESSAGE value="红色文化菜单" />
-    <MESSAGE value="所有导航栏“返回”按钮添加" />
     <MESSAGE value="影视文学文字" />
-    <option name="LAST_COMMIT_MESSAGE" value="影视文学文字" />
+    <MESSAGE value="所有导航栏“返回”按钮添加" />
+    <option name="LAST_COMMIT_MESSAGE" value="所有导航栏“返回”按钮添加" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
