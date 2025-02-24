@@ -60,6 +60,11 @@ const jumpArticle = () => {
         path: '/userHome/article'
     })
 }
+const jumpUpload = () =>{
+  router.push({
+    path: '/userHome/upload'
+  })
+}
 const jumpStar = () => {
   router.push({
     path: '/userHome/star'
@@ -96,7 +101,7 @@ const jumpActivity = () => {
             <el-icon><DataAnalysis /></el-icon>
             <template #title>用户画像</template>
           </el-menu-item>
-          <el-menu-item index="5" @click="jumpEmpty">
+          <el-menu-item index="5" @click="jumpUpload">
             <el-icon><Upload /></el-icon>
             <template #title>关系上传</template>
           </el-menu-item>
