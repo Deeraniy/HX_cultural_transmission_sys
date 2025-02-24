@@ -101,12 +101,12 @@ const jumpActivity = () => {
             <el-icon><DataAnalysis /></el-icon>
             <template #title>用户画像</template>
           </el-menu-item>
-          <el-menu-item index="5" @click="jumpUpload">
+          <el-menu-item index="6" @click="jumpUpload">
             <el-icon><Upload /></el-icon>
             <template #title>关系上传</template>
           </el-menu-item>
             <!-- 菜单4 -->
-            <el-menu-item index="5" @click="jumpSet">
+            <el-menu-item index="7" @click="jumpSet">
                 <el-icon>
                     <setting />
                 </el-icon>

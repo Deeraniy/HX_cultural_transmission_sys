@@ -5,7 +5,8 @@ import ManageSystem from "@/components/ManageSystem/ManageSystem.vue";
 
 <template>
   <div id="app">
-  <ManageSystem/>
+<!--  <ManageSystem/>-->
+    <router-view/>
   </div>
 </template>
 
