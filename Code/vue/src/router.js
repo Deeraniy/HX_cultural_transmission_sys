@@ -6,6 +6,7 @@ import UserTags from "@/components/User/components/left/UserTags.vue";
 import UserProfile from "@/components/User/components/left/UserProfile.vue";
 import UserArticle from "@/components/User/components/left/UserArticle.vue";
 import UserStar from "@/components/User/components/left/UserStar.vue"
+import UserUpload from "@/components/User/components/left/UserUpload.vue"
 // 定义路由
 const routes = [
     {
@@ -22,6 +23,10 @@ const routes = [
             {
                 path: 'tags',
                 component: UserTags
+            },
+            {
+                path: 'upload',
+                component: UserUpload
             },
             {
                 path: 'profile',
