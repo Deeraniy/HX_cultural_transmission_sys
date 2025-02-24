@@ -5,7 +5,7 @@ import UserHomeMain from "@/components/User/components/main/UserHomeMain.vue";
 import UserTags from "@/components/User/components/left/UserTags.vue";
 import UserProfile from "@/components/User/components/left/UserProfile.vue";
 import UserArticle from "@/components/User/components/left/UserArticle.vue";
-
+import UserStar from "@/components/User/components/left/UserStar.vue"
 // 定义路由
 const routes = [
     {
@@ -30,6 +30,10 @@ const routes = [
             {
                 path: 'article',
                 component: UserArticle
+            },
+            {
+                path: 'star',
+                component: UserStar
             },
         ]
     },

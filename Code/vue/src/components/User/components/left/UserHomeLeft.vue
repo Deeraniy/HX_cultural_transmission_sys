@@ -60,6 +60,11 @@ const jumpArticle = () => {
         path: '/userHome/article'
     })
 }
+const jumpStar = () => {
+  router.push({
+    path: '/userHome/star'
+  })
+}
 
 const jumpActivity = () => {
   router.push({
@@ -75,29 +80,6 @@ const jumpActivity = () => {
       </div>
         <!-- 菜单组件 -->
         <el-menu class="card">
-            <!-- 菜单1 -->
-<!--            <el-menu-item index="0" @click="jumpUserHome">-->
-<!--                <el-icon><icon-menu /></el-icon>-->
-<!--                <template #title>个人信息</template>-->
-<!--            </el-menu-item>-->
-<!--            <el-sub-menu index="1">-->
-<!--                <template #title>-->
-<!--                    <el-icon>-->
-<!--                        <location />-->
-<!--                    </el-icon>-->
-<!--                    <span>我的资料</span>-->
-<!--                </template>-->
-<!--                <el-menu-item-group>-->
-<!--                    &lt;!&ndash; <template #title><span>资料操作</span></template> &ndash;&gt;-->
-<!--                    <el-menu-item index="1-1" @click="jumpProfile">修改资料与密码</el-menu-item>-->
-<!--                    <el-menu-item index="1-2" @click="jumpEmpty">分享卡片</el-menu-item>-->
-<!--                </el-menu-item-group>-->
-<!--            </el-sub-menu>-->
-            <!-- 菜单2 -->
-<!--            <el-menu-item index="2" @click="jumpTags">-->
-<!--                <el-icon><icon-menu /></el-icon>-->
-<!--                <template #title>管理我的标签</template>-->
-<!--            </el-menu-item>-->
             <!-- 菜单3 -->
             <el-menu-item index="3" @click="jumpArticle">
                 <el-icon>
@@ -106,7 +88,7 @@ const jumpActivity = () => {
                 <template #title>浏览记录</template>
             </el-menu-item>
             <!--  -->
-            <el-menu-item index="4" @click="jumpEmpty">
+            <el-menu-item index="4" @click="jumpStar">
               <el-icon><Star/></el-icon>
                 <template #title>收藏</template>
             </el-menu-item>
