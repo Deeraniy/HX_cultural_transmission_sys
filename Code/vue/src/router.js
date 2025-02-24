@@ -1,10 +1,41 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
 
+import UserHome from "@/components/User/UserHome.vue";
+import UserHomeMain from "@/components/User/components/main/UserHomeMain.vue";
+import UserTags from "@/components/User/components/left/UserTags.vue";
+import UserProfile from "@/components/User/components/left/UserProfile.vue";
+import UserArticle from "@/components/User/components/left/UserArticle.vue";
+import UserStar from "@/components/User/components/left/UserStar.vue"
 // 定义路由
 const routes = [
     {
-        path: '/',
+        path: '/index',
         component:() => import('./components/IndexHeader.vue'),
+    },
+    {
+        path: '/userHome',
+        component: UserHome,
+        children: [{
+            path: '',
+            component: UserHomeMain
+        },
+            {
+                path: 'tags',
+                component: UserTags
+            },
+            {
+                path: 'profile',
+                component: UserProfile
+            },
+            {
+                path: 'article',
+                component: UserArticle
+            },
+            {
+                path: 'star',
+                component: UserStar
+            },
+        ]
     },
     {
         path: '/placeOfInterest',
@@ -21,6 +52,10 @@ const routes = [
     {
         path: '/detail',
         component:() => import('./components/DetailPage.vue'),
+    },
+    {
+        path: '/platform',
+        component:() => import('./components/EntireAnalysis/PlatformAnalysisHeader.vue'),
     },
     {
         path: '/3d',

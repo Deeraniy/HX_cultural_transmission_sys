@@ -96,6 +96,10 @@ const handleSearch = () => {
   if (searchQuery.value.trim()) {
     emit('update:search', searchQuery.value.trim());
     console.log('发送搜索内容:', searchQuery.value.trim());
+    // 清空搜索框
+    searchQuery.value = '';
+    // 重置下拉列表选项
+    selectedType.value = null;
   }
 };
 
