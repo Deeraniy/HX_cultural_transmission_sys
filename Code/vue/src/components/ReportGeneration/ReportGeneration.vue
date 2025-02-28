@@ -50,6 +50,26 @@
           />
         </el-form-item>
 
+        <!-- 活动名输入 -->
+        <el-form-item label="活动名" prop="eventName" :rules="[{ required: true, message: '请输入活动名', trigger: 'blur' }]">
+          <el-input v-model="report.eventName" placeholder="请输入活动名"/>
+        </el-form-item>
+
+        <!-- 活动属性输入 -->
+        <el-form-item label="活动属性" prop="eventType" :rules="[{ required: true, message: '请输入活动属性', trigger: 'blur' }]">
+          <el-input v-model="report.eventType" placeholder="请输入活动属性"/>
+        </el-form-item>
+
+        <!-- 宣传倾向输入 -->
+        <el-form-item label="宣传倾向" prop="promotionTendency" :rules="[{ required: true, message: '请输入宣传倾向', trigger: 'blur' }]">
+          <el-input v-model="report.promotionTendency" placeholder="请输入宣传倾向"/>
+        </el-form-item>
+
+        <!-- 宣传途径输入 -->
+        <el-form-item label="宣传途径" prop="promotionMethod" :rules="[{ required: true, message: '请输入宣传途径', trigger: 'blur' }]">
+          <el-input v-model="report.promotionMethod" placeholder="请输入宣传途径"/>
+        </el-form-item>
+
         <!-- 生成与润色按钮 -->
         <el-form-item>
           <el-button type="primary" @click="generateReport">生成报道</el-button>
@@ -69,6 +89,10 @@
         <p><strong>标题：</strong>{{ generatedReport.title }}</p>
         <p><strong>标签：</strong>{{ generatedReport.tags.join(', ') }}</p>
         <p><strong>内容：</strong>{{ generatedReport.content }}</p>
+        <p><strong>活动名：</strong>{{ generatedReport.eventName }}</p>
+        <p><strong>活动属性：</strong>{{ generatedReport.eventType }}</p>
+        <p><strong>宣传倾向：</strong>{{ generatedReport.promotionTendency }}</p>
+        <p><strong>宣传途径：</strong>{{ generatedReport.promotionMethod }}</p>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">关闭</el-button>
@@ -78,8 +102,8 @@
 </template>
 
 <script>
-import {ref} from "vue";
-import {ElForm, ElFormItem, ElInput, ElButton, ElTag, ElCard, ElDialog} from "element-plus";
+import { ref } from "vue";
+import { ElForm, ElFormItem, ElInput, ElButton, ElTag, ElCard, ElDialog } from "element-plus";
 
 export default {
   components: {
@@ -100,6 +124,10 @@ export default {
       title: "",
       content: "",
       tags: [],
+      eventName: "",
+      eventType: "",
+      promotionTendency: "",
+      promotionMethod: "",
     });
     const selectedTags = ref([]); // 选中的标签
     const generatedReport = ref(null);
@@ -126,12 +154,11 @@ export default {
     };
 
     // 生成报道
-      const generateReport = () => {
+    const generateReport = () => {
       const form = this.$refs.form;
-      dialogVisible.value = true; // 显示弹窗
       form.validate((valid) => {
         if (valid) {
-          generatedReport.value = {...report.value, tags: selectedTags.value}; // 添加已选标签
+          generatedReport.value = { ...report.value, tags: selectedTags.value }; // 添加已选标签
           dialogVisible.value = true; // 显示弹窗
         } else {
           return false;
@@ -157,6 +184,10 @@ export default {
         title: "",
         content: "",
         tags: [],
+        eventName: "",
+        eventType: "",
+        promotionTendency: "",
+        promotionMethod: "",
       };
       selectedTags.value = [];
     };
