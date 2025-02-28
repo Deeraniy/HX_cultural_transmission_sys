@@ -126,7 +126,7 @@ export default {
     };
 
     // 生成报道
-    const generateReport = () => {
+      const generateReport = () => {
       const form = this.$refs.form;
       dialogVisible.value = true; // 显示弹窗
       form.validate((valid) => {

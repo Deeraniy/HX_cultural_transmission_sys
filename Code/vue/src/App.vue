@@ -6,7 +6,6 @@ import ReportGeneration from "@/components/ReportGeneration/ReportGeneration.vue
 <template>
   <div id="app">
     <router-view/>
-  <ReportGeneration/>
   </div>
 </template>
 
