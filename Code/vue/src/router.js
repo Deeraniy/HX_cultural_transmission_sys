@@ -1,10 +1,51 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
 
+import UserHome from "@/components/User/UserHome.vue";
+import UserHomeMain from "@/components/User/components/main/UserHomeMain.vue";
+import UserTags from "@/components/User/components/left/UserTags.vue";
+import UserProfile from "@/components/User/components/left/UserProfile.vue";
+import UserArticle from "@/components/User/components/left/UserArticle.vue";
+import UserStar from "@/components/User/components/left/UserStar.vue"
+import UserUpload from "@/components/User/components/left/UserUpload.vue"
+import UserActivity from "@/components/User/components/left/UserActivity.vue";
 // 定义路由
 const routes = [
     {
-        path: '/',
+        path: '/index',
         component:() => import('./components/IndexHeader.vue'),
+    },
+    {
+        path: '/userHome',
+        component: UserHome,
+        children: [{
+            path: '',
+            component: UserHomeMain
+        },
+            {
+                path: 'tags',
+                component: UserTags
+            },
+            {
+              path: 'activity',
+                component: UserActivity
+            },
+            {
+                path: 'upload',
+                component: UserUpload
+            },
+            {
+                path: 'profile',
+                component: UserProfile
+            },
+            {
+                path: 'article',
+                component: UserArticle
+            },
+            {
+                path: 'star',
+                component: UserStar
+            },
+        ]
     },
     {
         path: '/placeOfInterest',

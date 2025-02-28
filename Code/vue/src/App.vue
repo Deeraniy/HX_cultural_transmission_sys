@@ -1,11 +1,12 @@
 <script setup>
 import router from "@/router.js";
-
+import ManageSystem from "@/components/ManageSystem/ManageSystem.vue";
 </script>
 
 <template>
   <div id="app">
-  <router-view/>
+<!--  <ManageSystem/>-->
+    <router-view/>
   </div>
 </template>
 

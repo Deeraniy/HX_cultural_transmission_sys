@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面+民俗展示界面bug修复">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/湖南省博物馆_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/湖南省博物馆_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,6 +51,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "ts.external.directory.path": "D:\\IntelliJ IDEA 2024.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "vue.recent.templates": [
+      "Vue Composition API Component"
+    ]
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "ts.external.directory.path": "D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
@@ -57,7 +92,7 @@
     &quot;ts.external.directory.path&quot;: &quot;D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
@@ -67,11 +102,11 @@
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\vue\HX_cultural_transmission_sys\Code\vue\src\assets\login" />
+      <recent name="D:\vue\HX_cultural_transmission_sys\Code\vue\src\components" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\json" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components" />
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
-      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\components\FilmLiterature\Literature" />
-      <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src" />
     </key>
   </component>
   <component name="RunManager">
@@ -86,6 +121,14 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
@@ -98,6 +141,7 @@
     </task>
     <task active="true" id="Default" summary="Default task">
       <changelist id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="" />
+      <changelist id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
       <created>1731041273818</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -126,6 +170,9 @@
       <workItem from="1736642065952" duration="33753000" />
       <workItem from="1736728785393" duration="10448000" />
       <workItem from="1736755786972" duration="2201000" />
+      <workItem from="1736642065952" duration="27021000" />
+      <workItem from="1736759679072" duration="1506000" />
+      <workItem from="1740115400323" duration="4057000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
