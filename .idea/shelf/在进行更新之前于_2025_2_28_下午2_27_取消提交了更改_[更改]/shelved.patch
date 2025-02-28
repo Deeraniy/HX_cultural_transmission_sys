@@ -1,0 +1,339 @@
+Index: .idea/inspectionProfiles/Project_Default.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"InspectionProjectProfileManager\">\r\n  <profile version=\"1.0\">\r\n    <option name=\"myName\" value=\"Project Default\" />\r\n    <inspection_tool class=\"PyPackageRequirementsInspection\" enabled=\"true\" level=\"WARNING\" enabled_by_default=\"true\">\r\n      <option name=\"ignoredPackages\">\r\n        <value>\r\n          <list size=\"85\">\r\n            <item index=\"0\" class=\"java.lang.String\" itemvalue=\"traitlets\" />\r\n            <item index=\"1\" class=\"java.lang.String\" itemvalue=\"pywinpty\" />\r\n            <item index=\"2\" class=\"java.lang.String\" itemvalue=\"rfc3339-validator\" />\r\n            <item index=\"3\" class=\"java.lang.String\" itemvalue=\"huggingface-hub\" />\r\n            <item index=\"4\" class=\"java.lang.String\" itemvalue=\"scikit-learn\" />\r\n            <item index=\"5\" class=\"java.lang.String\" itemvalue=\"PyYAML\" />\r\n            <item index=\"6\" class=\"java.lang.String\" itemvalue=\"defusedxml\" />\r\n            <item index=\"7\" class=\"java.lang.String\" itemvalue=\"PyQt5-sip\" />\r\n            <item index=\"8\" class=\"java.lang.String\" itemvalue=\"setuptools\" />\r\n            <item index=\"9\" class=\"java.lang.String\" itemvalue=\"executing\" />\r\n            <item index=\"10\" class=\"java.lang.String\" itemvalue=\"MarkupSafe\" />\r\n            <item index=\"11\" class=\"java.lang.String\" itemvalue=\"pycparser\" />\r\n            <item index=\"12\" class=\"java.lang.String\" itemvalue=\"tinycss2\" />\r\n            <item index=\"13\" class=\"java.lang.String\" itemvalue=\"python-json-logger\" />\r\n            <item index=\"14\" class=\"java.lang.String\" itemvalue=\"Pygments\" />\r\n            <item index=\"15\" class=\"java.lang.String\" itemvalue=\"PyQt5\" />\r\n            <item index=\"16\" class=\"java.lang.String\" itemvalue=\"pyzmq\" />\r\n            <item index=\"17\" class=\"java.lang.String\" itemvalue=\"safetensors\" />\r\n            <item index=\"18\" class=\"java.lang.String\" itemvalue=\"bleach\" />\r\n            <item index=\"19\" class=\"java.lang.String\" itemvalue=\"certifi\" />\r\n            <item index=\"20\" class=\"java.lang.String\" itemvalue=\"jupyter_server_terminals\" />\r\n            <item index=\"21\" class=\"java.lang.String\" itemvalue=\"soupsieve\" />\r\n            <item index=\"22\" class=\"java.lang.String\" itemvalue=\"prometheus_client\" />\r\n            <item index=\"23\" class=\"java.lang.String\" itemvalue=\"torchaudio\" />\r\n            <item index=\"24\" class=\"java.lang.String\" itemvalue=\"beautifulsoup4\" />\r\n            <item index=\"25\" class=\"java.lang.String\" itemvalue=\"pywin32\" />\r\n            <item index=\"26\" class=\"java.lang.String\" itemvalue=\"tokenizers\" />\r\n            <item index=\"27\" class=\"java.lang.String\" itemvalue=\"terminado\" />\r\n            <item index=\"28\" class=\"java.lang.String\" itemvalue=\"comm\" />\r\n            <item index=\"29\" class=\"java.lang.String\" itemvalue=\"transformers\" />\r\n            <item index=\"30\" class=\"java.lang.String\" itemvalue=\"fqdn\" />\r\n            <item index=\"31\" class=\"java.lang.String\" itemvalue=\"wordcloud\" />\r\n            <item index=\"32\" class=\"java.lang.String\" itemvalue=\"contourpy\" />\r\n            <item index=\"33\" class=\"java.lang.String\" itemvalue=\"psutil\" />\r\n            <item index=\"34\" class=\"java.lang.String\" itemvalue=\"fonttools\" />\r\n            <item index=\"35\" class=\"java.lang.String\" itemvalue=\"jedi\" />\r\n            <item index=\"36\" class=\"java.lang.String\" itemvalue=\"pure-eval\" />\r\n            <item index=\"37\" class=\"java.lang.String\" itemvalue=\"regex\" />\r\n            <item index=\"38\" class=\"java.lang.String\" itemvalue=\"jupyterlab_pygments\" />\r\n            <item index=\"39\" class=\"java.lang.String\" itemvalue=\"platformdirs\" />\r\n            <item index=\"40\" class=\"java.lang.String\" itemvalue=\"matplotlib\" />\r\n            <item index=\"41\" class=\"java.lang.String\" itemvalue=\"charset-normalizer\" />\r\n            <item index=\"42\" class=\"java.lang.String\" itemvalue=\"PySide6\" />\r\n            <item index=\"43\" class=\"java.lang.String\" itemvalue=\"idna\" />\r\n            <item index=\"44\" class=\"java.lang.String\" itemvalue=\"referencing\" />\r\n            <item index=\"45\" class=\"java.lang.String\" itemvalue=\"PySide6_Addons\" />\r\n            <item index=\"46\" class=\"java.lang.String\" itemvalue=\"decorator\" />\r\n            <item index=\"47\" class=\"java.lang.String\" itemvalue=\"matplotlib-inline\" />\r\n            <item index=\"48\" class=\"java.lang.String\" itemvalue=\"webcolors\" />\r\n            <item index=\"49\" class=\"java.lang.String\" itemvalue=\"json5\" />\r\n            <item index=\"50\" class=\"java.lang.String\" itemvalue=\"cffi\" />\r\n            <item index=\"51\" class=\"java.lang.String\" itemvalue=\"pandocfilters\" />\r\n            <item index=\"52\" class=\"java.lang.String\" itemvalue=\"wcwidth\" />\r\n            <item index=\"53\" class=\"java.lang.String\" itemvalue=\"numpy\" />\r\n            <item index=\"54\" class=\"java.lang.String\" itemvalue=\"jupyter_core\" />\r\n            <item index=\"55\" class=\"java.lang.String\" itemvalue=\"shiboken6\" />\r\n            <item index=\"56\" class=\"java.lang.String\" itemvalue=\"rfc3986-validator\" />\r\n            <item index=\"57\" class=\"java.lang.String\" itemvalue=\"types-python-dateutil\" />\r\n            <item index=\"58\" class=\"java.lang.String\" itemvalue=\"websocket-client\" />\r\n            <item index=\"59\" class=\"java.lang.String\" itemvalue=\"sqlparse\" />\r\n            <item index=\"60\" class=\"java.lang.String\" itemvalue=\"rpds-py\" />\r\n            <item index=\"61\" class=\"java.lang.String\" itemvalue=\"uri-template\" />\r\n            <item index=\"62\" class=\"java.lang.String\" itemvalue=\"stack-data\" />\r\n            <item index=\"63\" class=\"java.lang.String\" itemvalue=\"nest-asyncio\" />\r\n            <item index=\"64\" class=\"java.lang.String\" itemvalue=\"urllib3\" />\r\n            <item index=\"65\" class=\"java.lang.String\" itemvalue=\"six\" />\r\n            <item index=\"66\" class=\"java.lang.String\" itemvalue=\"tornado\" />\r\n            <item index=\"67\" class=\"java.lang.String\" itemvalue=\"prompt_toolkit\" />\r\n            <item index=\"68\" class=\"java.lang.String\" itemvalue=\"parso\" />\r\n            <item index=\"69\" class=\"java.lang.String\" itemvalue=\"tzdata\" />\r\n            <item index=\"70\" class=\"java.lang.String\" itemvalue=\"jsonpointer\" />\r\n            <item index=\"71\" class=\"java.lang.String\" itemvalue=\"Send2Trash\" />\r\n            <item index=\"72\" class=\"java.lang.String\" itemvalue=\"packaging\" />\r\n            <item index=\"73\" class=\"java.lang.String\" itemvalue=\"PySide6_Essentials\" />\r\n            <item index=\"74\" class=\"java.lang.String\" itemvalue=\"et-xmlfile\" />\r\n            <item index=\"75\" class=\"java.lang.String\" itemvalue=\"overrides\" />\r\n            <item index=\"76\" class=\"java.lang.String\" itemvalue=\"fastjsonschema\" />\r\n            <item index=\"77\" class=\"java.lang.String\" itemvalue=\"mistune\" />\r\n            <item index=\"78\" class=\"java.lang.String\" itemvalue=\"pandas\" />\r\n            <item index=\"79\" class=\"java.lang.String\" itemvalue=\"tqdm\" />\r\n            <item index=\"80\" class=\"java.lang.String\" itemvalue=\"Django\" />\r\n            <item index=\"81\" class=\"java.lang.String\" itemvalue=\"debugpy\" />\r\n            <item index=\"82\" class=\"java.lang.String\" itemvalue=\"pytz\" />\r\n            <item index=\"83\" class=\"java.lang.String\" itemvalue=\"webencodings\" />\r\n            <item index=\"84\" class=\"java.lang.String\" itemvalue=\"openpyxl\" />\r\n          </list>\r\n        </value>\r\n      </option>\r\n    </inspection_tool>\r\n  </profile>\r\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/inspectionProfiles/Project_Default.xml b/.idea/inspectionProfiles/Project_Default.xml
+--- a/.idea/inspectionProfiles/Project_Default.xml	(revision c28c44d7b4890d6a721cc21d4b8949c01ae0c15a)
++++ b/.idea/inspectionProfiles/Project_Default.xml	(date 1740371744004)
+@@ -1,6 +1,16 @@
+ <component name="InspectionProjectProfileManager">
+   <profile version="1.0">
+     <option name="myName" value="Project Default" />
++    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
++      <option name="myValues">
++        <value>
++          <list size="1">
++            <item index="0" class="java.lang.String" itemvalue="slot-scope" />
++          </list>
++        </value>
++      </option>
++      <option name="myCustomValuesEnabled" value="true" />
++    </inspection_tool>
+     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+       <option name="ignoredPackages">
+         <value>
+Index: Code/vue/src/App.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><script setup>\r\nimport router from \"@/router.js\";\r\nimport ManageSystem from \"@/components/ManageSystem/ManageSystem.vue\";\r\n</script>\r\n\r\n<template>\r\n  <div id=\"app\">\r\n  <ManageSystem/>\r\n  </div>\r\n</template>\r\n\r\n<style scoped>\r\n#app{\r\n\r\n}\r\n\r\nheader {\r\n  line-height: 1.5;\r\n}\r\n\r\n.logo {\r\n  display: block;\r\n  margin: 0 auto 2rem;\r\n}\r\n\r\n@media (min-width: 1024px) {\r\n  header {\r\n    display: flex;\r\n    place-items: center;\r\n    padding-right: calc(var(--section-gap) / 2);\r\n  }\r\n\r\n  .logo {\r\n    margin: 0 2rem 0 0;\r\n  }\r\n\r\n  header .wrapper {\r\n    display: flex;\r\n    place-items: flex-start;\r\n    flex-wrap: wrap;\r\n  }\r\n}\r\n</style>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Code/vue/src/App.vue b/Code/vue/src/App.vue
+--- a/Code/vue/src/App.vue	(revision c28c44d7b4890d6a721cc21d4b8949c01ae0c15a)
++++ b/Code/vue/src/App.vue	(date 1740721221511)
+@@ -1,11 +1,11 @@
+ <script setup>
+ import router from "@/router.js";
+-import ManageSystem from "@/components/ManageSystem/ManageSystem.vue";
++import ReportGeneration from "@/components/ReportGeneration/ReportGeneration.vue";
+ </script>
+ 
+ <template>
+   <div id="app">
+-  <ManageSystem/>
++  <ReportGeneration/>
+   </div>
+ </template>
+ 
+Index: Code/vue/src/components/ReportGeneration/ReportGeneration.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Code/vue/src/components/ReportGeneration/ReportGeneration.vue b/Code/vue/src/components/ReportGeneration/ReportGeneration.vue
+new file mode 100644
+--- /dev/null	(date 1740723952729)
++++ b/Code/vue/src/components/ReportGeneration/ReportGeneration.vue	(date 1740723952729)
+@@ -0,0 +1,225 @@
++<template>
++  <div class="report-generation">
++    <el-card class="form-card">
++      <h2>宣传报道生成</h2>
++      <el-form :model="report" ref="form" label-width="120px" class="form">
++        <!-- 可选标签展示 -->
++        <el-form-item label="选择标签" prop="tags">
++          <div class="available-tags">
++            <el-tag
++                v-for="(tag, index) in availableTags"
++                :key="index"
++                :closable="isTagSelected(tag)"
++                @close="removeTag(tag)"
++                :type="isTagSelected(tag) ? 'success' : 'info'"
++                @click="toggleTagSelection(tag)"
++                class="tag-item"
++            >
++              {{ tag }}
++            </el-tag>
++          </div>
++        </el-form-item>
++
++        <!-- 已选择的标签展示 -->
++        <div v-if="selectedTags.length" class="selected-tags">
++          <span><strong>已选择标签：</strong></span>
++          <el-tag
++              v-for="(tag, index) in selectedTags"
++              :key="index"
++              closable
++              @close="removeTag(tag)"
++              class="selected-tag"
++          >
++            {{ tag }}
++          </el-tag>
++        </div>
++
++        <!-- 标题输入 -->
++        <el-form-item label="标题" prop="title" :rules="[{ required: true, message: '请输入标题', trigger: 'blur' }]">
++          <el-input v-model="report.title" placeholder="请输入报道标题"/>
++        </el-form-item>
++
++        <!-- 内容输入 -->
++        <el-form-item label="内容" prop="content"
++                      :rules="[{ required: true, message: '请输入报道内容', trigger: 'blur' }]">
++          <el-input
++              type="textarea"
++              v-model="report.content"
++              placeholder="请输入报道内容"
++              rows="6"
++          />
++        </el-form-item>
++
++        <!-- 生成与润色按钮 -->
++        <el-form-item>
++          <el-button type="primary" @click="generateReport">生成报道</el-button>
++          <el-button @click="polishReport">润色报道</el-button>
++        </el-form-item>
++      </el-form>
++    </el-card>
++
++    <!-- 生成的报道预览 弹窗 -->
++    <el-dialog
++        v-model:visible="dialogVisible"
++        title="生成的报道"
++        @close="resetForm"
++        width="50%"
++    >
++      <div v-if="generatedReport">
++        <p><strong>标题：</strong>{{ generatedReport.title }}</p>
++        <p><strong>标签：</strong>{{ generatedReport.tags.join(', ') }}</p>
++        <p><strong>内容：</strong>{{ generatedReport.content }}</p>
++      </div>
++      <span slot="footer" class="dialog-footer">
++        <el-button @click="dialogVisible = false">关闭</el-button>
++      </span>
++    </el-dialog>
++  </div>
++</template>
++
++<script>
++import {ref} from "vue";
++import {ElForm, ElFormItem, ElInput, ElButton, ElTag, ElCard, ElDialog} from "element-plus";
++
++export default {
++  components: {
++    ElForm,
++    ElFormItem,
++    ElInput,
++    ElButton,
++    ElTag,
++    ElCard,
++    ElDialog,
++  },
++  setup() {
++    const availableTags = [
++      "文化", "科技", "教育", "公益", "环境", "健康", "经济", "体育", "艺术", "创新",
++      "社会", "旅游", "历史", "政治", "法律", "军事", "生态", "企业", "金融", "城市"
++    ]; // 预定义标签
++    const report = ref({
++      title: "",
++      content: "",
++      tags: [],
++    });
++    const selectedTags = ref([]); // 选中的标签
++    const generatedReport = ref(null);
++    const dialogVisible = ref(false); // 控制弹窗的显示
++
++    // 检查标签是否已选中
++    const isTagSelected = (tag) => selectedTags.value.includes(tag);
++
++    // 切换标签选中状态
++    const toggleTagSelection = (tag) => {
++      if (isTagSelected(tag)) {
++        removeTag(tag);
++      } else {
++        selectedTags.value.push(tag);
++      }
++    };
++
++    // 移除标签
++    const removeTag = (tag) => {
++      const index = selectedTags.value.indexOf(tag);
++      if (index !== -1) {
++        selectedTags.value.splice(index, 1);
++      }
++    };
++
++    // 生成报道
++    const generateReport = () => {
++      const form = this.$refs.form;
++      dialogVisible.value = true; // 显示弹窗
++      form.validate((valid) => {
++        if (valid) {
++          generatedReport.value = {...report.value, tags: selectedTags.value}; // 添加已选标签
++          dialogVisible.value = true; // 显示弹窗
++        } else {
++          return false;
++        }
++      });
++    };
++
++    // 润色报道
++    const polishReport = () => {
++      if (generatedReport.value) {
++        generatedReport.value.content = generatedReport.value.content.replace(
++            /(.+)/,
++            "经过进一步润色，内容变得更加生动和有吸引力：$1"
++        );
++        dialogVisible.value = true; // 显示弹窗
++      }
++    };
++
++    // 重置表单
++    const resetForm = () => {
++      dialogVisible.value = false;
++      report.value = {
++        title: "",
++        content: "",
++        tags: [],
++      };
++      selectedTags.value = [];
++    };
++
++    return {
++      availableTags,
++      report,
++      selectedTags,
++      generatedReport,
++      dialogVisible,
++      generateReport,
++      polishReport,
++      isTagSelected,
++      toggleTagSelection,
++      removeTag,
++      resetForm,
++    };
++  },
++};
++</script>
++
++<style scoped>
++.report-generation {
++  max-width: 800px;
++  margin: 30px auto;
++}
++
++.form-card {
++  padding: 20px;
++  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
++}
++
++.selected-tags {
++  margin-top: 10px;
++}
++
++.selected-tag {
++  margin-right: 8px;
++  margin-bottom: 8px;
++}
++
++.available-tags {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 10px;
++}
++
++.tag-item {
++  cursor: pointer;
++}
++
++.generated-report {
++  margin-top: 30px;
++  padding: 20px;
++  border: 1px solid #dcdfe6;
++  background-color: #f9f9f9;
++}
++
++.generated-report h3 {
++  margin-top: 0;
++}
++
++.generated-report p {
++  margin: 10px 0;
++}
++</style>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"557df84b-d7e5-4d19-bbcc-27387cf58ce6\" name=\"Changes\" comment=\"所有导航栏“返回”按钮添加\">\r\n      <change afterPath=\"$PROJECT_DIR$/Code/vue/src/assets/login/city.png\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Code/vue/src/assets/login/hunan.jpg\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/Code/vue/src/components/login.vue\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/在进行更新之前于_2025_1_12_下午5_20_取消提交了更改_[更改]/shelved.patch\" beforeDir=\"false\" />\r\n    <list default=\"true\" id=\"557df84b-d7e5-4d19-bbcc-27387cf58ce6\" name=\"Changes\" comment=\"情感分析界面+民俗展示界面bug修复\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/misc.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/湖南省博物馆_wordcloud.png\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/湖南省博物馆_wordcloud.png\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/vue/src/App.vue\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/vue/src/App.vue\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/vue/static/index.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/vue/static/index.html\" afterDir=\"false\" />\r\n    </list>\r\n    <list id=\"403c99ed-9698-4d5d-8b85-b34b96edd3f6\" name=\"更改\" comment=\"影视文学文字\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"JavaScript File\" />\r\n        <option value=\"TypeScript File\" />\r\n        <option value=\"Vue Composition API Component\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PUSH_TAGS\">\r\n      <GitPushTagMode>\r\n        <option name=\"argument\" value=\"--tags\" />\r\n        <option name=\"title\" value=\"All\" />\r\n      </GitPushTagMode>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;customColor&quot;: &quot;&quot;,\r\n  &quot;associatedIndex&quot;: 0\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2oYKrZNxAKPlwVJX3B8q8YPBDrT\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"npm.dev.executor\": \"Run\",\r\n    \"ts.external.directory.path\": \"D:\\\\IntelliJ IDEA 2024.1\\\\plugins\\\\javascript-impl\\\\jsLanguageServicesImpl\\\\external\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"vue.recent.templates\": [\r\n      \"Vue Composition API Component\"\r\n    ]\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"SONARLINT_PRECOMMIT_ANALYSIS\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"npm.dev.executor\": \"Run\",\r\n    \"ts.external.directory.path\": \"D:\\\\software_installation\\\\IntelliJ IDEA 2023.2.3\\\\plugins\\\\javascript-impl\\\\jsLanguageServicesImpl\\\\external\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\assets\" />\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\assets\\folkCustom\" />\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\static\\img\\img_hx\" />\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\assets\\models\" />\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\json\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\vue\\HX_cultural_transmission_sys\\Code\\vue\\src\\assets\\login\" />\r\n      <recent name=\"D:\\vue\\HX_cultural_transmission_sys\\Code\\vue\\src\\components\" />\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\json\" />\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\components\" />\r\n      <recent name=\"D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\assets\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"dev\" type=\"js.build_tools.npm\" nameIsGenerated=\"true\">\r\n      <package-json value=\"$PROJECT_DIR$/Code/vue/package.json\" />\r\n      <command value=\"run\" />\r\n      <scripts>\r\n        <script value=\"dev\" />\r\n      </scripts>\r\n      <node-interpreter value=\"project\" />\r\n      <envs />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240\" />\r\n        <option value=\"bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task id=\"LOCAL-00001\" summary=\"影视艺术页面——文学页面（轮播图）\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736042556822</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736042556822</updated>\r\n    </task>\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"557df84b-d7e5-4d19-bbcc-27387cf58ce6\" name=\"Changes\" comment=\"\" />\r\n      <changelist id=\"403c99ed-9698-4d5d-8b85-b34b96edd3f6\" name=\"更改\" comment=\"影视文学文字\" />\r\n      <created>1731041273818</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1731041273818</updated>\r\n      <workItem from=\"1731041278749\" duration=\"1052000\" />\r\n      <workItem from=\"1731043520238\" duration=\"362000\" />\r\n      <workItem from=\"1732083330542\" duration=\"60000\" />\r\n      <workItem from=\"1732092920229\" duration=\"39000\" />\r\n      <workItem from=\"1733187071892\" duration=\"565000\" />\r\n      <workItem from=\"1735958588437\" duration=\"9292000\" />\r\n      <workItem from=\"1735979942322\" duration=\"5148000\" />\r\n      <workItem from=\"1736036799062\" duration=\"27010000\" />\r\n      <workItem from=\"1736123715474\" duration=\"26271000\" />\r\n      <workItem from=\"1736174103384\" duration=\"412000\" />\r\n      <workItem from=\"1736230281438\" duration=\"16750000\" />\r\n      <workItem from=\"1736296294231\" duration=\"23162000\" />\r\n      <workItem from=\"1736338547775\" duration=\"9806000\" />\r\n      <workItem from=\"1736383582729\" duration=\"267000\" />\r\n      <workItem from=\"1736385593939\" duration=\"1015000\" />\r\n      <workItem from=\"1736387575471\" duration=\"63000\" />\r\n      <workItem from=\"1736387665227\" duration=\"617000\" />\r\n      <workItem from=\"1736391193427\" duration=\"30161000\" />\r\n      <workItem from=\"1736469344910\" duration=\"37069000\" />\r\n      <workItem from=\"1736555277985\" duration=\"12653000\" />\r\n      <workItem from=\"1736605608675\" duration=\"3140000\" />\r\n      <workItem from=\"1736642065952\" duration=\"33753000\" />\r\n      <workItem from=\"1736728785393\" duration=\"10448000\" />\r\n      <workItem from=\"1736755786972\" duration=\"2201000\" />\r\n      <workItem from=\"1736642065952\" duration=\"27021000\" />\r\n      <workItem from=\"1736759679072\" duration=\"1506000\" />\r\n      <workItem from=\"1740115400323\" duration=\"4057000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"影视艺术页面——文学页面（前端完成）\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736071183782</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736071183782</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"影视艺术页面——文学页面（前端美化）\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736146719811</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736146719811</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"影视艺术页面——古代文学页面+新媒体艺术页面\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736167744168</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736167744168</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"影视艺术页面——古代文学页面+新媒体艺术页面（图片）\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736167786885</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736167786885</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"影视艺术页面(前端完成)\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736237483521</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736237483521</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"影视艺术页面(前端完成)\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736237509112</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736237509112</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"影视艺术页面(前后端连接完成)\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736323233739</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736323233739</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"美食文化页面嵌入\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736404049460</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736404049460</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"情感分析页面搜索功能实现\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736410611162</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736410611162</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"美食页面优化\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736436050164</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736436050164</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00012\" summary=\"民俗页面优化\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736477962747</created>\r\n      <option name=\"number\" value=\"00012\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00012\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736477962747</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00013\" summary=\"民俗页面优化\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736479271000</created>\r\n      <option name=\"number\" value=\"00013\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00013\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736479271000</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00014\" summary=\"民俗页面轮播图\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736497203308</created>\r\n      <option name=\"number\" value=\"00014\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00014\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736497203308</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00015\" summary=\"民俗页面轮播图\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736497324724</created>\r\n      <option name=\"number\" value=\"00015\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00015\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736497324724</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00016\" summary=\"情感分析页面刷新问题解决\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736514185220</created>\r\n      <option name=\"number\" value=\"00016\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00016\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736514185220</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00017\" summary=\"民俗轮播图微调\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736514293199</created>\r\n      <option name=\"number\" value=\"00017\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00017\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736514293199</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00018\" summary=\"首页美化\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736523355250</created>\r\n      <option name=\"number\" value=\"00018\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00018\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736523355250</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00019\" summary=\"首页导航栏美化\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736558932952</created>\r\n      <option name=\"number\" value=\"00019\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00019\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736558932952</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00020\" summary=\"首页导航栏美化\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736558976473</created>\r\n      <option name=\"number\" value=\"00020\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00020\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736558976473</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00021\" summary=\"美食旋转木马微调\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736562407355</created>\r\n      <option name=\"number\" value=\"00021\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00021\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736562407355</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00022\" summary=\"首页路由\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736566803707</created>\r\n      <option name=\"number\" value=\"00022\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00022\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736566803707</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00023\" summary=\"非遗民俗菜单栏\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736568411437</created>\r\n      <option name=\"number\" value=\"00023\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00023\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736568411437</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00024\" summary=\"红色文化界面\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736662769936</created>\r\n      <option name=\"number\" value=\"00024\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00024\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736662769937</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00025\" summary=\"红色文化展示界面\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736668893379</created>\r\n      <option name=\"number\" value=\"00025\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00025\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736668893379</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00026\" summary=\"红色文化展示界面\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736668917792</created>\r\n      <option name=\"number\" value=\"00026\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00026\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736668917792</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00027\" summary=\"红色文化菜单\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736669370297</created>\r\n      <option name=\"number\" value=\"00027\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00027\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736669370297</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00028\" summary=\"所有导航栏“返回”按钮添加\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736674490869</created>\r\n      <option name=\"number\" value=\"00028\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00028\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736674490869</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00029\" summary=\"所有导航栏“返回”按钮添加\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736756855718</created>\r\n      <option name=\"number\" value=\"00029\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00029\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736756855718</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"30\" />\r\n    <task id=\"LOCAL-00029\" summary=\"所有导航栏“返回”按钮添加\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736674536903</created>\r\n      <option name=\"number\" value=\"00029\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00029\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736674536903</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00030\" summary=\"非遗民俗情感分析前后端连接\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736684931015</created>\r\n      <option name=\"number\" value=\"00030\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00030\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736684931015</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00031\" summary=\"非遗民俗界面优化+图片刷新\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736688842141</created>\r\n      <option name=\"number\" value=\"00031\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00031\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736688842141</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00032\" summary=\"情感分析界面+民俗展示界面bug修复\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736732687699</created>\r\n      <option name=\"number\" value=\"00032\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00032\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736732687699</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00033\" summary=\"情感分析界面+民俗展示界面bug修复\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1736756104914</created>\r\n      <option name=\"number\" value=\"00033\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00033\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1736756104914</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"34\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"影视艺术页面——文学页面（前端美化）\" />\r\n    <MESSAGE value=\"影视艺术页面——古代文学页面+新媒体艺术页面\" />\r\n    <MESSAGE value=\"影视艺术页面——古代文学页面+新媒体艺术页面（图片）\" />\r\n    <MESSAGE value=\"影视艺术页面(前端完成)\" />\r\n    <MESSAGE value=\"影视艺术页面(前后端连接完成)\" />\r\n    <MESSAGE value=\"美食文化页面嵌入\" />\r\n    <MESSAGE value=\"情感分析页面搜索功能实现\" />\r\n    <MESSAGE value=\"美食页面优化\" />\r\n    <MESSAGE value=\"民俗页面优化\" />\r\n    <MESSAGE value=\"民俗页面轮播图\" />\r\n    <MESSAGE value=\"情感分析页面刷新问题解决\" />\r\n    <MESSAGE value=\"民俗轮播图微调\" />\r\n    <MESSAGE value=\"首页美化\" />\r\n    <MESSAGE value=\"首页导航栏美化\" />\r\n    <MESSAGE value=\"美食旋转木马微调\" />\r\n    <MESSAGE value=\"首页路由\" />\r\n    <MESSAGE value=\"非遗民俗菜单栏\" />\r\n    <MESSAGE value=\"红色文化界面\" />\r\n    <MESSAGE value=\"红色文化展示界面\" />\r\n    <MESSAGE value=\"红色文化菜单\" />\r\n    <MESSAGE value=\"所有导航栏“返回”按钮添加\" />\r\n    <MESSAGE value=\"非遗民俗情感分析前后端连接\" />\r\n    <MESSAGE value=\"非遗民俗界面优化+图片刷新\" />\r\n    <MESSAGE value=\"情感分析界面加载动画\" />\r\n    <MESSAGE value=\"情感分析界面+民俗展示界面bug修复\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"情感分析界面+民俗展示界面bug修复\" />\r\n    <MESSAGE value=\"影视文学文字\" />\r\n    <MESSAGE value=\"所有导航栏“返回”按钮添加\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"所有导航栏“返回”按钮添加\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"javascript\">\r\n          <url>file://$PROJECT_DIR$/Code/vue/src/utils/turn.js</url>\r\n          <line>864</line>\r\n          <option name=\"timeStamp\" value=\"3\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision c28c44d7b4890d6a721cc21d4b8949c01ae0c15a)
++++ b/.idea/workspace.xml	(date 1740371800764)
+@@ -23,6 +23,7 @@
+       <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Code/vue/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/index.html" afterDir="false" />
+     </list>
++    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="后台管理页面+登录注册页面" />
+     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -168,7 +169,7 @@
+       <workItem from="1736755786972" duration="2201000" />
+       <workItem from="1736642065952" duration="27021000" />
+       <workItem from="1736759679072" duration="1506000" />
+-      <workItem from="1740115400323" duration="4057000" />
++      <workItem from="1740115400323" duration="14295000" />
+     </task>
+     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
+       <option name="closed" value="true" />
+@@ -394,6 +395,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1736756855718</updated>
+     </task>
++    <task id="LOCAL-00030" summary="后台管理页面+登录注册页面">
++      <option name="closed" value="true" />
++      <created>1740131115206</created>
++      <option name="number" value="00030" />
++      <option name="presentableId" value="LOCAL-00030" />
++      <option name="project" value="LOCAL" />
++      <updated>1740131115206</updated>
++    </task>
++    <option name="localTasksCounter" value="31" />
+     <option name="localTasksCounter" value="30" />
+     <task id="LOCAL-00029" summary="所有导航栏“返回”按钮添加">
+       <option name="closed" value="true" />
+@@ -484,7 +494,8 @@
+     <option name="LAST_COMMIT_MESSAGE" value="情感分析界面+民俗展示界面bug修复" />
+     <MESSAGE value="影视文学文字" />
+     <MESSAGE value="所有导航栏“返回”按钮添加" />
+-    <option name="LAST_COMMIT_MESSAGE" value="所有导航栏“返回”按钮添加" />
++    <MESSAGE value="后台管理页面+登录注册页面" />
++    <option name="LAST_COMMIT_MESSAGE" value="后台管理页面+登录注册页面" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
