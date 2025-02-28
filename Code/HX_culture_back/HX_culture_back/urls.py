@@ -5,7 +5,7 @@ from app01 import spot,collaborative_filter
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze
+from app01 import food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
@@ -13,7 +13,7 @@ urlpatterns = [
 #     url(r'^search/$', search.search),
 #     url(r'^search-post/$', search2.search_post),
     url(r'^classes/',view.classes),
-
+    url(r'^register/',user.register_user),
     url(r'^get_city/',city.get_city_list),
     url(r'^get_average_score_by_bi_month/',comment.get_average_score_by_bi_month),
     url(r'^get_comment_list_recent/',comment.get_comment_list_recent),

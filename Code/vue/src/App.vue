@@ -1,12 +1,12 @@
 <script setup>
 import router from "@/router.js";
-import ManageSystem from "@/components/ManageSystem/ManageSystem.vue";
+import ReportGeneration from "@/components/ReportGeneration/ReportGeneration.vue";
 </script>
 
 <template>
   <div id="app">
-<!--  <ManageSystem/>-->
     <router-view/>
+  <ReportGeneration/>
   </div>
 </template>
 
