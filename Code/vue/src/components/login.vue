@@ -5,7 +5,6 @@
         <img src="@/assets/login/hunan.jpg" alt="logo" />
       </div>
       <h1>湖湘文化数智化传播系统</h1>
-
       <!-- 登录表单 -->
       <form v-if="!isRegister" @submit.prevent="handleLogin">
         <div class="input-group">
@@ -78,58 +77,62 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      username: '',        // 登录时的用户名
-      password: '',        // 登录时的密码
-      isRegister: false,   // 控制显示登录还是注册表单
-      registerUsername: '', // 注册时的用户名
-      registerPassword: '', // 注册时的密码
-      registerConfirmPassword: '', // 注册时的确认密码
-    };
-  },
-  methods: {
-    // 登录处理
-    handleLogin() {
-      if (this.username && this.password) {
-        console.log('Logging in with:', this.username, this.password);
-        this.$router.push('/dashboard'); // 登录成功后跳转到仪表盘
-      } else {
-        alert('请输入用户名和密码');
-      }
-    },
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import {
+  provinceAndCityData,
+  pcTextArr,
+  regionData,
+  pcaTextArr,
+  codeToText,
+} from "element-china-area-data";
 
-    // 注册处理
-    handleRegister() {
-      // 检查密码是否匹配
-      if (this.registerPassword !== this.registerConfirmPassword) {
-        alert('密码和确认密码不一致');
-        return;
-      }
+const router = useRouter();
 
-      if (this.registerUsername && this.registerPassword) {
-        console.log('Registering with:', this.registerUsername, this.registerPassword);
-        this.$router.push('/dashboard'); // 注册成功后跳转到仪表盘
-      } else {
-        alert('请输入用户名和密码');
-      }
-    },
+const username = ref('');
+const password = ref('');
+const isRegister = ref(false);
+const registerUsername = ref('');
+const registerPassword = ref('');
+const registerConfirmPassword = ref('');
 
-    // 忘记密码处理
-    handleForgotPassword() {
-      // 假设跳转到忘记密码页面
-      this.$router.push('/forgot-password');
-    },
+// 登录处理
+const handleLogin = () => {
+  if (username.value && password.value) {
+    console.log('Logging in with:', username.value, password.value);
+    router.push('/index');
+  } else {
+    alert('请输入用户名和密码');
+  }
+};
 
-    // 切换表单
-    toggleForm() {
-      this.isRegister = !this.isRegister;
-    },
-  },
+// 注册处理
+const handleRegister = () => {
+  if (registerPassword.value !== registerConfirmPassword.value) {
+    alert('密码和确认密码不一致');
+    return;
+  }
+
+  if (registerUsername.value && registerPassword.value) {
+    console.log('Registering with:', registerUsername.value, registerPassword.value);
+    router.push('/dashboard');
+  } else {
+    alert('请输入用户名和密码');
+  }
+};
+
+// 忘记密码处理
+const handleForgotPassword = () => {
+  router.push('/forgot-password');
+};
+
+// 切换表单
+const toggleForm = () => {
+  isRegister.value = !isRegister.value;
 };
 </script>
+
 
 <style scoped>
 .login-container {

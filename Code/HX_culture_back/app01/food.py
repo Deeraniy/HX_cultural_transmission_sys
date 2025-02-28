@@ -78,9 +78,6 @@ def clearData():
         text1 = re.sub(r'详情介绍', '', record['text'])
         text = re.sub(r' ', '', text1)
 
-
-
-
         # 更新记录
         update_query = """
         UPDATE folkcustom
