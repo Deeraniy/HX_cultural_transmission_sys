@@ -23,6 +23,7 @@
       <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/index.html" afterDir="false" />
     </list>
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="后台管理页面+登录注册页面" />
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +169,7 @@
       <workItem from="1736755786972" duration="2201000" />
       <workItem from="1736642065952" duration="27021000" />
       <workItem from="1736759679072" duration="1506000" />
-      <workItem from="1740115400323" duration="4057000" />
+      <workItem from="1740115400323" duration="14295000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
@@ -394,6 +395,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736756855718</updated>
     </task>
+    <task id="LOCAL-00030" summary="后台管理页面+登录注册页面">
+      <option name="closed" value="true" />
+      <created>1740131115206</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1740131115206</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <option name="localTasksCounter" value="30" />
     <task id="LOCAL-00029" summary="所有导航栏“返回”按钮添加">
       <option name="closed" value="true" />
@@ -484,7 +494,8 @@
     <option name="LAST_COMMIT_MESSAGE" value="情感分析界面+民俗展示界面bug修复" />
     <MESSAGE value="影视文学文字" />
     <MESSAGE value="所有导航栏“返回”按钮添加" />
-    <option name="LAST_COMMIT_MESSAGE" value="所有导航栏“返回”按钮添加" />
+    <MESSAGE value="后台管理页面+登录注册页面" />
+    <option name="LAST_COMMIT_MESSAGE" value="后台管理页面+登录注册页面" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
