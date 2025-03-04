@@ -25,7 +25,7 @@ def filter_words(word, min_length=2):
 def get_db_connection():
     """获取数据库连接"""
     return pymysql.connect(
-        host='120.233.26.237', 
+        host='60.215.128.117', 
         port=15320, 
         user='root', 
         passwd='kissme77', 
