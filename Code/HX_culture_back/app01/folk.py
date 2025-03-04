@@ -6,7 +6,7 @@ def get_folkcustom_list(request):
     # pass
     # 访问非遗文化专区展示非遗民俗
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -29,7 +29,7 @@ def get_folk_influence(request):
     # 访问非遗文化专区展示非遗传播效果
 
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)

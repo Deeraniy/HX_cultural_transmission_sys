@@ -10,7 +10,7 @@ def get_comment_list_literature(request):
     
     # 创建连接
     conn = pymysql.connect(
-        host='120.233.26.237', 
+        host='60.215.128.117', 
         port=15320, 
         user='root', 
         passwd='kissme77',
