@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, HttpResponse, JsonResponse
+from django.shortcuts import render, redirect,HttpResponse
+from django.http import JsonResponse
 import pymysql
 
 # 实现注册
