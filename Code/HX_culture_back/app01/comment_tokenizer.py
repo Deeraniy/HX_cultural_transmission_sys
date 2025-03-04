@@ -103,7 +103,7 @@ def process_spot_tokens(spot_name):
 def get_db_connection():
     """获取数据库连接"""
     return pymysql.connect(
-        host='120.233.26.237', 
+        host='60.215.128.117', 
         port=15320, 
         user='root', 
         passwd='kissme77', 
@@ -224,7 +224,7 @@ def get_word_frequency(request):
 if __name__ == "__main__":
     try:
         # 连接数据库获取所有景点
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
+        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
                              passwd='kissme77', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
