@@ -1,11 +1,11 @@
 <script setup>
 import router from "@/router.js";
-
+import ReportGeneration from "@/components/ReportGeneration/ReportGeneration.vue";
 </script>
 
 <template>
   <div id="app">
-  <router-view/>
+    <router-view/>
   </div>
 </template>
 
