@@ -47,7 +47,7 @@ def sentiments_all():
     try:
         # 建立数据库连接，添加超时设置
         conn = pymysql.connect(
-            host='120.233.26.237', 
+            host='60.215.128.117', 
             port=15320, 
             user='root', 
             passwd='kissme77',
@@ -91,7 +91,7 @@ def sentiments_all():
                 # 尝试重新连接
                 if not conn.open:
                     conn = pymysql.connect(
-                        host='120.233.26.237', 
+                        host='60.215.128.117', 
                         port=15320, 
                         user='root', 
                         passwd='kissme77',
@@ -122,7 +122,7 @@ def sentiments_analyze(request):
     name = request.GET.get('name')
     try:
         conn = pymysql.connect(
-            host='120.233.26.237', 
+            host='60.215.128.117', 
             port=15320, 
             user='root', 
             passwd='kissme77',
@@ -203,7 +203,7 @@ def sentiments_result(request):
         logger.info(f"正在查询文学作品: {name}")
             
         # 数据库连接
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
+        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
                              passwd='kissme77', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -417,7 +417,7 @@ def sentiments_result_total_count(request):
         logger.info(f"正在查询文学作品: {name}")
             
         # 数据库连接
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', 
+        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
                              passwd='kissme77', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)

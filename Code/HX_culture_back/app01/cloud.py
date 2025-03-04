@@ -13,7 +13,7 @@ def get_cloud(request):
     spot_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -51,7 +51,7 @@ def get_cloud_literature(request):
     liter_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -86,7 +86,7 @@ def get_cloud_food(request):
     food_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -121,7 +121,7 @@ def get_cloud_folk(request):
     folk_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)

@@ -115,7 +115,7 @@ def analyze_token_sentiments():
     """对folk_token表中的词语进行情感分析"""
     try:
         conn = pymysql.connect(
-            host='120.233.26.237', 
+            host='60.215.128.117', 
             port=15320, 
             user='root', 
             passwd='kissme77',
@@ -155,7 +155,7 @@ def analyze_token_sentiments():
                 cursor.close()
                 conn.close()
                 conn = pymysql.connect(
-                    host='120.233.26.237', 
+                    host='60.215.128.117', 
                     port=15320, 
                     user='root', 
                     passwd='kissme77',
