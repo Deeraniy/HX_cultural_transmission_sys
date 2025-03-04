@@ -5,10 +5,12 @@ from app01 import spot,collaborative_filter
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user
+from app01 import views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
+    # 上传头像
+    path('upload/avatar', views.UploadAvatar.as_view(), name='upload_avatar'),
 #     url(r'^search-form/$', search.search_form),
 #     url(r'^search/$', search.search),
 #     url(r'^search-post/$', search2.search_post),
@@ -63,7 +65,7 @@ urlpatterns = [
     url(r'^get_folkcustom/',folk.get_folkcustom_list),# get_folkcustom_list获取 folkcustom全部详细信息，把名称和图片等展示
     url(r'^get_folk_influence/',folk.get_folk_influence),
     url(r'^get_all_node/',search.get_all_node),
-
+        # 上传头像
     url(r'^get_user_preference/$', collaborative_filter.get_user_preference),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

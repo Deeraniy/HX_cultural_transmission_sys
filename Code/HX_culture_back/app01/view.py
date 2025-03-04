@@ -1,25 +1,18 @@
-from django.shortcuts import render, redirect,HttpResponse
-import pymysql
+import datetime
+import os
+from travel_recommend import settings
 
-
-def classes(request):
-    # pass
-    # 访问classes的时候展示班级
-
-    # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
-                           db='studentmanagement',charset='utf8')
-    # 创建游标
-    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-
-    # 执行SQL，并返回收影响行数
-    effect_row = cursor.execute("select id,title from class")
-    class_list =cursor.fetchall()
-    print(class_list)
-
-    # 关闭游标
-    cursor.close()
-    # 关闭连接
-    conn.close()
-    # 将查询得到的数据放在class_list列表中
-    return render(request,'classes.html',{'class_list':class_list})
+class UploadAvatar(APIView):
+    def post(self, request):
+        file = request.FILES.get('avatar')
+        if not file:
+            return response.server_error(message="上传文件不能为空")
+        new_file_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '-' + file.name
+        file_path = os.path.join(settings.USER_AVATAR_ROOT, new_file_name)
+        try:
+            with open(file_path, 'wb') as f:
+                for chunk in file.chunks():
+                    f.write(chunk)
+            return response.success_data_msg(f'{settings.USER_MEDIA_URL}' + new_file_name, "上传成功")
+        except:
+            return response.server_error("上传头像失败")
