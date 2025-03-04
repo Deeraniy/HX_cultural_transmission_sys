@@ -10,7 +10,7 @@ urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
     # 上传头像
-    path('upload/avatar', views.UploadAvatar.as_view(), name='upload_avatar'),
+#     path('upload/avatar', views.UploadAvatar.as_view(), name='upload_avatar'),
 #     url(r'^search-form/$', search.search_form),
 #     url(r'^search/$', search.search),
 #     url(r'^search-post/$', search2.search_post),
