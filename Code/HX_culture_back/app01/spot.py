@@ -7,7 +7,7 @@ def get_spot_list(request):
     # 访问classes的时候展示班级
 
     # 创建连接
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -27,7 +27,7 @@ def get_spot_list(request):
 
 def get_spot_by_name(request):
     spot_name=request.GET.get('spot_name')
-    conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
