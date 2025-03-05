@@ -323,7 +323,7 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
                 
                 # 修改：创建 CausalImpact 对象，使用简单的数值索引
                 ci = CausalImpact(
-                    data=np.array(impact_data),  # 转换为 numpy 数组
+                    data=impact_data,
                     pre_period=[0, change_point],
                     post_period=[change_point + 1, len(impact_data) - 1],
                     model_args={
@@ -333,24 +333,76 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
                     }
                 )
                 ci.run()
-                # 获取分析结果
-                summary = ci.summary()
-                report = ci.summary(output='report')
                 
-                print("Impact Summary:", summary)
-                print("Impact Report:", report)
+                # 打印完整的 inferences 信息
+                print("\n=== Inferences DataFrame 完整信息 ===")
+                print("列名:", ci.inferences.columns.tolist())
+                print("\n前5行数据:")
+                print(ci.inferences.head())
+                print("\n数据类型:")
+                print(ci.inferences.dtypes)
+                
+                # 使用正确的列名提取数据
+                summary_data = {
+                    'average': {
+                        'actual': float(ci.inferences['response'].mean()),
+                        'predicted': float(ci.inferences['point_pred'].mean()),
+                        'effect': float(ci.inferences['point_effect'].mean()),
+                        'ci_lower': float(ci.inferences['point_effect_lower'].mean()),
+                        'ci_upper': float(ci.inferences['point_effect_upper'].mean())
+                    },
+                    'cumulative': {
+                        'actual': float(ci.inferences['cum_response'].iloc[-1]),
+                        'predicted': float(ci.inferences['cum_pred'].iloc[-1]),
+                        'effect': float(ci.inferences['cum_effect'].iloc[-1]),
+                        'ci_lower': float(ci.inferences['cum_effect_lower'].iloc[-1]),
+                        'ci_upper': float(ci.inferences['cum_effect_upper'].iloc[-1])
+                    }
+                }
+                
+                # 计算相对效应
+                relative_effect = (summary_data['cumulative']['effect'] / summary_data['cumulative']['actual']) * 100
+                
+                # 生成详细的报告文本
+                report_text = f"""
+因果推理分析报告 - {indicator}
+
+1. 平均效应分析:
+   - 实际平均值: {summary_data['average']['actual']:.2f}
+   - 预测平均值: {summary_data['average']['predicted']:.2f}
+   - 平均因果效应: {summary_data['average']['effect']:.2f}
+   - 95%置信区间: [{summary_data['average']['ci_lower']:.2f}, {summary_data['average']['ci_upper']:.2f}]
+
+2. 累积效应分析:
+   - 实际累积值: {summary_data['cumulative']['actual']:.2f}
+   - 预测累积值: {summary_data['cumulative']['predicted']:.2f}
+   - 累积因果效应: {summary_data['cumulative']['effect']:.2f}
+   - 95%置信区间: [{summary_data['cumulative']['ci_lower']:.2f}, {summary_data['cumulative']['ci_upper']:.2f}]
+
+3. 相对效应:
+   - 相对变化: {relative_effect:.1f}%
+
+4. 统计显著性:
+   - 置信区间是否包含0: {"否" if summary_data['average']['ci_lower'] * summary_data['average']['ci_upper'] > 0 else "是"}
+   - 效应方向: {"正向" if summary_data['average']['effect'] > 0 else "负向" if summary_data['average']['effect'] < 0 else "无显著效应"}
+
+5. 结论:
+   在干预后期间，{indicator}的实际值与预测值之间存在{abs(summary_data['average']['effect']):.2f}的差异。
+   这表明干预{"产生了显著" if abs(relative_effect) > 10 else "产生了轻微" if abs(relative_effect) > 5 else "没有产生显著"}影响。
+   累积来看，干预导致{indicator}{"增加" if summary_data['cumulative']['effect'] > 0 else "减少"}了{abs(summary_data['cumulative']['effect']):.2f}个单位。
+"""
                 
                 results[indicator] = {
                     'change_point_index': int(change_point),
                     'change_point_date': {
-                        'year': dates[change_point].year,  # 确保 dates[change_point] 是一个日期对象
+                        'year': dates[change_point].year,
                         'month': dates[change_point].month
                     },
                     'change_value': float(change_value),
                     'pre_period_mean': float(impact_data['y'][:change_point].mean()),
                     'post_period_mean': float(impact_data['y'][change_point:].mean()),
-                    'impact_summary': summary,
-                    'impact_report': report
+                    'impact_summary': summary_data,
+                    'impact_report': report_text
                 }
             except Exception as e:
                 logger.error(f"处理指标 {indicator} 时出错: {str(e)}")
