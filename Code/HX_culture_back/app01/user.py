@@ -123,3 +123,36 @@ def get_user_activity(request):
     else:
         return JsonResponse({"error": "不是GET请求!"})
 
+def get_user_info(request):
+    if request.method == 'GET':
+        username = request.GET.get('username')
+
+        if username:
+            # 创建连接
+            conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+                                   db='hx_cultural_transmission_sys', charset='utf8')
+            # 创建游标
+            cursor = conn.cursor()
+            try:
+                # 执行SQL查询语句
+                sql = "SELECT * FROM users WHERE username = %s"
+                cursor.execute(sql, (username,))
+                result = cursor.fetchone()
+                if result:
+                    columns = [desc[0] for desc in cursor.description]
+                    user_info = dict(zip(columns, result))
+                    return JsonResponse(user_info)
+                else:
+                    return JsonResponse({"error": "用户不存在"})
+            except Exception as e:
+                conn.rollback()
+                return JsonResponse({"error": f"获取用户信息失败: {e}"})
+            finally:
+                # 关闭游标
+                cursor.close()
+                # 关闭连接
+                conn.close()
+        else:
+            return JsonResponse({"error": "未提供用户名"})
+    else:
+        return JsonResponse({"error": "不是GET请求!"})
