@@ -6,8 +6,8 @@ import test from "@/components/Test.vue"
 
 <template>
   <div id="app">
-<!--    <router-view/>-->
-    <test/>
+    <router-view/>
+<!--    <test/>-->
   </div>
 </template>
 
