@@ -5,7 +5,7 @@ from app01 import spot,collaborative_filter
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user
+from app01 import views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tags
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
@@ -67,6 +67,7 @@ urlpatterns = [
     url(r'^get_all_node/',search.get_all_node),
         # 上传头像
     url(r'^get_user_preference/$', collaborative_filter.get_user_preference),
+    url(r'^get_all_tags/$', tags.get_all_tags),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

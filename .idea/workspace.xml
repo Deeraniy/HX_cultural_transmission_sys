@@ -4,16 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面+民俗展示界面bug修复">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/_2025_1_12_5_20____.xml" afterDir="false" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/api/tags.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/api/user.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/_2025_2_28_2_27____.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/_2025_2_28_2_27____.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/再见爱人_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/土家族民歌_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/太平街_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/湖南省博物馆_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/湖南省博物馆_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/collaborative_filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/collaborative_filter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/111.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/111.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,8 +33,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
-        <option value="TypeScript File" />
         <option value="Vue Composition API Component" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -51,34 +59,6 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "ts.external.directory.path": "D:\\IntelliJ IDEA 2024.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "vue.recent.templates": [
-      "Vue Composition API Component"
-    ]
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "ts.external.directory.path": "D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
@@ -89,10 +69,11 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;ts.external.directory.path&quot;: &quot;D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
@@ -173,6 +154,12 @@
       <workItem from="1736642065952" duration="27021000" />
       <workItem from="1736759679072" duration="1506000" />
       <workItem from="1740115400323" duration="4057000" />
+      <workItem from="1740720925444" duration="11683000" />
+      <workItem from="1741060668017" duration="2596000" />
+      <workItem from="1741153586674" duration="7603000" />
+      <workItem from="1741171556958" duration="4516000" />
+      <workItem from="1741255620519" duration="1475000" />
+      <workItem from="1741310510143" duration="1456000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
@@ -430,7 +417,23 @@
       <option name="project" value="LOCAL" />
       <updated>1736756104914</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="个人中心优化">
+      <option name="closed" value="true" />
+      <created>1740728157713</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1740728157713</updated>
+    </task>
+    <task id="LOCAL-00035" summary="登录界面优化">
+      <option name="closed" value="true" />
+      <created>1740731732246</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1740731732246</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -448,9 +451,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="影视艺术页面——文学页面（前端美化）" />
-    <MESSAGE value="影视艺术页面——古代文学页面+新媒体艺术页面" />
-    <MESSAGE value="影视艺术页面——古代文学页面+新媒体艺术页面（图片）" />
     <MESSAGE value="影视艺术页面(前端完成)" />
     <MESSAGE value="影视艺术页面(前后端连接完成)" />
     <MESSAGE value="美食文化页面嵌入" />
@@ -473,7 +473,10 @@
     <MESSAGE value="非遗民俗界面优化+图片刷新" />
     <MESSAGE value="情感分析界面加载动画" />
     <MESSAGE value="情感分析界面+民俗展示界面bug修复" />
-    <option name="LAST_COMMIT_MESSAGE" value="情感分析界面+民俗展示界面bug修复" />
+    <MESSAGE value="数据库设计" />
+    <MESSAGE value="个人中心优化" />
+    <MESSAGE value="登录界面优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="登录界面优化" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

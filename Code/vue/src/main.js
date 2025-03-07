@@ -11,7 +11,8 @@ import 'element-plus/dist/index.css'
 import App from '@/App.vue'
 import router from "@/router.js";
 import * as echarts from 'echarts'
-
+import 'swiper/css'
+import 'swiper/css/effect-cards'
 const app = createApp(App)
 app.config.globalProperties.$echarts = echarts
 // 使用 Vue 插件
