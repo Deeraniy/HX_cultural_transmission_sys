@@ -128,19 +128,28 @@ def get_user_info(request):
         username = request.GET.get('username')
 
         if username:
-            # 创建连接
             conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                                    db='hx_cultural_transmission_sys', charset='utf8')
-            # 创建游标
             cursor = conn.cursor()
             try:
-                # 执行SQL查询语句
-                sql = "SELECT * FROM users WHERE username = %s"
+                sql = """
+                SELECT user_id, user_name, user_age, user_sex, user_region, user_avatar 
+                FROM user 
+                WHERE user_name = %s
+                """
                 cursor.execute(sql, (username,))
                 result = cursor.fetchone()
+                print("Query result:", result)
+                
                 if result:
-                    columns = [desc[0] for desc in cursor.description]
-                    user_info = dict(zip(columns, result))
+                    user_info = {
+                        'user_id': result[0],
+                        'user_name': result[1],
+                        'user_age': result[2],
+                        'user_sex': result[3],  # 已经是字符串格式了
+                        'user_region': result[4],
+                        'user_avatar': result[5]
+                    }
                     return JsonResponse(user_info)
                 else:
                     return JsonResponse({"error": "用户不存在"})
@@ -148,9 +157,7 @@ def get_user_info(request):
                 conn.rollback()
                 return JsonResponse({"error": f"获取用户信息失败: {e}"})
             finally:
-                # 关闭游标
                 cursor.close()
-                # 关闭连接
                 conn.close()
         else:
             return JsonResponse({"error": "未提供用户名"})

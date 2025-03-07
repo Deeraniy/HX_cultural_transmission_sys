@@ -4,24 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/api/tags.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/api/user.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/_2025_2_28_2_27____.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/_2025_2_28_2_27____.xml" afterDir="false" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="个性推荐页面demo+前后端连接">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/collaborative_filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/collaborative_filter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/111.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/111.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/user.py" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -159,7 +144,7 @@
       <workItem from="1741153586674" duration="7603000" />
       <workItem from="1741171556958" duration="4516000" />
       <workItem from="1741255620519" duration="1475000" />
-      <workItem from="1741310510143" duration="1456000" />
+      <workItem from="1741310510143" duration="2610000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
@@ -433,7 +418,15 @@
       <option name="project" value="LOCAL" />
       <updated>1740731732246</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="个性推荐页面demo+前后端连接">
+      <option name="closed" value="true" />
+      <created>1741334788150</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1741334788150</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -451,7 +444,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="影视艺术页面(前端完成)" />
     <MESSAGE value="影视艺术页面(前后端连接完成)" />
     <MESSAGE value="美食文化页面嵌入" />
     <MESSAGE value="情感分析页面搜索功能实现" />
@@ -476,7 +468,8 @@
     <MESSAGE value="数据库设计" />
     <MESSAGE value="个人中心优化" />
     <MESSAGE value="登录界面优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="登录界面优化" />
+    <MESSAGE value="个性推荐页面demo+前后端连接" />
+    <option name="LAST_COMMIT_MESSAGE" value="个性推荐页面demo+前后端连接" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
