@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^get_comment_ip_count/',comment.get_comment_ip_count),
     url(r'^get_spot/',spot.get_spot_list),
     url(r'^preview/',preview.preview),
-
+    url(r'^get_user_info/',user.get_user_info),
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
     url(r'^get_comment/',comment.get_comment_list),
     url(r'^get_literature_by_type/',literature.get_literature_by_type),
