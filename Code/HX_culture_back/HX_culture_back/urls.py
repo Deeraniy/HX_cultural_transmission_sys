@@ -5,7 +5,7 @@ from app01 import spot,collaborative_filter
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tags
+from app01 import views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tags,tag_details
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^get_comment_ip_count/',comment.get_comment_ip_count),
     url(r'^get_spot/',spot.get_spot_list),
     url(r'^preview/',preview.preview),
-    url(r'^get_user_info/',user.get_user_info),
+
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
     url(r'^get_comment/',comment.get_comment_list),
     url(r'^get_literature_by_type/',literature.get_literature_by_type),
@@ -67,7 +67,8 @@ urlpatterns = [
     url(r'^get_all_node/',search.get_all_node),
         # 上传头像
     url(r'^get_user_preference/$', collaborative_filter.get_user_preference),
-    url(r'^get_all_tags/$', tags.get_all_tags),
+    url(r'^get_all_tags/', tags.get_all_tags),
+    url(r'^get_tag_details/', tag_details.get_tag_details),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

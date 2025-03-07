@@ -75,8 +75,10 @@
                     <div v-for="(card, cardIndex) in userPreferenceCards.slice(0, 4)"
                          :key="'pref-' + cardIndex"
                          class="sub-card">
-                      <img :src="card.image_url" :alt="card.folk_name || card.tag_name">
-                      <div class="card-info">
+                      <img :src="getImageUrl(card.image)"
+                           :alt="card.folk_name || card.tag_name"
+                           @error="(e) => e.target.src = defaultEmptyImg">
+                      <div class="card-overlay">
                         <p class="title">{{ card.folk_name || card.tag_name }}</p>
                       </div>
                     </div>
@@ -102,8 +104,10 @@
                     <div v-for="(card, cardIndex) in similarUserCards.slice(0, 4)"
                          :key="'similar-' + cardIndex"
                          class="sub-card">
-                      <img :src="card.image_url" :alt="card.folk_name || card.tag_name">
-                      <div class="card-info">
+                      <img :src="getImageUrl(card.image)"
+                           :alt="card.folk_name || card.tag_name"
+                           @error="(e) => e.target.src = defaultEmptyImg">
+                      <div class="card-overlay">
                         <p class="title">{{ card.folk_name || card.tag_name }}</p>
                       </div>
                     </div>
@@ -167,13 +171,9 @@
         <div v-for="(card, index) in currentDialogCards"
              :key="index"
              class="preference-card">
-          <img :src="card.image" :alt="card.title">
-          <div class="card-info">
-            <p class="title">{{ card.title }}</p>
-            <p class="description">{{ card.description }}</p>
-            <p v-if="!card.userPreference" class="similarity">
-              相似度: {{ (card.similarityScore * 100).toFixed(0) }}%
-            </p>
+          <img :src="getImageUrl(card.image)" :alt="card.title">
+          <div class="card-overlay">
+            <p class="title">{{ card.folk_name || card.tag_name }}</p>
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import Swiper from 'swiper'
 import { EffectCards } from 'swiper/modules'
 import RecommendAPI from "@/api/user"
@@ -280,6 +280,7 @@ const showMorePreferences = () => {
   dialogTitle.value = '全部用户偏好';
   currentDialogCards.value = userPreferenceCards.value;
   showAllPreferencesDialog.value = true;
+  document.body.style.overflow = 'hidden'; // 禁用body滚动
 };
 
 // 显示更多相似用户推荐
@@ -287,7 +288,15 @@ const showMoreSimilarPreferences = () => {
   dialogTitle.value = '相似用户推荐';
   currentDialogCards.value = similarUserCards.value;
   showAllPreferencesDialog.value = true;
+  document.body.style.overflow = 'hidden'; // 禁用body滚动
 };
+
+// 监听弹窗关闭
+watch(showAllPreferencesDialog, (newVal) => {
+  if (!newVal) {
+    document.body.style.overflow = ''; // 恢复body滚动
+  }
+});
 
 // 简化图片处理函数
 const getImageUrl = (url) => {
@@ -300,6 +309,8 @@ const getImageUrl = (url) => {
 const fetchData = async () => {
   try {
     loading.value = true;
+    console.log("fetchData 开始执行");
+
     const userId = 1;
     const preferenceResponse = await RecommendAPI.getPerferenceAPI(userId);
     const tagsResponse = await TagsAPI.getAllTagsAPI();
@@ -311,7 +322,7 @@ const fetchData = async () => {
       const userPreferences = preferenceResponse.data;
       const tagData = tagsResponse.data;
 
-      Object.entries(tagData).forEach(([theme, tags]) => {
+      for (const [theme, tags] of Object.entries(tagData)) {
         console.log(`\n处理主题: ${theme}`);
 
         let slideIndex = -1;
@@ -323,77 +334,105 @@ const fetchData = async () => {
           case 'history': slideIndex = 4; break;
         }
 
-        if (slideIndex !== -1) {
+        if (slideIndex !== -1 && Array.isArray(tags)) {  // 确保 tags 是数组
           const themePreferences = userPreferences.detailed_preferences[theme.toLowerCase()] || [];
           const similarUsers = userPreferences.similar_users || [];
 
-          // 处理用户偏好
-          const preferredTags = tags.filter(tag =>
-            themePreferences.some(p => p.tag_id === tag.tag_id)
-          ).map(tag => {
-            const preference = themePreferences.find(p => p.tag_id === tag.tag_id);
-            return {
-              ...tag,
-              userScore: preference.score,
-              name: tag.folk_name || tag.tag_name,
-              image: tag.image_url,
-              userPreference: true,
-              description: '您的偏好'
-            }
-          }).sort((a, b) => b.userScore - a.userScore);
+          // **提取用户偏好的 tag_id**
+          const userPreferredTagIds = themePreferences.map(p => p.tag_id).filter(id => typeof id === "number");
 
-          // 处理相似用户的偏好
-          const similarUserTags = [];
-          similarUsers.forEach(simUser => {
-            const userPrefs = simUser.preferences || {};
-            Object.entries(userPrefs).forEach(([tagId, prefData]) => {
-              if (prefData.theme_name.toLowerCase() === theme.toLowerCase()) {
-                const tag = tags.find(t => t.tag_id === parseInt(tagId));
-                if (tag) {
-                  similarUserTags.push({
+          // **提取相似用户推荐的 tag_id**
+          const recommendedTagIds = similarUsers.flatMap(simUser =>
+              Object.entries(simUser.preferences || {})
+                  .filter(([_, prefData]) => prefData.theme_name.toLowerCase() === theme.toLowerCase())
+                  .map(([tagId]) => parseInt(tagId))
+          ).filter(id => typeof id === "number");
+
+          // **合并所有 tag_id**
+          const tagIds = [...new Set([...userPreferredTagIds, ...recommendedTagIds])];
+
+          console.log(`主题 ${theme} 需要查询的 tagIds:`, tagIds);
+
+          if (tagIds.length > 0) {
+            console.log(`即将调用 getTagDetailAPI 获取 ${theme} 的详细信息...`);
+            const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
+            const tagDetailsArray = Array.isArray(tagDetailsResponse?.tag_details)
+                ? tagDetailsResponse.tag_details
+                : [];
+            const tagDetailsMap = new Map(
+                tagDetailsArray
+                    .filter(tag => typeof tag.tag_id === "number")
+                    .map(tag => [tag.tag_id, tag])
+            );
+
+            console.log("tagDetailsMap 赋值后:", tagDetailsMap);
+            console.log(`getTagDetailAPI 返回 ${theme} 数据:`, tagDetailsResponse.tag_details);
+
+            // 处理用户偏好
+            const preferredTags = tags.filter(tag => userPreferredTagIds.includes(tag.tag_id))
+                .map(tag => {
+                  const preference = themePreferences.find(p => p.tag_id === tag.tag_id);
+                  const tagDetail = tagDetailsMap.get(tag.tag_id) || {};
+
+                  return {
                     ...tag,
-                    name: tag.folk_name || tag.tag_name,
-                    image: tag.image_url,
+                    userScore: preference?.score || 0,
+                    name: tagDetail.folk_name || tag.folk_name || tag.tag_name,
+                    image: tagDetail.image_url || tag.image_url || defaultEmptyImg,
+                    userPreference: true,
+                    description: tagDetail.details?.description || '您的偏好'
+                  };
+                }).sort((a, b) => b.userScore - a.userScore);
+
+            // 处理相似用户的偏好
+            const similarUserTags = tags.filter(tag => recommendedTagIds.includes(tag.tag_id))
+                .map(tag => {
+                  const tagDetail = tagDetailsMap.get(tag.tag_id) || {};
+
+                  return {
+                    ...tag,
+                    name: tagDetail.folk_name || tag.tag_name,
+                    image: tagDetail.image_url || defaultEmptyImg,
                     userPreference: false,
-                    similarityScore: simUser.similarity_score,
+                    similarityScore: 0, // 你可以在 `similarUsers` 里找到对应的 `similarity_score`
                     description: `来自相似用户的推荐`
-                  });
-                }
-              }
+                  };
+                });
+
+            // 更新 slides，确保从 tagDetailsMap 获取详细信息
+            slides.value[slideIndex].favoriteCards = preferredTags.slice(0, 5).map(tag => {
+              const tagDetail = tagDetailsMap.get(tag.tag_id) || {}; // 获取 tag 详情
+              return {
+                title: tagDetail.title || tagDetail.folk_name || tag.name, // 确保 title 取自 tagDetailsMap
+                image: tagDetail.details?.image_url || tagDetail.image_url || defaultEmptyImg, // 确保 image 来源正确
+                rating: tag.userScore ? (tag.userScore * 10).toFixed(1) : '-', // 评分
+                userPreference: true
+              };
             });
-          });
 
-          // 更新 slides
-          if (preferredTags.length > 0) {
-            slides.value[slideIndex].favoriteCards = preferredTags.slice(0, 5).map(tag => ({
-              title: tag.name,
-              image: tag.image,
-              rating: (tag.userScore * 10).toFixed(1),
-              userPreference: true
-            }));
-          } else {
-            slides.value[slideIndex].favoriteCards = [{
-              title: '暂无推荐',
-              image: defaultEmptyImg,
-              rating: '-',
-              userPreference: false
-            }];
+            slides.value[slideIndex].subCards = [...preferredTags, ...similarUserTags].map(tag => {
+              const tagDetail = tagDetailsMap.get(tag.tag_id) || {}; // 获取 tag 详情
+              return {
+                ...tag,
+                title: tagDetail.title || tagDetail.folk_name || tag.name, // 确保 title 取自 tagDetailsMap
+                image: tagDetail.details?.image_url || tagDetail.image_url || defaultEmptyImg, // 确保 image 来源正确
+                description: tagDetail.details?.description || tag.description || "暂无描述",
+                userPreference: tag.userPreference || false
+              };
+            });
+
           }
-
-          // 合并用户偏好和相似用户推荐
-          slides.value[slideIndex].subCards = [
-            ...preferredTags,
-            ...similarUserTags
-          ];
         }
-      });
+      }
     }
   } catch (error) {
-    console.error('获取数据失败:', error);
+    console.error("获取数据失败:", error);
   } finally {
     loading.value = false;
+    console.log("fetchData 执行完成");
   }
 };
+
 
 // 计算滑动样式
 const slideStyle = computed(() => ({
@@ -407,19 +446,22 @@ const handleTabClick = (index) => {
 
 // 处理滚轮事件
 const handleWheel = (e) => {
-  if (isAnimating.value) return
+  // 如果弹窗打开，不处理滚轮事件
+  if (showAllPreferencesDialog.value) return;
+  
+  if (isAnimating.value) return;
 
-  isAnimating.value = true
+  isAnimating.value = true;
   setTimeout(() => {
-    isAnimating.value = false
-  }, 1000)
+    isAnimating.value = false;
+  }, 1000);
 
   if (e.deltaY > 0 && currentIndex.value < slides.value.length - 1) {
-    currentIndex.value++
+    currentIndex.value++;
   } else if (e.deltaY < 0 && currentIndex.value > 0) {
-    currentIndex.value--
+    currentIndex.value--;
   }
-}
+};
 
 // 处理地图点击事件
 const handleMapClick = (region) => {
@@ -548,6 +590,7 @@ onMounted(() => {
 
 .main-description {
   flex: 1;
+  margin-left: 150px;
 }
 
 .sub-content {
@@ -567,6 +610,7 @@ onMounted(() => {
   gap: 20px;
   flex-wrap: wrap;
   margin-bottom: 30px;
+  position: relative; /* 为绝对定位的按钮提供参考点 */
 }
 
 .user-preferences .sub-card {
@@ -579,34 +623,52 @@ onMounted(() => {
 
 .sub-card {
   flex: 0 0 200px;
-  background: white;
+  height: 130px;
+  position: relative;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
-  border: 2px solid #3498db;
-  height: 130px;
 }
 
 .sub-card img {
   width: 100%;
-  height: 120px;
+  height: 100%;
   object-fit: cover;
+}
+
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+}
+
+.card-overlay .title {
+  margin: 0;
+  color: white;
+  font-size: 0.95em;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .more-button {
   position: absolute;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.85em;
-  padding: 4px 8px;
+  top: 0;
+  padding: 2px 8px;  /* 减小内边距使按钮更小 */
   background-color: #3498db;
   color: white;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
   white-space: nowrap;
+  font-size: 0.85em;
+  z-index: 1;  /* 确保按钮显示在上层 */
 }
 
 .more-button:hover {
@@ -808,12 +870,35 @@ onMounted(() => {
   .all-preferences-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 15px;
     padding: 20px;
+    max-height: 70vh; /* 限制最大高度 */
+    overflow-y: auto; /* 允许内容滚动 */
+    overscroll-behavior: contain; /* 防止滚动传播 */
+  }
+
+  /* 自定义滚动条样式 */
+  .all-preferences-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .all-preferences-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .all-preferences-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  .all-preferences-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 
   .preference-card {
-    border: 1px solid #ddd;
+    position: relative;
+    height: 130px;
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s;
@@ -824,12 +909,27 @@ onMounted(() => {
 
     img {
       width: 100%;
-      height: 150px;
+      height: 100%;
       object-fit: cover;
     }
 
-    .card-info {
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
       padding: 8px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    }
+
+    .title {
+      margin: 0;
+      color: white;
+      font-size: 0.95em;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
