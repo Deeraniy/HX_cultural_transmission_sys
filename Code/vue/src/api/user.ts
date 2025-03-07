@@ -15,6 +15,20 @@ class RecommendAPI {
             }
         });
     }
+        // 获取标签详细信息
+    static getTagDetailAPI(tagIds) {
+        if (!Array.isArray(tagIds)) {
+            console.error("getTagDetailAPI: tagIds 不是数组", tagIds);
+            return Promise.resolve({ data: { tag_details: [] } });
+        }
+        let urlPath = 'get_tag_details';
+        return request({
+            url: `${DICT_BASE_URL}/${urlPath}/`,
+            method: "get",
+            params: { tag_ids: tagIds.join(',') }
+        });
+    }
+
 }
 export default RecommendAPI;
 
