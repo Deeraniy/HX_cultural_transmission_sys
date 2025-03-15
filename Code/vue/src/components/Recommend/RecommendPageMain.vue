@@ -185,7 +185,7 @@
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import Swiper from 'swiper'
 import { EffectCards } from 'swiper/modules'
-import RecommendAPI from "@/api/user"
+import RecommendAPI from "@/api/recommend"
 import TagsAPI from "@/api/tags"
 import 'swiper/css'
 import 'swiper/css/effect-cards'
@@ -353,7 +353,7 @@ const fetchData = async () => {
 
           console.log(`主题 ${theme} 需要查询的 tagIds:`, tagIds);
 
-          if (tagIds.length > 0) {
+      if (tagIds.length > 0) {
             console.log(`即将调用 getTagDetailAPI 获取 ${theme} 的详细信息...`);
             const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
             const tagDetailsArray = Array.isArray(tagDetailsResponse?.tag_details)
@@ -448,7 +448,7 @@ const handleTabClick = (index) => {
 const handleWheel = (e) => {
   // 如果弹窗打开，不处理滚轮事件
   if (showAllPreferencesDialog.value) return;
-  
+
   if (isAnimating.value) return;
 
   isAnimating.value = true;
