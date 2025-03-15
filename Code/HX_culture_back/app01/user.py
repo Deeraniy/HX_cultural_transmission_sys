@@ -1,65 +1,129 @@
-from django.shortcuts import render, redirect,HttpResponse
+from django.shortcuts import render, redirect, HttpResponse
 from django.http import JsonResponse
 import pymysql
+import json
 
 # 实现注册
 def register_user(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        # 创建连接
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
-                               db='hx_cultural_transmission_sys', charset='utf8')
-        # 创建游标
-        cursor = conn.cursor()
         try:
-            # 执行SQL插入语句
-            sql = "INSERT INTO users (username, password) VALUES (%s, %s)"
-            cursor.execute(sql, (username, password))
-            conn.commit()
-            return HttpResponse("注册成功")
+            # 从请求体获取 JSON 数据
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+            age = data.get('age', 0)
+            sex = data.get('sex', 'other')
+            region = data.get('location', '')
+            avatar = data.get('avatar', '')
+
+            print(f"注册用户数据: {data}")  # 调试日志
+
+            conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+                                 db='hx_cultural_transmission_sys', charset='utf8')
+            cursor = conn.cursor()
+            
+            try:
+                # 检查用户名是否已存在
+                check_sql = "SELECT user_id FROM user WHERE user_name = %s"
+                cursor.execute(check_sql, (username,))
+                if cursor.fetchone():
+                    return JsonResponse({"status": "error", "msg": "用户名已存在"})
+
+                # 执行插入
+                sql = """
+                INSERT INTO user 
+                    (user_name, user_pwd, user_age, user_sex, user_region, user_avatar) 
+                VALUES 
+                    (%s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(sql, (username, password, age, sex, region, avatar))
+                conn.commit()
+                
+                # 获取新插入用户的 ID
+                new_user_id = cursor.lastrowid
+                
+                response_data = {
+                    "status": "success",
+                    "msg": "注册成功",
+                    "user_id": new_user_id,
+                    "username": username
+                }
+                print(f"注册成功: {response_data}")  # 调试日志
+                return JsonResponse(response_data)
+
+            except Exception as e:
+                conn.rollback()
+                print(f"注册错误: {str(e)}")  # 调试日志
+                return JsonResponse({
+                    "status": "error",
+                    "msg": f"注册失败: {str(e)}"
+                })
+            finally:
+                cursor.close()
+                conn.close()
         except Exception as e:
-            conn.rollback()
-            return HttpResponse(f"注册失败: {e}")
-        finally:
-            # 关闭游标
-            cursor.close()
-            # 关闭连接
-            conn.close()
+            print(f"请求处理错误: {str(e)}")  # 调试日志
+            return JsonResponse({
+                "status": "error",
+                "msg": f"请求处理失败: {str(e)}"
+            })
     else:
-        return HttpResponse("故障!")
+        return JsonResponse({
+            "status": "error",
+            "msg": "请使用POST方法"
+        })
 
 
 def verify_user(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        # 创建连接
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
-                               db='hx_cultural_transmission_sys', charset='utf8')
-        # 创建游标
-        cursor = conn.cursor()
         try:
-            # 执行SQL查询语句
-            sql = "SELECT * FROM users WHERE username = %s AND password = %s"
-            cursor.execute(sql, (username, password))
-            result = cursor.fetchone()
-            if result:
-                return HttpResponse("验证成功")
-            else:
-                return HttpResponse("验证失败: 用户名或密码错误")
+            data = json.loads(request.body)
+            username = data.get('username')
+            password = data.get('password')
+
+            print(f"尝试验证用户: {username}")
+
+            conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+                               db='hx_cultural_transmission_sys', charset='utf8')
+            cursor = conn.cursor()
+            try:
+                sql = "SELECT user_id, user_name FROM user WHERE user_name = %s AND user_pwd = %s"
+                cursor.execute(sql, (username, password))
+                result = cursor.fetchone()
+                
+                print(f"查询结果: {result}")
+                
+                if result:
+                    response_data = {
+                        "status": "success",
+                        "msg": "验证成功",
+                        "user_id": result[0],
+                        "username": result[1]
+                    }
+                    print(f"返回数据: {response_data}")  # 添加日志
+                    return JsonResponse(response_data)
+                else:
+                    return JsonResponse({
+                        "status": "error",
+                        "msg": "验证失败：用户名或密码错误"
+                    })
+            except Exception as e:
+                print(f"错误: {str(e)}")
+                return JsonResponse({
+                    "status": "error",
+                    "msg": str(e)
+                })
         except Exception as e:
-            conn.rollback()
-            return HttpResponse(f"验证失败: {e}")
-        finally:
-            # 关闭游标
-            cursor.close()
-            # 关闭连接
-            conn.close()
+            print(f"错误: {str(e)}")
+            return JsonResponse({
+                "status": "error",
+                "msg": str(e)
+            })
     else:
-        return HttpResponse("故障!")
+        return JsonResponse({
+            "status": "error",
+            "msg": "请使用POST方法"
+        })
 
 
 def get_user_activity(request):
@@ -68,7 +132,7 @@ def get_user_activity(request):
 
         if username:
             # 创建连接
-            conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+            conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                                    db='hx_cultural_transmission_sys', charset='utf8')
             # 创建游标
             cursor = conn.cursor()
@@ -163,3 +227,31 @@ def get_user_info(request):
             return JsonResponse({"error": "未提供用户名"})
     else:
         return JsonResponse({"error": "不是GET请求!"})
+
+def init_database():
+    conn = pymysql.connect(
+        host='60.215.128.117',
+        port=15320,
+        user='root',
+        passwd='kissme77',
+        db='hx_cultural_transmission_sys',
+        charset='utf8'
+    )
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute("""
+            ALTER TABLE user MODIFY COLUMN user_id INT AUTO_INCREMENT PRIMARY KEY;
+        """)
+        conn.commit()
+        print("数据库表结构更新成功")
+    except Exception as e:
+        conn.rollback()
+        print(f"更新失败: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+# 在文件末尾调用这个函数
+if __name__ == "__main__":
+    init_database()
