@@ -140,3 +140,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # media_confige
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'static/media'
+
+USER_MEDIA_URL = 'http://127.0.0.1:8000/upload/user/avatar/'
+USER_AVATAR_ROOT = os.path.join(BASE_DIR, 'upload/user/avatar')
