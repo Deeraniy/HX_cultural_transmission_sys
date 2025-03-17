@@ -147,6 +147,9 @@ def get_user_preference(request):
         # 1. 获取用户当前的偏好
         user_preferences = get_user_interactions(user_id)
         
+        # 获取主用户的所有tag_id集合
+        user_tag_ids = set(user_preferences.keys())
+        
         # 2. 计算用户相似度
         user_similarities = calculate_user_similarity(user_id)
         
@@ -157,7 +160,23 @@ def get_user_preference(request):
             reverse=True
         )[:5]
         
-        # 3. 整理返回结果
+        # 3. 获取相似用户的标签偏好（排除主用户已有的标签）
+        similar_users_preferences = {}
+        for sim_user_id, similarity in similar_users:
+            sim_user_prefs = get_user_interactions(sim_user_id)
+            # 过滤掉主用户已有的标签
+            filtered_prefs = {
+                tag_id: data 
+                for tag_id, data in sim_user_prefs.items() 
+                if tag_id not in user_tag_ids
+            }
+            if filtered_prefs:  # 只保存有独特偏好的相似用户
+                similar_users_preferences[sim_user_id] = {
+                    'similarity': similarity,
+                    'preferences': filtered_prefs
+                }
+        
+        # 4. 整理返回结果
         theme_preferences = {}
         for tag_id, data in user_preferences.items():
             theme = data['theme_name']
@@ -175,17 +194,23 @@ def get_user_preference(request):
             if items:
                 theme_scores[theme] = sum(item['score'] for item in items) / len(items)
         
+        # 只返回有独特偏好的相似用户
+        filtered_similar_users = [
+            {
+                "user_id": uid,
+                "similarity_score": score,
+                "preferences": similar_users_preferences[uid]['preferences']
+            }
+            for uid, score in similar_users
+            if uid in similar_users_preferences
+        ]
+        
         return JsonResponse({
             "status": "ok",
             "data": {
                 "theme_preferences": theme_scores,
                 "detailed_preferences": theme_preferences,
-                "similar_users": [
-                    {
-                        "user_id": uid,
-                        "similarity_score": score
-                    } for uid, score in similar_users
-                ]
+                "similar_users": filtered_similar_users
             }
         })
         
@@ -196,66 +221,49 @@ def get_user_preference(request):
         })
 
 def calculate_user_similarity(user_id: int) -> Dict[int, float]:
-    """计算用户相似度（使用皮尔逊相关系数）"""
+    """计算用户相似度"""
     try:
         cursor = connection.cursor()
         
-        # 1. 获取所有用户的标签交互数据
+        # 1. 获取所有用户的标签交互数据（移除时间限制）
         cursor.execute("""
-            SELECT user_id, tag_id, 
-                   (click_count * 0.4 + 
-                    CASE WHEN is_favorite THEN 0.6 ELSE 0 END) as interaction_score
-            FROM tag_user
-        """)
-        user_interactions = cursor.fetchall()
+            SELECT 
+                tu1.user_id,
+                COUNT(DISTINCT tu1.tag_id) as common_tags,
+                COUNT(DISTINCT t1.theme_name) as common_themes,
+                AVG(tu1.click_count * 0.6 + 
+                    CASE WHEN tu1.is_favorite THEN 0.4 ELSE 0 END) as avg_interaction
+            FROM tag_user tu1
+            JOIN tag t1 ON tu1.tag_id = t1.tag_id
+            JOIN tag_user tu2 ON t1.theme_name = (
+                SELECT t2.theme_name 
+                FROM tag_user tu3 
+                JOIN tag t2 ON tu3.tag_id = t2.tag_id 
+                WHERE tu3.user_id = %s AND tu3.tag_id = tu1.tag_id
+            )
+            WHERE tu1.user_id != %s
+            GROUP BY tu1.user_id
+            HAVING COUNT(DISTINCT tu1.tag_id) >= 2
+        """, [user_id, user_id])
         
-        # 构建用户-标签交互矩阵
-        user_tag_matrix = {}
-        for interaction in user_interactions:
-            u_id, t_id, score = interaction
-            if u_id not in user_tag_matrix:
-                user_tag_matrix[u_id] = {}
-            user_tag_matrix[u_id][t_id] = score
+        potential_users = cursor.fetchall()
         
-        # 2. 计算用户相似度
+        # 2. 计算相似度分数
         similarities = {}
-        target_user = user_tag_matrix.get(user_id, {})
-        
-        for other_user_id, other_user_tags in user_tag_matrix.items():
-            if other_user_id == user_id:
-                continue
-                
-            # 获取共同评分的标签
-            common_tags = set(target_user.keys()) & set(other_user_tags.keys())
-            if not common_tags:
-                continue
-                
-            # 计算皮尔逊相关系数
-            target_avg = np.mean(list(target_user.values()))
-            other_avg = np.mean(list(other_user_tags.values()))
+        for user_data in potential_users:
+            other_user_id = user_data[0]
+            common_tags = user_data[1]
+            common_themes = user_data[2]
+            avg_interaction = user_data[3] or 0  # 防止 NULL 值
             
-            # 计算分子（协方差）
-            numerator = sum(
-                (target_user[tag] - target_avg) * 
-                (other_user_tags[tag] - other_avg)
-                for tag in common_tags
+            # 简化的相似度计算
+            similarity_score = (
+                min(common_tags / 5, 1) * 0.5 +  # 共同标签数量（最高权重）
+                min(common_themes / 3, 1) * 0.3 + # 共同主题数量
+                min(float(avg_interaction), 1) * 0.2  # 平均交互强度
             )
             
-            # 计算分母（标准差乘积）
-            denominator1 = sqrt(sum(
-                (target_user[tag] - target_avg) ** 2
-                for tag in common_tags
-            ))
-            denominator2 = sqrt(sum(
-                (other_user_tags[tag] - other_avg) ** 2
-                for tag in common_tags
-            ))
-            
-            # 计算相似度
-            if denominator1 * denominator2 == 0:
-                similarities[other_user_id] = 0
-            else:
-                similarities[other_user_id] = numerator / (denominator1 * denominator2)
+            similarities[other_user_id] = similarity_score
         
         return similarities
         
