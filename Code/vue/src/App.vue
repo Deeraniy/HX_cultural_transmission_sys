@@ -2,12 +2,16 @@
 import router from "@/router.js";
 import ReportGeneration from "@/components/ReportGeneration/ReportGeneration.vue";
 import test from "@/components/Test.vue"
+import manageSystem from "@/components/ManageSystem/ManageSystem.vue";
+import cultureManagement from "@/components/ManageSystem/CultureManagement.vue"
 </script>
 
 <template>
   <div id="app">
-    <router-view/>
+g'i't
 <!--    <test/>-->
+<!--    <manage-system/>-->
+<!--    <ReportGeneration/>-->
   </div>
 </template>
 
