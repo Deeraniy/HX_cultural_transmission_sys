@@ -7,7 +7,10 @@ import router from "@/router.js";
     <router-view/>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 <!--    <test/>-->
