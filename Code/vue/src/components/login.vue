@@ -5,7 +5,7 @@
         <!-- Logo和标题 -->
         <div class="brand">
           <div class="logo">
-            <img src="@/assets/login/hunan.jpg" alt="logo" />
+            <img src="@/assets/333.png" alt="logo" />
           </div>
           <h1 class="title">湖湘文化数智化传播系统</h1>
           <p class="subtitle">数联万里湖湘 · 智汇千年文脉</p>
@@ -79,15 +79,28 @@
             />
           </el-form-item>
 
-          <el-form-item prop="confirmPassword">
-            <el-input
-                v-model="registerForm.confirmPassword"
-                :prefix-icon="Lock"
-                type="password"
-                placeholder="请确认密码"
-                show-password
-            />
-          </el-form-item>
+          <!-- 年龄和性别放在同一行 -->
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item prop="age">
+                <el-input
+                    v-model.number="registerForm.age"
+                    :prefix-icon="Calendar"
+                    type="number"
+                    placeholder="请输入年龄"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item prop="sex">
+                <el-select v-model="registerForm.sex" placeholder="请选择性别" style="width: 100%">
+                  <el-option label="男" value="male" />
+                  <el-option label="女" value="female" />
+                  <el-option label="其他" value="other" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
 
           <el-form-item prop="region" label="所在地区">
             <el-cascader
@@ -123,12 +136,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { User, Lock } from '@element-plus/icons-vue';
+import { User, Lock, Calendar } from '@element-plus/icons-vue';
 import { regionData } from 'element-china-area-data';
 import { ElMessage } from 'element-plus';
+import UserAPI from '@/api/user';
 
 const router = useRouter();
 const loading = ref(false);
@@ -147,8 +161,10 @@ const registerFormRef = ref(null);
 const registerForm = reactive({
   username: '',
   password: '',
-  confirmPassword: '',
-  region: []
+  age: '',
+  sex: 'other' as 'male' | 'female' | 'other',
+  region: [] as any[],
+  avatar: ''
 });
 
 // 表单验证规则
@@ -164,24 +180,49 @@ const loginRules = {
 };
 
 const registerRules = {
-  ...loginRules,
-  confirmPassword: [
-    { required: true, message: '请确认密码', trigger: 'blur' },
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, message: '密码长度不能小于 6 个字符', trigger: 'blur' }
+  ],
+  age: [
+    { required: true, message: '请输入年龄', trigger: 'blur' },
     {
       validator: (rule, value, callback) => {
-        if (value !== registerForm.password) {
-          callback(new Error('两次输入密码不一致'));
+        if (value === '') {
+          callback(new Error('请输入年龄'))
         } else {
-          callback();
+          const age = parseInt(value)
+          if (isNaN(age)) {
+            callback(new Error('年龄必须为数字'))
+          } else if (age < 0 || age > 150) {
+            callback(new Error('年龄必须在 0 到 150 之间'))
+          } else {
+            callback()
+          }
         }
       },
       trigger: 'blur'
     }
   ],
+  sex: [
+    { required: true, message: '请选择性别', trigger: 'change' }
+  ],
   region: [
     { required: true, message: '请选择所在地区', trigger: 'change' }
   ]
 };
+
+// 修改响应类型定义
+interface ApiResponse {
+  status: string;
+  msg: string;
+  user_id: number;
+  username: string;
+}
 
 // 处理登录
 const handleLogin = async () => {
@@ -191,14 +232,37 @@ const handleLogin = async () => {
     await loginFormRef.value.validate();
     loading.value = true;
 
-    // 模拟登录请求
-    setTimeout(() => {
-      ElMessage.success('登录成功');
-      router.push('/index');
-      loading.value = false;
-    }, 1000);
+    const loginData = {
+      username: loginForm.username,
+      password: loginForm.password
+    };
+
+    try {
+      const response = await UserAPI.loginAPI(loginData);
+      console.log('Login response:', response);
+
+      if (response.status === "success") {
+        ElMessage.success('登录成功');
+        
+        localStorage.setItem('userId', String(response.user_id));
+        localStorage.setItem('username', response.username);
+        
+        if (rememberMe.value) {
+          localStorage.setItem('rememberMe', 'true');
+        }
+        
+        router.push('/index');
+      } else {
+        ElMessage.error(response.msg || '登录失败');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      ElMessage.error('登录失败，请稍后重试');
+    }
   } catch (error) {
     console.error('表单验证失败:', error);
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -210,14 +274,34 @@ const handleRegister = async () => {
     await registerFormRef.value.validate();
     loading.value = true;
 
-    // 模拟注册请求
-    setTimeout(() => {
+    const regionValue = registerForm.region[registerForm.region.length - 1];
+
+    const registerData = {
+      username: registerForm.username,
+      password: registerForm.password,
+      age: parseInt(registerForm.age) || 0,
+      sex: registerForm.sex,
+      location: regionValue || '',  // 确保有默认值
+      avatar: registerForm.avatar
+    };
+
+    try {
+      const response = await UserAPI.registerAPI(registerData);
+      console.log('Registration response:', response);
+
+      if (!response) {
+        throw new Error('注册失败：服务器无响应');
+      }
+
       ElMessage.success('注册成功');
-      isRegister.value = false;
-      loading.value = false;
-    }, 1000);
-  } catch (error) {
-    console.error('表单验证失败:', error);
+      isRegister.value = false;  // 切换到登录界面
+
+    } catch (error: any) {
+      console.error('Registration error details:', error);
+      ElMessage.error(error.message || '注册失败，请稍后重试');
+    }
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -237,6 +321,7 @@ const toggleForm = () => {
   }
 };
 </script>
+
 <style scoped>
 @import '@/assets/font/font.css';
 
@@ -273,10 +358,7 @@ const toggleForm = () => {
 .logo img {
   width: 80px;
   height: 80px;
-  border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -404,5 +486,59 @@ const toggleForm = () => {
   .title {
     font-size: 24px;
   }
+}
+
+/* 统一所有输入框的基础样式 */
+:deep(.el-input__wrapper),
+:deep(.el-select .el-input__wrapper) {
+    height: 44px;  /* 设置统一高度 */
+    line-height: 44px;
+    box-sizing: border-box;
+}
+
+/* 专门调整性别选择框 */
+:deep(.el-select) {
+    width: 100%;
+    height: 44px;
+}
+
+:deep(.el-select .el-input) {
+    height: 44px;
+}
+
+:deep(.el-select .el-input__wrapper) {
+    height: 44px !important;
+}
+
+:deep(.el-select .el-input__inner) {
+    height: 44px !important;
+    line-height: 44px !important;
+}
+
+/* 调整下拉选项的样式 */
+:deep(.el-select-dropdown__item) {
+    height: 44px;
+    line-height: 44px;
+}
+
+/* 确保所有表单项容器高度一致 */
+.el-form-item {
+    margin-bottom: 20px;
+    height: 44px;
+}
+
+:deep(.el-form-item__content) {
+    height: 44px;
+    line-height: 44px;
+}
+
+/* 移除行间距 */
+.el-row {
+    margin-bottom: 0;
+}
+
+/* 调整列间距 */
+.el-col {
+    padding: 0 10px;
 }
 </style>

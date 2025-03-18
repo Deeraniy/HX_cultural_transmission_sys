@@ -16,6 +16,7 @@ urlpatterns = [
 #     url(r'^search-post/$', search2.search_post),
     url(r'^classes/',view.classes),
     url(r'^register/',user.register_user),
+    url(r'^login/',user.verify_user),
     url(r'^get_city/',city.get_city_list),
     url(r'^get_average_score_by_bi_month/',comment.get_average_score_by_bi_month),
     url(r'^get_comment_list_recent/',comment.get_comment_list_recent),
@@ -69,7 +70,6 @@ urlpatterns = [
     url(r'^get_user_preference/$', collaborative_filter.get_user_preference),
     url(r'^get_all_tags/', tags.get_all_tags),
     url(r'^get_tag_details/', tag_details.get_tag_details),
-
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
