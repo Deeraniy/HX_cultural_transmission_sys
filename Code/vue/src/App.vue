@@ -5,6 +5,15 @@ import router from "@/router.js";
 <template>
   <div id="app">
     <router-view/>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+<!--    <test/>-->
+<!--    <manage-system/>-->
+<!--    <ReportGeneration/>-->
+>>>>>>> Stashed changes
   </div>
 </template>
 

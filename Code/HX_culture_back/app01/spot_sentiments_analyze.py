@@ -55,7 +55,7 @@ def sentiments_analyze(request):
 
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(name))
-    sql_query = "SELECT content FROM usercomment WHERE spot_id=%s"
+    sql_query = "SELECT content FROM user_comment_spot WHERE spot_id=%s"
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
     comment_list =cursor.fetchall()
@@ -90,7 +90,7 @@ def sentiments_all():
         conn.rollback()
         
         # 获取所有评论
-        cursor.execute("SELECT comment_id, content FROM usercomment WHERE sentiment IS NULL")
+        cursor.execute("SELECT comment_id, content FROM user_comment_spot WHERE sentiment IS NULL")
         comments = cursor.fetchall()
         
         processed_count = 0
@@ -102,7 +102,7 @@ def sentiments_all():
                 
                 # 更新数据库
                 update_sql = """
-                    UPDATE usercomment 
+                    UPDATE user_comment_spot 
                     SET sentiment = %s, sentiment_confidence = %s 
                     WHERE comment_id = %s
                 """
@@ -211,7 +211,7 @@ def sentiments_result_total_count(request):
                 sentiment,
                 COUNT(*) as count,
                 COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
-            FROM usercomment 
+            FROM user_comment_spot 
             WHERE spot_id = %s AND sentiment IS NOT NULL
             GROUP BY sentiment
         """
@@ -295,7 +295,7 @@ def sentiments_result(request):
                 sentiment_confidence, 
                 SUBSTRING_INDEX(LEFT(create_time, 7), '-', 1) as year,
                 SUBSTRING_INDEX(LEFT(create_time, 7), '-', -1) as month
-            FROM usercomment 
+            FROM user_comment_spot 
             WHERE spot_id = %s AND sentiment IS NOT NULL
             ORDER BY create_time
         """
