@@ -5,7 +5,7 @@ from app01 import spot,collaborative_filter,casual_impact
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tags,tag_details
+from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
