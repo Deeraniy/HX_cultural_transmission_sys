@@ -91,7 +91,7 @@ def sentiments_time_series(request):
         eco_results.sort(key=lambda x: (x['year'], x['month']))
         print(eco_results)
         # 原有的情感分析代码
-        tag_name = request.GET.get('tag_name', '').strip()
+        tag_name = request.GET.get('name', '').strip()
         if not tag_name:
             return JsonResponse({
                 'status': 'error',
@@ -256,9 +256,22 @@ def prepare_casual_impact_data(eco_results, analysis_results):
         
         df = pd.DataFrame(data)
         
+        # 处理缺失值
+        # 1. 对于连续性数据，使用前后值的平均值填充
+        df['cpi'] = df['cpi'].interpolate(method='linear', limit_direction='both')
+        df['investment'] = df['investment'].interpolate(method='linear', limit_direction='both')
+        df['sales_rate'] = df['sales_rate'].interpolate(method='linear', limit_direction='both')
+        
+        # 2. 检查是否还有缺失值
+        if df.isnull().any().any():
+            print("\n=== 警告：填充后仍存在缺失值 ===")
+            print(df.isnull().sum())
+            # 如果开头或结尾有缺失值，使用最近的有效值填充
+            df = df.fillna(method='bfill').fillna(method='ffill')
+        
         # 打印调试信息
-        print("\n=== 准备的因果推理数据 ===")
-        print(df)
+        print("\n=== 准备的因果推理数据（处理缺失值后）===")
+        print(df.head())
         print("\n=== 数据形状 ===")
         print(f"行数: {len(df)}, 列数: {len(df.columns)}")
         print("\n=== 数据类型 ===")
@@ -267,7 +280,7 @@ def prepare_casual_impact_data(eco_results, analysis_results):
         print(df.isnull().sum())
         
         # 确保 dates 是一个包含日期对象的列表
-        dates = pd.date_range(start='2021-01-01', periods=len(df), freq='M').to_pydatetime().tolist()
+        dates = pd.date_range(start='2021-01-01', periods=len(df), freq='ME').to_pydatetime().tolist()
         
         return df, dates
         
@@ -288,150 +301,132 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
         
         if len(df) < 6:
             return {'error': '数据点不足以进行因果推理分析（至少需要6个点）'}
+            
+        # 找出情感数据的重大变化点
+        sentiment_data = df['sentiment'].values
+        change_point, change_value = find_significant_changes(sentiment_data)
         
-        # 对每个经济指标进行分析
-        indicators = ['cpi', 'investment', 'sales_rate']
-        results = {}
+        if change_point is None:
+            return {'error': '未找到显著的变化点'}
+            
+        print(f"\n=== 找到的变化点 ===")
+        print(f"位置: {change_point}")
+        print(f"变化值: {change_value}")
         
-        for indicator in indicators:
-            try:
-                # 修改：创建 CausalImpact 对象，不使用日期索引
-                impact_data = pd.DataFrame({
-                    'y': df[indicator],
-                    'x1': df['sentiment'],
-                    'x2': df['investment'] if indicator != 'investment' else df['cpi'],
-                    'x3': df['sales_rate'] if indicator != 'sales_rate' else df['cpi']
-                })
-                
-                # 使用 ffill() 和 bfill() 替代 fillna(method='ffill')
-                impact_data = impact_data.ffill().bfill()
-                
-                # 打印处理后的数据
-                print(f"\n=== {indicator} 处理后数据 ===")
-                print("DataFrame shape:", impact_data.shape)
-                print("DataFrame head:")
-                print(impact_data.head())
-                
-                if len(impact_data) < 6:
-                    results[indicator] = {'error': f'{indicator} 的有效数据点不足（至少需要6个点）'}
-                    continue
-                
-                # 找出该指标的重大变化点
-                values = impact_data['y'].values
-                change_point = len(values) // 2  # 使用数据中点作为变化点
-                change_value = np.abs(np.mean(values[change_point:]) - np.mean(values[:change_point]))
-                
-                # 修改：创建 CausalImpact 对象，使用简单的数值索引
-                ci = CausalImpact(
-                    data=impact_data,
-                    pre_period=[0, change_point],
-                    post_period=[change_point + 1, len(impact_data) - 1],
-                    model_args={
-                        'niter': 1000,
-                        'nseasons': 12,
-                        'standardize': True
-                    }
-                )
-                ci.run()
-                
-                # 打印完整的 inferences 信息
-                print("\n=== Inferences DataFrame 完整信息 ===")
-                print("列名:", ci.inferences.columns.tolist())
-                print("\n前5行数据:")
-                print(ci.inferences.head())
-                print("\n数据类型:")
-                print(ci.inferences.dtypes)
-                
-                # 使用正确的列名提取数据
-                summary_data = {
-                    'average': {
-                        'actual': float(ci.inferences['response'].mean()),
-                        'predicted': float(ci.inferences['point_pred'].mean()),
-                        'effect': float(ci.inferences['point_effect'].mean()),
-                        'ci_lower': float(ci.inferences['point_effect_lower'].mean()),
-                        'ci_upper': float(ci.inferences['point_effect_upper'].mean())
-                    },
-                    'cumulative': {
-                        'actual': float(ci.inferences['cum_response'].iloc[-1]),
-                        'predicted': float(ci.inferences['cum_pred'].iloc[-1]),
-                        'effect': float(ci.inferences['cum_effect'].iloc[-1]),
-                        'ci_lower': float(ci.inferences['cum_effect_lower'].iloc[-1]),
-                        'ci_upper': float(ci.inferences['cum_effect_upper'].iloc[-1])
-                    }
-                }
-                
-                # 计算相对效应
-                relative_effect = (summary_data['cumulative']['effect'] / summary_data['cumulative']['actual']) * 100
-                
-                # 生成详细的报告文本
-                report_text = f"""
-因果推理分析报告 - {indicator}
+        # 准备因果推理数据
+        impact_data = pd.DataFrame({
+            'y': df['sentiment'],  # 情感分析得分作为因变量
+            'x1': df['cpi'],      # 经济指标作为协变量
+            'x2': df['investment'],
+            'x3': df['sales_rate']
+        })
+        
+        print("\n=== 准备的因果推理数据 ===")
+        print(impact_data.head())
+        print("\n相关性矩阵:")
+        print(impact_data.corr())
+        
+        # 运行因果推理
+        ci = CausalImpact(
+            data=impact_data,
+            pre_period=[0, change_point],
+            post_period=[change_point + 1, len(impact_data) - 1],
+            model_args={
+                'niter': 1000,
+                'nseasons': 12,
+                'standardize': True
+            }
+        )
+        ci.run()
+        
+        # 获取反事实预测值
+        counterfactual_predictions = {
+            'dates': [],
+            'actual_sentiment': [],
+            'predicted_sentiment': [],
+            'ci_lower': [],
+            'ci_upper': []
+        }
+        
+        # 遍历后干预期的数据
+        post_start = change_point + 1
+        for i in range(post_start, len(dates)):
+            counterfactual_predictions['dates'].append({
+                'year': dates[i].year,
+                'month': dates[i].month
+            })
+            counterfactual_predictions['actual_sentiment'].append(float(ci.inferences['response'].iloc[i]))
+            counterfactual_predictions['predicted_sentiment'].append(float(ci.inferences['point_pred'].iloc[i]))
+            counterfactual_predictions['ci_lower'].append(float(ci.inferences['point_pred_lower'].iloc[i]))
+            counterfactual_predictions['ci_upper'].append(float(ci.inferences['point_pred_upper'].iloc[i]))
+        
+        # 提取分析结果
+        summary_data = {
+            'average': {
+                'actual': float(ci.inferences['response'].mean()),
+                'predicted': float(ci.inferences['point_pred'].mean()),
+                'effect': float(ci.inferences['point_effect'].mean()),
+                'ci_lower': float(ci.inferences['point_effect_lower'].mean()),
+                'ci_upper': float(ci.inferences['point_effect_upper'].mean())
+            },
+            'cumulative': {
+                'actual': float(ci.inferences['cum_response'].iloc[-1]),
+                'predicted': float(ci.inferences['cum_pred'].iloc[-1]),
+                'effect': float(ci.inferences['cum_effect'].iloc[-1]),
+                'ci_lower': float(ci.inferences['cum_effect_lower'].iloc[-1]),
+                'ci_upper': float(ci.inferences['cum_effect_upper'].iloc[-1])
+            }
+        }
+        
+        # 计算相对效应
+        relative_effect = (summary_data['cumulative']['effect'] / summary_data['cumulative']['actual']) * 100
+        
+        # 生成详细的报告文本
+        report_text = f"""
+情感分析因果推理报告
 
-1. 平均效应分析:
-   - 实际平均值: {summary_data['average']['actual']:.2f}
-   - 预测平均值: {summary_data['average']['predicted']:.2f}
-   - 平均因果效应: {summary_data['average']['effect']:.2f}
-   - 95%置信区间: [{summary_data['average']['ci_lower']:.2f}, {summary_data['average']['ci_upper']:.2f}]
+1. 变化点信息:
+   - 变化点位置: 第{change_point}个月
+   - 变化点日期: {dates[change_point].year}年{dates[change_point].month}月
+   - 变化幅度: {change_value:.3f}
 
-2. 累积效应分析:
-   - 实际累积值: {summary_data['cumulative']['actual']:.2f}
-   - 预测累积值: {summary_data['cumulative']['predicted']:.2f}
-   - 累积因果效应: {summary_data['cumulative']['effect']:.2f}
-   - 95%置信区间: [{summary_data['cumulative']['ci_lower']:.2f}, {summary_data['cumulative']['ci_upper']:.2f}]
+2. 平均效应分析:
+   - 实际情感得分平均值: {summary_data['average']['actual']:.3f}
+   - 预测情感得分平均值: {summary_data['average']['predicted']:.3f}
+   - 平均因果效应: {summary_data['average']['effect']:.3f}
+   - 95%置信区间: [{summary_data['average']['ci_lower']:.3f}, {summary_data['average']['ci_upper']:.3f}]
 
-3. 相对效应:
+3. 累积效应分析:
+   - 实际累积情感得分: {summary_data['cumulative']['actual']:.3f}
+   - 预测累积情感得分: {summary_data['cumulative']['predicted']:.3f}
+   - 累积因果效应: {summary_data['cumulative']['effect']:.3f}
+   - 95%置信区间: [{summary_data['cumulative']['ci_lower']:.3f}, {summary_data['cumulative']['ci_upper']:.3f}]
+
+4. 相对效应:
    - 相对变化: {relative_effect:.1f}%
 
-4. 统计显著性:
-   - 置信区间是否包含0: {"否" if summary_data['average']['ci_lower'] * summary_data['average']['ci_upper'] > 0 else "是"}
-   - 效应方向: {"正向" if summary_data['average']['effect'] > 0 else "负向" if summary_data['average']['effect'] < 0 else "无显著效应"}
-
 5. 结论:
-   在干预后期间，{indicator}的实际值与预测值之间存在{abs(summary_data['average']['effect']):.2f}的差异。
-   这表明干预{"产生了显著" if abs(relative_effect) > 10 else "产生了轻微" if abs(relative_effect) > 5 else "没有产生显著"}影响。
-   累积来看，干预导致{indicator}{"增加" if summary_data['cumulative']['effect'] > 0 else "减少"}了{abs(summary_data['cumulative']['effect']):.2f}个单位。
+   在经济指标变化后的期间，情感得分的实际值与预测值之间存在{abs(summary_data['average']['effect']):.3f}的差异。
+   这表明经济变化{"产生了显著" if abs(relative_effect) > 10 else "产生了轻微" if abs(relative_effect) > 5 else "没有产生显著"}影响。
 """
-                
-                results[indicator] = {
-                    'change_point_index': int(change_point),
-                    'change_point_date': {
-                        'year': dates[change_point].year,
-                        'month': dates[change_point].month
-                    },
-                    'change_value': float(change_value),
-                    'pre_period_mean': float(impact_data['y'][:change_point].mean()),
-                    'post_period_mean': float(impact_data['y'][change_point:].mean()),
-                    'impact_summary': summary_data,
-                    'impact_report': report_text
-                }
-            except Exception as e:
-                logger.error(f"处理指标 {indicator} 时出错: {str(e)}")
-                results[indicator] = {'error': f'处理数据时出错: {str(e)}'}
         
-        return results
+        return {
+            'change_point_info': {
+                'index': int(change_point),
+                'date': {
+                    'year': dates[change_point].year,
+                    'month': dates[change_point].month
+                },
+                'value': float(change_value)
+            },
+            'impact_summary': summary_data,
+            'impact_report': report_text,
+            'counterfactual_predictions': counterfactual_predictions
+        }
         
     except Exception as e:
-        logger.error(f"因果推理分析整体失败: {str(e)}")
-        return {'error': f'因果推理分析整体失败: {str(e)}'}
-
-def create_mock_sentiment_data():
-    """创建模拟的情感分析数据"""
-    sentiment_data = []
-    # 只创建2024-2025年的模拟数据，与经济数据时间范围匹配
-    for year in range(2024, 2026):
-        for month in range(1, 13):
-            # 如果是2025年且月份超过1月，就停止
-            if year == 2025 and month > 1:
-                break
-                
-            sentiment_data.append({
-                'year': year,
-                'month': month,
-                'sentiment_score': 0.75,  # 模拟情感分数
-                'sentiment': 'positive',
-                'comment_count': 50
-            })
-    return sentiment_data
+        logger.error(f"因果推理分析失败: {str(e)}")
+        return {'error': f'因果推理分析失败: {str(e)}'}
 
 def test_casual_impact():
     """测试因果推理功能"""

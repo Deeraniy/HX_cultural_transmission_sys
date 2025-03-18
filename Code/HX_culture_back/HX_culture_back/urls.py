@@ -1,11 +1,11 @@
 from django.urls import path
 from django.urls import re_path as url
 from app01 import spot_sentiments_analyze, view, city, food, folk
-from app01 import spot,collaborative_filter
+from app01 import spot,collaborative_filter,casual_impact
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tags,tag_details
+from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
@@ -78,6 +78,7 @@ urlpatterns = [
     url(r'^api/tag/favorite$', tags.toggle_favorite),
     url(r'^api/tag/status$', tags.get_tag_status),
     url(r'^get_user_tag_status$', tags.get_user_tag_status),
+    url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -1,13 +1,10 @@
 <script setup>
 import router from "@/router.js";
-import ReportGeneration from "@/components/ReportGeneration/ReportGeneration.vue";
-import test from "@/components/Test.vue"
 </script>
 
 <template>
   <div id="app">
     <router-view/>
-<!--    <test/>-->
   </div>
 </template>
 
