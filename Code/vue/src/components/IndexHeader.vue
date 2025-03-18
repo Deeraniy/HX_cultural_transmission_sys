@@ -14,22 +14,15 @@
           @select="handleSelect"
       >
         <!-- 作品总览菜单项 -->
-        <el-sub-menu index="2" class="horizontal-submenu">
-          <template #title>
-            首页
-          </template>
-<!--          <el-menu-item index="2-1">文学</el-menu-item>-->
-<!--          <el-menu-item index="2-2">古代文学</el-menu-item>-->
-<!--          <el-menu-item index="2-3">新媒体艺术</el-menu-item>-->
-<!--          <el-menu-item index="2-4">表演艺术</el-menu-item>-->
-        </el-sub-menu>
+
         <el-menu-item index="3">名胜古迹</el-menu-item>
         <el-menu-item index="4">影视文学</el-menu-item>
         <el-menu-item index="5">美食文化</el-menu-item>
         <el-menu-item index="6">非遗民俗</el-menu-item>
         <el-menu-item index="7">红色文化</el-menu-item>
         <el-menu-item index="8">情感分析</el-menu-item>
-        <el-menu-item index="9">全球传播情况</el-menu-item>
+        <el-menu-item index="9">个性推荐</el-menu-item>
+        <el-menu-item index="10">全球传播情况</el-menu-item>
         <el-sub-menu index="1">
           <template #title>
             <span class="work">工作台</span>
@@ -47,8 +40,11 @@
       </el-menu>
       <!-- 右侧用户信息 -->
       <div class="user-info">
+        <!-- 问候语 -->
+        <span class="greeting">{{ greeting }}</span>
+
         <!-- 语言选择 -->
-        <el-dropdown trigger="click" >
+        <el-dropdown trigger="click" @command="handleLanguageChange">
           <el-button type="primary">
             {{ language || '语言' }} <el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
@@ -57,15 +53,27 @@
               <el-dropdown-item command="1">中文</el-dropdown-item>
               <el-dropdown-item command="2">English</el-dropdown-item>
               <el-dropdown-item command="3">日本語</el-dropdown-item>
-              <el-dropdown-item command="4">일본어</el-dropdown-item>
-              <el-dropdown-item command="5">Japonais</el-dropdown-item>
+              <el-dropdown-item command="4">한국어</el-dropdown-item>
+              <el-dropdown-item command="5">Français</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <!-- 用户头像 -->
-        <div class="user-avatar">
-          <img src="@/assets/Video1.jpg" alt="User Avatar" />
-        </div>
+
+        <!-- 用户头像下拉菜单 -->
+        <el-dropdown v-if="userStore.isLoggedIn" trigger="click" @command="handleCommand">
+          <div class="user-avatar">
+            <img src="@/assets/Video1.jpg" alt="User Avatar" />
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <!-- 未登录时显示登录按钮 -->
+        <el-button v-else type="text" @click="goToLogin">登录</el-button>
       </div>
     </div>
 
@@ -77,34 +85,52 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, watch} from 'vue';
+import {ref, watch, computed} from 'vue';
 import Index from "@/components/index.vue";
 import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
-import router from '@/router'
-import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
-import ShowDisplay from "@/components/FilmLiterature/Literature/ShowDisplay.vue";
 import {ArrowDown} from "@element-plus/icons-vue";
+import { useRouter, useRoute } from 'vue-router';
+import { useUserStore } from '@/stores/user'
+
+const route = useRoute();
+const router = useRouter();
+const userStore = useUserStore()
+
 // 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
 // Sync the activeIndex with the route path
 const activeIndex = ref<string | null>(null);
 
 // Watch for route changes and update activeIndex
 watch(
-    () => router,
+    () => route.path,
     (newPath) => {
       console.log("newPath", newPath)
       if (newPath === '/placeOfInterest') activeIndex.value = '3';
       else if (newPath === '/filmLiterature') activeIndex.value = '4';
       else if (newPath === '/food') activeIndex.value = '5';
-      else activeIndex.value = null; // default value if no match
+      else activeIndex.value = null;
     }
 );
 
 // Set the initial activeIndex based on the current route
-if (router.currentRoute === '/placeOfInterest') activeIndex.value = '3';
-else if (router.currentRoute === '/filmLiterature') activeIndex.value = '4';
-else if (router.currentRoute === '/food') activeIndex.value = '5';
+if (route.path === '/placeOfInterest') activeIndex.value = '3';
+else if (route.path === '/filmLiterature') activeIndex.value = '4';
+else if (route.path === '/food') activeIndex.value = '5';
 const language = ref('中文');
+
+// 获取问候语
+const greeting = computed(() => {
+  const hour = new Date().getHours();
+  if (hour < 6) return '凌晨好！';
+  if (hour < 9) return '早上好！';
+  if (hour < 12) return '上午好！';
+  if (hour < 14) return '中午好！';
+  if (hour < 17) return '下午好！';
+  if (hour < 19) return '傍晚好！';
+  if (hour < 22) return '晚上好！';
+  return '夜深了！';
+});
+
 // 处理菜单选择
 // Handle menu item select and navigate accordingly
 const handleSelect = (key: string, keyPath: string[]) => {
@@ -132,8 +158,53 @@ const handleSelect = (key: string, keyPath: string[]) => {
     case '8':
       router.push('/detail'); // 美食文化
       break;
+    case '9':
+      router.push('/recommend');
+      break;
+    case '10':
+      router.push('/global');
+      break;
       // Add more cases for other menu items if needed
     default:
+      break;
+  }
+};
+
+// 跳转到登录页
+const goToLogin = () => {
+  router.push('/login');
+};
+
+// 恢复处理用户下拉菜单命令
+const handleCommand = (command: string) => {
+  switch (command) {
+    case 'profile':
+      router.push('/userHome');
+      break;
+    case 'logout':
+      userStore.logout();
+      router.push('/login');
+      break;
+  }
+};
+
+// 处理语言切换
+const handleLanguageChange = (command: string) => {
+  switch (command) {
+    case '1':
+      language.value = '中文';
+      break;
+    case '2':
+      language.value = 'English';
+      break;
+    case '3':
+      language.value = '日本語';
+      break;
+    case '4':
+      language.value = '한국어';
+      break;
+    case '5':
+      language.value = 'Français';
       break;
   }
 };
@@ -206,11 +277,12 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 .total {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
-  padding-left: 20px;
+  padding-right: 20px;
+  justify-content: space-between;
 }
 
 .whole {
@@ -234,18 +306,18 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 .el-menu-demo {
-  margin-left: 90px;
+  margin-left: 50px;  /* 增加与logo的距离 */
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   background-color: transparent !important;
   box-shadow: none;
-  padding-top: 0;
-  padding-bottom: 0;
   border-bottom: none;
+  flex: 1;
 }
 
 .el-menu-item {
   margin-right: 0px;
+  padding: 0 15px;
   background-color: #B71C1C64 !important;
   color: #fff8f0 !important;
   font-size: 25px;
@@ -260,11 +332,11 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 :deep(.el-sub-menu__title) {
+  padding: 0 15px;
   color: #fff8f0 !important;
   background-color: #B71C1C64 !important;
   font-family: 'HelveticaNeue', serif !important;
   font-size: 25px;
-  padding: 0 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -283,53 +355,78 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 :deep(.el-sub-menu) {
   background-color: transparent !important;
-}/* 左侧Logo样式 */
+}
+
+/* 左侧Logo样式 */
 .logo {
   flex: 0 0 40px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .logo-image {
-  width: 180%;  /* 从 250% 改为 100% */
+  width: 180%;
   height: auto;
-  margin-left: 15px;
+  margin-left: 0;
 }
 
 /* 右侧用户信息 */
 .user-info {
   display: flex;
   align-items: center;
+  gap: 15px;  /* 增加元素间距 */
   margin-left: auto;
-  margin-bottom: 8px;
+  margin-right: 0;
+  z-index: 1;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .user-avatar img {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
   border-radius: 50%;
-  margin-right: 10px;
-
 }
 
-.language-select {
-  margin-right: 10px;
-  width: 120px;
+.username {
+  color: #fff8f0;
+  font-family: 'HelveticaNeue', serif;
+  font-size: 16px;
+  white-space: nowrap;  /* 防止文字换行 */
 }
+
+.el-button.el-button--text {
+  color: #fff8f0;
+  font-family: 'HelveticaNeue', serif;
+  font-size: 16px;
+}
+
 /* 修改下拉按钮样式 */
 .el-dropdown .el-button {
-  background-color: transparent;  /* 金色背景 */
+  background-color: transparent;
   color: #fff8f0;
   border: none;
-  font-family: 'HelveticaNeue', serif;  /* 修改字体 */
-  font-size: 20px;
-  margin-right: 10px;
+  font-family: 'HelveticaNeue', serif;
+  font-size: 16px;
+  padding: 0 10px;
 }
 
 .el-dropdown .el-button .el-icon--right {
-  color: #fff8f0 !important;  /* 强制将下拉符号的颜色设置为黑色 */
+  color: #fff8f0;
 }
 
-.el-dropdown .el-button .el-icon--right {
-  color: white;  /* 确保右侧箭头图标颜色也为白色 */
+.greeting {
+  color: #fff8f0;
+  font-family: 'HelveticaNeue', serif;
+  font-size: 16px;
+  white-space: nowrap;
 }
 
 </style>

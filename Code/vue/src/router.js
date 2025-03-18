@@ -1,4 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import { createPinia } from 'pinia';
 
 import UserHome from "@/components/User/UserHome.vue";
 import UserHomeMain from "@/components/User/components/main/UserHomeMain.vue";
@@ -9,6 +11,9 @@ import UserStar from "@/components/User/components/left/UserStar.vue"
 import UserUpload from "@/components/User/components/left/UserUpload.vue"
 import UserActivity from "@/components/User/components/left/UserActivity.vue";
 import Login from "@/components/login.vue"
+// 创建 Pinia 实例
+const pinia = createPinia();
+
 // 定义路由
 const routes = [
     {
@@ -17,7 +22,11 @@ const routes = [
     },
     {
         path: '/login',
-        component:() => import('./components/Login.vue'),
+        component:() => import('./components/login.vue'),
+    },
+    {
+        path: '/',
+        component:() => import('./components/login.vue'),
     },
     {
         path: '/userHome',
@@ -157,9 +166,31 @@ const routes = [
 ];
 
 // 创建路由器实例
-const router =createRouter({
-    history:createWebHashHistory(),
+const router = createRouter({
+    history: createWebHashHistory(),
     routes
+});
+
+// 修改路由守卫
+router.beforeEach((to, from, next) => {
+    // 需要认证的路由
+    const authRoutes = [
+        '/userHome',
+        '/recommend',
+        '/placeOfInterest',
+        '/placeDetail',
+        '/detail',
+        '/platform'
+    ];
+
+    // 从 localStorage 直接检查登录状态
+    const isLoggedIn = !!localStorage.getItem('userId');
+
+    if (authRoutes.includes(to.path) && !isLoggedIn) {
+        next('/login');
+    } else {
+        next();
+    }
 });
 
 export default router;

@@ -139,7 +139,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #上传图片
 # media_confige
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'static/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
-USER_MEDIA_URL = 'http://127.0.0.1:8000/upload/user/avatar/'
+# 添加基础 URL 配置
+BACKEND_URL = 'http://localhost:8080'  # 使用实际的后端地址
+FRONTEND_URL = 'http://localhost:5173'  # Vue 前端服务器地址
+
+# 使用后端地址构建媒体文件 URL
+MEDIA_BASE_URL = f"{BACKEND_URL}{MEDIA_URL}"
+
+USER_MEDIA_URL = 'http://127.0.0.1:8080/upload/user/avatar/'
 USER_AVATAR_ROOT = os.path.join(BASE_DIR, 'upload/user/avatar')

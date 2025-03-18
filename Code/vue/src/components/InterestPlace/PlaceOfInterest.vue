@@ -40,7 +40,7 @@
       <div class="attraction-card-box">
         <!-- 动态展示当前选中的城市景点 -->
         <div class="attractions-container">
-          <div class="attraction-card" @click="goToPlaceDetail(attraction.name)" v-for="attraction in filteredAttractions" :key="attraction.name" >
+          <div class="attraction-card" @click="showDetail(attraction)" v-for="attraction in filteredAttractions" :key="attraction.name">
             <img :src="attraction.image" :alt="attraction.name" class="attraction-image" />
             <div class="attraction-details">
               <h3>
@@ -60,7 +60,84 @@
       </div>
     </div>
 
+    <!-- 详情弹窗 -->
+    <el-dialog
+      v-model="dialogVisible"
+      width="80%"
+      class="detail-dialog"
+      :show-close="false"
+    >
+      <!-- 添加右上角关闭按钮 -->
+      <div class="dialog-close-button" @click="dialogVisible = false">
+        <el-icon><Close /></el-icon>
+      </div>
 
+      <div class="dialog-content">
+        <!-- 左侧固定图片区域 -->
+        <div class="left-section">
+          <img :src="selectedPlace?.image" class="detail-image">
+        </div>
+
+        <!-- 右侧可滚动内容区域 -->
+        <div class="right-section">
+          <!-- 固定顶栏 -->
+          <div class="right-header">
+            <h2>{{ selectedPlace?.name }}</h2>
+          </div>
+
+          <!-- 可滚动的内容区域 -->
+          <div class="right-content">
+            <div class="info-content">
+              <div class="info-item">
+                <h3>地理位置</h3>
+                <p>{{ selectedPlace?.location }}</p>
+              </div>
+              <div class="info-item">
+                <h3>历史背景</h3>
+                <p>{{ selectedPlace?.history }}</p>
+              </div>
+              <div class="info-item">
+                <h3>文化特色</h3>
+                <p>{{ selectedPlace?.culture }}</p>
+              </div>
+              <div class="info-item">
+                <h3>详细介绍</h3>
+                <p>{{ selectedPlace?.description }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 固定底栏 -->
+          <div class="right-footer">
+            <el-button
+              type="primary"
+              class="analysis-btn"
+              @click="goToAnalysis(selectedPlace)"
+            >
+              情感分析
+            </el-button>
+            <div class="dialog-interaction-icons">
+              <div class="icon-wrapper" @click="toggleLike(selectedPlace)">
+                <img
+                  :src="getImageUrl(tagStatus.is_liked ? 'setting/赞 (1).png' : 'setting/赞.png')"
+                  :class="['icon', { 'active': tagStatus.is_liked }]"
+                  alt="赞"
+                />
+                <span>{{ tagStatus.total_likes || 0 }}</span>
+              </div>
+              <div class="icon-wrapper" @click="toggleFavorite(selectedPlace)">
+                <img
+                  :src="getImageUrl(tagStatus.is_favorite ? 'setting/收藏(1).png' : 'setting/收藏.png')"
+                  :class="['icon', { 'active': tagStatus.is_favorite }]"
+                  alt="收藏"
+                />
+                <span>收藏</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </el-main>
 </template>
 
@@ -76,7 +153,10 @@ import CloudAPI from "@/api/cloud";
 import SentimentAPI from "@/api/sentiment";
 import {error} from "echarts/types/src/util/log";
 import Sentiment from "@/api/sentiment";
-import router from '@/router'
+import { useRouter } from 'vue-router'
+import TagsAPI from '@/api/tags';
+
+const router = useRouter()
 const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
 const selectedCity = ref<string>(''); // 保存选中的城市名称
@@ -92,6 +172,34 @@ const cityInfoData = ref<any>(null);
 let myChart: any;
 
 const attractions = ref([]); // 保存当前选中的城市的所有景点
+
+const dialogVisible = ref(false)
+const selectedPlace = ref<Place | null>(null)
+
+interface Place {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+  location: string;
+  history: string;
+  culture: string;
+}
+
+// 添加新的接口和状态
+interface TagStatus {
+  is_liked: boolean;
+  is_favorite: boolean;
+  total_likes: number;
+  click_count: number;
+}
+
+const tagStatus = ref<TagStatus>({
+  is_liked: false,
+  is_favorite: false,
+  total_likes: 0,
+  click_count: 0
+});
 
 // 从 interest.json 中加载数据并更新 attractions
 const loadAttractions = (cityName: string) => {
@@ -120,9 +228,13 @@ const loadAttractions = (cityName: string) => {
     attractions.value = interestData.value
         .filter((spot: any) => spot.city_id === cityId)
         .map((spot: any) => ({
+          id: spot.spot_id,
           name: spot.spot_name,
           image: spot.image_url,
           description: spot.description,
+          location: spot.location || '',
+          history: spot.history || '',
+          culture: spot.culture || ''
         }));
     console.log("筛选后的景点:", attractions.value);
   } else {
@@ -180,9 +292,9 @@ onMounted(async () => {
   // SentimentAPI.getSentimentAnalyzeAPI("橘子洲").then(data=>{
   //   console.log("情感分析",data);
   // })
-  SentimentAPI.getSentimentResultAPI("橘子洲").then(data=>{
-    console.log("情感结果",data);
-  })
+  // SentimentAPI.getSentimentResultAPI("橘子洲", "place").then(data=>{
+  //   console.log("情感结果",data);
+  // })
 
   myChart = echarts.init(chartsDOM.value as HTMLElement);
 
@@ -228,16 +340,31 @@ const onCitySelect = () => {
   loadAttractions(selectedCity.value); // 加载选中城市的景点信息
 };
 //const attractionName=ref('')//保存当前点击的景点的名字，并进行跳转，将景点名传给详情页
-const goToPlaceDetail = (attractionName) => {
-  router.push({
-    path: '/detail',
-    query: {
-      name: attractionName,
-      value: 1,
-      theme: 1  // 新增 theme 参数
-    }
-  });
+const showDetail = async (attraction: Place) => {
+  selectedPlace.value = attraction;
+  dialogVisible.value = true;
 
+  try {
+    const userId = 1; // 这里需要替换为实际的用户ID
+    const tagId = attraction.id; // 确保attraction有id属性
+
+    console.log('正在调用 viewTagAPI:', userId, tagId);
+    await TagsAPI.viewTagAPI(userId, tagId);
+
+    console.log('正在调用 getTagStatusAPI:', userId, tagId);
+    const response = await TagsAPI.getTagStatusAPI(userId, tagId);
+    console.log('获取标签状态响应:', response);
+
+    if (response.code === 200) {
+      tagStatus.value = response.data;
+    }
+  } catch (error) {
+    console.error('获取标签状态失败:', error);
+    if (error.response) {
+      console.error('错误响应:', error.response.data);
+      console.error('状态码:', error.response.status);
+    }
+  }
 }
 
 // 更新城市信息
@@ -275,11 +402,12 @@ const highlightCity = () => {
 };
 const getImageUrl = (imagePath) => {
   try {
-    // 替换路径中的 `@` 为 `/src`
-    const adjustedPath = imagePath.replace(/^@/, '/src');
-    const url = new URL(adjustedPath, import.meta.url).href;
-    console.log(url);
-    return url;
+    // 如果是完整的 URL，直接返回
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    // 否则使用相对路径
+    return new URL(`../../assets/${imagePath}`, import.meta.url).href;
   } catch (e) {
     console.error('图片加载失败', e);
     return '';
@@ -310,6 +438,71 @@ const searchAttractions = () => {
   console.log("搜索结果：", filteredAttractions.value);
   // 您可以在这里添加额外的逻辑，比如记录搜索日志等
 };
+
+const goToAnalysis = (place: Place) => {
+  if (!place) return;
+  router.push({
+    path: '/detail',
+    query: {
+      name: place.name,
+      value: '1',  // 这个值代表什么？
+      theme: '1'   // 这个值代表景点类型
+    }
+  })
+}
+
+// 修改点赞函数
+const toggleLike = async (place: Place) => {
+  if (!place || !place.id) {
+    console.error('无效的景点数据');
+    return;
+  }
+
+  try {
+    const userId = 1; // 需要替换为实际的用户ID
+    console.log('发送点赞请求，景点ID:', place.id);
+    const response = await TagsAPI.toggleLikeAPI(userId, place.id);
+    console.log('点赞响应:', response);
+    
+    if (response.code === 200) {
+      // 更新点赞数和点赞状态
+      const newLikes = response.data.total_likes;
+      const newIsLiked = response.data.is_liked;
+      console.log('新的点赞数:', newLikes, '新的点赞状态:', newIsLiked);
+      
+      // 确保深拷贝对象，避免引用问题
+      tagStatus.value = {
+        ...tagStatus.value,
+        total_likes: newLikes,
+        is_liked: newIsLiked
+      };
+      console.log('更新后的状态:', tagStatus.value);
+    }
+  } catch (error) {
+    console.error('点赞操作失败:', error);
+  }
+}
+
+// 修改收藏函数
+const toggleFavorite = async (place: Place) => {
+  if (!place || !place.id) {
+    console.error('无效的景点数据');
+    return;
+  }
+
+  try {
+    const userId = 1; // 需要替换为实际的用户ID
+    console.log('发送收藏请求:', userId, place.id);
+    const response = await TagsAPI.toggleFavoriteAPI(userId, place.id);
+    console.log('收藏响应:', response);
+
+    if (response.code === 200) {
+      tagStatus.value.is_favorite = response.data.is_favorite;
+    }
+  } catch (error) {
+    console.error('收藏操作失败:', error);
+  }
+}
 
 </script>
 
@@ -443,7 +636,7 @@ const searchAttractions = () => {
 }
 
 .attraction-card {
-  #background-color: #fff8f0;
+  /* background-color: #fff8f0; */
   background-image: url('@/assets/img_3.jpg');
 
   margin-right: 22px;
@@ -475,16 +668,18 @@ const searchAttractions = () => {
 
 .attraction-details {
   margin-top: 10px;
-}
 
-.attraction-details a {
-  color: #2c3e50; /* 设置链接的颜色 */
-  font-family: 'HelveticaNeue',serif;
-  font-size: 12px;
-  text-decoration: underline; /* 添加下划线让用户知道是链接 */
-  cursor: pointer; /* 确保鼠标悬停时显示为指针 */
-  pointer-events: auto; /* 确保链接可以点击 */
-  word-break: break-all; /* 允许长链接换行 */
+  a {
+    color: #2c3e50;
+    font-family: 'HelveticaNeue',serif;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    pointer-events: auto;
+    word-break: break-all;
+    margin-bottom: 10px;
+    display: block;
+  }
 }
 
 .attraction-details h3 {
@@ -532,5 +727,219 @@ const searchAttractions = () => {
 
 .search-container button:hover {
   background-color: #b71c1c;
+}
+
+.detail-dialog {
+  :deep(.el-dialog__body) {
+    padding: 0;
+    height: 600px;
+    overflow: hidden;
+  }
+
+  :deep(.el-dialog__header) {
+    display: none;
+  }
+
+  :deep(.el-dialog) {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    width: 1000px !important;
+    height: 600px;
+  }
+
+  :deep(.el-overlay) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;  /* 防止遮罩层滚动 */
+  }
+}
+
+/* 防止背景滚动 */
+:deep(.el-overlay-dialog) {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.dialog-content {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.left-section {
+  flex: 0 0 45%;
+  height: 100%;
+  position: relative;
+  background-color: black;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .detail-image {
+    height: 600px;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: white;
+  min-width: 0;
+  border-left: 1px solid #eee;  /* 添加左边框分隔线 */
+}
+
+.right-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: flex-start;  /* 标题靠左对齐 */
+  align-items: center;
+  background-color: white;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+}
+
+.right-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 80px;
+  scrollbar-width: thin;  /* Firefox */
+
+  /* Webkit浏览器的滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .info-content {
+    max-width: 100%;  /* 限制内容宽度 */
+    .info-item {
+      margin-bottom: 20px;
+
+      h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+
+      p {
+        color: #666;
+        line-height: 1.6;
+        text-align: justify;
+        word-wrap: break-word;  /* 确保长文本会换行 */
+      }
+    }
+  }
+}
+
+.right-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 45%;
+  z-index: 1;
+}
+
+.dialog-interaction-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  span {
+    font-size: 14px;
+    color: #666;
+    transition: color 0.3s ease;
+  }
+
+  &:hover span {
+    color: #333;
+  }
+}
+
+.analysis-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+}
+
+/* 右上角关闭按钮 */
+.dialog-close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+
+  .el-icon {
+    color: #999;
+    font-size: 20px;
+    transition: color 0.3s ease;
+  }
+
+  &:hover {
+    .el-icon {
+      color: #333;
+    }
+  }
 }
 </style>
