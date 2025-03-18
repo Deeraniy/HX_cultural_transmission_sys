@@ -7,7 +7,7 @@ import re
 def crawl_and_update_literature():
     try:
         # 数据库连接部分保持不变
-        conn = pymysql.connect(host='120.233.26.237', port=15320, user='root', passwd='kissme77',
+        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                              db='hx_cultural_transmission_sys', charset='utf8')
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         
