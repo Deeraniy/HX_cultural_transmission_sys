@@ -6,7 +6,10 @@ import router from "@/router.js";
   <div id="app">
     <router-view/>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <!--    <test/>-->
 <!--    <manage-system/>-->
 <!--    <ReportGeneration/>-->
