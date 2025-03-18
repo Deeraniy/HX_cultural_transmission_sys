@@ -3,7 +3,7 @@
     <div class="total">
       <!-- 左侧Logo -->
       <div class="logo">
-        <img src="@/assets/111.png" alt="Logo" class="logo-image" />
+        <img src="@/assets/444.png" alt="Logo" class="logo-image" />
       </div>
       <!-- 菜单区域 -->
       <el-menu
@@ -289,9 +289,9 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 .logo-image {
-  width: 100%;
+  width: 180%;  /* 从 250% 改为 100% */
   height: auto;
-  margin-bottom: 5px;
+  margin-left: 15px;
 }
 
 /* 右侧用户信息 */

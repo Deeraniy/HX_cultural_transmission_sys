@@ -52,6 +52,10 @@ const routes = [
         ]
     },
     {
+        path: '/recommend',
+        component:() => import('./components/Recommend/RecommendPageMain.vue'),
+    },
+    {
         path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
