@@ -8,7 +8,6 @@ import UserArticle from "@/components/User/components/left/UserArticle.vue";
 import UserStar from "@/components/User/components/left/UserStar.vue"
 import UserUpload from "@/components/User/components/left/UserUpload.vue"
 import UserActivity from "@/components/User/components/left/UserActivity.vue";
-import Login from "@/components/login.vue"
 // 定义路由
 const routes = [
     {
