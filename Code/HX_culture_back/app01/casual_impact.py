@@ -414,25 +414,6 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
         logger.error(f"因果推理分析整体失败: {str(e)}")
         return {'error': f'因果推理分析整体失败: {str(e)}'}
 
-def create_mock_sentiment_data():
-    """创建模拟的情感分析数据"""
-    sentiment_data = []
-    # 只创建2024-2025年的模拟数据，与经济数据时间范围匹配
-    for year in range(2024, 2026):
-        for month in range(1, 13):
-            # 如果是2025年且月份超过1月，就停止
-            if year == 2025 and month > 1:
-                break
-                
-            sentiment_data.append({
-                'year': year,
-                'month': month,
-                'sentiment_score': 0.75,  # 模拟情感分数
-                'sentiment': 'positive',
-                'comment_count': 50
-            })
-    return sentiment_data
-
 def test_casual_impact():
     """测试因果推理功能"""
     try:

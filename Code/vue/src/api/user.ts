@@ -1,29 +1,45 @@
 import request from "@/utils/request";
-import TagsAPI from "./tags";
 
 const DICT_BASE_URL = "";
 
-class RecommendAPI {
-    static getPerferenceAPI(userId) {
-        let urlPath = 'get_user_preference';
 
+class UserAPI {
+    // 用户注册
+    static registerAPI(data: {
+        username: string,
+        password: string,
+        age: number,
+        sex: 'male' | 'female' | 'other',
+        location: string,
+        avatar?: string
+    }) {
+        let urlPath = 'register';
+        
         return request({
             url: `${DICT_BASE_URL}/${urlPath}/`,
-            method: "get",
-            params: {
-                user_id: userId
-            }
+            method: "post",
+            data
+        }).catch(error => {
+            // 打印详细错误信息
+            console.error('Registration error:', error.response?.data || error);
+            throw error;
         });
     }
-        // 获取标签详细信息
-        static getTagDetailAPI(tagIds: number[]) {
-            let urlPath = 'get_tag_details';
-            return request({
-                url: `${DICT_BASE_URL}/${urlPath}/`,
-                method: "get",
-                params: { tag_ids: tagIds.join(',') }
-            });
-        }
+
+    // 用户登录
+    static loginAPI(data: {
+        username: string,
+        password: string
+    }) {
+        let urlPath = 'login';
+        
+        return request({
+            url: `${DICT_BASE_URL}/${urlPath}/`,
+            method: "post",
+            data
+        });
+    }
 }
-export default RecommendAPI;
+
+export default UserAPI ;
 
