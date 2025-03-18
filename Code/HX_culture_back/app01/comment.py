@@ -11,7 +11,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def get_comment_list(request):
+def get_comment_list_spot(request):
     spot_name = request.GET.get('name')
     
     # 创建连接
@@ -28,7 +28,7 @@ def get_comment_list(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     
     # 查询spot_id
-    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s", (spot_name,))
+    cursor.execute("SELECT spot_id FROM spot WHERE spot_name=%s", (spot_name,))
     spot_result = cursor.fetchone()
     
     if spot_result:
