@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^preview/',preview.preview),
 
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
-    url(r'^get_comment/',comment.get_comment_list),
+    url(r'^get_comment/',comment.get_comment_list_spot),
     url(r'^get_literature_by_type/',literature.get_literature_by_type),
 
     url(r'^spot_sentiments_analyze/',spot_sentiments_analyze.sentiments_analyze),
