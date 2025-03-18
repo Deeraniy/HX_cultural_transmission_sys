@@ -1,7 +1,7 @@
 from django.urls import path
 from django.urls import re_path as url
 from app01 import spot_sentiments_analyze, view, city, food, folk
-from app01 import spot,collaborative_filter
+from app01 import spot,collaborative_filter,casual_impact
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
@@ -70,6 +70,7 @@ urlpatterns = [
     url(r'^get_user_preference/$', collaborative_filter.get_user_preference),
     url(r'^get_all_tags/', tags.get_all_tags),
     url(r'^get_tag_details/', tag_details.get_tag_details),
+    url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
