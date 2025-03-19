@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="因果推理前端">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面。。。">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustom.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -149,7 +152,7 @@
       <workItem from="1742190484223" duration="7019000" />
       <workItem from="1742279858184" duration="5434000" />
       <workItem from="1742300753704" duration="724000" />
-      <workItem from="1742344277495" duration="13459000" />
+      <workItem from="1742344277495" duration="13607000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
@@ -561,7 +564,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="非遗民俗菜单栏" />
     <MESSAGE value="红色文化界面" />
     <MESSAGE value="红色文化展示界面" />
     <MESSAGE value="红色文化菜单" />
@@ -586,7 +588,8 @@
     <MESSAGE value="除红色人物外点赞收藏功能全部实现" />
     <MESSAGE value="点赞收藏维修+情感分析界面维修" />
     <MESSAGE value="因果推理前端" />
-    <option name="LAST_COMMIT_MESSAGE" value="因果推理前端" />
+    <MESSAGE value="情感分析界面。。。" />
+    <option name="LAST_COMMIT_MESSAGE" value="情感分析界面。。。" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -207,7 +207,7 @@ const tagStatus = ref<TagStatus>({
 // 获取用户存储
 const userStore = useUserStore();
 
-// 添加获取用户ID的函数，参考 UserHomeMain.vue 的方法
+// 修改 getUserId 函数，参考 UserHomeMain.vue 的实现
 const getUserId = () => {
   // 首先从 userStore 中获取
   if (userStore.userId) {
@@ -220,8 +220,8 @@ const getUserId = () => {
     return userId;
   }
   
-  // 如果都没有，返回 null
-  console.warn('User ID is missing');
+  // 如果都没有，返回 null 并提示用户登录
+  ElMessage.warning('请先登录以使用此功能');
   return null;
 };
 
@@ -491,7 +491,41 @@ const goToAnalysis = (place: Place) => {
   })
 }
 
-// 点赞函数
+// 修改 getTagStatus 函数，使用新的 getUserId 函数
+const getTagStatus = async (attraction) => {
+  try {
+    // 获取用户ID
+    const userId = getUserId();
+    if (!userId) {
+      console.log('用户未登录，无法获取标签状态');
+      return;
+    }
+
+    // 获取标签ID
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', attraction.id);
+    if (response && typeof response === 'object' && 'code' in response && response.code === 200) {
+      const tagId = response.data.id;
+      console.log(`获取到的标签ID: ${tagId}`);
+      
+      // 记录浏览
+      await TagsAPI.viewTagAPI(Number(userId), tagId);
+      console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
+      
+      // 获取标签状态
+      const statusResponse = await TagsAPI.getTagStatusAPI(Number(userId), tagId);
+      if (statusResponse && typeof statusResponse === 'object' && 'code' in statusResponse && statusResponse.code === 200) {
+        tagStatus.value = statusResponse.data;
+        console.log('标签状态:', tagStatus.value);
+      }
+    } else {
+      console.error('获取标签ID失败:', response);
+    }
+  } catch (error) {
+    console.error('获取标签状态失败:', error);
+  }
+};
+
+// 修改 toggleLike 函数，使用新的 getUserId 函数
 const toggleLike = async (place) => {
   try {
     // 获取用户ID
@@ -500,19 +534,19 @@ const toggleLike = async (place) => {
       ElMessage.warning('请先登录后再点赞');
       return;
     }
-    
+
     // 获取标签ID
     const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', place.id);
-    if (response.code === 200) {
+    if (response && typeof response === 'object' && 'code' in response && response.code === 200) {
       const tagId = response.data.id;
       console.log(`获取到的标签ID: ${tagId}`);
       
       console.log(`用户ID: ${userId}, 标签ID: ${tagId}`);
       
-      const likeResponse = await TagsAPI.toggleLikeAPI(userId, tagId);
+      const likeResponse = await TagsAPI.toggleLikeAPI(Number(userId), tagId);
       console.log('点赞响应:', likeResponse);
       
-      if (likeResponse.code === 200) {
+      if (likeResponse && typeof likeResponse === 'object' && 'code' in likeResponse && likeResponse.code === 200) {
         // 更新点赞状态
         console.log('点赞前状态:', { ...tagStatus.value });
         // 确保深拷贝对象，避免引用问题
@@ -527,10 +561,11 @@ const toggleLike = async (place) => {
     }
   } catch (error) {
     console.error('点赞操作失败:', error);
+    ElMessage.error('点赞失败，请稍后重试');
   }
 };
 
-// 收藏函数
+// 修改 toggleFavorite 函数，使用新的 getUserId 函数
 const toggleFavorite = async (place) => {
   try {
     // 获取用户ID
@@ -539,20 +574,22 @@ const toggleFavorite = async (place) => {
       ElMessage.warning('请先登录后再收藏');
       return;
     }
-    
+
     // 获取标签ID
     const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', place.id);
-    if (response.code === 200) {
+    if (response && typeof response === 'object' && 'code' in response && response.code === 200) {
       const tagId = response.data.id;
       
-      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(userId, tagId);
-      if (favoriteResponse.code === 200) {
+      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(Number(userId), tagId);
+      if (favoriteResponse && typeof favoriteResponse === 'object' && 'code' in favoriteResponse && favoriteResponse.code === 200) {
         // 更新收藏状态
         tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
+        ElMessage.success(favoriteResponse.data.is_favorite ? '收藏成功' : '已取消收藏');
       }
     }
   } catch (error) {
     console.error('收藏操作失败:', error);
+    ElMessage.error('收藏失败，请稍后重试');
   }
 };
 
