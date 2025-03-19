@@ -59,7 +59,7 @@ def process_spot_tokens(spot_name):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
         # 获取所有评论
-        comment_sql = "SELECT content FROM usercomment WHERE spot_id = %s"
+        comment_sql = "SELECT content FROM user_comment_spot WHERE spot_id = %s"
         cursor.execute(comment_sql, (spot_id,))
         comments = cursor.fetchall()
         

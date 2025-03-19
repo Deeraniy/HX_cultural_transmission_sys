@@ -49,7 +49,7 @@ def lda_analyze(request):
     spot_id = cursor.fetchone()['spot_id']
     print("id名称为",spot_id)
     
-    sql_query = "SELECT content FROM usercomment WHERE spot_id=%s"
+    sql_query = "SELECT content FROM user_comment_spot WHERE spot_id=%s"
     
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))

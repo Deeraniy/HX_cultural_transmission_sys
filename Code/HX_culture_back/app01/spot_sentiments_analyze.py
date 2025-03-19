@@ -193,7 +193,7 @@ def sentiments_result_total_count(request):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
         # 首先获取景点ID
-        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
+        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s"
         cursor.execute(spot_sql, (name,))
         spot_result = cursor.fetchone()
         
@@ -274,7 +274,7 @@ def sentiments_result(request):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
         # 修正：使用正确的字段名 spot_name 而不是 name
-        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s LIMIT 1"
+        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s LIMIT 1"
         cursor.execute(spot_sql, (name,))
         spot_result = cursor.fetchone()
         

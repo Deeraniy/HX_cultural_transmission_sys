@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^preview/',preview.preview),
 
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
-    url(r'^get_comment/',comment.get_comment_list),
+    url(r'^get_comment/',comment.get_comment_list_spot),
     url(r'^get_literature_by_type/',literature.get_literature_by_type),
 
     url(r'^spot_sentiments_analyze/',spot_sentiments_analyze.sentiments_analyze),
@@ -54,7 +54,7 @@ urlpatterns = [
     url(r'^liter_lda_analyze/',lda_topic_extractor.lda_analyze_literature),
     url(r'^food_lda_analyze/',lda_topic_extractor.lda_analyze_food),
     url(r'^folk_lda_analyze/',lda_topic_extractor.lda_analyze_folk),
-    url(r'^spot_get_comment_list/',comment.get_comment_list),
+    url(r'^spot_get_comment_list/',comment.get_comment_list_spot),
     url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
     url(r'^food_get_comment_list/',comment.get_comment_list_food),
     url(r'^folk_get_comment_list/',comment.get_comment_list_folk),
