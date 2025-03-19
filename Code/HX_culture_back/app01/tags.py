@@ -55,6 +55,15 @@ def view_tag(request):
         user_id = data.get('user_id')
         tag_id = data.get('tag_id')
         
+        print(f"记录浏览: user_id={user_id}, tag_id={tag_id}")
+        
+        # 确保 total_clicks 不为 NULL
+        cursor.execute("""
+            UPDATE tag 
+            SET total_clicks = COALESCE(total_clicks, 0)
+            WHERE tag_id = %s
+        """, (tag_id,))
+        
         # 检查是否存在记录
         cursor.execute("""
             SELECT click_count FROM tag_user 
@@ -83,9 +92,25 @@ def view_tag(request):
             WHERE tag_id = %s
         """, (tag_id,))
         
+        # 获取更新后的点击量
+        cursor.execute("""
+            SELECT COALESCE(total_clicks, 0) as total_clicks
+            FROM tag 
+            WHERE tag_id = %s
+        """, (tag_id,))
+        total_clicks = cursor.fetchone()[0]
+        print(f"更新后的点击量: {total_clicks}")
+        
         conn.commit()
-        return JsonResponse({'code': 200, 'message': '浏览记录已更新'})
+        return JsonResponse({
+            'code': 200, 
+            'message': '浏览记录已更新',
+            'data': {
+                'total_clicks': total_clicks
+            }
+        })
     except Exception as e:
+        print(f"记录浏览出错: {str(e)}")
         conn.rollback()
         return JsonResponse({'code': 500, 'message': str(e)})
     finally:
@@ -95,7 +120,7 @@ def view_tag(request):
 @require_http_methods(["POST"])
 def toggle_like(request):
     """
-    切换标签点赞状态（增加或减少点赞数）
+    切换标签点赞状态
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -104,80 +129,77 @@ def toggle_like(request):
         user_id = data.get('user_id')
         tag_id = data.get('tag_id')
         
-        print(f"接收到点赞请求，user_id: {user_id}, tag_id: {tag_id}")
+        print(f"接收到点赞请求: user_id={user_id}, tag_id={tag_id}")
         
-        # 先检查tag是否存在
-        cursor.execute("SELECT tag_id, total_likes FROM tag WHERE tag_id = %s", (tag_id,))
-        tag_info = cursor.fetchone()
-        
-        if not tag_info:
-            print(f"错误: 找不到tag_id为{tag_id}的标签")
-            return JsonResponse({'code': 404, 'message': f'找不到ID为{tag_id}的标签'})
-        
-        # 检查用户是否已经点赞过这个标签
+        # 检查当前点赞状态
         cursor.execute("""
             SELECT is_liked FROM tag_user 
             WHERE user_id = %s AND tag_id = %s
         """, (user_id, tag_id))
-        user_tag = cursor.fetchone()
         
-        # 默认为未点赞状态
-        is_liked = False
+        result = cursor.fetchone()
+        is_liked = result[0] if result else False
         
-        if user_tag is not None:
-            # 用户记录存在，切换点赞状态
-            is_liked = bool(user_tag[0])
-            new_is_liked = not is_liked
-            
-            # 更新用户点赞状态
+        print(f"当前点赞状态: {is_liked}")
+        
+        # 切换点赞状态
+        new_is_liked = not is_liked
+        
+        # 更新 tag_user 表
+        if result:
             cursor.execute("""
                 UPDATE tag_user 
-                SET is_liked = %s 
+                SET is_liked = %s
                 WHERE user_id = %s AND tag_id = %s
             """, (new_is_liked, user_id, tag_id))
-            
-            # 更新标签总点赞数
-            like_change = 1 if new_is_liked else -1
-            cursor.execute("""
-                UPDATE tag 
-                SET total_likes = total_likes + %s 
-                WHERE tag_id = %s
-            """, (like_change, tag_id))
         else:
-            # 用户记录不存在，创建新记录并设为已点赞
             cursor.execute("""
-                INSERT INTO tag_user (user_id, tag_id, click_count, is_favorite, is_liked) 
-                VALUES (%s, %s, 0, 0, 1)
-            """, (user_id, tag_id))
-            
-            # 增加标签总点赞数
+                INSERT INTO tag_user (user_id, tag_id, is_liked, is_favorite, click_count)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (user_id, tag_id, new_is_liked, False, 1))
+        
+        # 先确保 total_likes 不为 NULL
+        cursor.execute("""
+            UPDATE tag 
+            SET total_likes = COALESCE(total_likes, 0)
+            WHERE tag_id = %s
+        """, (tag_id,))
+        
+        # 更新 tag 表中的总点赞数
+        if new_is_liked:
             cursor.execute("""
                 UPDATE tag 
-                SET total_likes = total_likes + 1 
+                SET total_likes = total_likes + 1
                 WHERE tag_id = %s
             """, (tag_id,))
-            new_is_liked = True
+        else:
+            cursor.execute("""
+                UPDATE tag 
+                SET total_likes = GREATEST(total_likes - 1, 0)
+                WHERE tag_id = %s
+            """, (tag_id,))
         
         # 获取更新后的总点赞数
         cursor.execute("""
-            SELECT COALESCE(total_likes, 0) as total_likes 
+            SELECT COALESCE(total_likes, 0) as total_likes
             FROM tag 
             WHERE tag_id = %s
         """, (tag_id,))
         total_likes = cursor.fetchone()[0]
-        print(f"更新后的点赞数: {total_likes}, 点赞状态: {new_is_liked}")
+        
+        print(f"更新后的点赞状态: {new_is_liked}, 总点赞数: {total_likes}")
         
         conn.commit()
+        
         return JsonResponse({
-            'code': 200,
-            'message': '操作成功',
+            'code': 200, 
             'data': {
-                'total_likes': total_likes,
-                'is_liked': new_is_liked
+                'is_liked': new_is_liked,
+                'total_likes': total_likes
             }
         })
     except Exception as e:
-        print(f"Error in toggle_like: {str(e)}")
+        print(f"点赞操作出错: {str(e)}")
         conn.rollback()
         return JsonResponse({'code': 500, 'message': str(e)})
     finally:
@@ -235,7 +257,7 @@ def toggle_favorite(request):
 @require_http_methods(["GET"])
 def get_tag_status(request):
     """
-    获取标签的状态（点赞数、是否收藏）
+    获取标签状态
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -243,36 +265,57 @@ def get_tag_status(request):
         user_id = request.GET.get('user_id')
         tag_id = request.GET.get('tag_id')
         
-        # 获取标签总点赞数
+        print(f"获取标签状态: user_id={user_id}, tag_id={tag_id}")
+        
+        # 获取标签信息
         cursor.execute("""
-            SELECT COALESCE(total_likes, 0) as total_likes 
+            SELECT COALESCE(total_likes, 0) as total_likes, COALESCE(total_clicks, 0) as total_clicks
             FROM tag 
             WHERE tag_id = %s
         """, (tag_id,))
-        tag_result = cursor.fetchone()
         
-        # 获取用户-标签关系 (包含is_liked)
+        tag_info = cursor.fetchone()
+        
+        if not tag_info:
+            return JsonResponse({'code': 404, 'message': '标签不存在'})
+        
+        total_likes = tag_info[0]  # 已确保不为 NULL
+        total_clicks = tag_info[1]
+        
+        print(f"标签信息: total_likes={total_likes}, total_clicks={total_clicks}")
+        
+        # 获取用户对该标签的状态
         cursor.execute("""
-            SELECT 
-                COALESCE(is_favorite, 0) as is_favorite,
-                COALESCE(click_count, 0) as click_count,
-                COALESCE(is_liked, 0) as is_liked
+            SELECT is_liked, is_favorite, click_count 
             FROM tag_user 
             WHERE user_id = %s AND tag_id = %s
         """, (user_id, tag_id))
+        
         user_tag = cursor.fetchone()
         
+        is_liked = False
+        is_favorite = False
+        click_count = 0
+        
+        if user_tag:
+            is_liked = bool(user_tag[0])
+            is_favorite = bool(user_tag[1])
+            click_count = user_tag[2] or 0
+        
+        print(f"用户标签状态: is_liked={is_liked}, is_favorite={is_favorite}, click_count={click_count}")
+        
         return JsonResponse({
-            'code': 200,
+            'code': 200, 
             'data': {
-                'total_likes': tag_result[0] if tag_result else 0,
-                'is_liked': bool(user_tag[2]) if user_tag else False,  # 正确返回用户点赞状态
-                'is_favorite': bool(user_tag[0]) if user_tag else False,
-                'click_count': user_tag[1] if user_tag else 0
+                'total_likes': total_likes,
+                'total_clicks': total_clicks,
+                'is_liked': is_liked,
+                'is_favorite': is_favorite,
+                'click_count': click_count
             }
         })
     except Exception as e:
-        print(f"Error in get_tag_status: {str(e)}")
+        print(f"获取标签状态出错: {str(e)}")
         return JsonResponse({'code': 500, 'message': str(e)})
     finally:
         cursor.close()
@@ -347,6 +390,125 @@ def get_user_tag_status(request):
         return JsonResponse({'code': 200, 'data': response_data})
     except Exception as e:
         print(f"获取用户标签状态出错: {str(e)}")
+        return JsonResponse({'code': 500, 'message': str(e)})
+    finally:
+        cursor.close()
+        conn.close()
+
+@require_http_methods(["GET"])
+def get_tag_by_theme_and_origin(request):
+    """
+    根据主题编号和原始ID获取标签ID
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        theme_name = request.GET.get('theme_name')
+        origin_id = request.GET.get('origin_id')
+        
+        if not theme_name or not origin_id:
+            return JsonResponse({
+                'code': 400, 
+                'message': '缺少必要参数：theme_name 或 origin_id'
+            })
+            
+        print(f"查询主题 {theme_name} 下的原始ID {origin_id} 对应的标签")
+        
+        # 查询匹配的标签
+        cursor.execute("""
+            SELECT tag_id, tag_name, theme_name, total_clicks, total_likes
+            FROM tag
+            WHERE theme_name = %s AND origin_id = %s
+        """, (theme_name, origin_id))
+        
+        tag = cursor.fetchone()
+        
+        if tag:
+            result = {
+                'id': tag[0],
+                'tag_name': tag[1],
+                'theme_name': tag[2],
+                'total_clicks': tag[3],
+                'total_likes': tag[4],
+                'origin_id': origin_id
+            }
+            return JsonResponse({'code': 200, 'data': result})
+        else:
+            return JsonResponse({
+                'code': 404, 
+                'message': f'未找到主题 {theme_name} 下原始ID为 {origin_id} 的标签'
+            })
+            
+    except Exception as e:
+        print(f"查询标签出错: {str(e)}")
+        return JsonResponse({'code': 500, 'message': str(e)})
+    finally:
+        cursor.close()
+        conn.close()
+
+@require_http_methods(["POST"])
+def get_tags_by_theme_and_origins(request):
+    """
+    批量根据主题编号和原始ID列表获取标签ID
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        data = json.loads(request.body)
+        theme_name = data.get('theme_name')
+        origin_ids = data.get('origin_ids', [])
+        
+        if not theme_name or not origin_ids:
+            return JsonResponse({
+                'code': 400, 
+                'message': '缺少必要参数：theme_name 或 origin_ids'
+            })
+            
+        print(f"批量查询主题 {theme_name} 下的原始ID列表 {origin_ids} 对应的标签")
+        
+        # 构建 SQL IN 查询
+        placeholders = ', '.join(['%s'] * len(origin_ids))
+        query = f"""
+            SELECT tag_id, tag_name, theme_name, total_clicks, total_likes, origin_id
+            FROM tag
+            WHERE theme_name = %s AND origin_id IN ({placeholders})
+        """
+        
+        # 构建参数列表
+        params = [theme_name] + origin_ids
+        
+        # 执行查询
+        cursor.execute(query, params)
+        tags = cursor.fetchall()
+        
+        if tags:
+            results = [{
+                'id': tag[0],
+                'tag_name': tag[1],
+                'theme_name': tag[2],
+                'total_clicks': tag[3],
+                'total_likes': tag[4],
+                'origin_id': tag[5]
+            } for tag in tags]
+            
+            # 创建一个映射，方便前端使用
+            mapping = {str(tag['origin_id']): tag['id'] for tag in results}
+            
+            return JsonResponse({
+                'code': 200, 
+                'data': {
+                    'tags': results,
+                    'mapping': mapping  # origin_id 到 tag_id 的映射
+                }
+            })
+        else:
+            return JsonResponse({
+                'code': 404, 
+                'message': f'未找到主题 {theme_name} 下指定原始ID的标签'
+            })
+            
+    except Exception as e:
+        print(f"批量查询标签出错: {str(e)}")
         return JsonResponse({'code': 500, 'message': str(e)})
     finally:
         cursor.close()
