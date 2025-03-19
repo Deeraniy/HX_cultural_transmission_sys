@@ -41,7 +41,7 @@
       <!-- 右侧用户信息 -->
       <div class="user-info">
         <!-- 问候语 -->
-        <span class="greeting">{{ greeting }}</span>
+        
 
         <!-- 语言选择 -->
         <el-dropdown trigger="click" @command="handleLanguageChange">
@@ -58,11 +58,11 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-
+        <span class="greeting">{{ greeting }}</span>
         <!-- 用户头像下拉菜单 -->
         <el-dropdown v-if="userStore.isLoggedIn" trigger="click" @command="handleCommand">
           <div class="user-avatar">
-            <img src="@/assets/Video1.jpg" alt="User Avatar" />
+            <img :src="userData.avatar || '@/assets/Video1.jpg'" alt="User Avatar" />
           </div>
           <template #dropdown>
             <el-dropdown-menu>
@@ -85,16 +85,17 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, watch, computed} from 'vue';
+import {ref, watch, computed, onMounted} from 'vue';
 import Index from "@/components/index.vue";
-import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
+import PoemDisplay from "@/components/FilmLiterature/FilmLiteratureMain.vue"; // 导入 PoemDisplay 组件
 import {ArrowDown} from "@element-plus/icons-vue";
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user'
+import UserAPI from '@/api/user'; // 导入UserAPI
 
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 // 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
 // Sync the activeIndex with the route path
@@ -208,6 +209,38 @@ const handleLanguageChange = (command: string) => {
       break;
   }
 };
+
+// 用户数据，包含头像
+const userData = ref({
+  avatar: '@/assets/Video1.jpg', // 默认头像
+});
+
+// 获取用户信息
+const refreshUserInfo = async () => {
+  try {
+    if (userStore.isLoggedIn && userStore.userId) {
+      const res = await UserAPI.getUserFullInfo(userStore.userId);
+      if (res && res.status === 'success' && res.data) {
+        userData.value = {
+          ...userData.value,
+          avatar: res.data.avatar || '@/assets/Video1.jpg',
+        };
+      }
+    }
+  } catch (error) {
+    console.error('获取用户信息失败:', error);
+  }
+};
+
+// 在组件挂载时获取用户信息
+onMounted(() => {
+  if (userStore.isLoggedIn) {
+    refreshUserInfo();
+  }
+  
+  // 监听用户信息更新事件
+  window.addEventListener('user-info-updated', refreshUserInfo);
+});
 </script>
 
 <style>

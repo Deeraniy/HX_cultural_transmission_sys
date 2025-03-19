@@ -64,7 +64,7 @@ const routes = [
     },
     {
         path: '/recommend',
-        component:() => import('./components/Recommend/RecommendPageMain.vue'),
+        component:() => import('./components/Recommend/RecommendPage.vue'),
     },
     {
         path: '/placeOfInterest',
@@ -172,7 +172,9 @@ const router = createRouter({
     routes
 });
 
-// 修改路由守卫
+// 添加全局导航守卫
+const scrollPositions = {};
+
 router.beforeEach((to, from, next) => {
     // 需要认证的路由
     const authRoutes = [
@@ -190,7 +192,20 @@ router.beforeEach((to, from, next) => {
     if (authRoutes.includes(to.path) && !isLoggedIn) {
         next('/login');
     } else {
+        // 保存离开页面的滚动位置
+        if (from.path === '/recommend') {
+            scrollPositions[from.path] = window.scrollY;
+        }
         next();
+    }
+});
+
+router.afterEach((to, from) => {
+    // 恢复页面的滚动位置
+    if (to.path === '/recommend' && scrollPositions[to.path]) {
+        nextTick(() => {
+            window.scrollTo(0, scrollPositions[to.path]);
+        });
     }
 });
 

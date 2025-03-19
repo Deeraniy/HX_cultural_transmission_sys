@@ -21,105 +21,136 @@
         <div v-for="(slide, index) in slides"
              :key="index"
              class="slide"
-             :class="{ active: currentIndex === index }">
+             :class="{
+               'empty-slide': !slide.favoriteCards || slide.favoriteCards.length === 0,
+               'slide-1': index === 0,
+               'slide-2': index === 1,
+               'slide-3': index === 2,
+               'slide-4': index === 3,
+               'slide-5': index === 4,
+               'slide-6': index === 5,
+               active: currentIndex === index
+             }">
+          <!-- 跳转按钮 - 有偏好时显示在右上角 -->
+          <div v-if="hasPreferences(slide)" class="navigate-button top-right" @click="navigateToPage(index)">
+            查看更多 <i class="el-icon-arrow-right"></i>
+          </div>
+
           <div class="slide-content">
-            <!-- 第一行：改为卡片轮播 + 描述 -->
-            <div class="main-content">
-              <!-- 卡片轮播部分 -->
-              <div class="swiper">
-                <div class="swiper-wrapper">
-                  <div v-for="(card, cardIndex) in slide.favoriteCards"
-                       :key="cardIndex"
-                       class="swiper-slide"
-                       :class="{ 'empty-card': card.rating === '-' }">
-                    <img
-                      :src="card.image"
-                      :alt="card.title"
-                      class="card-image"
-                      @error="(e) => {
-                        console.error('图片加载失败:', e.target.src);
-                        e.target.src = defaultEmptyImg;
-                      }"
-                    >
-                    <div class="overlay">
-                      <span :class="{ 'user-preference': card.userPreference }">
-                        {{ card.rating }}
-                      </span>
-                      <h2>{{ card.title }}</h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 描述部分 -->
-              <div class="main-description">
-                <h2>{{ slide.title }}</h2>
-                <p>{{ slide.description }}</p>
-              </div>
+            <!-- 无偏好时显示中央提示 -->
+            <div v-if="!hasPreferences(slide)" class="empty-content">
+              <h2>{{ slide.title }}</h2>
+              <p>{{ slide.description }}</p>
+              <button class="navigate-button center" @click="navigateToPage(index)">
+                前往{{ slide.title }}页面
+              </button>
             </div>
 
-            <!-- 第二行：小卡片列表 -->
-            <div class="sub-content">
-              <div class="cards-row" v-if="slide.subCards.length > 0">
-                <!-- 用户偏好部分 -->
-                <div class="row user-preferences">
-                  <div class="row-header">
-                    <h3>
-                      <span>您</span>
-                      <span>的</span>
-                      <span>喜</span>
-                      <span>好</span>
-                    </h3>
-                  </div>
-                  <div class="cards-container">
-                    <div v-for="(card, cardIndex) in userPreferenceCards.slice(0, 4)"
-                         :key="'pref-' + cardIndex"
-                         class="sub-card">
-                      <img :src="getImageUrl(card.image)"
-                           :alt="card.folk_name || card.tag_name"
-                           @error="(e) => e.target.src = defaultEmptyImg">
-                      <div class="card-overlay">
-                        <p class="title">{{ card.folk_name || card.tag_name }}</p>
+            <!-- 有偏好时显示正常内容 -->
+            <template v-else>
+              <!-- 第一行：改为卡片轮播 + 描述 -->
+              <div class="main-content">
+                <!-- 卡片轮播部分 -->
+                <div class="swiper">
+                  <div class="swiper-wrapper">
+                    <div v-for="(card, cardIndex) in slide.favoriteCards"
+                         :key="cardIndex"
+                         class="swiper-slide"
+                         @click="selectCard(card)"
+                         :class="{ 'empty-card': card.rating === '-' }">
+                      <img
+                        :src="card.image"
+                        :alt="card.title"
+                        class="card-image"
+                        @error="(e) => {
+                          console.error('图片加载失败:', e.target.src);
+                          e.target.src = defaultEmptyImg;
+                        }"
+                      >
+                      <div class="overlay">
+                        <span :class="{ 'user-preference': card.userPreference }">
+                          {{ card.rating }}
+                        </span>
+                        <h2>{{ card.title }}</h2>
                       </div>
                     </div>
                   </div>
-                  <div v-if="userPreferenceCards.length > 4"
-                       class="more-button"
-                       @click="showMorePreferences">
-                    更多 ({{ userPreferenceCards.length - 4 }})
-                  </div>
                 </div>
 
-                <!-- 相似用户偏好部分 -->
-                <div class="row similar-users">
-                  <div class="row-header">
-                    <h3>
-                      <span>推</span>
-                      <span>荐</span>
-                      <span>偏</span>
-                      <span>好</span>
-                    </h3>
+                <!-- 描述部分 -->
+                <div class="main-description">
+                  <h1>{{ selectedCard ? selectedCard.title : slide.title }}</h1>
+                  <div class="card-details" v-if="selectedCard">
+                    <div class="rating-badge">评分: {{ selectedCard.rating || '暂无评分' }}</div>
+                    <p class="card-description">{{ formatDescription(selectedCard.description) || '暂无描述' }}</p>
                   </div>
-                  <div class="cards-container">
-                    <div v-for="(card, cardIndex) in similarUserCards.slice(0, 4)"
-                         :key="'similar-' + cardIndex"
-                         class="sub-card">
-                      <img :src="getImageUrl(card.image)"
-                           :alt="card.folk_name || card.tag_name"
-                           @error="(e) => e.target.src = defaultEmptyImg">
-                      <div class="card-overlay">
-                        <p class="title">{{ card.folk_name || card.tag_name }}</p>
+                  <p v-else>{{ slide.description }}</p>
+                </div>
+              </div>
+
+              <!-- 第二行：小卡片列表 -->
+              <div class="sub-content">
+                <div class="cards-row" v-if="slide.subCards.length > 0">
+                  <!-- 用户偏好部分 -->
+                  <div class="row user-preferences">
+                    <div class="row-header">
+                      <h3>
+                        <span>您</span>
+                        <span>的</span>
+                        <span>喜</span>
+                        <span>好</span>
+                      </h3>
+                    </div>
+                    <div class="cards-container">
+                      <div v-for="(card, cardIndex) in userPreferenceCards.slice(0, 5)"
+                           :key="'pref-' + cardIndex"
+                           class="sub-card">
+                        <img :src="getImageUrl(card.image)"
+                             :alt="card.folk_name || card.tag_name"
+                             @error="(e) => e.target.src = defaultEmptyImg">
+                        <div class="card-overlay">
+                          <p class="title">{{ card.folk_name || card.tag_name }}</p>
+                        </div>
                       </div>
                     </div>
+                    <div v-if="userPreferenceCards.length > 5"
+                         class="more-button"
+                         @click="showMorePreferences">
+                      更多 ({{ userPreferenceCards.length - 5 }})
+                    </div>
                   </div>
-                  <div v-if="similarUserCards.length > 4"
-                       class="more-button"
-                       @click="showMoreSimilarPreferences">
-                    更多 ({{ similarUserCards.length - 4 }})
+
+                  <!-- 相似用户偏好部分 -->
+                  <div class="row similar-users">
+                    <div class="row-header">
+                      <h3>
+                        <span>推</span>
+                        <span>荐</span>
+                        <span>偏</span>
+                        <span>好</span>
+                      </h3>
+                    </div>
+                    <div class="cards-container">
+                      <div v-for="(card, cardIndex) in similarUserCards.slice(0, 5)"
+                           :key="'similar-' + cardIndex"
+                           class="sub-card">
+                        <img :src="getImageUrl(card.image)"
+                             :alt="card.folk_name || card.tag_name"
+                             @error="(e) => e.target.src = defaultEmptyImg">
+                        <div class="card-overlay">
+                          <p class="title">{{ card.folk_name || card.tag_name }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="similarUserCards.length > 5"
+                         class="more-button"
+                         @click="showMoreSimilarPreferences">
+                      更多 ({{ similarUserCards.length - 5 }})
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
@@ -190,6 +221,7 @@ import TagsAPI from "@/api/tags"
 import 'swiper/css'
 import 'swiper/css/effect-cards'
 import { useUserStore } from '@/stores/user' // 导入用户存储
+import { useRouter } from 'vue-router' // 导入路由
 
 // 导入默认图片以备用
 import defaultEmptyImg from '@/assets/BookB.jpg'
@@ -198,6 +230,8 @@ const currentIndex = ref(0)
 const isAnimating = ref(false)
 const loading = ref(true)
 const userStore = useUserStore() // 使用用户存储
+const selectedCard = ref(null) // 当前选中的卡片
+const router = useRouter() // 使用路由
 
 // 定义所有标签页
 const tabs = ['名胜古迹', '美食文化', '影视文学', '非遗民俗', '红色人物', '发现更多']
@@ -348,7 +382,7 @@ const fetchData = async () => {
           'spot': [],
           'history': []
         };
-        
+
         // 将所有标签按主题分类
         if (Array.isArray(tagData)) {
           tagData.forEach(tag => {
@@ -377,15 +411,15 @@ const fetchData = async () => {
 
         if (slideIndex !== -1 && Array.isArray(tags)) {  // 确保 tags 是数组
           console.log(`处理主题 ${theme} 的标签数据，共 ${tags.length} 个标签`);
-          
+
           // 如果没有该主题的偏好数据，创建空数组
           if (!userPreferences.detailed_preferences[theme.toLowerCase()]) {
             userPreferences.detailed_preferences[theme.toLowerCase()] = [];
           }
-          
+
           const themePreferences = userPreferences.detailed_preferences[theme.toLowerCase()] || [];
           console.log(`用户对主题 ${theme} 的偏好数量:`, themePreferences.length);
-          
+
           const similarUsers = userPreferences.similar_users || [];
           console.log(`相似用户数量:`, similarUsers.length);
 
@@ -420,12 +454,12 @@ const fetchData = async () => {
             console.log(`即将调用 getTagDetailAPI 获取 ${theme} 的详细信息...`);
             const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
             console.log(`getTagDetailAPI 返回数据:`, tagDetailsResponse);
-            
+
             const tagDetailsArray = Array.isArray(tagDetailsResponse?.tag_details)
                 ? tagDetailsResponse.tag_details
                 : [];
             console.log(`标签详情数组长度:`, tagDetailsArray.length);
-            
+
             const tagDetailsMap = new Map(
                 tagDetailsArray
                     .filter(tag => typeof tag.tag_id === "number")
@@ -532,13 +566,13 @@ const fetchData = async () => {
           userPreference: true
         }));
       }
-      
+
       if (slides.value[i].subCards.length === 0) {
         slides.value[i].subCards = Array(8).fill(0).map((_, idx) => ({
           title: `示例标签 ${idx + 1}`,
           image: defaultEmptyImg,
           description: '示例描述',
-          userPreference: idx < 4
+          userPreference: idx < 5
         }));
       }
     }
@@ -622,7 +656,7 @@ const initSwiper = () => {
             // 获取点击位置
             const clickX = event.clientX - this.el.getBoundingClientRect().left;
             const halfWidth = this.el.offsetWidth / 2;
-            
+
             // 点击左侧向前，右侧向后
             if (clickX < halfWidth) {
               this.slidePrev();
@@ -646,6 +680,79 @@ watch(currentIndex, () => {
   });
 });
 
+// 选择卡片
+const selectCard = (card) => {
+  console.log('选中卡片:', card);
+  selectedCard.value = card;
+
+  // 找到当前卡片在轮播中的索引
+  const currentSlide = slides.value[currentIndex.value];
+  const cardIndex = currentSlide.favoriteCards.findIndex(c => c.title === card.title);
+
+  // 如果找到了卡片，并且不是最后一个，则自动切换到下一个卡片
+  if (cardIndex !== -1 && cardIndex < currentSlide.favoriteCards.length - 1) {
+    // 使用setTimeout模拟点击后的延迟切换效果
+    setTimeout(() => {
+      selectedCard.value = currentSlide.favoriteCards[cardIndex + 1];
+      console.log('自动切换到下一个卡片:', selectedCard.value);
+
+      // 如果有Swiper实例，也更新轮播位置
+      if (swiperInstances[currentIndex.value]) {
+        swiperInstances[currentIndex.value].slideTo(cardIndex + 1);
+      }
+    }, 300);
+  }
+};
+
+// 格式化描述文本
+const formatDescription = (description) => {
+  if (!description) return '暂无描述';
+  // 如果描述是URL，则提取有用信息或返回默认文本
+  if (description.startsWith('http')) {
+    return '点击查看详细介绍';
+  }
+  return description;
+};
+
+// 检查主题是否有偏好
+const hasPreferences = (slide) => {
+  return slide.favoriteCards.length > 0 || slide.subCards.length > 0;
+};
+
+// 导航到相应页面
+const navigateToPage = (index) => {
+  // 根据索引确定要跳转的路由
+  let route = '';
+  switch (index) {
+    case 0: route = '/placeOfInterest'; break;
+    case 1: route = '/food'; break;
+    case 2: route = '/filmLiterature'; break;
+    case 3: route = '/folkCustom'; break;
+    case 4: route = '/red'; break;
+    case 5: route = '/discover'; break;
+    default: route = '/';
+  }
+
+  // 在跳转前清理状态
+  selectedCard.value = null;
+
+  // 使用 nextTick 确保状态更新后再跳转
+  nextTick(() => {
+    // 使用 push 而不是 replace，保留历史记录
+    router.push(route);
+  });
+};
+
+// 当切换标签页时，选择当前页的第一个卡片
+watch(currentIndex, (newIndex) => {
+  if (slides.value[newIndex]?.favoriteCards?.length > 0) {
+    selectedCard.value = slides.value[newIndex].favoriteCards[0];
+    console.log('切换标签后选中卡片:', selectedCard.value);
+  } else {
+    selectedCard.value = null;
+  }
+});
+
 onMounted(async () => {
   // 确保用户数据已加载
   if (!userStore.isLoggedIn) {
@@ -653,17 +760,22 @@ onMounted(async () => {
   } else {
     console.log("当前登录用户:", userStore.user);
   }
-  
+
   await fetchData();
-  
-  // 添加延迟以确保数据加载完成后再初始化 Swiper
-  setTimeout(() => {
+
+  // 初始化轮播
+  nextTick(() => {
     initSwiper();
-  }, 500);
+    // 立即设置第一个卡片为选中状态
+    if (slides.value[currentIndex.value]?.favoriteCards?.length > 0) {
+      selectedCard.value = slides.value[currentIndex.value].favoriteCards[0];
+      console.log('初始选中卡片:', selectedCard.value);
+    }
+  });
 });
 </script>
 
-<style scoped>
+<style lang="scss">
 /* 移除灰点 */
 .fullpage-container::before,
 .fullpage-container::after {
@@ -679,13 +791,14 @@ onMounted(async () => {
 }
 
 .fullpage-container {
-  height: 100vh;
+  height: 695px;
   overflow: hidden;
   position: relative;
+  font-family: 'HelveticaNeue', serif;
 }
 
 .slides-container {
-  height: 100%;
+  height: 90%;
   width: 100%;
   position: absolute;
   top: 0;
@@ -697,12 +810,16 @@ onMounted(async () => {
   height: 100vh;
   width: 100%;
   position: relative;
+  background-color: transparent;
 }
 
-/* 可以为每个页面添加不同的背景色 */
-.slide:nth-child(1) { background-color: #f1c40f; }
-.slide:nth-child(2) { background-color: #e74c3c; }
-.slide:nth-child(3) { background-color: #3498db; }
+/* 只有空白幻灯片才显示蒙版 */
+.empty-slide.slide-1 { background-color: rgba(52, 152, 219, 0.2); }  /* 半透明蓝色 */
+.empty-slide.slide-2 { background-color: rgba(241, 196, 15, 0.2); }  /* 半透明黄色 */
+.empty-slide.slide-3 { background-color: rgba(231, 76, 60, 0.2); }   /* 半透明红色 */
+.empty-slide.slide-4 { background-color: rgba(241, 196, 15, 0.2); }  /* 半透明黄色 */
+.empty-slide.slide-5 { background-color: rgba(231, 76, 60, 0.2); }   /* 半透明红色 */
+.empty-slide.slide-6 { background-color: rgba(52, 152, 219, 0.2); }  /* 半透明蓝色 */
 
 .slide-content {
   position: absolute;
@@ -745,10 +862,12 @@ onMounted(async () => {
   padding: 15px 5px;
   cursor: pointer;
   transition: all 0.3s;
+
+  font-family: 'HelveticaNeue', serif;
 }
 
 .tab-item.active {
-  color: #3498db;
+  color: #b71c1c;
   font-weight: bold;
 }
 
@@ -757,35 +876,145 @@ onMounted(async () => {
   gap: 30px;
   align-items: center;
   padding: 0 5%;
+  margin-left: 20px; /* 添加左边距使其与"您的偏好"标签对齐 */
 }
 
 .main-description {
   flex: 1;
-  margin-left: 150px;
+  margin-left: 100px;
+  max-width: 700px;
+
+  .card-details {
+    margin-top: 20px;
+  }
+
+  .rating-badge {
+    display: inline-block;
+    background-color: #b71c1c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    font-family: 'HelveticaNeue', serif;
+  }
+
+  .card-description {
+    line-height: 1.6;
+    font-size: 1.1em;
+    color: #333;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+    font-family: 'HelveticaNeue', serif;
+  }
+
+  .card-description::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .card-description::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .card-description::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
 }
 
 .sub-content {
   width: 90%;
   margin: 0 auto;
   padding-top: 40px;
+  padding-left: 20px; /* 添加左边距使内容对齐 */
+  max-width: 1300px; /* 限制最大宽度 */
 }
 
 .cards-row {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-left: 30px; /* 增加左边距 */
 }
 
 .row {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
+  width: 100%;
+  gap: 15px;
+  flex-wrap: nowrap; /* 确保不换行 */
+  margin-bottom: 20px;
   position: relative; /* 为绝对定位的按钮提供参考点 */
+  align-items: flex-start; /* 顶部对齐 */
+}
+
+/* 更多按钮样式 */
+.more-button {
+  writing-mode: vertical-lr; /* 竖排文字 */
+  padding: 15px 8px;
+  background-color: #b71c1c;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+  font-size: 1.2em;
+  height: 105px; /* 与卡片高度一致 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* 防止收缩 */
+  font-family: 'HelveticaNeue', serif;
+}
+
+.more-button:hover {
+  background-color: #7f0c07;
+}
+
+/* 用户偏好和相似用户的行样式 */
+.user-preferences, .similar-users {
+  display: flex;
+  flex-direction: row; /* 水平排列 */
+  align-items: flex-start; /* 顶部对齐 */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.row-header {
+  display: flex;
+  height: 105px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 添加垂直居中 */
+  padding: 15px 10px;
+  background-color: #b71c1c; /* 改为红色背景 */
+  border-radius: 8px;
+  margin-right: 5px;
+  flex-shrink: 0;
+  width: 30px; /* 固定宽度 */
+}
+
+.row-header h3 {
+  margin: 0;
+  font-size: 1.5em;
+  color: white; /* 改为白色文字 */
+  display: flex;
+  flex-direction: column;
+  line-height: 1.8;
+  justify-content: center; /* 添加垂直居中 */
+  height: 100%; /* 使其占满整个高度 */
+  font-family: 'HelveticaNeue', serif;
+}
+
+.row-header h3 span {
+  display: block;
+  text-align: center;
+  writing-mode: vertical-lr;
+  letter-spacing: 2px;
 }
 
 .user-preferences .sub-card {
-  border: 2px solid #3498db;
+  border: 2px solid #b71c1c;
 }
 
 .similar-users .sub-card {
@@ -793,7 +1022,7 @@ onMounted(async () => {
 }
 
 .sub-card {
-  flex: 0 0 200px;
+  flex: 0 0 180px; /* 减小卡片宽度 */
   height: 130px;
   position: relative;
   border-radius: 8px;
@@ -820,30 +1049,28 @@ onMounted(async () => {
 .card-overlay .title {
   margin: 0;
   color: white;
-  font-size: 0.95em;
+  font-size: 1.1em;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: 'HelveticaNeue', serif;
 }
 
-.more-button {
-  position: absolute;
-  right: 0;
-  top: 0;
-  padding: 2px 8px;  /* 减小内边距使按钮更小 */
-  background-color: #3498db;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  white-space: nowrap;
-  font-size: 0.85em;
-  z-index: 1;  /* 确保按钮显示在上层 */
-}
+/* 卡片容器样式 */
+.cards-container {
+  display: flex;
+  gap: 15px;
+  position: relative;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  flex: 1; /* 让容器占据剩余空间 */
+  min-width: 0; /* 防止flex项目溢出 */
 
-.more-button:hover {
-  background-color: #2980b9;
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
 }
 
 .map-container {
@@ -862,7 +1089,7 @@ onMounted(async () => {
 
 .back-button {
   padding: 10px 20px;
-  background: #3498db;
+  background: #b71c1c;
   color: white;
   border: none;
   border-radius: 5px;
@@ -871,7 +1098,7 @@ onMounted(async () => {
 }
 
 .back-button:hover {
-  background: #2980b9;
+  background: #7f0c07;
 }
 
 .map-wrapper {
@@ -902,10 +1129,11 @@ onMounted(async () => {
   color: white;
   padding: 5px 10px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 16px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s;
+  font-family: 'HelveticaNeue', serif;
 }
 
 .map-region:hover .region-tooltip {
@@ -928,22 +1156,25 @@ onMounted(async () => {
 /* 添加 Swiper 相关样式 */
 .swiper {
   width: 300px;
-  height: 350px;
-  margin-top: 30px;
+  height: 300px;
+  margin-top: -30px;
+  margin-left: 30px; /* 增加左边距 */
 }
 
 .swiper-slide {
   position: relative;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
-  user-select: none;
+  overflow: hidden;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   background: #fff; /* 添加背景色以便于查看图片加载状态 */
 }
 
 .swiper-slide:hover {
   transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .swiper-slide img {
@@ -979,6 +1210,7 @@ onMounted(async () => {
   box-shadow: inset 2px -2px 20px rgba(214, 214, 214, 0.2),
     inset -3px 3px 3px rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(74px);
+  font-family: 'HelveticaNeue', serif;
 }
 
 .overlay h2 {
@@ -987,9 +1219,10 @@ onMounted(async () => {
   left: 0;
   color: #fff;
   font-weight: 400;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   line-height: 1.4;
   margin: 0 0 20px 20px;
+  font-family: 'HelveticaNeue', serif;
 }
 
 .loading-overlay {
@@ -1105,77 +1338,6 @@ onMounted(async () => {
   }
 }
 
-.row-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px 10px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  margin-right: 20px;
-}
-
-.row-header h3 {
-  margin: 0;
-  font-size: 1.2em;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  line-height: 2;
-}
-
-.row-header h3 span {
-  display: block;
-  text-align: center;
-  writing-mode: vertical-lr;
-  letter-spacing: 2px;
-}
-
-.cards-container {
-  display: flex;
-  gap: 15px;
-  position: relative;
-  padding-right: 80px;
-}
-
-.card-info {
-  padding: 8px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.card-info .title {
-  margin: 0;
-  font-size: 0.95em;
-  font-weight: 500;
-  color: #333;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.user-preferences .sub-card,
-.similar-users .sub-card {
-  border: 2px solid #3498db;
-}
-
-.more-button {
-  padding: 4px 12px;
-  background-color: #3498db;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  white-space: nowrap;
-  font-size: 0.85em;
-  height: fit-content;
-  align-self: center; /* 确保按钮垂直居中 */
-}
-
 /* 导航按钮样式 */
 .swiper-button-next,
 .swiper-button-prev {
@@ -1205,6 +1367,95 @@ onMounted(async () => {
 /* 增强卡片点击区域 */
 .swiper-slide {
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* 空内容样式 */
+.empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 0 20%;
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+    font-family: 'HelveticaNeue', serif;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #666;
+    line-height: 1.6;
+    font-family: 'HelveticaNeue', serif;
+  }
+}
+
+/* 导航按钮样式 */
+.navigate-button {
+  padding: 10px 20px;
+  background-color: #b71c1c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background-color: #7f0c07;
+    transform: translateY(-2px);
+  }
+
+  &.center {
+    font-size: 1.2rem;
+    padding: 12px 24px;
+  }
+
+  &.top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* 添加全局字体样式 */
+.fullpage-container {
+  font-family: 'HelveticaNeue', serif;
+}
+
+/* 确保所有文本元素都使用相同字体 */
+.tab-item,
+.main-description h2,
+.main-description p,
+.card-description,
+.row-header h3,
+.card-overlay .title,
+.more-button,
+.empty-content h2,
+.empty-content p,
+.navigate-button,
+.rating-badge,
+.overlay h2,
+.overlay span,
+.region-tooltip,
+.loading-spinner {
+  font-family: 'HelveticaNeue', serif;
 }
 </style>
 
