@@ -33,32 +33,13 @@
 <script lang="ts" setup>
 // 引入 vue-router
 import { useRouter } from 'vue-router'
-import { onMounted, nextTick } from 'vue'
 
 const router = useRouter()
 
 // 返回上一页的方法
 const goBack = () => {
-  // 直接导航到推荐页面，而不是使用浏览器历史
-  router.push('/recommend');
+  router.go(-1)  // 返回上一页
 }
-
-// 在组件挂载时确保顶栏样式正确
-onMounted(() => {
-  nextTick(() => {
-    // 强制刷新顶栏样式
-    const totalElement = document.querySelector('.total');
-    if (totalElement) {
-      // 触发重排以刷新样式
-      totalElement.style.display = 'none';
-      void totalElement.offsetWidth;
-      totalElement.style.display = 'flex';
-      
-      // 确保背景图片正确加载
-      totalElement.style.backgroundImage = 'url(' + require('@/assets/img_4.png') + ')';
-    }
-  });
-});
 </script>
 
 <style scoped>
