@@ -127,6 +127,16 @@ class SentimentAPI {
             }
         });
     }
+
+    static getCasualImpactAPI(name: string) {
+        return request({
+            url: `${DICT_BASE_URL}/get_casual_impact/`,
+            method: "get",
+            params: {
+                name: name
+            }
+        });
+    }
 }
 
 export default SentimentAPI;
