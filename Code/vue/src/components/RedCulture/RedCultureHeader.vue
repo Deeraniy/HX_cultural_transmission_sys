@@ -1,8 +1,10 @@
 <template>
   <div class="whole">
     <div class="total">
-      <h2 class="fixed-title">红色文化展示界面</h2>
-      <el-button class="back-btn" @click="goBack">|返回</el-button>
+      <div class="left-container">
+        <h2 class="fixed-title">红色文化展示界面</h2>
+        <el-button class="back-btn" @click="goBack">|返回</el-button>
+      </div>
       <el-menu
           :default-active="activeIndex"
           class="el-menu-demo"
@@ -13,20 +15,7 @@
         <el-menu-item index="2">红色人物展示</el-menu-item>
         <el-menu-item index="3">智问智答</el-menu-item>
         <el-menu-item index="4">知识图谱</el-menu-item>
-        <el-sub-menu index="1" class="workbench">
-          <template #title>
-            <span class="work">工作台</span>
-          </template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-          <el-menu-item index="1-3">item three</el-menu-item>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-            <el-menu-item index="1-4-2">item two</el-menu-item>
-            <el-menu-item index="1-4-3">item three</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
+        
       </el-menu>
     </div>
     <el-main>
@@ -59,7 +48,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .total {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   background-image: url('@/assets/img_4.png');
   background-size: cover;
   background-position: center;
@@ -69,6 +57,13 @@ const handleSelect = (key: string, keyPath: string[]) => {
   width: 100%;
   box-sizing: border-box;
   position: relative;
+}
+
+/* 创建一个左侧容器来包含标题和返回按钮 */
+.left-container {
+  display: flex;
+  align-items: center;
+  flex: 1;
 }
 
 .whole {
@@ -90,6 +85,19 @@ const handleSelect = (key: string, keyPath: string[]) => {
   font-size: 45px;
   margin: 0;
   white-space: nowrap;
+  margin-right: 20px; /* 在标题和返回按钮之间添加间距 */
+}
+
+.back-btn {
+  font-family: 'HelveticaNeue', serif;
+  background-color: transparent !important;
+  color: #fff8f0 !important;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 0; /* 移除内边距 */
+  height: auto; /* 允许按钮高度自适应 */
 }
 
 .el-menu-demo {
@@ -98,7 +106,16 @@ const handleSelect = (key: string, keyPath: string[]) => {
   background-color: transparent !important;
   box-shadow: none;
   border: none;
-  width: 100%;
+  margin-left: auto;
+}
+
+.el-menu-item, .el-sub-menu {
+  order: 1;
+}
+
+.workbench {
+  order: 2;
+  margin-left: 20px;
 }
 
 .el-menu-item, .el-sub-menu__title {
@@ -112,24 +129,5 @@ const handleSelect = (key: string, keyPath: string[]) => {
   color: #ffd700 !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
   border-bottom: 2px solid #ffd700;
-}
-
-.back-btn {
-  font-family: 'HelveticaNeue', serif;
-  background-color: transparent !important;
-  color: #fff8f0 !important;
-  margin-bottom: 15px;
-  border: none;
-  font-size: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
-}
-
-.workbench {
-  margin-left: auto;
-  font-family: 'HelveticaNeue', serif !important;
-  font-size: 28px;
-  color: #fff8f0 !important;
 }
 </style>

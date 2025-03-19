@@ -23,7 +23,6 @@ const routes = [
     {
         path: '/login',
         component:() => import('./components/login.vue'),
-        component:() => import('./components/login.vue'),
     },
     {
         path: '/',
@@ -69,6 +68,10 @@ const routes = [
     {
         path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
+    },
+    {
+        path: '/report',
+        component:() => import('./components/ReportGeneration/ReportMain.vue'),
     },
     {
         path: '/index',

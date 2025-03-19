@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面。。。">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="知识图谱（红色">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustom.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/KnowledgeGraph.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/KnowledgeGraph.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/RedCultureHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/RedCultureHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -152,15 +157,7 @@
       <workItem from="1742190484223" duration="7019000" />
       <workItem from="1742279858184" duration="5434000" />
       <workItem from="1742300753704" duration="724000" />
-      <workItem from="1742344277495" duration="13607000" />
-    </task>
-    <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
-      <option name="closed" value="true" />
-      <created>1736071183782</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1736071183782</updated>
+      <workItem from="1742344277495" duration="16307000" />
     </task>
     <task id="LOCAL-00003" summary="影视艺术页面——文学页面（前端美化）">
       <option name="closed" value="true" />
@@ -546,7 +543,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742368337608</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="情感分析界面。。。">
+      <option name="closed" value="true" />
+      <created>1742370911871</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1742370911892</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -564,7 +569,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="红色文化界面" />
     <MESSAGE value="红色文化展示界面" />
     <MESSAGE value="红色文化菜单" />
     <MESSAGE value="所有导航栏“返回”按钮添加" />
@@ -589,7 +593,8 @@
     <MESSAGE value="点赞收藏维修+情感分析界面维修" />
     <MESSAGE value="因果推理前端" />
     <MESSAGE value="情感分析界面。。。" />
-    <option name="LAST_COMMIT_MESSAGE" value="情感分析界面。。。" />
+    <MESSAGE value="知识图谱（红色" />
+    <option name="LAST_COMMIT_MESSAGE" value="知识图谱（红色" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls import re_path as url
-from app01 import spot_sentiments_analyze, view, city, food, folk
+from app01 import spot_sentiments_analyze, view, city, food, folk, publicity
 from app01 import spot,collaborative_filter,casual_impact
 from . import testdb,search,search2
 from django.conf import settings
@@ -81,6 +81,7 @@ urlpatterns = [
     url(r'^api/tag/by_origin$', tags.get_tag_by_theme_and_origin),
     url(r'^api/tag/by_origins$', tags.get_tags_by_theme_and_origins),
     url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
+    url(r'^generate_publicity/', publicity.generate_publicity_report),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

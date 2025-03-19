@@ -22,26 +22,13 @@
         <el-menu-item index="7">红色文化</el-menu-item>
         <el-menu-item index="8">情感分析</el-menu-item>
         <el-menu-item index="9">个性推荐</el-menu-item>
-        <el-menu-item index="10">全球传播情况</el-menu-item>
-        <el-sub-menu index="1">
-          <template #title>
-            <span class="work">工作台</span>
-          </template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-          <el-menu-item index="1-3">item three</el-menu-item>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-            <el-menu-item index="1-4-2">item two</el-menu-item>
-            <el-menu-item index="1-4-3">item three</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
+        <el-menu-item index="10">宣传报告生成</el-menu-item>
+        <el-menu-item index="11">全球传播情况</el-menu-item>
       </el-menu>
       <!-- 右侧用户信息 -->
       <div class="user-info">
         <!-- 问候语 -->
-        
+
 
         <!-- 语言选择 -->
         <el-dropdown trigger="click" @command="handleLanguageChange">
@@ -163,6 +150,9 @@ const handleSelect = (key: string, keyPath: string[]) => {
       router.push('/recommend');
       break;
     case '10':
+      router.push('/report');
+      break;
+    case '11':
       router.push('/global');
       break;
       // Add more cases for other menu items if needed
@@ -237,7 +227,7 @@ onMounted(() => {
   if (userStore.isLoggedIn) {
     refreshUserInfo();
   }
-  
+
   // 监听用户信息更新事件
   window.addEventListener('user-info-updated', refreshUserInfo);
 });
