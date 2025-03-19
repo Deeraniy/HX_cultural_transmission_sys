@@ -3,6 +3,27 @@
     <div class="modal-content" @click.stop>
       <!-- 右上角关闭按钮 -->
       <button class="close-button" @click="closeModal">X</button>
+      
+      <!-- 添加右侧交互图标 -->
+      <div class="side-interaction-icons">
+        <div class="icon-wrapper" @click="toggleLike">
+          <img
+            :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
+            :class="['icon', { 'active': tagStatus.is_liked }]"
+            alt="赞"
+          />
+          <span>{{ tagStatus.total_likes || 0 }}</span>
+        </div>
+        <div class="icon-wrapper" @click="toggleFavorite">
+          <img
+            :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
+            :class="['icon', { 'active': tagStatus.is_favorite }]"
+            alt="收藏"
+          />
+          <span>收藏</span>
+        </div>
+      </div>
+
       <div class="scene">
         <article class="book">
           <section
@@ -20,9 +41,10 @@
             </div>
             <div class="back" @click="handlePageClick(index, 'back')">
               <div v-if="index === 0">
-                <h2 class="centered-title" style="position: absolute; top: 40%; left: 35%; transform: translate(-50%, -50%);">{{ page.title }}</h2>
-                <button v-if="index === 0" class="jump-button" @click="handlePageClick(index, 'button')">情感分析</button>
-
+                <h2 class="centered-title">{{ page.title }}</h2>
+                <div class="button-container">
+                  <button class="jump-button" @click="handlePageClick(index, 'button')">情感分析</button>
+                </div>
               </div>
               <div v-else>
                 <p>{{ page.backText }}</p>
@@ -36,8 +58,15 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, onMounted } from 'vue';
 import router from "@/router.js";
+import TagsAPI from '@/api/tags';
+import { useUserStore } from '@/stores/user';
+// 直接导入图片
+import likeIcon from '@/assets/setting/赞.png'
+import likeActiveIcon from '@/assets/setting/赞 (1).png'
+import favoriteIcon from '@/assets/setting/收藏.png'
+import favoriteActiveIcon from '@/assets/setting/收藏(1).png'
 
 // 传入的 book 对象
 const props = defineProps({
@@ -90,7 +119,93 @@ pages.value[1].backText = backText;
 let touchStartX = 0;
 let touchEndX = 0;
 
+// 添加用户存储
+const userStore = useUserStore();
 
+// 添加标签状态
+const tagStatus = ref({
+  is_liked: false,
+  is_favorite: false,
+  total_likes: 0,
+  click_count: 0
+});
+
+// 获取图片URL的辅助函数
+const getImageUrl = (imagePath) => {
+  try {
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    return new URL(`../../../../assets/${imagePath}`, import.meta.url).href;
+  } catch (e) {
+    console.error('图片加载失败', e);
+    return '';
+  }
+};
+
+// 初始化标签状态
+const initTagStatus = async () => {
+  try {
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
+    if (response.code === 200) {
+      const tagId = response.data.id;
+      const userId = userStore.user?.user_id || 1;
+      
+      // 获取标签状态
+      const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
+      if (statusResponse.code === 200) {
+        tagStatus.value = statusResponse.data;
+      }
+    }
+  } catch (error) {
+    console.error('获取标签状态失败:', error);
+  }
+};
+
+// 点赞功能
+const toggleLike = async () => {
+  try {
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
+    if (response.code === 200) {
+      const tagId = response.data.id;
+      const userId = userStore.user?.user_id || 1;
+      
+      const likeResponse = await TagsAPI.toggleLikeAPI(userId, tagId);
+      if (likeResponse.code === 200) {
+        tagStatus.value = {
+          ...tagStatus.value,
+          is_liked: likeResponse.data.is_liked,
+          total_likes: likeResponse.data.total_likes
+        };
+      }
+    }
+  } catch (error) {
+    console.error('点赞操作失败:', error);
+  }
+};
+
+// 收藏功能
+const toggleFavorite = async () => {
+  try {
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
+    if (response.code === 200) {
+      const tagId = response.data.id;
+      const userId = userStore.user?.user_id || 1;
+      
+      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(userId, tagId);
+      if (favoriteResponse.code === 200) {
+        tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
+      }
+    }
+  } catch (error) {
+    console.error('收藏操作失败:', error);
+  }
+};
+
+// 在组件挂载时初始化标签状态
+onMounted(() => {
+  initTagStatus();
+});
 
 // 翻转到背面
 const flipPageToBack = (page) => {
@@ -208,6 +323,7 @@ const goToPrevPage = () => {
 
 .modal-content {
   position: relative;
+  margin-right: 60px; /* 为右侧图标留出空间 */
   background-color: transparent;
   padding: 20px;
   display: flex;
@@ -330,5 +446,113 @@ const goToPrevPage = () => {
   font-family: 'HelveticaNeue', serif;
   writing-mode: vertical-rl; /* 竖排文本 */
   transform: rotate(180deg); /* 如果你想调整方向，可以旋转 */
+}
+
+.button-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%; /* 减小容器宽度 */
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px; /* 减小间距 */
+}
+
+.jump-button {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 8px 16px; /* 减小内边距 */
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; /* 减小字体大小 */
+  transition: background-color 0.3s;
+  white-space: nowrap;
+}
+
+.jump-button:hover {
+  background-color: #3367d6;
+}
+
+.interaction-icons {
+  display: flex;
+  gap: 10px; /* 减小图标间距 */
+  align-items: center;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.icon {
+  width: 20px; /* 减小图标尺寸 */
+  height: 20px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.icon.active {
+  opacity: 1;
+}
+
+.icon-wrapper span {
+  font-size: 12px; /* 减小文字大小 */
+  color: #666;
+}
+
+.icon-wrapper:hover span {
+  color: #333;
+}
+
+.side-interaction-icons {
+  position: absolute;
+  right: -60px; /* 改为右侧 */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 100;
+}
+
+.icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 8px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.icon-wrapper:hover {
+  transform: scale(1.1);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.icon.active {
+  opacity: 1;
+}
+
+.icon-wrapper span {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
 }
 </style>
