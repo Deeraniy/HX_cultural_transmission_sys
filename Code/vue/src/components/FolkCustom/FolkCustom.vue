@@ -293,8 +293,18 @@ const showDetails = async (folk) => {
   selectedFolk.value = folk;
   dialogVisible.value = true;
   
-  // 初始化标签状态
-  await initTagStatus(folk.id);
+  // 确保有 folk.id 才初始化标签状态
+  if (folk && folk.id) {
+    await initTagStatus(folk.id);
+  } else {
+    console.warn('Folk ID is missing, cannot initialize tag status');
+    // 设置默认状态
+    tagStatus.value = {
+      is_liked: false,
+      is_favorite: false,
+      total_likes: 0
+    };
+  }
 };
 </script>
 
