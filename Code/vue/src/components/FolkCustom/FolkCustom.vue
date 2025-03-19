@@ -9,20 +9,20 @@
 
       <!-- 展示的内容 -->
       <div class="folklore-container">
-        <div v-for="(book, index) in currentBooks" :key="index" class="card-container">
+        <div v-for="(folk, index) in currentFolks" :key="index" class="card-container">
           <div class="flip-card">
-            <div class="flip-card-inner" @click="showDetails(book)">
+            <div class="flip-card-inner" @click="showDetails(folk)">
               <div class="flip-card-front">
-                <p>{{ book.name }}</p>
+                <p>{{ folk.name }}</p>
               </div>
               <div class="flip-card-back">
-                <img :src="book.image" alt="图片" />
+                <img :src="folk.image" alt="图片" />
               </div>
             </div>
           </div>
           <!-- 在每个卡片下方放按钮 -->
           <div class="card-buttons">
-            <button class="emotion-btn" @click="goToPlaceDetail(book.name)">情感分析</button>
+            <button class="emotion-btn" @click="goToPlaceDetail(folk.name)">情感分析</button>
           </div>
         </div>
       </div>
@@ -36,11 +36,31 @@
 
     <!-- 弹窗 -->
     <el-dialog v-model="dialogVisible" title="民俗文化详情" width="600px">
-      <div v-if="selectedBook">
-        <h2>{{ selectedBook.name }}</h2>
-        <h3>级别：{{selectedBook.rank}}</h3> <!--非遗民俗级别-->
-        <img :src="selectedBook.image" alt="详细图片" class="dialog-image" />
-        <p>{{ selectedBook.description }}</p>
+      <!-- 添加右侧交互图标 -->
+      <div class="side-interaction-icons">
+        <div class="icon-wrapper" @click="toggleLike">
+          <img
+            :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
+            :class="['icon', { 'active': tagStatus.is_liked }]"
+            alt="赞"
+          />
+          <span>{{ tagStatus.total_likes || 0 }}</span>
+        </div>
+        <div class="icon-wrapper" @click="toggleFavorite">
+          <img
+            :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
+            :class="['icon', { 'active': tagStatus.is_favorite }]"
+            alt="收藏"
+          />
+          <span>收藏</span>
+        </div>
+      </div>
+
+      <div v-if="selectedFolk">
+        <h2>{{ selectedFolk.name }}</h2>
+        <h3>级别：{{selectedFolk.rank}}</h3>
+        <img :src="selectedFolk.image" alt="详细图片" class="dialog-image" />
+        <p>{{ selectedFolk.description }}</p>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">关闭</el-button>
@@ -55,20 +75,149 @@ import { useRouter } from 'vue-router'; // 导入 useRouter
 import { ElDialog, ElButton } from 'element-plus';
 import Lunbo from './LunBo.vue';
 import FolkAPI from "@/api/folk";
+import TagsAPI from '@/api/tags';
+import { useUserStore } from '@/stores/user';
+// 导入图标
+import likeIcon from '@/assets/setting/赞.png'
+import likeActiveIcon from '@/assets/setting/赞 (1).png'
+import favoriteIcon from '@/assets/setting/收藏.png'
+import favoriteActiveIcon from '@/assets/setting/收藏(1).png'
+
+const userStore = useUserStore();
+const tagStatus = ref({
+  is_liked: false,
+  is_favorite: false,
+  total_likes: 0
+});
+
+// 获取用户ID
+const getUserId = () => {
+  // 首先从 userStore 中获取
+  if (userStore.isLoggedIn && userStore.userId) {
+    return userStore.userId;
+  }
+  
+  // 如果 userStore 中没有，尝试从 localStorage 获取
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    return userId;
+  }
+  
+  // 如果都没有，返回一个默认值或 null
+  console.warn('User ID is missing');
+  return null;
+};
+
+// 初始化标签状态
+const initTagStatus = async (folkId) => {
+  console.log('Initializing tag status with ID:', folkId);
+  if (!folkId) {
+    console.error('Folk ID is missing');
+    return;
+  }
+  
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      console.warn('Cannot initialize tag status: User ID is missing');
+      return;
+    }
+    
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', folkId);
+    console.log('Tag response:', response);
+    
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+      const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
+      console.log('Status response:', statusResponse);
+      
+      if (statusResponse.code === 200) {
+        tagStatus.value = statusResponse.data;
+      }
+    }
+  } catch (error) {
+    console.error('获取标签状态失败:', error);
+  }
+};
+
+// 点赞功能
+const toggleLike = async () => {
+  if (!selectedFolk.value?.id) {
+    console.error('Folk ID is missing');
+    return;
+  }
+
+  try {
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', selectedFolk.value.id);
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+      const userId = getUserId();
+
+      if (!userId) {
+        console.error('User ID is missing');
+        return;
+      }
+
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      const likeResponse = await TagsAPI.toggleLikeAPI(numericUserId, tagId);
+      
+      if (likeResponse.code === 200) {
+        tagStatus.value = {
+          ...tagStatus.value,
+          is_liked: likeResponse.data.is_liked,
+          total_likes: likeResponse.data.total_likes
+        };
+      }
+    }
+  } catch (error) {
+    console.error('点赞操作失败:', error);
+  }
+};
+
+// 收藏功能
+const toggleFavorite = async () => {
+  if (!selectedFolk.value?.id) {
+    console.error('Folk ID is missing');
+    return;
+  }
+
+  try {
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', selectedFolk.value.id);
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+      const userId = getUserId();
+
+      if (!userId) {
+        console.error('User ID is missing');
+        return;
+      }
+
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(numericUserId, tagId);
+      
+      if (favoriteResponse.code === 200) {
+        tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
+      }
+    }
+  } catch (error) {
+    console.error('收藏操作失败:', error);
+  }
+};
 
 // 民俗文化数据
-const books = ref([]);
+const folks = ref([]);
 
 async function fetchFolkCustomData() {
   try {
     const response = await FolkAPI.getFolkCustomAPI();
-    books.value = response.data.map(item => ({
+    folks.value = response.data.map(item => ({
+      id: item.folk_id,
       name: item.folk_name || '',
       image: item.image_url || '',
       description: item.description || '',
       rank: item.folk_rank || ''
     }));
-    console.log('FolkCustom data:', books.value);
+    console.log('Folk data:', folks.value);
   } catch (error) {
     console.error('Error fetching folk data:', error);
   }
@@ -95,26 +244,26 @@ const goToPlaceDetail = (attractionName) => {
 const searchQuery = ref('');
 
 // 计算筛选后的书籍
-const filteredBooks = computed(() => {
-  return books.value.filter(book =>
-      book.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+const filteredFolks = computed(() => {
+  return folks.value.filter(folk =>
+    folk.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
 // 每页显示15个条目（3行 * 5列）
-const booksPerPage = 15;
+const itemsPerPage = 15;
 
 // 计算总页数
-const totalPages = computed(() => Math.ceil(filteredBooks.value.length / booksPerPage));
+const totalPages = computed(() => Math.ceil(filteredFolks.value.length / itemsPerPage));
 
 // 当前页
 const currentPage = ref(0);
 
 // 获取当前页的书籍
-const currentBooks = computed(() => {
-  const start = currentPage.value * booksPerPage;
-  const end = start + booksPerPage;
-  return filteredBooks.value.slice(start, end);
+const currentFolks = computed(() => {
+  const start = currentPage.value * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredFolks.value.slice(start, end);
 });
 
 // 翻页函数
@@ -132,12 +281,14 @@ const nextPage = () => {
 
 // 弹窗相关
 const dialogVisible = ref(false);
-const selectedBook = ref(null);
+const selectedFolk = ref(null);
 
 // 显示详细信息的函数
-const showDetails = (book) => {
-  selectedBook.value = book;
+const showDetails = async (folk) => {
+  console.log('Showing folk detail:', folk);
+  selectedFolk.value = folk;
   dialogVisible.value = true;
+  await initTagStatus(folk.id);
 };
 </script>
 
@@ -319,5 +470,55 @@ const showDetails = (book) => {
 
 .search-box:focus {
   border-color: #b71c1c;
+}
+
+.side-interaction-icons {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 100;
+}
+
+.icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 8px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.icon-wrapper:hover {
+  transform: scale(1.1);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.icon.active {
+  opacity: 1;
+}
+
+.icon-wrapper span {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+/* 调整弹窗内容以适应右侧图标 */
+.el-dialog {
+  position: relative;
+  margin-right: 60px !important;
 }
 </style>

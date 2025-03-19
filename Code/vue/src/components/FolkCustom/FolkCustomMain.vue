@@ -40,6 +40,8 @@ import router from '@/router'
 import Carousel from "@/components/RedCulture/Carousel.vue";
 import RedCultureMain from "@/components/RedCulture/RedCultureMain.vue";
 import { ref, onMounted, nextTick } from 'vue'
+// 导入背景图片
+import backgroundImage from '@/assets/img_4.png';
 
 const goBack = () => {
   // 使用 router.back() 返回上一页
@@ -58,13 +60,16 @@ onMounted(() => {
     // 强制刷新顶栏样式
     const totalElement = document.querySelector('.total');
     if (totalElement) {
-      // 触发重排以刷新样式
-      totalElement.style.display = 'none';
-      void totalElement.offsetWidth;
-      totalElement.style.display = 'flex';
+      // 使用类型断言告诉 TypeScript 这是一个 HTMLElement
+      const htmlElement = totalElement as HTMLElement;
       
-      // 确保背景图片正确加载
-      totalElement.style.backgroundImage = 'url(' + require('@/assets/img_4.png') + ')';
+      // 触发重排以刷新样式
+      htmlElement.style.display = 'none';
+      void htmlElement.offsetWidth;
+      htmlElement.style.display = 'flex';
+      
+      // 确保背景图片正确加载 - 使用导入的图片
+      htmlElement.style.backgroundImage = `url(${backgroundImage})`;
     }
   });
 });

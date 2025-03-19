@@ -11,10 +11,10 @@ def get_folkcustom_list(request):
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-    # 执行SQL，并返回收影响行数
-    effect_row = cursor.execute("select folk_name,image_url,folk_type,folk_rank,description from folk")
+    # 执行SQL，并返回收影响行数 - 修改SQL查询，确保包含folk_id字段
+    effect_row = cursor.execute("select folk_id, folk_name, image_url, folk_type, folk_rank, description from folk")
     #folk和folkcustom表内容一样
-    folkcustom_list =cursor.fetchall()
+    folkcustom_list = cursor.fetchall()
     print(folkcustom_list)
 
     # 关闭游标
