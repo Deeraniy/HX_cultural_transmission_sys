@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="因果推理前端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/subcomponent/ThreeLineChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/subcomponent/ThreeLineChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -102,14 +102,6 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task id="LOCAL-00001" summary="影视艺术页面——文学页面（轮播图）">
-      <option name="closed" value="true" />
-      <created>1736042556822</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1736042556822</updated>
-    </task>
     <task active="true" id="Default" summary="Default task">
       <changelist id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="" />
       <changelist id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
@@ -157,7 +149,7 @@
       <workItem from="1742190484223" duration="7019000" />
       <workItem from="1742279858184" duration="5434000" />
       <workItem from="1742300753704" duration="724000" />
-      <workItem from="1742344277495" duration="11709000" />
+      <workItem from="1742344277495" duration="13459000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
@@ -543,7 +535,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742367980437</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="因果推理前端">
+      <option name="closed" value="true" />
+      <created>1742368337604</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1742368337608</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

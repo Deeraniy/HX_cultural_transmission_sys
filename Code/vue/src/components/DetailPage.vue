@@ -81,7 +81,7 @@
             <div class="chart-container" style="position: relative; width: 30%; height: 400px;">
               <Loader v-if="isPieChartLoading" class="loader" />
               <PieChart
-                  v-if="!isPieChartLoading"
+                  v-if="!isPieChartLoading && data1 && data1.length > 0"
                   :chartData="data1"
                   style="width: 100%; height: 100%;"
               />
@@ -93,7 +93,7 @@
             <div class="chart-container" style="position: relative; width: 50%; height: 500px;">
               <Loader v-if="isSentimentStatsLoading" class="loader" />
               <SentimentStats
-                  v-if="!isSentimentStatsLoading"
+                  v-if="!isSentimentStatsLoading && topic && topic.length > 0"
                   :tableData="topic"
                   style="width: 100%; height: 100%;"
               />
@@ -101,7 +101,7 @@
             <div class="chart-container" style="position: relative; width: 50%; height: 500px;">
               <Loader v-if="isTopicClusterLoading" class="loader" />
               <TopicCluster
-                  v-if="!isTopicClusterLoading"
+                  v-if="!isTopicClusterLoading && sentiment && sentiment.length > 0"
                   :tableData="sentiment"
                   style="width: 100%; height: 100%;"
               />
@@ -109,11 +109,12 @@
           </div>
         </div>
         <LineRace
-            v-if="processedTimeData.length > 0"
+            v-if="processedTimeData && processedTimeData.length > 0"
             :timeData="processedTimeData"
             style="margin-top: 30px"
         />
         <ThreeLineChart
+            v-if="threeLineData && threeLineData.length > 0"
             :timeData="threeLineData"
         />
       </el-main>
@@ -134,15 +135,15 @@ import WordCloud from "@/components/InterestPlace/subcomponent/WordCloud.vue";
 import SentimentStats from "@/components/InterestPlace/subcomponent/SentimentStats.vue";
 import Loader from '@/components/Loader.vue';  // 导入 Loader 组件
 //import data1 from "@/json/data1.json";
-import data2 from "@/json/data2.json";
-import time from "@/json/time.json"
+//import data2 from "@/json/data2.json";
+//import time from "@/json/time.json"
 //import sentiment from "@/json/sentiment.json";
 //import topic from '@/json/topic.json';
-import wordcloud from '@/json/wordCloud.json';
+//import wordcloud from '@/json/wordCloud.json';
 import CloudAPI from "@/api/cloud";
 import danmaku from 'vue3-danmaku';
 import LdaAPI from "@/api/lda";
-import danmuData from '@/json/danmuData.json';
+//import danmuData from '@/json/danmuData.json';
 import LineRace from "@/components/InterestPlace/subcomponent/LineRace.vue";
 import SpotsAPI from "@/api/spot";
 import FoodAPI from "@/api/food";
@@ -192,6 +193,357 @@ const data1 = ref([  // 将 data1 用 ref 包装成响应式数据
   { name: '负面', value: 33.73 }
 ]);
 
+const fetchAttractionName = () => {
+  nowName.value = <string>route.query.name;
+  console.log("hhhhhname",route.query.name);
+};
+
+const loadAllData = async () => {
+  fetchAttractionName();
+  const pageTypeNum = Number(pageType.value);
+  console.log("这里pageType", pageTypeNum);
+
+  if(pageTypeNum === 1){
+    try {
+      const spotsResponse = await SpotsAPI.getSpotsAPI();
+      console.log("我不叫喂！")
+      if (typeof spotsResponse === "string") {
+        const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+        const spotsArray = fixedResponse
+            .replace(/'/g, '"')
+            .match(/{[^}]+}/g)
+            .map((spot) => JSON.parse(spot));
+
+        interestData.value = spotsArray;
+
+        console.log("景点数据（处理后）:", interestData.value);
+
+        if (interestData.value.length > 0) {
+          loadAttractions(nowName);
+        } else {
+          console.warn("景点数据为空");
+        }
+      } else {
+        console.error("景点数据格式错误，期望为字符串形式");
+      }
+    } catch (error) {
+      console.error("加载景点数据时出错:",error);
+    }
+  }else if(pageTypeNum===2){
+    console.log("我叫喂！")
+    try {
+      console.log("我不叫喂！")
+      // 根据 themeType 设置 type_id
+      let type_id = '';
+      const pageTheme = Number(themeType.value);
+      if (pageTheme === 1) {
+        type_id = '文学';
+      } else if (pageTheme === 2) {
+        type_id = '表演艺术';
+      } else if (pageTheme === 3) {
+        type_id = '新媒体艺术';
+      } else if (pageTheme === 4) {
+        type_id = '古诗词';
+      }
+      console.log("ThemeType",pageTheme)
+      console.log("Type_id", type_id)
+ // 调用 getBook 并传递 type_id
+ const booksResponse = await FilmLiterature.getBook(type_id);
+      console.log("书籍数据（未处理）:", type_id);
+
+      if (booksResponse && typeof booksResponse === 'object' && 'data' in booksResponse) {
+        if (Array.isArray(booksResponse.data)) {
+          const booksArray = booksResponse.data.map((book) => {
+            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+            if (typeof book.someDecimalField === "string") {
+              book.someDecimalField = book.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+            }
+            return book;
+          });
+
+          bookData.value = booksArray;
+
+          console.log("书籍数据（处理后）:", bookData.value);
+
+          if (bookData.value.length > 0) {
+            loadBooks(nowName);
+          } else {
+            console.warn("书籍数据为空");
+          }
+        } else {
+          console.log("bookResponse", booksResponse.data)
+          console.error("书籍数据格式错误，期望为字符串形式");
+        }
+      } else {
+        console.error("书籍数据格式不正确:", booksResponse);
+      }
+    } catch (error) {
+      console.error("加载书籍数据时出错:", error);
+    }
+  }else   if(pageTypeNum === 3){
+    try {
+      const foodResponse = await FoodAPI.getFoodAPI();
+      console.log("我不叫喂！",foodResponse)
+      if (foodResponse && typeof foodResponse === 'object' && 'data' in foodResponse) {
+        if (Array.isArray(foodResponse.data)) {
+          const foodArray = foodResponse.data.map((food) => {
+            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+            if (typeof food.someDecimalField === "string") {
+              food.someDecimalField = food.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+            }
+            return food;
+          });
+
+          foodData.value = foodArray;
+
+          console.log("美食数据（处理后）:", foodData.value);
+
+          if (foodData.value.length > 0) {
+            loadFood(nowName);
+          } else {
+            console.warn("美食数据为空");
+          }
+        } else {
+          console.log("foodResponse", foodResponse.data)
+          console.error("美食数据格式错误，期望为字符串形式");
+        }
+      } else {
+        console.error("美食数据格式不正确:", foodResponse);
+      }
+    } catch (error) {
+      console.error("加载美食数据时出错:",error);
+    }
+  }else   if(pageTypeNum === 4){
+    try {
+      const folkResponse = await FolkAPI.getFolkCustomAPI();
+      console.log("我不叫喂！",folkResponse)
+      if (folkResponse && typeof folkResponse === 'object' && 'data' in folkResponse) {
+        if (Array.isArray(folkResponse.data)) {
+          const folkArray = folkResponse.data.map((folk) => {
+            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+            if (typeof folk.someDecimalField === "string") {
+              folk.someDecimalField = folk.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+            }
+            return folk;
+          });
+
+          folkData.value = folkArray;
+
+          console.log("民俗数据（处理后）:", folkData.value);
+
+          if (folkData.value.length > 0) {
+            loadFolk(nowName);
+          } else {
+            console.warn("民俗数据为空");
+          }
+        } else {
+          console.log("folkResponse", folkResponse.data)
+          console.error("民俗数据格式错误，期望为字符串形式");
+        }
+      } else {
+        console.error("民俗数据格式不正确:", folkResponse);
+      }
+    } catch (error) {
+      console.error("加载民俗数据时出错:",error);
+    }
+  }
+
+  try {
+    const commentResponse = await CommentAPI.getCommentList(nowName.value, pageType.value);
+    // 评论改了格式，要记得修改
+    console.log("原始评论数据:", commentResponse);
+
+    // 确保返回的数据包含 comments 数组
+    if (commentResponse && typeof commentResponse === 'object' && 'comments' in commentResponse && Array.isArray(commentResponse.comments)) {
+      const commentsArray = commentResponse.comments;
+
+      // 映射到弹幕数据
+      danmus.value = commentsArray.map(comment => ({
+        name: comment.user_id || '匿名用户',
+        text: comment.comment_text || '',  // 使用新的字段 comment_text
+        sentiment: comment.sentiment || '',  // 如果需要，可以把情感分析加入
+        sentiment_confidence: comment.sentiment_confidence || '',  // 情感分析置信度
+        platform: comment.platform || ''  // 评论平台
+      }));
+      isDanmuLoading.value=false;
+      console.log("成功解析的评论数组:", commentsArray);
+    } else {
+      throw new Error("返回的数据格式不正确，未找到有效的评论数组。");
+    }
+  } catch (error) {
+    console.error("加载评论数据时出错:", error);
+  }
+
+
+
+  try {
+    const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageType.value);
+    console.log("词云地址:", cloudResponse);
+    
+    if (cloudResponse && typeof cloudResponse === 'object' && 'wordcloud_url' in cloudResponse) {
+      isWordCloudLoading.value=false;
+      cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
+    } else {
+      console.warn("词云数据格式不正确:", cloudResponse);
+    }
+  } catch (error) {
+    console.error("加载词云数据时出错:", error);
+  }
+
+
+  try {
+    const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value, pageType.value);
+
+    if (pieResponse && typeof pieResponse === 'object' && 'data' in pieResponse &&
+        'positive_percentage' in pieResponse.data &&
+        'neutral_percentage' in pieResponse.data &&
+        'negative_percentage' in pieResponse.data) {
+      
+      // 格式化为 PieChart 需要的数据结构
+      data1.value = [
+        { name: '正面', value: parseFloat(pieResponse.data.positive_percentage) || 0 },
+        { name: '中立', value: parseFloat(pieResponse.data.neutral_percentage) || 0 },
+        { name: '负面', value: parseFloat(pieResponse.data.negative_percentage) || 0 }
+      ];
+      isPieChartLoading.value = false;
+      console.log("饼图数据（处理后）:", data1.value);
+    } else {
+      console.warn("饼图数据格式不正确:", pieResponse);
+      // 设置默认数据，避免渲染错误
+      data1.value = [
+        { name: '正面', value: 33 },
+        { name: '中立', value: 33 },
+        { name: '负面', value: 34 }
+      ];
+      isPieChartLoading.value = false;
+    }
+  } catch (error) {
+    console.error("加载饼图数据时出错:", error);
+    // 设置默认数据，避免渲染错误
+    data1.value = [
+      { name: '正面', value: 33 },
+      { name: '中立', value: 33 },
+      { name: '负面', value: 34 }
+    ];
+    isPieChartLoading.value = false;
+  }
+
+
+  try {
+    // 获取 LdaResponse 数据
+    const ldaResponse = await LdaAPI.LdaAPI(nowName.value,pageType.value);
+
+    // 检查数据有效性，并格式化为表格需要的格式
+    if (Array.isArray(ldaResponse)) {
+      sentiment.value = ldaResponse.map(item => ({
+        topic: item.topic, // 主题
+        frequency: item.frequency, // 出现频率
+        sentiment: item.sentiment, // 情感
+      }));
+      console.log("LDA 数据加载成功:", sentiment.value);
+      isTopicClusterLoading.value=false;
+      isBarChartLoading.value=false;
+    } else {
+      console.warn("LDA 数据格式不正确:", ldaResponse);
+    }
+  } catch (error) {
+    console.error("加载 LDA 数据时出错:", error);
+  }
+
+  try {
+    // 获取 WordResponse 数据
+    const wordResponse = await SentimentAPI.getSentimentWordAPI(nowName.value,pageType.value);
+
+    // 检查数据有效性，并格式化为表格需要的格式
+    if (wordResponse && typeof wordResponse === 'object' && 'data' in wordResponse) {
+      if (Array.isArray(wordResponse.data)) {
+        topic.value = wordResponse.data.map(item => ({
+          word: item.word, // 关键词
+          frequency: item.frequency, // 出现频率
+          sentiment: item.sentiment, // 情感
+        }));
+        // console.log("Word 数据加载成功:", topic.value);
+        isSentimentStatsLoading.value=false;
+      } else {
+        console.warn("Word 数据格式不正确:", wordResponse);
+      }
+    } else {
+      console.error("Word 数据格式不正确:", wordResponse);
+    }
+  } catch (error) {
+    console.error("加载 Word 数据时出错:", error);
+  }
+
+
+
+// 在加载时间情感数据后，赋值给 processedTimeData
+  try {
+    const timeResponse = await SentimentAPI.getSentimentResultAPI(nowName.value,pageType.value);
+    if (timeResponse && typeof timeResponse === "object" && 'data' in timeResponse && Array.isArray(timeResponse.data)) {
+      processedTimeData.value = timeResponse.data.map(item => {
+        const paddedMonth = item.month < 10 ? '0' + item.month : item.month;
+        //console.log("你好！！！" + parseFloat(item.sentiment_score));
+        return {
+          date: `${item.year}-${paddedMonth}`,
+          sentimentScore: parseFloat(item.sentiment_score) || 0,
+          sentiment: item.sentiment,
+          commentCount: item.comment_count,
+        };
+      });
+      isLineRaceLoading.value=false;
+      // console.log("时间情感数据（处理后）:", processedTimeData.value);
+    } else {
+      console.warn("时间情感数据格式不正确:", timeResponse);
+    }
+  } catch (error) {
+    console.error("加载时间情感数据时出错:", error);
+  }
+
+  try {
+    const threeLineResponse = await SentimentAPI.getCasualImpactAPI(nowName.value);
+    console.log("三线图原始数据:", threeLineResponse);
+    
+    // 检查数据结构是否符合预期
+    if (threeLineResponse && 
+        typeof threeLineResponse === 'object' && 
+        'economic_data' in threeLineResponse && 
+        'sentiment_data' in threeLineResponse && 
+        'casual_impact_analysis' in threeLineResponse) {
+      
+      threeLineData.value = threeLineResponse;
+      console.log("三线图数据处理成功");
+    } else {
+      console.warn("三线图数据格式不符合预期:", threeLineResponse);
+      threeLineData.value = []; // 设置为空数组避免渲染错误
+    }
+  } catch (error) {
+    console.error("加载三线图数据时出错:", error);
+    threeLineData.value = []; // 出错时也设置为空数组
+  }
+
+
+
+  // try {
+  //   const sentimentResponse = await SentimentAPI.getSentimentReportAPI(nowName.value);
+  //   if (sentimentResponse && typeof sentimentResponse === "object" && sentimentResponse.data) {
+  //     // 将 Markdown 转换为 HTML
+  //     let markdownContent;
+  //     markdownContent.value = marked(sentimentResponse.data);
+  //     console.log("AI 报告解析后的 HTML:", markdownContent.value);
+  //
+  //     // 如果需要，也可以在这里进行进一步的数据处理
+  //     // 例如，提取 sentiment 或其他相关信息
+  //
+  //   } else {
+  //     console.error("AI 报告数据格式不符合预期:", sentimentResponse);
+  //   }
+  // } catch (error) {
+  //   console.error("加载 AI 报告时出错:", error);
+  // }
+
+
+}
+
 const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
   if (!interestData.value || !Array.isArray(interestData.value)) {
     console.warn("景点数据未加载或格式错误");
@@ -211,7 +563,7 @@ const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | st
     // 更新图片 URL
     currentImageUrl.value = spot.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
-    console.log("当前选中的景点:", attractions.name);
+    console.log("当前选中的景点:", attractions.value.name);
     isImageLoading.value=false;
   } else {
     console.warn(`未找到名称为 "${spotName}" 的景点`);
@@ -239,7 +591,7 @@ const loadBooks = (bookName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>)
     // 更新图片 URL
     currentImageUrl.value = book.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
-    console.log("当前选中的书籍:", books.name);
+    console.log("当前选中的书籍:", books.value.name);
     isImageLoading.value=false;
   } else {
     console.warn(`未找到名称为 "${bookName.value}" 的书`);
@@ -267,7 +619,7 @@ const loadFood = (foodName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) 
     // 更新图片 URL
     currentImageUrl.value = foods.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
-    console.log("当前选中的美食:", food.name);
+    console.log("当前选中的美食:", food.value?.name);
     isImageLoading.value=false;
   } else {
     console.warn(`未找到名称为 "${foodName}" 的美食`);
@@ -296,7 +648,7 @@ const loadFolk = (folkName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) 
     // 更新图片 URL
     currentImageUrl.value = folks.image_url;
     console.log("currentImgUrl:", currentImageUrl.value)
-    console.log("当前选中的民俗:", folk.name);
+    console.log("当前选中的民俗:", folk.value?.name);
     isImageLoading.value=false;
 
   } else {
@@ -319,11 +671,6 @@ const route = useRoute();
 const nowName = ref<string>('');
 const themeType = ref(null);
 const pageType = ref(null);
-// 删除之前的三个单独的 watch
-// 删除这些：
-// watch(() => route.query.name, ...)
-// watch(() => route.query.value, ...)
-// watch(() => route.query.theme, ...)
 
 // 只保留一个统一的 watch
 watch(
@@ -374,12 +721,6 @@ watch(
       deep: true
     }
 );
-
-const fetchAttractionName = () => {
-  nowName.value = <string>route.query.name;
-  console.log("hhhhhname",route.query.name);
-};
-
 
 // 在父组件中添加以下方法
 const handleTypeChange = async (typeId) => {
@@ -455,8 +796,8 @@ const checkContentAvailability = async () => {
             const booksResponse = await FilmLiterature.getBook(type_id);
             console.log(`获取类型 ${type_id} 的书籍数据:`, booksResponse);
 
-            // 确保返回的是字符串格式
-            if (booksResponse && typeof booksResponse === 'object' && 'status' in booksResponse && 'data' in booksResponse) {
+// 确保返回的是字符串格式
+          if (booksResponse && typeof booksResponse === 'object' && 'status' in booksResponse && 'data' in booksResponse) {
               if (booksResponse.status === 'success' && Array.isArray(booksResponse.data)) {
                 // 从响应中提取 data 字段
                 const booksArray = booksResponse.data;
@@ -597,312 +938,7 @@ function getRandomColor() {
   const color = colorList.value[Math.floor(Math.random() * 8)];
   return color;
 }
-const loadAllData = async () => {
-  fetchAttractionName();
-  const pageTypeNum = Number(pageType.value);
-  console.log("这里pageType", pageTypeNum);
 
-  if(pageTypeNum === 1){
-    try {
-      const spotsResponse = await SpotsAPI.getSpotsAPI();
-      console.log("我不叫喂！")
-      if (typeof spotsResponse === "string") {
-        const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-        const spotsArray = fixedResponse
-            .replace(/'/g, '"')
-            .match(/{[^}]+}/g)
-            .map((spot) => JSON.parse(spot));
-
-        interestData.value = spotsArray;
-
-        console.log("景点数据（处理后）:", interestData.value);
-
-        if (interestData.value.length > 0) {
-          loadAttractions(nowName);
-        } else {
-          console.warn("景点数据为空");
-        }
-      } else {
-        console.error("景点数据格式错误，期望为字符串形式");
-      }
-    } catch (error) {
-      console.error("加载景点数据时出错:",error);
-    }
-  }else if(pageTypeNum===2){
-    console.log("我叫喂！")
-    try {
-      console.log("我不叫喂！")
-      // 根据 themeType 设置 type_id
-      let type_id = '';
-      const pageTheme = Number(themeType.value);
-      if (pageTheme === 1) {
-        type_id = '文学';
-      } else if (pageTheme === 2) {
-        type_id = '表演艺术';
-      } else if (pageTheme === 3) {
-        type_id = '新媒体艺术';
-      } else if (pageTheme === 4) {
-        type_id = '古诗词';
-      }
-      console.log("ThemeType",pageTheme)
-      console.log("Type_id", type_id)
-      // 调用 getBook 并传递 type_id
-      const booksResponse = await FilmLiterature.getBook(type_id);
-      console.log("书籍数据（未处理）:", type_id);
-
-      if (booksResponse && typeof booksResponse === 'object' && 'data' in booksResponse) {
-        if (Array.isArray(booksResponse.data)) {
-          const booksArray = booksResponse.data.map((book) => {
-            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
-            if (typeof book.someDecimalField === "string") {
-              book.someDecimalField = book.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-            }
-            return book;
-          });
-
-          bookData.value = booksArray;
-
-          console.log("书籍数据（处理后）:", bookData.value);
-
-          if (bookData.value.length > 0) {
-            loadBooks(nowName);
-          } else {
-            console.warn("书籍数据为空");
-          }
-        } else {
-          console.log("bookResponse", booksResponse.data)
-          console.error("书籍数据格式错误，期望为字符串形式");
-        }
-      } else {
-        console.error("书籍数据格式不正确:", booksResponse);
-      }
-    } catch (error) {
-      console.error("加载书籍数据时出错:", error);
-    }
-  }else   if(pageTypeNum === 3){
-    try {
-      const foodResponse = await FoodAPI.getFoodAPI();
-      console.log("我不叫喂！",foodResponse)
-      if (foodResponse && typeof foodResponse === 'object' && 'data' in foodResponse) {
-        if (Array.isArray(foodResponse.data)) {
-          const foodArray = foodResponse.data.map((food) => {
-            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
-            if (typeof food.someDecimalField === "string") {
-              food.someDecimalField = food.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-            }
-            return food;
-          });
-
-          foodData.value = foodArray;
-
-          console.log("美食数据（处理后）:", foodData.value);
-
-          if (foodData.value.length > 0) {
-            loadFood(nowName);
-          } else {
-            console.warn("美食数据为空");
-          }
-        } else {
-          console.log("foodResponse", foodResponse.data)
-          console.error("美食数据格式错误，期望为字符串形式");
-        }
-      } else {
-        console.error("美食数据格式不正确:", foodResponse);
-      }
-    } catch (error) {
-      console.error("加载美食数据时出错:",error);
-    }
-  }else   if(pageTypeNum === 4){
-    try {
-      const folkResponse = await FolkAPI.getFolkCustomAPI();
-      console.log("我不叫喂！",folkResponse)
-      if (folkResponse && typeof folkResponse === 'object' && 'data' in folkResponse) {
-        if (Array.isArray(folkResponse.data)) {
-          const folkArray = folkResponse.data.map((folk) => {
-            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
-            if (typeof folk.someDecimalField === "string") {
-              folk.someDecimalField = folk.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-            }
-            return folk;
-          });
-
-          folkData.value = folkArray;
-
-          console.log("民俗数据（处理后）:", folkData.value);
-
-          if (folkData.value.length > 0) {
-            loadFolk(nowName);
-          } else {
-            console.warn("民俗数据为空");
-          }
-        } else {
-          console.log("folkResponse", folkResponse.data)
-          console.error("民俗数据格式错误，期望为字符串形式");
-        }
-      } else {
-        console.error("民俗数据格式不正确:", folkResponse);
-      }
-    } catch (error) {
-      console.error("加载民俗数据时出错:",error);
-    }
-  }
-
-  try {
-    const commentResponse = await CommentAPI.getCommentList(nowName.value, pageType.value);
-    // 评论改了格式，要记得修改
-    console.log("原始评论数据:", commentResponse);
-
-    // 确保返回的数据包含 comments 数组
-    if (commentResponse && commentResponse.comments && Array.isArray(commentResponse.comments)) {
-      const commentsArray = commentResponse.comments;
-
-      // 映射到弹幕数据
-      danmus.value = commentsArray.map(comment => ({
-        name: comment.user_id || '匿名用户',
-        text: comment.comment_text || '',  // 使用新的字段 comment_text
-        sentiment: comment.sentiment || '',  // 如果需要，可以把情感分析加入
-        sentiment_confidence: comment.sentiment_confidence || '',  // 情感分析置信度
-        platform: comment.platform || ''  // 评论平台
-      }));
-      isDanmuLoading.value=false;
-      console.log("成功解析的评论数组:", commentsArray);
-    } else {
-      throw new Error("返回的数据格式不正确，未找到有效的评论数组。");
-    }
-  } catch (error) {
-    console.error("加载评论数据时出错:", error);
-  }
-
-
-
-  try {
-    const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageType.value);
-    console.log("词云地址:", cloudResponse.wordcloud_url);
-    isWordCloudLoading.value=false;
-    cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
-  } catch (error) {
-    console.error("加载评论数据时出错:", error);
-  }
-
-
-  try {
-    const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value,pageType.value);
-
-    if (pieResponse && pieResponse.data) {
-      // 格式化为 PieChart 需要的数据结构
-      data1.value = [
-        { name: '正面', value: parseFloat(pieResponse.data.positive_percentage) },
-        { name: '中立', value: parseFloat(pieResponse.data.neutral_percentage) },
-        { name: '负面', value: parseFloat(pieResponse.data.negative_percentage) }
-      ];
-      isPieChartLoading.value=false;
-      console.log("饼图数据（处理后）:", data1.value);
-    } else {
-      console.warn("饼图数据格式不正确:", pieResponse);
-    }
-  } catch (error) {
-    console.error("加载饼图数据时出错:", error);
-  }
-
-
-  try {
-    // 获取 LdaResponse 数据
-    const ldaResponse = await LdaAPI.LdaAPI(nowName.value,pageType.value);
-
-    // 检查数据有效性，并格式化为表格需要的格式
-    if (Array.isArray(ldaResponse)) {
-      sentiment.value = ldaResponse.map(item => ({
-        topic: item.topic, // 主题
-        frequency: item.frequency, // 出现频率
-        sentiment: item.sentiment, // 情感
-      }));
-      console.log("LDA 数据加载成功:", sentiment.value);
-      isTopicClusterLoading.value=false;
-      isBarChartLoading.value=false;
-    } else {
-      console.warn("LDA 数据格式不正确:", ldaResponse);
-    }
-  } catch (error) {
-    console.error("加载 LDA 数据时出错:", error);
-  }
-
-  try {
-    // 获取 WordResponse 数据
-    const wordResponse = await SentimentAPI.getSentimentWordAPI(nowName.value,pageType.value);
-
-    // 检查数据有效性，并格式化为表格需要的格式
-    if (wordResponse && typeof wordResponse === 'object' && 'data' in wordResponse) {
-      if (Array.isArray(wordResponse.data)) {
-        topic.value = wordResponse.data.map(item => ({
-          word: item.word, // 关键词
-          frequency: item.frequency, // 出现频率
-          sentiment: item.sentiment, // 情感
-        }));
-        // console.log("Word 数据加载成功:", topic.value);
-        isSentimentStatsLoading.value=false;
-      } else {
-        console.warn("Word 数据格式不正确:", wordResponse);
-      }
-    } else {
-      console.error("Word 数据格式不正确:", wordResponse);
-    }
-  } catch (error) {
-    console.error("加载 Word 数据时出错:", error);
-  }
-
-
-
-// 在加载时间情感数据后，赋值给 processedTimeData
-  try {
-    const timeResponse = await SentimentAPI.getSentimentResultAPI(nowName.value,pageType.value);
-    if (timeResponse && typeof timeResponse === "object" && Array.isArray(timeResponse.data)) {
-      processedTimeData.value = timeResponse.data.map(item => {
-        const paddedMonth = item.month < 10 ? '0' + item.month : item.month;
-        //console.log("你好！！！" + parseFloat(item.sentiment_score));
-        return {
-          date: `${item.year}-${paddedMonth}`,
-          sentimentScore: parseFloat(item.sentiment_score) || 0,
-          sentiment: item.sentiment,
-          commentCount: item.comment_count,
-        };
-      });
-      isLineRaceLoading.value=false;
-      // console.log("时间情感数据（处理后）:", processedTimeData.value);
-    }
-  } catch (error) {
-    console.error("加载时间情感数据时出错:", error);
-  }
-
-  try {
-    threeLineData.value = await SentimentAPI.getCasualImpactAPI(nowName.value);
-    console.log("three_line_data", threeLineData.value);
-
-  } catch (error) {
-    console.error("加载时间情感数据时出错:", error);
-  }
-
-
-
-  // try {
-  //   const sentimentResponse = await SentimentAPI.getSentimentReportAPI(nowName.value);
-  //   if (sentimentResponse && typeof sentimentResponse === "object" && sentimentResponse.data) {
-  //     // 将 Markdown 转换为 HTML
-  //     let markdownContent;
-  //     markdownContent.value = marked(sentimentResponse.data);
-  //     console.log("AI 报告解析后的 HTML:", markdownContent.value);
-  //
-  //     // 如果需要，也可以在这里进行进一步的数据处理
-  //     // 例如，提取 sentiment 或其他相关信息
-  //
-  //   } else {
-  //     console.error("AI 报告数据格式不符合预期:", sentimentResponse);
-  //   }
-  // } catch (error) {
-  //   console.error("加载 AI 报告时出错:", error);
-  // }
-
-
-}
 onMounted(async () => {
   await loadAllData();
 
