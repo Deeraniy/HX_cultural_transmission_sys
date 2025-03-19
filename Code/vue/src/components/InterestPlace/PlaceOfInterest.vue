@@ -157,6 +157,7 @@ import { useRouter } from 'vue-router'
 import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
 import { Close } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter()
 const chartsDOM = ref<HTMLElement | null>(null);
@@ -205,6 +206,24 @@ const tagStatus = ref<TagStatus>({
 
 // 获取用户存储
 const userStore = useUserStore();
+
+// 添加获取用户ID的函数，参考 UserHomeMain.vue 的方法
+const getUserId = () => {
+  // 首先从 userStore 中获取
+  if (userStore.userId) {
+    return userStore.userId;
+  }
+  
+  // 如果 userStore 中没有，尝试从 localStorage 获取
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    return userId;
+  }
+  
+  // 如果都没有，返回 null
+  console.warn('User ID is missing');
+  return null;
+};
 
 // 从 interest.json 中加载数据并更新 attractions
 const loadAttractions = (cityName: string) => {
@@ -356,16 +375,29 @@ const showDetail = async (attraction) => {
       const tagId = response.data.id;
       console.log(`获取到的标签ID: ${tagId}`);
       
-      // 记录浏览
-      const userId = userStore.user?.user_id || 1; // 获取用户ID，如果未登录则使用默认值1
-      await TagsAPI.viewTagAPI(userId, tagId);
-      console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
+      // 获取用户ID
+      const userId = getUserId();
       
-      // 获取标签状态
-      const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
-      if (statusResponse.code === 200) {
-        tagStatus.value = statusResponse.data;
-        console.log('标签状态:', tagStatus.value);
+      if (userId) {
+        // 记录浏览
+        await TagsAPI.viewTagAPI(userId, tagId);
+        console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
+        
+        // 获取标签状态
+        const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
+        if (statusResponse.code === 200) {
+          tagStatus.value = statusResponse.data;
+          console.log('标签状态:', tagStatus.value);
+        }
+      } else {
+        // 未登录用户设置默认状态
+        tagStatus.value = {
+          is_liked: false,
+          is_favorite: false,
+          total_likes: 0,
+          click_count: 0
+        };
+        console.log('用户未登录，使用默认标签状态');
       }
     } else {
       console.error('获取标签ID失败:', response.message);
@@ -462,14 +494,19 @@ const goToAnalysis = (place: Place) => {
 // 点赞函数
 const toggleLike = async (place) => {
   try {
+    // 获取用户ID
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再点赞');
+      return;
+    }
+    
     // 获取标签ID
     const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', place.id);
     if (response.code === 200) {
       const tagId = response.data.id;
       console.log(`获取到的标签ID: ${tagId}`);
       
-      // 执行点赞操作
-      const userId = userStore.user?.user_id || 1; // 获取用户ID，如果未登录则使用默认值1
       console.log(`用户ID: ${userId}, 标签ID: ${tagId}`);
       
       const likeResponse = await TagsAPI.toggleLikeAPI(userId, tagId);
@@ -496,13 +533,18 @@ const toggleLike = async (place) => {
 // 收藏函数
 const toggleFavorite = async (place) => {
   try {
+    // 获取用户ID
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再收藏');
+      return;
+    }
+    
     // 获取标签ID
     const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', place.id);
     if (response.code === 200) {
       const tagId = response.data.id;
       
-      // 执行收藏操作
-      const userId = userStore.user?.user_id || 1; // 获取用户ID，如果未登录则使用默认值1
       const favoriteResponse = await TagsAPI.toggleFavoriteAPI(userId, tagId);
       if (favoriteResponse.code === 200) {
         // 更新收藏状态
