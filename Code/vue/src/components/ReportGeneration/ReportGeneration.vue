@@ -2,11 +2,55 @@
   <div class="report-generation">
     <el-card class="form-card">
       <div class="card-header">
-        <h2>宣传报告生成</h2>
-        <p class="subtitle">选择合适的标签和平台，生成专业的宣传内容</p>
-      </div>
+
+
+<p class="subtitle">选择合适的标签和平台，生成专业的宣传内容</p>
+
+</div>
 
       <el-form :model="report" ref="form" label-width="120px" class="form">
+
+        <!-- 活动信息分组 -->
+        <div class="form-group">
+          <h3 class="group-title">活动信息（必填）</h3>
+          <el-form-item 
+            label="活动名称" 
+            prop="eventName"
+            :rules="[{ required: true, message: '请输入活动名称', trigger: 'blur' }]"
+          >
+            <el-input 
+              v-model="report.eventName" 
+              placeholder="例如：2024湖南非物质文化遗产展示周"
+            />
+          </el-form-item>
+          <el-form-item 
+            label="活动属性" 
+            prop="eventType"
+            :rules="[{ required: true, message: '请输入活动属性', trigger: 'blur' }]"
+          >
+            <el-input 
+              v-model="report.eventType" 
+              placeholder="例如：文化展览/非遗传承/民俗活动"
+            />
+          </el-form-item>
+        </div>
+
+        <!-- 宣传信息分组 -->
+        <div class="form-group">
+          <h3 class="group-title">宣传策略</h3>
+          <el-form-item label="宣传倾向" prop="promotionTendency">
+            <el-input 
+              v-model="report.promotionTendency" 
+              placeholder="例如：突出文化传承价值/提升青年参与感"
+            />
+          </el-form-item>
+          <el-form-item label="宣传方式" prop="promotionMethod">
+            <el-input 
+              v-model="report.promotionMethod" 
+              placeholder="例如：图文结合/短视频/现场直播"
+            />
+          </el-form-item>
+        </div>
         <!-- 平台选择 -->
         <el-form-item label="宣传平台" prop="platform" :rules="[{ required: true, message: '请选择宣传平台', trigger: 'change' }]">
           <el-select v-model="report.platform" placeholder="请选择宣传平台" class="platform-select">
@@ -79,49 +123,6 @@
             show-word-limit
           />
         </el-form-item>
-
-        <!-- 活动信息分组 -->
-        <div class="form-group">
-          <h3 class="group-title">活动信息（必填）</h3>
-          <el-form-item 
-            label="活动名称" 
-            prop="eventName"
-            :rules="[{ required: true, message: '请输入活动名称', trigger: 'blur' }]"
-          >
-            <el-input 
-              v-model="report.eventName" 
-              placeholder="例如：2024湖南非物质文化遗产展示周"
-            />
-          </el-form-item>
-          <el-form-item 
-            label="活动属性" 
-            prop="eventType"
-            :rules="[{ required: true, message: '请输入活动属性', trigger: 'blur' }]"
-          >
-            <el-input 
-              v-model="report.eventType" 
-              placeholder="例如：文化展览/非遗传承/民俗活动"
-            />
-          </el-form-item>
-        </div>
-
-        <!-- 宣传信息分组 -->
-        <div class="form-group">
-          <h3 class="group-title">宣传策略</h3>
-          <el-form-item label="宣传倾向" prop="promotionTendency">
-            <el-input 
-              v-model="report.promotionTendency" 
-              placeholder="例如：突出文化传承价值/提升青年参与感"
-            />
-          </el-form-item>
-          <el-form-item label="宣传方式" prop="promotionMethod">
-            <el-input 
-              v-model="report.promotionMethod" 
-              placeholder="例如：图文结合/短视频/现场直播"
-            />
-          </el-form-item>
-        </div>
-
         <!-- 操作按钮 -->
         <el-form-item class="form-actions">
           <el-button type="primary" @click="generateReport" :loading="generating">
@@ -187,7 +188,7 @@
 .report-generation {
   max-width: 900px;
   margin: 30px auto;
-  padding: 0 20px;
+  padding: 0 140px;
 }
 
 .form-card {
@@ -309,12 +310,13 @@
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .group-title {
   font-size: 16px;
   color: #333;
+  margin-top: -10px;
   margin-bottom: 20px;
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
