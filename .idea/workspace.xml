@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="个性化介面">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustomMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustomMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodShow.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodShow.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/HomePageMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/HomePageMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterestMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterestMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
-    </list>
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="个性化界面完善" />
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +154,7 @@
       <workItem from="1742190484223" duration="7019000" />
       <workItem from="1742279858184" duration="5434000" />
       <workItem from="1742300753704" duration="724000" />
-      <workItem from="1742344277495" duration="9409000" />
+      <workItem from="1742344277495" duration="9722000" />
     </task>
     <task id="LOCAL-00002" summary="影视艺术页面——文学页面（前端完成）">
       <option name="closed" value="true" />
@@ -519,7 +508,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742349466624</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="个性化界面完善">
+      <option name="closed" value="true" />
+      <created>1742361358186</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1742361358186</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -537,7 +534,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="民俗轮播图微调" />
     <MESSAGE value="首页美化" />
     <MESSAGE value="首页导航栏美化" />
     <MESSAGE value="美食旋转木马微调" />
@@ -562,7 +558,8 @@
     <MESSAGE value="用户界面+点赞收藏（未完成" />
     <MESSAGE value="图片" />
     <MESSAGE value="个性化介面" />
-    <option name="LAST_COMMIT_MESSAGE" value="个性化介面" />
+    <MESSAGE value="个性化界面完善" />
+    <option name="LAST_COMMIT_MESSAGE" value="个性化界面完善" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

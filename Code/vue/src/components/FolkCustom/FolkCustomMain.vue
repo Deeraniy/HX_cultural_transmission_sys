@@ -39,11 +39,11 @@ import FolkSentimentAnalyze from "@/components/FolkCustom/FolkSentimentAnalyze.v
 import router from '@/router'
 import Carousel from "@/components/RedCulture/Carousel.vue";
 import RedCultureMain from "@/components/RedCulture/RedCultureMain.vue";
-import { ref, onMounted, nextTick, inject } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 
 const goBack = () => {
-  // 直接导航到推荐页面，而不是使用浏览器历史
-  router.push('/recommend');
+  // 使用 router.back() 返回上一页
+  router.back();
 }
 
 const activeIndex = ref('2')
@@ -52,14 +52,21 @@ const handleSelect = (key: string, keyPath: string[]) => {
   activeIndex.value = key;  // 更新 activeIndex
 }
 
-// 注入全局样式修复函数
-const fixHeaderStyles = inject('fixHeaderStyles');
-
-// 在组件挂载时调用
+// 在组件挂载时确保顶栏样式正确
 onMounted(() => {
-  if (fixHeaderStyles) {
-    fixHeaderStyles();
-  }
+  nextTick(() => {
+    // 强制刷新顶栏样式
+    const totalElement = document.querySelector('.total');
+    if (totalElement) {
+      // 触发重排以刷新样式
+      totalElement.style.display = 'none';
+      void totalElement.offsetWidth;
+      totalElement.style.display = 'flex';
+      
+      // 确保背景图片正确加载
+      totalElement.style.backgroundImage = 'url(' + require('@/assets/img_4.png') + ')';
+    }
+  });
 });
 </script>
 
