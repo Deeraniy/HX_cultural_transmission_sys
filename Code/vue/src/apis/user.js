@@ -10,7 +10,7 @@ import httpInstance from "@/utils/http";
 //获取用户标签信息
 export function getUserTagList(){
     return httpInstance({
-        url:`/tag/tagList`,
+        url: '/get_all_tags/',
         method:'get',
     })
 }
@@ -22,10 +22,11 @@ export function getUserArticleList(){
     })
 }
 
-export function getUserInfo(){
+export function getUserInfo(userId){
     return httpInstance({
-        url:`/user`,
-        method:'get',
+        url: '/user',
+        method: 'get',
+        params: { userId }
     })
 }
 

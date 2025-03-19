@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.http import JsonResponse
 import pymysql
 import json
+from django.db import connection
+import os
+from django.conf import settings
+import base64
+import time
 
 # 实现注册
 def register_user(request):
@@ -15,6 +20,9 @@ def register_user(request):
             sex = data.get('sex', 'other')
             region = data.get('location', '')
             avatar = data.get('avatar', '')
+            email = data.get('email', '')
+            mobile = data.get('mobile', '')
+            description = data.get('description', '')
 
             print(f"注册用户数据: {data}")  # 调试日志
 
@@ -32,11 +40,18 @@ def register_user(request):
                 # 执行插入
                 sql = """
                 INSERT INTO user 
-                    (user_name, user_pwd, user_age, user_sex, user_region, user_avatar) 
+                    (user_name, user_pwd, user_age, user_sex, user_region, 
+                    user_avatar, email, mobile, description, 
+                    register_time, last_login_time) 
                 VALUES 
-                    (%s, %s, %s, %s, %s, %s)
+                    (%s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, 
+                    CURRENT_TIMESTAMP, NULL)
                 """
-                cursor.execute(sql, (username, password, age, sex, region, avatar))
+                cursor.execute(sql, (
+                    username, password, age, sex, region, 
+                    avatar, email, mobile, description
+                ))
                 conn.commit()
                 
                 # 获取新插入用户的 ID
@@ -94,6 +109,10 @@ def verify_user(request):
                 print(f"查询结果: {result}")
                 
                 if result:
+                    # 更新最后登录时间
+                    update_sql = "UPDATE user SET last_login_time = CURRENT_TIMESTAMP WHERE user_id = %s"
+                    cursor.execute(update_sql, (result[0],))
+
                     response_data = {
                         "status": "success",
                         "msg": "验证成功",
@@ -188,45 +207,50 @@ def get_user_activity(request):
         return JsonResponse({"error": "不是GET请求!"})
 
 def get_user_info(request):
-    if request.method == 'GET':
-        username = request.GET.get('username')
+    try:
+        user_id = request.GET.get('userId')
+        if not user_id:
+            return JsonResponse({
+                'status': 'error',
+                'message': '未提供用户ID'
+            })
 
-        if username:
-            conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
-                                   db='hx_cultural_transmission_sys', charset='utf8')
-            cursor = conn.cursor()
-            try:
-                sql = """
-                SELECT user_id, user_name, user_age, user_sex, user_region, user_avatar 
-                FROM user 
-                WHERE user_name = %s
-                """
-                cursor.execute(sql, (username,))
-                result = cursor.fetchone()
-                print("Query result:", result)
-                
-                if result:
-                    user_info = {
-                        'user_id': result[0],
-                        'user_name': result[1],
-                        'user_age': result[2],
-                        'user_sex': result[3],  # 已经是字符串格式了
-                        'user_region': result[4],
-                        'user_avatar': result[5]
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT user_id, user_name, user_sex, user_age, user_region, 
+                       user_avatar
+                FROM user
+                WHERE user_id = %s
+            """, [user_id])
+            
+            user = cursor.fetchone()
+            
+            if user:
+                return JsonResponse({
+                    'status': 'success',
+                    'data': {
+                        'uid': user[0],
+                        'account': user[0],
+                        'nickname': user[1],
+                        'gender': user[2] or '',
+                        'age': user[3] or 0,
+                        'location': user[4] or '',
+                        'avatar': user[5] or '',
+                        'description': '这个人很懒，什么都没写~',
                     }
-                    return JsonResponse(user_info)
-                else:
-                    return JsonResponse({"error": "用户不存在"})
-            except Exception as e:
-                conn.rollback()
-                return JsonResponse({"error": f"获取用户信息失败: {e}"})
-            finally:
-                cursor.close()
-                conn.close()
-        else:
-            return JsonResponse({"error": "未提供用户名"})
-    else:
-        return JsonResponse({"error": "不是GET请求!"})
+                })
+            else:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': '用户不存在'
+                })
+                
+    except Exception as e:
+        print('获取用户信息错误:', str(e))  # 添加错误日志
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        })
 
 def init_database():
     conn = pymysql.connect(
@@ -251,6 +275,150 @@ def init_database():
     finally:
         cursor.close()
         conn.close()
+
+def update_user_info(request):
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            uid = data.get('uid') or request.GET.get('userId')
+            
+            if not uid:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': '未提供用户ID'
+                })
+
+            # 获取要更新的字段
+            nickname = data.get('nickname')
+            gender = data.get('gender')
+            # 转换性别值为数据库支持的格式
+            if gender == '男':
+                gender = 'male'
+            elif gender == '女':
+                gender = 'female'
+            else:
+                gender = 'other'
+            
+            age = data.get('age')
+            description = data.get('description')
+            location = data.get('location')
+
+            with connection.cursor() as cursor:
+                update_fields = []
+                params = []
+
+                if nickname is not None:
+                    update_fields.append("user_name = %s")
+                    params.append(nickname)
+                if gender is not None:
+                    update_fields.append("user_sex = %s")
+                    params.append(gender)
+                if age is not None:
+                    update_fields.append("user_age = %s")
+                    params.append(age)
+                if description is not None:
+                    update_fields.append("description = %s")
+                    params.append(description)
+                if location is not None:
+                    update_fields.append("user_region = %s")
+                    params.append(location)
+
+                if update_fields:
+                    params.append(uid)
+                    
+                    sql = f"""
+                        UPDATE user 
+                        SET {', '.join(update_fields)}
+                        WHERE user_id = %s
+                    """
+                    
+                    try:
+                        cursor.execute(sql, params)
+                        if cursor.rowcount > 0:
+                            return JsonResponse({
+                                'status': 'success',
+                                'message': '更新成功'
+                            })
+                        else:
+                            return JsonResponse({
+                                'status': 'error',
+                                'message': '未找到要更新的用户'
+                            })
+                    except Exception as e:
+                        print("SQL执行错误:", str(e))
+                        return JsonResponse({
+                            'status': 'error',
+                            'message': f'数据库更新错误: {str(e)}'
+                        })
+                else:
+                    return JsonResponse({
+                        'status': 'error',
+                        'message': '没有提供要更新的字段'
+                    })
+        else:
+            return JsonResponse({
+                'status': 'error',
+                'message': '请使用POST方法'
+            })
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'status': 'error',
+            'message': '无效的JSON数据'
+        })
+    except Exception as e:
+        print("更新用户信息错误:", str(e))
+        return JsonResponse({
+            'status': 'error',
+            'message': f'服务器错误: {str(e)}'
+        })
+
+def upload_avatar(request):
+    if request.method == 'POST':
+        try:
+            file = request.FILES.get('file')
+            user_id = request.POST.get('userId')
+            
+            if not file or not user_id:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': '没有收到文件或用户ID'
+                })
+
+            # 读取文件内容并转换为base64
+            file_content = base64.b64encode(file.read()).decode('utf-8')
+            
+            # 获取文件类型
+            file_type = file.content_type
+            
+            # 生成完整的base64图片字符串
+            avatar_data = f"data:{file_type};base64,{file_content}"
+            
+            # 更新数据库中的头像
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    UPDATE user 
+                    SET user_avatar = %s 
+                    WHERE user_id = %s
+                """, [avatar_data, user_id])
+            
+            return JsonResponse({
+                'status': 'success',
+                'data': {
+                    'url': avatar_data
+                }
+            })
+            
+        except Exception as e:
+            print(f"上传错误: {str(e)}")  # 添加错误日志
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            })
+            
+    return JsonResponse({
+        'status': 'error',
+        'message': '不支持的请求方法'
+    })
 
 # 在文件末尾调用这个函数
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^preview/',preview.preview),
 
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
-    url(r'^get_comment/',comment.get_comment_list),
+    url(r'^get_comment/',comment.get_comment_list_spot),
     url(r'^get_literature_by_type/',literature.get_literature_by_type),
 
     url(r'^spot_sentiments_analyze/',spot_sentiments_analyze.sentiments_analyze),
@@ -54,7 +54,7 @@ urlpatterns = [
     url(r'^liter_lda_analyze/',lda_topic_extractor.lda_analyze_literature),
     url(r'^food_lda_analyze/',lda_topic_extractor.lda_analyze_food),
     url(r'^folk_lda_analyze/',lda_topic_extractor.lda_analyze_folk),
-    url(r'^spot_get_comment_list/',comment.get_comment_list),
+    url(r'^spot_get_comment_list/',comment.get_comment_list_spot),
     url(r'^liter_get_comment_list/',comment.get_comment_list_literature),
     url(r'^food_get_comment_list/',comment.get_comment_list_food),
     url(r'^folk_get_comment_list/',comment.get_comment_list_folk),
@@ -70,6 +70,16 @@ urlpatterns = [
     url(r'^get_user_preference/$', collaborative_filter.get_user_preference),
     url(r'^get_all_tags/', tags.get_all_tags),
     url(r'^get_tag_details/', tag_details.get_tag_details),
+    url(r'^user$', user.get_user_info, name='get_user_info'),  # GET 请求获取用户信息
+    url(r'^user/update$', user.update_user_info, name='update_user'),  # PUT 请求处理更新用户信息
+    url(r'^user/upload$', user.upload_avatar, name='upload_avatar'),  # 添加头像上传路由
+    url(r'^api/tag/view$', tags.view_tag),
+    url(r'^api/tag/like$', tags.toggle_like),
+    url(r'^api/tag/favorite$', tags.toggle_favorite),
+    url(r'^api/tag/status$', tags.get_tag_status),
+    url(r'^get_user_tag_status$', tags.get_user_tag_status),
+    url(r'^api/tag/by_origin$', tags.get_tag_by_theme_and_origin),
+    url(r'^api/tag/by_origins$', tags.get_tags_by_theme_and_origins),
     url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

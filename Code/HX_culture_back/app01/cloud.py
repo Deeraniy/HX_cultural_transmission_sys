@@ -21,7 +21,7 @@ def get_cloud(request):
     # SQL查询，根据spot_name查找评论
     cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
     spot_id=cursor.fetchone()['spot_id']
-    cursor.execute("SELECT * FROM usercomment WHERE spot_id = %s", (spot_id))
+    cursor.execute("SELECT * FROM user_comment_spot WHERE spot_id = %s", (spot_id))
     comments = cursor.fetchall()
         # 合并评论文本
     text = " ".join(comment['content'] for comment in comments)
