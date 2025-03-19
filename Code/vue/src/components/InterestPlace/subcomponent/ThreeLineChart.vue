@@ -45,19 +45,19 @@ let chart = null;
 
 const initChart = () => {
   if (!chartRef.value) return;
-  
+
   if (chart) {
     chart.dispose();
   }
-  
+
   chart = echarts.init(chartRef.value);
-  
+
   chart.on('click', (params) => {
     if (params.componentType === 'markLine') {
       showReport.value = true;
     }
   });
-  
+
   chart.showLoading();
 };
 
@@ -65,11 +65,11 @@ const updateChart = () => {
   if (!chart || !props.timeData || props.timeData.length === 0) {
     return;
   }
-  
+
   chart.hideLoading();
-  
+
   const data = props.timeData;
-  
+
   const option = {
     title: {
       text: '综合经济与情感分析',
@@ -188,7 +188,7 @@ const updateChart = () => {
       end: 100
     }]
   };
-  
+
   chart.setOption(option);
 };
 
