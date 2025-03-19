@@ -11,7 +11,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-def get_comment_list(request):
+def get_comment_list_spot(request):
     spot_name = request.GET.get('name')
     
     # 创建连接
@@ -28,7 +28,7 @@ def get_comment_list(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     
     # 查询spot_id
-    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s", (spot_name,))
+    cursor.execute("SELECT spot_id FROM spot WHERE spot_name=%s", (spot_name,))
     spot_result = cursor.fetchone()
     
     if spot_result:
@@ -46,7 +46,7 @@ def get_comment_list(request):
             id, user_id, ip_location, comment_id, content, 
             like_count, spot_id, create_time, sentiment, 
             sentiment_confidence, platform 
-        FROM usercomment 
+        FROM user_comment_spot 
         WHERE spot_id=%s
     """
     cursor.execute(sql_query, (spot_id,))
@@ -91,7 +91,7 @@ def get_comment_list_recent(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
     spot_id=cursor.fetchone()['spot_id']
-    sql_query = "SELECT * FROM usercomment WHERE spot_id=%s AND YEAR(comment_time)=%s AND MONTH(comment_time)=%s"
+    sql_query = "SELECT * FROM user_comment_spot WHERE spot_id=%s AND YEAR(comment_time)=%s AND MONTH(comment_time)=%s"
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id, current_year, current_month))
     comment_list =cursor.fetchall()
@@ -113,7 +113,7 @@ def get_comment_time_span(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     
     # 查询该地点的评论时间范围
-    sql_query = "SELECT MIN(comment_time) AS start_time, MAX(comment_time) AS end_time FROM usercomment WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
+    sql_query = "SELECT MIN(comment_time) AS start_time, MAX(comment_time) AS end_time FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
     cursor.execute(sql_query, (spot_name,))
     time_span = cursor.fetchone()
     
@@ -138,7 +138,7 @@ def get_comment_ip_count(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
     
     # 查询该地点评论的IP地址种类数量
-    sql_query = "SELECT COUNT(DISTINCT ip_location) AS ip_count FROM usercomment WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
+    sql_query = "SELECT COUNT(DISTINCT ip_location) AS ip_count FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
     cursor.execute(sql_query, (spot_name,))
     ip_count = cursor.fetchone()
     
@@ -168,7 +168,7 @@ def get_average_score_by_bi_month(request):
             DATE_FORMAT(comment_time, '%%Y-%%m') AS period,  -- 双百分号
             AVG(like_count) AS average_score
         FROM 
-            usercomment
+            user_comment_spot
         WHERE 
             spot_id = (SELECT spot_id FROM scenicspot WHERE spot_name = %s) 
             AND comment_time >= %s
@@ -209,7 +209,7 @@ def get_comment_count_last_12_months(request):
             DATE_FORMAT(comment_time, '%%Y-%%m') AS month,
             COUNT(*) AS comment_count
         FROM 
-            usercomment
+            user_comment_spot
         WHERE 
             spot_id = (SELECT spot_id FROM scenicspot WHERE spot_name = %s)
             AND comment_time >= %s
