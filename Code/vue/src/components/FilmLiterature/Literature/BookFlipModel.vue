@@ -62,6 +62,7 @@ import { ref, defineEmits, onMounted } from 'vue';
 import router from "@/router.js";
 import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
+import { ElMessage } from 'element-plus';
 // 直接导入图片
 import likeIcon from '@/assets/setting/赞.png'
 import likeActiveIcon from '@/assets/setting/赞 (1).png'
@@ -130,6 +131,24 @@ const tagStatus = ref({
   click_count: 0
 });
 
+// 获取用户ID的函数
+const getUserId = () => {
+  // 首先从 userStore 中获取
+  if (userStore.userId) {
+    return userStore.userId;
+  }
+  
+  // 如果 userStore 中没有，尝试从 localStorage 获取
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    return userId;
+  }
+  
+  // 如果都没有，返回 null
+  console.warn('User ID is missing');
+  return null;
+};
+
 // 获取图片URL的辅助函数
 const getImageUrl = (imagePath) => {
   try {
@@ -149,10 +168,28 @@ const initTagStatus = async () => {
     const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
     if (response.code === 200) {
       const tagId = response.data.id;
-      const userId = userStore.user?.user_id || 1;
+      
+      const userId = getUserId();
+      if (!userId) {
+        console.warn('Cannot initialize tag status: User not logged in');
+        // 未登录用户设置默认状态：未点赞、未收藏
+        tagStatus.value = {
+          is_liked: false,
+          is_favorite: false,
+          total_likes: 0,
+          click_count: 0
+        };
+        return;
+      }
+      
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      
+      // 记录浏览
+      await TagsAPI.viewTagAPI(numericUserId, tagId);
       
       // 获取标签状态
-      const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
+      const statusResponse = await TagsAPI.getTagStatusAPI(numericUserId, tagId);
       if (statusResponse.code === 200) {
         tagStatus.value = statusResponse.data;
       }
@@ -162,15 +199,23 @@ const initTagStatus = async () => {
   }
 };
 
-// 点赞功能
+// 点赞函数
 const toggleLike = async () => {
   try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再点赞');
+      return;
+    }
+    
     const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
     if (response.code === 200) {
       const tagId = response.data.id;
-      const userId = userStore.user?.user_id || 1;
       
-      const likeResponse = await TagsAPI.toggleLikeAPI(userId, tagId);
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      
+      const likeResponse = await TagsAPI.toggleLikeAPI(numericUserId, tagId);
       if (likeResponse.code === 200) {
         tagStatus.value = {
           ...tagStatus.value,
@@ -184,15 +229,23 @@ const toggleLike = async () => {
   }
 };
 
-// 收藏功能
+// 收藏函数
 const toggleFavorite = async () => {
   try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再收藏');
+      return;
+    }
+    
     const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
     if (response.code === 200) {
       const tagId = response.data.id;
-      const userId = userStore.user?.user_id || 1;
       
-      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(userId, tagId);
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      
+      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(numericUserId, tagId);
       if (favoriteResponse.code === 200) {
         tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
       }
@@ -204,7 +257,12 @@ const toggleFavorite = async () => {
 
 // 在组件挂载时初始化标签状态
 onMounted(() => {
-  initTagStatus();
+  // 确保有 book.liter_id 才初始化标签状态
+  if (props.book && props.book.liter_id) {
+    initTagStatus();
+  } else {
+    console.warn('Book ID is missing, cannot initialize tag status');
+  }
 });
 
 // 翻转到背面

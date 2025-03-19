@@ -149,7 +149,7 @@ const tagStatus = ref({
 // 获取用户ID
 const getUserId = () => {
   // 首先从 userStore 中获取
-  if (userStore.isLoggedIn && userStore.userId) {
+  if (userStore.userId) {
     return userStore.userId;
   }
   
@@ -159,7 +159,7 @@ const getUserId = () => {
     return userId;
   }
   
-  // 如果都没有，返回一个默认值或 null
+  // 如果都没有，返回 null
   console.warn('User ID is missing');
   return null;
 };
@@ -169,21 +169,24 @@ const initializeTagStatus = async (foodId) => {
   try {
     const userId = getUserId();
     if (!userId) {
-      console.warn('Cannot initialize tag status: User ID is missing');
+      console.warn('Cannot initialize tag status: User not logged in');
+      // 未登录用户设置默认状态：未点赞、未收藏
+      tagStatus.value = {
+        is_liked: false,
+        is_favorite: false,
+        total_likes: 0
+      };
       return;
     }
     
     console.log(`Initializing tag status with ID: ${foodId}`);
     const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
     
-    console.log('Tag response:', response);
-    
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const statusResponse = await TagsAPI.getTagStatusAPI(numericUserId, tagId);
-      console.log('Status response:', statusResponse);
       
       if (statusResponse.code === 200) {
         tagStatus.value = statusResponse.data;
@@ -197,6 +200,12 @@ const initializeTagStatus = async (foodId) => {
 // 点赞功能
 const toggleLike = async () => {
   try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再点赞');
+      return;
+    }
+
     // 尝试从多个可能的来源获取 food_id
     const foodId = foodDetail.item?.food_id || foodDetail.item?.id || foodDetail.id;
     
@@ -210,12 +219,6 @@ const toggleLike = async () => {
     const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
-      const userId = getUserId();
-
-      if (!userId) {
-        ElMessage.warning('请先登录');
-        return;
-      }
 
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
@@ -237,6 +240,12 @@ const toggleLike = async () => {
 // 收藏功能
 const toggleFavorite = async () => {
   try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再收藏');
+      return;
+    }
+
     // 尝试从多个可能的来源获取 food_id
     const foodId = foodDetail.item?.food_id || foodDetail.item?.id || foodDetail.id;
     
@@ -250,12 +259,6 @@ const toggleFavorite = async () => {
     const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
-      const userId = getUserId();
-
-      if (!userId) {
-        ElMessage.warning('请先登录');
-        return;
-      }
 
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
@@ -272,23 +275,15 @@ const toggleFavorite = async () => {
 
 // 显示食品详情
 const showFoodDetail = async (item) => {
-  console.log('Showing food detail:', item); // 添加日志查看 item 对象
-  
   foodDetail.visible = true;
-  foodDetail.item = item; // 保存整个 item 对象
   foodDetail.name = item.name;
-  foodDetail.img = item.img;
   foodDetail.description = item.description;
-  foodDetail.id = item.id || item.food_id; // 保存 ID，兼容两种可能的字段名
-  
-  // 初始化标签状态，使用 item.id 或 item.food_id
-  const foodId = item.id || item.food_id;
-  if (foodId) {
-    console.log('Initializing tag status with food ID:', foodId);
-    await initializeTagStatus(foodId);
-  } else {
-    console.error('Food ID is missing from item:', item);
-  }
+  foodDetail.img = item.img;
+  foodDetail.item = item;
+  foodDetail.id = item.food_id || item.id;
+
+  // 初始化标签状态
+  await initializeTagStatus(foodDetail.id);
 };
 
 // 情感分析按钮点击事件

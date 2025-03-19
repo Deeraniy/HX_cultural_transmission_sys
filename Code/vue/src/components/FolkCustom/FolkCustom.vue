@@ -72,7 +72,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'; // 导入 useRouter
-import { ElDialog, ElButton } from 'element-plus';
+import { ElDialog, ElButton, ElMessage } from 'element-plus';
 import Lunbo from './LunBo.vue';
 import FolkAPI from "@/api/folk";
 import TagsAPI from '@/api/tags';
@@ -93,7 +93,7 @@ const tagStatus = ref({
 // 获取用户ID
 const getUserId = () => {
   // 首先从 userStore 中获取
-  if (userStore.isLoggedIn && userStore.userId) {
+  if (userStore.userId) {
     return userStore.userId;
   }
   
@@ -103,7 +103,7 @@ const getUserId = () => {
     return userId;
   }
   
-  // 如果都没有，返回一个默认值或 null
+  // 如果都没有，返回 null
   console.warn('User ID is missing');
   return null;
 };
@@ -119,17 +119,22 @@ const initTagStatus = async (folkId) => {
   try {
     const userId = getUserId();
     if (!userId) {
-      console.warn('Cannot initialize tag status: User ID is missing');
+      console.warn('Cannot initialize tag status: User not logged in');
+      // 未登录用户设置默认状态：未点赞、未收藏
+      tagStatus.value = {
+        is_liked: false,
+        is_favorite: false,
+        total_likes: 0
+      };
       return;
     }
     
     const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', folkId);
-    console.log('Tag response:', response);
     
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
-      const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
-      console.log('Status response:', statusResponse);
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      const statusResponse = await TagsAPI.getTagStatusAPI(numericUserId, tagId);
       
       if (statusResponse.code === 200) {
         tagStatus.value = statusResponse.data;
@@ -148,16 +153,16 @@ const toggleLike = async () => {
   }
 
   try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再点赞');
+      return;
+    }
+    
     const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', selectedFolk.value.id);
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
-      const userId = getUserId();
-
-      if (!userId) {
-        console.error('User ID is missing');
-        return;
-      }
-
+      
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const likeResponse = await TagsAPI.toggleLikeAPI(numericUserId, tagId);
       
@@ -182,16 +187,16 @@ const toggleFavorite = async () => {
   }
 
   try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再收藏');
+      return;
+    }
+    
     const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', selectedFolk.value.id);
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
-      const userId = getUserId();
-
-      if (!userId) {
-        console.error('User ID is missing');
-        return;
-      }
-
+      
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const favoriteResponse = await TagsAPI.toggleFavoriteAPI(numericUserId, tagId);
       
@@ -285,9 +290,10 @@ const selectedFolk = ref(null);
 
 // 显示详细信息的函数
 const showDetails = async (folk) => {
-  console.log('Showing folk detail:', folk);
   selectedFolk.value = folk;
   dialogVisible.value = true;
+  
+  // 初始化标签状态
   await initTagStatus(folk.id);
 };
 </script>

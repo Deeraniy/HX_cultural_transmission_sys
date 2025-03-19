@@ -229,7 +229,7 @@ const loadBooks = (bookName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>)
 
   console.log("书籍数据（未处理）1111:", bookName.value);
   // 查找匹配的单个书籍
-  const book =bookData.value.find((book: any) => book.liter_name === bookName.value);
+  const book = bookData.value.find((book: any) => book.liter_name === bookName.value);
   if (book) {
     books.value = {
       name: book.liter_name,
@@ -456,11 +456,13 @@ const checkContentAvailability = async () => {
             console.log(`获取类型 ${type_id} 的书籍数据:`, booksResponse);
 
             // 确保返回的是字符串格式
-            if (booksResponse.status === 'success' && Array.isArray(booksResponse.data)) {
-              // 从响应中提取 data 字段
-              const booksArray = booksResponse.data;
-              // 将当前类型的书籍加入到总的 allBooks 数组中
-              allBooks.push(...booksArray);
+            if (booksResponse && typeof booksResponse === 'object' && 'status' in booksResponse && 'data' in booksResponse) {
+              if (booksResponse.status === 'success' && Array.isArray(booksResponse.data)) {
+                // 从响应中提取 data 字段
+                const booksArray = booksResponse.data;
+                // 将当前类型的书籍加入到总的 allBooks 数组中
+                allBooks.push(...booksArray);
+              }
             } else {
               console.error(`获取类型 ${type_id} 的数据格式不正确`, booksResponse);
             }
@@ -507,10 +509,12 @@ const checkContentAvailability = async () => {
         console.log("我在找美食中……");
 
         // 确保 foodResponse 是一个对象，并且包含有效的 status 和 data
-        if (foodResponse && foodResponse.status === "ok" && Array.isArray(foodResponse.data)) {
-          const foodArray = foodResponse.data;
-          foodData.value = foodArray;
-          console.log("美食数据加载成功:", foodData.value);
+        if (foodResponse && typeof foodResponse === 'object' && 'status' in foodResponse && 'data' in foodResponse) {
+          if (foodResponse.status === "ok" && Array.isArray(foodResponse.data)) {
+            const foodArray = foodResponse.data;
+            foodData.value = foodArray;
+            console.log("美食数据加载成功:", foodData.value);
+          }
         } else {
           console.error("美食数据加载失败，响应格式不正确:", foodResponse);
         }
@@ -646,27 +650,31 @@ const loadAllData = async () => {
       const booksResponse = await FilmLiterature.getBook(type_id);
       console.log("书籍数据（未处理）:", type_id);
 
-      if (Array.isArray(booksResponse.data)) {
-        const booksArray = booksResponse.data.map((book) => {
-          // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
-          if (typeof book.someDecimalField === "string") {
-            book.someDecimalField = book.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+      if (booksResponse && typeof booksResponse === 'object' && 'data' in booksResponse) {
+        if (Array.isArray(booksResponse.data)) {
+          const booksArray = booksResponse.data.map((book) => {
+            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+            if (typeof book.someDecimalField === "string") {
+              book.someDecimalField = book.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+            }
+            return book;
+          });
+
+          bookData.value = booksArray;
+
+          console.log("书籍数据（处理后）:", bookData.value);
+
+          if (bookData.value.length > 0) {
+            loadBooks(nowName);
+          } else {
+            console.warn("书籍数据为空");
           }
-          return book;
-        });
-
-        bookData.value = booksArray;
-
-        console.log("书籍数据（处理后）:", bookData.value);
-
-        if (bookData.value.length > 0) {
-          loadBooks(nowName);
         } else {
-          console.warn("书籍数据为空");
+          console.log("bookResponse", booksResponse.data)
+          console.error("书籍数据格式错误，期望为字符串形式");
         }
-      }else {
-        console.log("bookResponse", booksResponse.data)
-        console.error("书籍数据格式错误，期望为字符串形式");
+      } else {
+        console.error("书籍数据格式不正确:", booksResponse);
       }
     } catch (error) {
       console.error("加载书籍数据时出错:", error);
@@ -675,27 +683,31 @@ const loadAllData = async () => {
     try {
       const foodResponse = await FoodAPI.getFoodAPI();
       console.log("我不叫喂！",foodResponse)
-      if (Array.isArray(foodResponse.data)) {
-        const foodArray = foodResponse.data.map((food) => {
-          // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
-          if (typeof food.someDecimalField === "string") {
-            food.someDecimalField = food.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+      if (foodResponse && typeof foodResponse === 'object' && 'data' in foodResponse) {
+        if (Array.isArray(foodResponse.data)) {
+          const foodArray = foodResponse.data.map((food) => {
+            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+            if (typeof food.someDecimalField === "string") {
+              food.someDecimalField = food.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+            }
+            return food;
+          });
+
+          foodData.value = foodArray;
+
+          console.log("美食数据（处理后）:", foodData.value);
+
+          if (foodData.value.length > 0) {
+            loadFood(nowName);
+          } else {
+            console.warn("美食数据为空");
           }
-          return food;
-        });
-
-        foodData.value = foodArray;
-
-        console.log("美食数据（处理后）:", foodData.value);
-
-        if (foodData.value.length > 0) {
-          loadFood(nowName);
         } else {
-          console.warn("美食数据为空");
+          console.log("foodResponse", foodResponse.data)
+          console.error("美食数据格式错误，期望为字符串形式");
         }
-      }else {
-        console.log("foodResponse", foodResponse.data)
-        console.error("美食数据格式错误，期望为字符串形式");
+      } else {
+        console.error("美食数据格式不正确:", foodResponse);
       }
     } catch (error) {
       console.error("加载美食数据时出错:",error);
@@ -704,27 +716,31 @@ const loadAllData = async () => {
     try {
       const folkResponse = await FolkAPI.getFolkCustomAPI();
       console.log("我不叫喂！",folkResponse)
-      if (Array.isArray(folkResponse.data)) {
-        const folkArray = folkResponse.data.map((folk) => {
-          // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
-          if (typeof folk.someDecimalField === "string") {
-            folk.someDecimalField = folk.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+      if (folkResponse && typeof folkResponse === 'object' && 'data' in folkResponse) {
+        if (Array.isArray(folkResponse.data)) {
+          const folkArray = folkResponse.data.map((folk) => {
+            // 假设数据中 Decimal 字符串类型的字段需要处理，可以对其做处理
+            if (typeof folk.someDecimalField === "string") {
+              folk.someDecimalField = folk.someDecimalField.replace(/Decimal\('([\d.]+)'\)/g, '$1');
+            }
+            return folk;
+          });
+
+          folkData.value = folkArray;
+
+          console.log("民俗数据（处理后）:", folkData.value);
+
+          if (folkData.value.length > 0) {
+            loadFolk(nowName);
+          } else {
+            console.warn("民俗数据为空");
           }
-          return folk;
-        });
-
-        folkData.value = folkArray;
-
-        console.log("民俗数据（处理后）:", folkData.value);
-
-        if (folkData.value.length > 0) {
-          loadFolk(nowName);
         } else {
-          console.warn("民俗数据为空");
+          console.log("folkResponse", folkResponse.data)
+          console.error("民俗数据格式错误，期望为字符串形式");
         }
-      }else {
-        console.log("folkResponse", folkResponse.data)
-        console.error("民俗数据格式错误，期望为字符串形式");
+      } else {
+        console.error("民俗数据格式不正确:", folkResponse);
       }
     } catch (error) {
       console.error("加载民俗数据时出错:",error);
@@ -815,16 +831,20 @@ const loadAllData = async () => {
     const wordResponse = await SentimentAPI.getSentimentWordAPI(nowName.value,pageType.value);
 
     // 检查数据有效性，并格式化为表格需要的格式
-    if (wordResponse && Array.isArray(wordResponse.data)) {
-      topic.value = wordResponse.data.map(item => ({
-        word: item.word, // 关键词
-        frequency: item.frequency, // 出现频率
-        sentiment: item.sentiment, // 情感
-      }));
-      // console.log("Word 数据加载成功:", topic.value);
-      isSentimentStatsLoading.value=false;
+    if (wordResponse && typeof wordResponse === 'object' && 'data' in wordResponse) {
+      if (Array.isArray(wordResponse.data)) {
+        topic.value = wordResponse.data.map(item => ({
+          word: item.word, // 关键词
+          frequency: item.frequency, // 出现频率
+          sentiment: item.sentiment, // 情感
+        }));
+        // console.log("Word 数据加载成功:", topic.value);
+        isSentimentStatsLoading.value=false;
+      } else {
+        console.warn("Word 数据格式不正确:", wordResponse);
+      }
     } else {
-      console.warn("Word 数据格式不正确:", wordResponse);
+      console.error("Word 数据格式不正确:", wordResponse);
     }
   } catch (error) {
     console.error("加载 Word 数据时出错:", error);
