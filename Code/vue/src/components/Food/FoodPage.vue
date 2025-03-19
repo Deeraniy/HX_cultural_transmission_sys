@@ -116,11 +116,13 @@ const sentimentAnalysis = (item) => {
     path: '/detail',
     query: {
       name: item.name, // 传递菜品名字
-      value: 3,  // 这里的 1 可以根据需要设置，如果是固定值，可以保留
-      theme: 1  // 可以在这里添加额外的参数，例如 theme
+      value: 3,  // 这里的 3 表示美食类型
+      theme: 1,  // 可以在这里添加额外的参数
+      from: 'food' // 添加来源标记，便于返回
     }
   });
 };
+
 const foodDetail = reactive({
   visible: false,
   name: '',
@@ -230,6 +232,11 @@ const getItemStyle = (index) => {
   return {
     transform: `rotateY(-${angle}deg) translateZ(${translateZ}px)`
   };
+};
+
+// 添加返回到美食主页的方法
+const goToFoodHome = () => {
+  router.push('/food/home');
 };
 </script>
 

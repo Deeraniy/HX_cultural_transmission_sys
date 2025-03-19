@@ -53,7 +53,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 // 返回上一页
 const goBack = () => {
-  router.go(-1);  // 返回上一页
+  // 直接导航到推荐页面，而不是使用浏览器历史
+  router.push('/recommend');
 }
 </script>
 

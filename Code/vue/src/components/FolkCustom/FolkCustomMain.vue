@@ -39,16 +39,28 @@ import FolkSentimentAnalyze from "@/components/FolkCustom/FolkSentimentAnalyze.v
 import router from '@/router'
 import Carousel from "@/components/RedCulture/Carousel.vue";
 import RedCultureMain from "@/components/RedCulture/RedCultureMain.vue";
-import { ref } from 'vue'
+import { ref, onMounted, nextTick, inject } from 'vue'
+
 const goBack = () => {
-  router.go(-1);  // 返回上一页
+  // 直接导航到推荐页面，而不是使用浏览器历史
+  router.push('/recommend');
 }
+
 const activeIndex = ref('2')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
   activeIndex.value = key;  // 更新 activeIndex
 }
 
+// 注入全局样式修复函数
+const fixHeaderStyles = inject('fixHeaderStyles');
+
+// 在组件挂载时调用
+onMounted(() => {
+  if (fixHeaderStyles) {
+    fixHeaderStyles();
+  }
+});
 </script>
 
 <style>
