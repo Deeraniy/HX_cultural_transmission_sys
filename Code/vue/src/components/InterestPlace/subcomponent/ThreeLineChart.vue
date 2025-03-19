@@ -25,12 +25,12 @@ echarts.use([
   UniversalTransition
 ]);
 
-// const props = defineProps({
-//   timeData: {
-//     type: Object,
-//     required: true,
-//   }
-// })
+const props = defineProps({
+  timeData: {
+    type: Object,
+    required: true,
+  }
+})
 
 const showReport = ref(false);
 onMounted(() => {
