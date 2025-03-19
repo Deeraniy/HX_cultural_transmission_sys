@@ -1,15 +1,10 @@
 <script setup>
 import router from "@/router.js";
-import ReportGeneration from "@/components/ReportGeneration/ReportGeneration.vue";
-import manageSystem from "@/components/ManageSystem/ManageSystem.vue";
-import cultureManagement from "@/components/ManageSystem/CultureManagement.vue"
-import test from "@/components/InterestPlace/subcomponent/ThreeLineChart.vue"
 </script>
 
 <template>
   <div id="app">
-<!--   <router-view/>-->
-  <test/>
+    <router-view/>
   </div>
 </template>
 
