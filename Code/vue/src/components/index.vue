@@ -13,7 +13,8 @@
           <img src="@/assets/index-back3.jpg" alt="Image 3" style="width: 100%; height: 100%; object-fit: cover;" />
           <!-- 添加蒙版和文字 -->
           <div class="carousel-overlay">
-            <span class="overlay-text">湖湘文化国际传播效果分析系统</span>
+            <span class="overlay-text">湖湘文化</span>
+            <span class="overlay-text">数智传播网</span>
           </div>
         </div>
         <!-- 第一个视频项 -->
@@ -209,6 +210,7 @@ onMounted(() => {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色蒙版 */
   display: flex;
+  flex-direction: column; /* 改为纵向排列 */
   justify-content: center;
   align-items: center;
   z-index: 2;
@@ -216,13 +218,19 @@ onMounted(() => {
 
 .overlay-text {
   font-family: 'HelveticaNeue', serif;
-  margin-top: -250px;
   color: white;
-  font-size: 10rem;
+  font-size: 14rem;
   font-weight: bold;
   text-align: center;
   padding: 0px;
-  //text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  line-height: 1.2; /* 控制行间距 */
+  display: block; /* 确保每个文本块独占一行 */
+  margin-top: -30px; /* 调整上边距，使两行文字更紧凑 */
+}
+
+/* 为第一行文字添加特殊样式 */
+.overlay-text:first-child {
+  margin-top: -250px; /* 保持原来的上边距 */
 }
 
 html, body {

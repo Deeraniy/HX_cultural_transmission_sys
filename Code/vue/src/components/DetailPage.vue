@@ -379,7 +379,7 @@ const loadAllData = async () => {
   try {
     const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageType.value);
     console.log("词云地址:", cloudResponse);
-    
+
     if (cloudResponse && typeof cloudResponse === 'object' && 'wordcloud_url' in cloudResponse) {
       isWordCloudLoading.value=false;
       cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
@@ -398,7 +398,7 @@ const loadAllData = async () => {
         'positive_percentage' in pieResponse.data &&
         'neutral_percentage' in pieResponse.data &&
         'negative_percentage' in pieResponse.data) {
-      
+
       // 格式化为 PieChart 需要的数据结构
       data1.value = [
         { name: '正面', value: parseFloat(pieResponse.data.positive_percentage) || 0 },
@@ -502,14 +502,14 @@ const loadAllData = async () => {
   try {
     const threeLineResponse = await SentimentAPI.getCasualImpactAPI(nowName.value);
     console.log("三线图原始数据:", threeLineResponse);
-    
+
     // 检查数据结构是否符合预期
-    if (threeLineResponse && 
-        typeof threeLineResponse === 'object' && 
-        'economic_data' in threeLineResponse && 
-        'sentiment_data' in threeLineResponse && 
+    if (threeLineResponse &&
+        typeof threeLineResponse === 'object' &&
+        'economic_data' in threeLineResponse &&
+        'sentiment_data' in threeLineResponse &&
         'casual_impact_analysis' in threeLineResponse) {
-      
+
       threeLineData.value = threeLineResponse;
       console.log("三线图数据处理成功");
     } else {
