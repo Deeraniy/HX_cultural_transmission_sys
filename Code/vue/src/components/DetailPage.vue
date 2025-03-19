@@ -113,13 +113,18 @@
             :timeData="processedTimeData"
             style="margin-top: 30px"
         />
+        <ThreeLineChart
+            :timeData="threeLineData"
+        />
       </el-main>
     </el-container>
+
   </div>
 </template>
 
 
 <script lang="ts" setup>
+import ThreeLineChart from "@/components/InterestPlace/subcomponent/ThreeLineChart.vue"
 import Header from "@/components/InterestPlace/subcomponent/Header.vue";
 import BarChart from "@/components/InterestPlace/subcomponent/BarChart.vue";
 import PieChart from "@/components/InterestPlace/subcomponent/PieChart.vue";
@@ -145,14 +150,20 @@ import FolkAPI from "@/api/folk"
 import CommentAPI from "@/api/comment";
 import SentimentAPI from "@/api/sentiment";
 import { ElMessage } from 'element-plus';
-
 import FilmLiterature from "@/api/filmLiterature";
+
+import * as echarts from 'echarts/core';
+
+
+
+const threeLineData = ref<any>([]);
 const interestData = ref<any>(null);
 const bookData = ref<any>(null);
 const foodData = ref<any>(null);
 const folkData = ref<any>(null);
 
 import router from "@/router.js";
+var option;
 const attractions = ref<any>({}); // 初始化为一个空对象
 const books = ref<any>({});
 const food = ref<any>({});
@@ -810,7 +821,7 @@ const loadAllData = async () => {
         frequency: item.frequency, // 出现频率
         sentiment: item.sentiment, // 情感
       }));
-      console.log("Word 数据加载成功:", topic.value);
+      // console.log("Word 数据加载成功:", topic.value);
       isSentimentStatsLoading.value=false;
     } else {
       console.warn("Word 数据格式不正确:", wordResponse);
@@ -836,11 +847,21 @@ const loadAllData = async () => {
         };
       });
       isLineRaceLoading.value=false;
-      console.log("时间情感数据（处理后）:", processedTimeData.value);
+      // console.log("时间情感数据（处理后）:", processedTimeData.value);
     }
   } catch (error) {
     console.error("加载时间情感数据时出错:", error);
   }
+
+  try {
+    threeLineData.value = await SentimentAPI.getCasualImpactAPI(nowName.value);
+    console.log("three_line_data", threeLineData.value);
+
+  } catch (error) {
+    console.error("加载时间情感数据时出错:", error);
+  }
+
+
 
   // try {
   //   const sentimentResponse = await SentimentAPI.getSentimentReportAPI(nowName.value);
