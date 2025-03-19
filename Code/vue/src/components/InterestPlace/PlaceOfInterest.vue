@@ -155,6 +155,8 @@ import {error} from "echarts/types/src/util/log";
 import Sentiment from "@/api/sentiment";
 import { useRouter } from 'vue-router'
 import TagsAPI from '@/api/tags';
+import { useUserStore } from '@/stores/user';
+import { Close } from '@element-plus/icons-vue';
 
 const router = useRouter()
 const chartsDOM = ref<HTMLElement | null>(null);
@@ -200,6 +202,9 @@ const tagStatus = ref<TagStatus>({
   total_likes: 0,
   click_count: 0
 });
+
+// 获取用户存储
+const userStore = useUserStore();
 
 // 从 interest.json 中加载数据并更新 attractions
 const loadAttractions = (cityName: string) => {
@@ -340,32 +345,35 @@ const onCitySelect = () => {
   loadAttractions(selectedCity.value); // 加载选中城市的景点信息
 };
 //const attractionName=ref('')//保存当前点击的景点的名字，并进行跳转，将景点名传给详情页
-const showDetail = async (attraction: Place) => {
+const showDetail = async (attraction) => {
   selectedPlace.value = attraction;
   dialogVisible.value = true;
-
+  
   try {
-    const userId = 1; // 这里需要替换为实际的用户ID
-    const tagId = attraction.id; // 确保attraction有id属性
-
-    console.log('正在调用 viewTagAPI:', userId, tagId);
-    await TagsAPI.viewTagAPI(userId, tagId);
-
-    console.log('正在调用 getTagStatusAPI:', userId, tagId);
-    const response = await TagsAPI.getTagStatusAPI(userId, tagId);
-    console.log('获取标签状态响应:', response);
-
+    // 获取标签ID
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', attraction.id);
     if (response.code === 200) {
-      tagStatus.value = response.data;
+      const tagId = response.data.id;
+      console.log(`获取到的标签ID: ${tagId}`);
+      
+      // 记录浏览
+      const userId = userStore.user?.user_id || 1; // 获取用户ID，如果未登录则使用默认值1
+      await TagsAPI.viewTagAPI(userId, tagId);
+      console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
+      
+      // 获取标签状态
+      const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
+      if (statusResponse.code === 200) {
+        tagStatus.value = statusResponse.data;
+        console.log('标签状态:', tagStatus.value);
+      }
+    } else {
+      console.error('获取标签ID失败:', response.message);
     }
   } catch (error) {
     console.error('获取标签状态失败:', error);
-    if (error.response) {
-      console.error('错误响应:', error.response.data);
-      console.error('状态码:', error.response.status);
-    }
   }
-}
+};
 
 // 更新城市信息
 const updateCityInfo = () => {
@@ -451,58 +459,60 @@ const goToAnalysis = (place: Place) => {
   })
 }
 
-// 修改点赞函数
-const toggleLike = async (place: Place) => {
-  if (!place || !place.id) {
-    console.error('无效的景点数据');
-    return;
-  }
-
+// 点赞函数
+const toggleLike = async (place) => {
   try {
-    const userId = 1; // 需要替换为实际的用户ID
-    console.log('发送点赞请求，景点ID:', place.id);
-    const response = await TagsAPI.toggleLikeAPI(userId, place.id);
-    console.log('点赞响应:', response);
-    
+    // 获取标签ID
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', place.id);
     if (response.code === 200) {
-      // 更新点赞数和点赞状态
-      const newLikes = response.data.total_likes;
-      const newIsLiked = response.data.is_liked;
-      console.log('新的点赞数:', newLikes, '新的点赞状态:', newIsLiked);
+      const tagId = response.data.id;
+      console.log(`获取到的标签ID: ${tagId}`);
       
-      // 确保深拷贝对象，避免引用问题
-      tagStatus.value = {
-        ...tagStatus.value,
-        total_likes: newLikes,
-        is_liked: newIsLiked
-      };
-      console.log('更新后的状态:', tagStatus.value);
+      // 执行点赞操作
+      const userId = userStore.user?.user_id || 1; // 获取用户ID，如果未登录则使用默认值1
+      console.log(`用户ID: ${userId}, 标签ID: ${tagId}`);
+      
+      const likeResponse = await TagsAPI.toggleLikeAPI(userId, tagId);
+      console.log('点赞响应:', likeResponse);
+      
+      if (likeResponse.code === 200) {
+        // 更新点赞状态
+        console.log('点赞前状态:', { ...tagStatus.value });
+        // 确保深拷贝对象，避免引用问题
+        tagStatus.value = {
+          ...tagStatus.value,
+          is_liked: likeResponse.data.is_liked,
+          total_likes: typeof likeResponse.data.total_likes === 'number' ? likeResponse.data.total_likes : 0
+        };
+        console.log('点赞后状态:', { ...tagStatus.value });
+        console.log('响应中的点赞数:', likeResponse.data.total_likes);
+      }
     }
   } catch (error) {
     console.error('点赞操作失败:', error);
   }
-}
+};
 
-// 修改收藏函数
-const toggleFavorite = async (place: Place) => {
-  if (!place || !place.id) {
-    console.error('无效的景点数据');
-    return;
-  }
-
+// 收藏函数
+const toggleFavorite = async (place) => {
   try {
-    const userId = 1; // 需要替换为实际的用户ID
-    console.log('发送收藏请求:', userId, place.id);
-    const response = await TagsAPI.toggleFavoriteAPI(userId, place.id);
-    console.log('收藏响应:', response);
-
+    // 获取标签ID
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', place.id);
     if (response.code === 200) {
-      tagStatus.value.is_favorite = response.data.is_favorite;
+      const tagId = response.data.id;
+      
+      // 执行收藏操作
+      const userId = userStore.user?.user_id || 1; // 获取用户ID，如果未登录则使用默认值1
+      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(userId, tagId);
+      if (favoriteResponse.code === 200) {
+        // 更新收藏状态
+        tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
+      }
     }
   } catch (error) {
     console.error('收藏操作失败:', error);
   }
-}
+};
 
 </script>
 

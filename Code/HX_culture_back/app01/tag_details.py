@@ -40,8 +40,8 @@ def get_tag_details(request):
                     theme_table_map = {
                         'folk': ('folk', 'folk_id'),
                         'food': ('food', 'food_id'),
-                        'literature': ('literature', 'literature_id'),
-                        'spot': ('scenic_spot', 'spot_id'),
+                        'literature': ('literature', 'liter_id'),
+                        'spot': ('spot', 'spot_id'),
                         'history': ('history', 'history_id')
                     }
                     

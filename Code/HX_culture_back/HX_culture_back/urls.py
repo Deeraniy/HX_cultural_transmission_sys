@@ -78,6 +78,8 @@ urlpatterns = [
     url(r'^api/tag/favorite$', tags.toggle_favorite),
     url(r'^api/tag/status$', tags.get_tag_status),
     url(r'^get_user_tag_status$', tags.get_user_tag_status),
+    url(r'^api/tag/by_origin$', tags.get_tag_by_theme_and_origin),
+    url(r'^api/tag/by_origins$', tags.get_tags_by_theme_and_origins),
     url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

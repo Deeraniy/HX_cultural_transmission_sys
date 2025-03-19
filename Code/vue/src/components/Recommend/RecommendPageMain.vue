@@ -189,6 +189,7 @@ import RecommendAPI from "@/api/recommend"
 import TagsAPI from "@/api/tags"
 import 'swiper/css'
 import 'swiper/css/effect-cards'
+import { useUserStore } from '@/stores/user' // 导入用户存储
 
 // 导入默认图片以备用
 import defaultEmptyImg from '@/assets/BookB.jpg'
@@ -196,6 +197,7 @@ import defaultEmptyImg from '@/assets/BookB.jpg'
 const currentIndex = ref(0)
 const isAnimating = ref(false)
 const loading = ref(true)
+const userStore = useUserStore() // 使用用户存储
 
 // 定义所有标签页
 const tabs = ['名胜古迹', '美食文化', '影视文学', '非遗民俗', '红色人物', '发现更多']
@@ -311,7 +313,10 @@ const fetchData = async () => {
     loading.value = true;
     console.log("fetchData 开始执行");
 
-    const userId = 1;
+    // 获取当前登录用户的ID
+    const userId = userStore.user?.id || 1; // 如果没有登录用户，则使用默认ID 1
+    console.log("当前用户ID:", userId);
+
     const preferenceResponse = await RecommendAPI.getPerferenceAPI(userId);
     const tagsResponse = await TagsAPI.getAllTagsAPI();
 
@@ -642,6 +647,13 @@ watch(currentIndex, () => {
 });
 
 onMounted(async () => {
+  // 确保用户数据已加载
+  if (!userStore.isLoggedIn) {
+    console.log("用户未登录，使用默认用户数据");
+  } else {
+    console.log("当前登录用户:", userStore.user);
+  }
+  
   await fetchData();
   
   // 添加延迟以确保数据加载完成后再初始化 Swiper

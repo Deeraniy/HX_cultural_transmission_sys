@@ -68,6 +68,30 @@ class TagsAPI {
             params: { user_id: userId }
         });
     }
+
+    // 根据主题和原始ID获取标签
+    static getTagByThemeAndOriginAPI(themeName: string, originId: string | number) {
+        return request({
+            url: `${DICT_BASE_URL1}/by_origin`,
+            method: "get",
+            params: {
+                theme_name: themeName,
+                origin_id: originId
+            }
+        });
+    }
+
+    // 批量根据主题和原始ID列表获取标签
+    static getTagsByThemeAndOriginsAPI(themeName: string, originIds: (string | number)[]) {
+        return request({
+            url: `${DICT_BASE_URL1}/by_origins`,
+            method: "post",
+            data: {
+                theme_name: themeName,
+                origin_ids: originIds
+            }
+        });
+    }
 }
 
 export default TagsAPI;
