@@ -138,11 +138,14 @@
         </div>
       </div>
     </el-dialog>
+
+    <!-- 添加词云图容器 -->
+    <div id="wordCloudChart" style="width: 100%; height: 300px;"></div>
   </el-main>
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import * as echarts from 'echarts';
 import hunanMapData from '@/json/湖南省.json';
 import cityInfoDataLocal from '@/assets/cityInfo.json'; // 导入城市信息
@@ -267,7 +270,121 @@ const loadAttractions = (cityName: string) => {
   }
 };
 
+// 修改词云图初始化和更新逻辑
+const initWordCloud = () => {
+  // 确保容器存在
+  const wordCloudContainer = document.getElementById('wordCloudChart');
+  if (!wordCloudContainer) {
+    console.error('词云图容器不存在');
+    return;
+  }
 
+  // 初始化echarts实例
+  const chart = echarts.init(wordCloudContainer);
+  
+  // 基础配置
+  const option = {
+    tooltip: {},
+    series: [{
+      type: 'wordCloud',
+      shape: 'circle',
+      left: 'center',
+      top: 'center',
+      width: '100%',
+      height: '100%',
+      right: null,
+      bottom: null,
+      sizeRange: [12, 60],
+      rotationRange: [-90, 90],
+      rotationStep: 45,
+      gridSize: 8,
+      drawOutOfBound: false,
+      textStyle: {
+        fontFamily: 'sans-serif',
+        fontWeight: 'bold',
+        color: function () {
+          return 'rgb(' + [
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160),
+            Math.round(Math.random() * 160)
+          ].join(',') + ')';
+        }
+      },
+      emphasis: {
+        textStyle: {
+          shadowBlur: 10,
+          shadowColor: '#333'
+        }
+      },
+      data: []
+    }]
+  };
+
+  // 设置配置项
+  chart.setOption(option);
+
+  // 保存实例以便后续更新
+  wordCloudChart.value = chart;
+
+  // 监听窗口大小变化
+  window.addEventListener('resize', () => {
+    chart.resize();
+  });
+};
+
+// 更新词云数据
+const updateWordCloud = (tags) => {
+  if (!wordCloudChart.value) {
+    console.error('词云图实例不存在');
+    return;
+  }
+
+  // 转换标签数据为词云所需格式
+  const data = tags.map(tag => ({
+    name: tag.name,
+    value: tag.weight || Math.random() * 100, // 如果没有权重则随机生成
+    textStyle: {
+      color: `rgb(${Math.random() * 160}, ${Math.random() * 160}, ${Math.random() * 160})`
+    }
+  }));
+
+  // 更新配置
+  wordCloudChart.value.setOption({
+    series: [{
+      data: data
+    }]
+  });
+};
+
+// 添加 tags 的定义
+const tags = ref([]);
+const wordCloudChart = ref(null);
+
+// 添加获取标签数据的函数
+const fetchTags = async (placeId) => {
+  try {
+    // 调用后端 API 获取标签数据
+    const response = await CloudAPI.getWordCloudAPI(placeId);
+    if (response && response.code === 200) {
+      tags.value = response.data.map(tag => ({
+        name: tag.word,
+        weight: tag.weight
+      }));
+      console.log('获取到的标签数据:', tags.value);
+    }
+  } catch (error) {
+    console.error('获取标签数据失败:', error);
+  }
+};
+
+// 在选择景点时获取标签数据
+const showPlaceDetails = async (place) => {
+  selectedPlace.value = place;
+  dialogVisible.value = true;
+  
+  // 获取该景点的标签数据
+  await fetchTags(place.id);
+};
 
 onMounted(async () => {
   try {
@@ -355,6 +472,12 @@ onMounted(async () => {
       loadAttractions(params.name); // 加载选中城市的景点信息
     }
   });
+
+  initWordCloud();
+  // 如果有初始数据，直接更新
+  if (tags.value && tags.value.length > 0) {
+    updateWordCloud(tags.value);
+  }
 });
 
 // 当从下拉框选择城市时的处理函数
@@ -446,8 +569,18 @@ const getImageUrl = (imagePath) => {
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    // 否则使用相对路径
-    return new URL(`../../assets/${imagePath}`, import.meta.url).href;
+    
+    // 如果是点赞或收藏图标，使用相对路径
+    if (imagePath.includes('setting/')) {
+      return new URL(`../../assets/${imagePath}`, import.meta.url).href;
+    }
+    
+    // 移除路径中的 @/assets 前缀
+    const cleanPath = imagePath.replace('@/assets/', '');
+    console.log('清理后的路径:', cleanPath);
+    
+    // 使用清理后的路径
+    return new URL(`../../assets/${cleanPath}`, import.meta.url).href;
   } catch (e) {
     console.error('图片加载失败', e);
     return '';
@@ -592,6 +725,13 @@ const toggleFavorite = async (place) => {
     ElMessage.error('收藏失败，请稍后重试');
   }
 };
+
+// 监听标签数据变化
+watch(tags, (newTags) => {
+  if (newTags && newTags.length > 0) {
+    updateWordCloud(newTags);
+  }
+}, { deep: true });
 
 </script>
 

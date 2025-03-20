@@ -29,6 +29,21 @@ class ReportAPI {
             }
         });
     }
+
+    // 生成宣传图片
+    static generatePublicityImageAPI(data: {
+        eventName: string;
+        eventType: string;
+        tags?: string[];
+        title?: string;
+        content?: string;
+    }) {
+        return request({
+            url: `${REPORT_BASE_URL}/api/report/generate_image/`,
+            method: 'post',
+            data
+        });
+    }
 }
 
 export default ReportAPI;

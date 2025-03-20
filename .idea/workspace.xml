@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="宣传策略初步">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/text_to_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/text_to_image.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/api/report.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/api/report.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
@@ -150,7 +154,8 @@
       <workItem from="1742190484223" duration="7019000" />
       <workItem from="1742279858184" duration="5434000" />
       <workItem from="1742300753704" duration="724000" />
-      <workItem from="1742344277495" duration="18833000" />
+      <workItem from="1742344277495" duration="19412000" />
+      <workItem from="1742430908181" duration="2047000" />
     </task>
     <task id="LOCAL-00005" summary="影视艺术页面——古代文学页面+新媒体艺术页面（图片）">
       <option name="closed" value="true" />
