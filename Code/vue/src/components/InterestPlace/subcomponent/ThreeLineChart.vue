@@ -34,6 +34,16 @@ const props = defineProps({
 
 const showReport = ref(false);
 onMounted(() => {
+  console.log("调用三线图")
+  console.log("子组件接收到的 timeData:", props.timeData);
+  if (!props.timeData ||
+      !props.timeData.economic_data ||
+      !props.timeData.sentiment_data) {
+    console.error('Invalid timeData structure');
+    return;
+  }
+
+  const timeData = props.timeData;
   const economicData = [...props.timeData.economic_data]
       .sort((a, b) => a.year - b.year || a.month - b.month); // 按时间排序
   const sentimentData = [...props.timeData.sentiment_data]
@@ -61,7 +71,7 @@ onMounted(() => {
   };
 
   // 突变点信息
-  const changePoint = timeData.casual_impact_analysis.change_point_info.date;
+  const changePoint = props.timeData.casual_impact_analysis.change_point_info.date;
   const changePointIndex = allDates.findIndex(d =>
       d === `${changePoint.year}-${changePoint.month.toString().padStart(2, '0')}`
   );
@@ -251,6 +261,7 @@ onMounted(() => {
 
   <div id="main" style="width: 100%; height: 400px;"></div>
   <!-- 因果推理报告 Drawer -->
+  因果推理模块
   <el-drawer
       v-model="showReport"
       title="因果推理报告"

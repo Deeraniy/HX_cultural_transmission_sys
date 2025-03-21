@@ -114,7 +114,9 @@
             style="margin-top: 30px"
         />
         <ThreeLineChart
-            v-if="threeLineData && threeLineData.length > 0"
+            v-if="threeLineData?.status === 'success'
+            && threeLineData?.sentiment_data?.length
+            && threeLineData?.economic_data?.length"
             :timeData="threeLineData"
         />
       </el-main>
@@ -157,7 +159,12 @@ import * as echarts from 'echarts/core';
 
 
 
-const threeLineData = ref<any>([]);
+const threeLineData = ref<{
+  status?: string;
+  sentiment_data?: any[];
+  economic_data?: any[];
+  casual_impact_analysis?: any;
+}>({});
 const interestData = ref<any>(null);
 const bookData = ref<any>(null);
 const foodData = ref<any>(null);
@@ -192,7 +199,6 @@ const data1 = ref([  // 将 data1 用 ref 包装成响应式数据
   { name: '中立', value: 7.28 },
   { name: '负面', value: 33.73 }
 ]);
-
 const fetchAttractionName = () => {
   nowName.value = <string>route.query.name;
   console.log("hhhhhname",route.query.name);
@@ -512,6 +518,7 @@ const loadAllData = async () => {
 
       threeLineData.value = threeLineResponse;
       console.log("三线图数据处理成功");
+      console.log("三线图数据（处理后）:", threeLineData.value);
     } else {
       console.warn("三线图数据格式不符合预期:", threeLineResponse);
       threeLineData.value = []; // 设置为空数组避免渲染错误
