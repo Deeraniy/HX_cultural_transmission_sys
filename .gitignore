@@ -1,2 +1,5 @@
 *.pyc
 node_modules
+Code/.env
+Code/.env.example
+Code/.env.example

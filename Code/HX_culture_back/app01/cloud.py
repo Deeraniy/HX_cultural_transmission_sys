@@ -24,7 +24,7 @@ def get_cloud(request):
     cursor.execute("SELECT * FROM user_comment_spot WHERE spot_id = %s", (spot_id))
     comments = cursor.fetchall()
         # 合并评论文本
-    text = " ".join(comment['content'] for comment in comments)
+    text = " ".join(comment['comment_text'] for comment in comments)
     # print(text)
     words=pseg.cut(text)
     nouns = [word for word, flag in words if flag.startswith('n') and len(word) > 1]

@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -151,5 +150,3 @@ MEDIA_BASE_URL = f"{BACKEND_URL}{MEDIA_URL}"
 
 USER_MEDIA_URL = 'http://127.0.0.1:8080/upload/user/avatar/'
 USER_AVATAR_ROOT = os.path.join(BASE_DIR, 'upload/user/avatar')
-# 加载 .env 文件中的环境变量
-load_dotenv()
