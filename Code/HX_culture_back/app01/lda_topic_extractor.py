@@ -49,7 +49,7 @@ def lda_analyze(request):
     spot_id = cursor.fetchone()['spot_id']
     print("id名称为",spot_id)
     
-    sql_query = "SELECT comment_text FROM user_comment_spot WHERE spot_id=%s"
+    sql_query = "SELECT content FROM user_comment_spot WHERE spot_id=%s"
     
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
@@ -57,7 +57,7 @@ def lda_analyze(request):
     # print(comment_list)
 
     data = {
-     '回答内容': [comment['comment_text'] for comment in comment_list]  # 假设评论存储在数据库的第一列
+     '回答内容': [comment['content'] for comment in comment_list]  # 假设评论存储在数据库的第一列
  }
 
     df = pd.DataFrame(data).drop_duplicates().rename(columns={
