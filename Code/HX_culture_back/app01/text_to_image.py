@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+from dotenv import load_dotenv
 from dashscope import ImageSynthesis
 import dashscope
 from urllib.parse import urlparse, unquote
@@ -7,23 +9,66 @@ import requests
 from http import HTTPStatus
 import oss2
 from IPython.display import Image as IPyImage, display
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+import json
+import time
 
-access_key_id = os.getenv("ALIYUN_ACCESS_KEY_ID")
-access_key_secret = os.getenv("ALIYUN_ACCESS_KEY_SECRET")
-endpoint = 'https://oss-cn-wuhan-lr.aliyuncs.com'
+# 获取项目根目录
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# 加载 .env 文件
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+# 检查环境变量是否加载成功
+access_key_id = os.getenv("ACCESS_KEY_ID")
+access_key_secret = os.getenv("ACCESS_KEY_SECRET")
+dashscope_api_key = os.getenv("DASHSCOPE_API_KEY")
+
+if not all([access_key_id, access_key_secret, dashscope_api_key]):
+    raise ValueError("环境变量未正确加载，请检查 .env 文件")
+
+# 阿里云 OSS 配置
+endpoint = 'http://oss-cn-wuhan-lr.aliyuncs.com'  # 使用武汉区域的 endpoint
 bucket_name = 'hx-cultural-images'
 oss_folder = 'text_to_graph'
 
-dashscope.api_key = API_KEY
+# # 配置 API key
+dashscope.api_key = dashscope_api_key
 
 # 初始化 OSS bucket
-auth = oss2.Auth(access_key_id, access_key_secret)
-bucket = oss2.Bucket(auth, endpoint, bucket_name)
+def init_oss_bucket():
+    try:
+        auth = oss2.Auth(access_key_id, access_key_secret)
+        # 配置 bucket
+        bucket = oss2.Bucket(
+            auth, 
+            endpoint, 
+            bucket_name,
+            connect_timeout=60,
+            is_cname=False,
+            enable_crc=False
+        )
+        
+        # 访问时使用的 URL（武汉区域）
+        public_endpoint = 'hx-cultural-images.oss-cn-wuhan-lr.aliyuncs.com'
+        
+        return bucket, public_endpoint
+    except Exception as e:
+        print(f"初始化 OSS 失败: {str(e)}")
+        raise e
 
-# 配置图片保存路径
-SAVE_DIR = os.path.join(settings.MEDIA_ROOT, 'generated_images')
-if not os.path.exists(SAVE_DIR):
-    os.makedirs(SAVE_DIR)
+try:
+    # 初始化 bucket 和获取 public_endpoint
+    bucket, public_endpoint = init_oss_bucket()
+except Exception as e:
+    print(f"OSS 初始化失败: {str(e)}")
+    raise e  # 不再使用备用配置，因为 bucket 必须在武汉区域
+
+# 设置全局请求超时
+oss2.defaults.connection_pool_timeout = 30
+oss2.defaults.connect_timeout = 30
+oss2.defaults.read_timeout = 60
 
 def generate_image_prompt(data):
     """根据活动信息生成图片提示词"""
@@ -68,7 +113,7 @@ def generate_publicity_image(request):
                     'message': f'缺少必要字段：{field}',
                     'data': None
                 })
-
+        
         # 生成提示词
         prompt = generate_image_prompt(data)
         
@@ -80,33 +125,75 @@ def generate_publicity_image(request):
             size='1024*1024'
         )
 
-# 可选：也将文件保存到本地目录
-local_save_dir = '/mnt/oss/text_to_graph/'
-os.makedirs(local_save_dir, exist_ok=True)
+        # 处理返回结果
+        if rsp.status_code == 200:
+            image_urls = []
+            
+            for idx, result in enumerate(rsp.output.results):
+                # 获取图片数据
+                img_response = requests.get(result.url)
+                if img_response.status_code != 200:
+                    continue
+                
+                # 生成文件名
+                file_name = f"{data['eventType']}_{data['eventName']}_{idx}.png"
+                # OSS对象名
+                oss_object_name = f"{oss_folder}/{file_name}"
+                
+                try:
+                    # 修改上传逻辑
+                    retry_times = 3
+                    for attempt in range(retry_times):
+                        try:
+                            upload_result = bucket.put_object(oss_object_name, img_response.content)
+                            if upload_result.status == 200:
+                                # 构建公网访问URL
+                                public_url = f"https://{public_endpoint}/{oss_object_name}"
+                                image_urls.append(public_url)
+                                print(f"图片上传成功：{public_url}")
+                                break
+                        except Exception as e:
+                            if attempt == retry_times - 1:  # 最后一次重试
+                                print(f"上传到OSS失败（第{attempt + 1}次尝试）：{str(e)}")
+                                continue
+                            print(f"上传失败，正在重试（第{attempt + 1}次）：{str(e)}")
+                            time.sleep(1)  # 等待1秒后重试
 
-if rsp.status_code == HTTPStatus.OK:
-    for result in rsp.output.results:
-        file_name = PurePosixPath(unquote(urlparse(result.url).path)).parts[-1]
-        img_data = requests.get(result.url).content
+                except Exception as e:
+                    print(f"上传到OSS失败：{str(e)}")
+                    continue
 
-        # ✅ 上传到 OSS
-        oss_object_name = f"{oss_folder}/{file_name}"
-        upload_result = bucket.put_object(oss_object_name, img_data)
-
-        if upload_result.status == 200:
-            public_url = f"https://{bucket_name}.oss-cn-wuhan-lr.aliyuncs.com/{oss_object_name}"
-            print(f"✅ 上传成功！公网访问地址：{public_url}")
-
-            # ✅ 可选：同时保存到本地（如果你服务器上需要保留备份）
-            save_path = os.path.join(local_save_dir, file_name)
-            with open(save_path, 'wb') as f:
-                f.write(img_data)
-            print(f"本地已保存：{save_path}")
-
-            # ✅ 展示图片（用公网 URL）
-            display(IPyImage(url=public_url))
+            if image_urls:
+                return JsonResponse({
+                    'code': 200,
+                    'message': 'success',
+                    'data': {
+                        'images': image_urls,
+                        'prompt': prompt
+                    }
+                })
+            else:
+                return JsonResponse({
+                    'code': 500,
+                    'message': '所有图片上传失败',
+                    'data': None
+                })
         else:
-            print(f"❌ 上传失败，状态码: {upload_result.status}")
-else:
-    print('❌ 图像生成失败')
-    print(f"status_code: {rsp.status_code}, code: {rsp.code}, message: {rsp.message}")
+            return JsonResponse({
+                'code': 500,
+                'message': f'图片生成失败: {rsp.message}',
+                'data': None
+            })
+            
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'code': 400,
+            'message': '无效的JSON格式',
+            'data': None
+        })
+    except Exception as e:
+        return JsonResponse({
+            'code': 500,
+            'message': f'生成图片失败：{str(e)}',
+            'data': None
+        })

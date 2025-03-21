@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="宣传策略初步">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/text_to_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/text_to_image.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/api/report.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/api/report.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
@@ -49,26 +44,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "Merging main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets" />
@@ -156,6 +151,7 @@
       <workItem from="1742300753704" duration="724000" />
       <workItem from="1742344277495" duration="19412000" />
       <workItem from="1742430908181" duration="2047000" />
+      <workItem from="1742456238590" duration="4159000" />
     </task>
     <task id="LOCAL-00005" summary="影视艺术页面——古代文学页面+新媒体艺术页面（图片）">
       <option name="closed" value="true" />

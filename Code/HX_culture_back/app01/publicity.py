@@ -10,9 +10,8 @@ client = ZhipuAI(api_key=API_KEY)
 # 定义不同平台的提示模板
 PLATFORM_PROMPTS = {
     # 一、社交种草平台
-    "小红书": lambda event_info, content_info: f"""
+    "小红书": lambda event_info: f"""
 {event_info}
-{content_info}
 
 请生成一篇小红书风格的文案，要求：
 1. 标题要吸引年轻人眼球，可以适当加入网络热词
@@ -22,12 +21,11 @@ PLATFORM_PROMPTS = {
 5. 最后加上3-5个相关话题标签
 6. 语言风格要活泼自然，富有感染力""",
 
-    "微博": lambda title, tags, content: f"""作为资深湖湘文化传播策划师，请优化以下内容以适应微博传播：
+    "微博": lambda title, tags: f"""作为资深湖湘文化传播策划师，请优化以下内容以适应微博传播：
 📌 标题：{title}（要求：热搜式标题+话题引导）
 🏷️ 标签：主话题#{tags}#，配合3-5个相关话题
 📱 形式：图文结合，配图文案点题
 📢 调性：简短有力，突出传播性，设置互动机制
-📝 原始内容：{content}
 ✍️ 优化要求：控制在140字内，设计2-3个互动话题，增加转发激励""",
 
     # 二、短视频平台
@@ -185,7 +183,15 @@ def generate_simple_report(data):
         # 生成主要内容
         main_content = ""
         if platform in PLATFORM_PROMPTS:
-            prompt = PLATFORM_PROMPTS[platform](event_context, content_context)
+            # 根据平台类型调用对应的 lambda 函数
+            if platform == "小红书":
+                prompt = PLATFORM_PROMPTS[platform](event_context)
+            elif platform == "微博":
+                prompt = PLATFORM_PROMPTS[platform](title, tags)
+            else:
+                # 其他平台的处理...
+                prompt = PLATFORM_PROMPTS[platform](title, tags)
+                
             response = client.chat.completions.create(
                 model="glm-4",
                 messages=[{

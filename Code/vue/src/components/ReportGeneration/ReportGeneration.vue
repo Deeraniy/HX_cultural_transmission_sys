@@ -206,9 +206,15 @@
           </div>
         </div>
       </div>
+    </el-card>
 
-      <!-- 在报告内容下方添加生成图片按钮和图片展示区域 -->
-      <div v-if="generatedReport" class="image-section">
+    <!-- 新增：独立的图片生成卡片 -->
+    <el-card class="image-card" v-if="report.eventName && report.eventType">
+      <div class="card-header">
+        <h3>宣传图片生成</h3>
+      </div>
+      
+      <div class="image-section">
         <el-button
           type="primary"
           @click="generateImage"
@@ -233,7 +239,7 @@
               </template>
             </el-image>
             <div class="image-actions">
-              <el-button type="text" @click="downloadImage(image)">
+              <el-button type="text" @click="handleDownload(image)">
                 下载图片
               </el-button>
             </div>
@@ -839,21 +845,21 @@ const removeTag = (tag) => {
 const generateReport = async () => {
   generating.value = true;
   try {
-    // const response = await ReportAPI.generatePublicityReportAPI({
-    //   platform: report.value.platform,
-    //   title: report.value.title,
-    //   content: report.value.content,
-    //   tags: selectedTags.value,
-    //   eventName: report.value.eventName,
-    //   eventType: report.value.eventType,
-    //   promotionTendency: report.value.promotionTendency,
-    //   promotionMethod: report.value.promotionMethod
-    // });
-    // console.log('生成报告响应:', response);
-    // if (response.code === 200) {
-    //   generatedReport.value = response.data.report;
-    //   ElMessage.success('报告生成成功！');
-    // }
+    const response = await ReportAPI.generatePublicityReportAPI({
+      platform: report.value.platform,
+      title: report.value.title,
+      content: report.value.content,
+      tags: selectedTags.value,
+      eventName: report.value.eventName,
+      eventType: report.value.eventType,
+      promotionTendency: report.value.promotionTendency,
+      promotionMethod: report.value.promotionMethod
+    });
+    console.log('生成报告响应:', response);
+    if (response.code === 200) {
+      generatedReport.value = response.data.report;
+      ElMessage.success('报告生成成功！');
+    }
     console.log("省钱");
   } catch (error) {
     console.error('生成报告失败:', error);
@@ -1070,23 +1076,23 @@ const generateImage = async () => {
   }
 };
 
-// 下载图片方法
-const downloadImage = async (imageUrl) => {
+// 简化的下载方法
+const handleDownload = (imageUrl) => {
   try {
-    const response = await fetch(imageUrl);
-    if (!response.ok) throw new Error('图片下载失败');
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+    // 创建一个隐藏的 a 标签
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `publicity_image_${Date.now()}.png`;
+    a.href = imageUrl;  // 直接使用图片 URL
+    a.target = '_blank'; // 在新标签页打开
+    a.rel = 'noopener noreferrer';
+    
+    // 设置文件名
+    const fileName = imageUrl.split('/').pop() || 'image.png';
+    a.download = fileName;
+    
+    // 触发点击
     document.body.appendChild(a);
     a.click();
-    window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
-
-    ElMessage.success('下载成功');
   } catch (error) {
     console.error('下载失败:', error);
     ElMessage.error('下载失败，请重试');
