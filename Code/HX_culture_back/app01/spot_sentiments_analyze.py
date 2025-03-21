@@ -90,14 +90,14 @@ def sentiments_all():
         conn.rollback()
         
         # 获取所有评论
-        cursor.execute("SELECT comment_id, content FROM user_comment_spot WHERE sentiment IS NULL")
+        cursor.execute("SELECT comment_id, comment_text FROM user_comment_spot WHERE sentiment IS NULL OR sentiment = ''")
         comments = cursor.fetchall()
         
         processed_count = 0
         
         for comment in comments:
             try:
-                sentiment_label, confidence = get_sentiment_label(comment['content'])
+                sentiment_label, confidence = get_sentiment_label(comment['comment_text'])
                 logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
                 
                 # 更新数据库
@@ -212,7 +212,7 @@ def sentiments_result_total_count(request):
                 COUNT(*) as count,
                 COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
             FROM user_comment_spot 
-            WHERE spot_id = %s AND sentiment IS NOT NULL
+            WHERE spot_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             GROUP BY sentiment
         """
         cursor.execute(sentiment_sql, (spot_id,))
@@ -293,11 +293,11 @@ def sentiments_result(request):
             SELECT 
                 sentiment, 
                 sentiment_confidence, 
-                SUBSTRING_INDEX(LEFT(create_time, 7), '-', 1) as year,
-                SUBSTRING_INDEX(LEFT(create_time, 7), '-', -1) as month
+                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
+                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
             FROM user_comment_spot 
-            WHERE spot_id = %s AND sentiment IS NOT NULL
-            ORDER BY create_time
+            WHERE spot_id = %s AND sentiment IS NOT NULL AND sentiment != ''
+            ORDER BY comment_time
         """
         cursor.execute(comment_sql, (spot_id,))
         results = cursor.fetchall()

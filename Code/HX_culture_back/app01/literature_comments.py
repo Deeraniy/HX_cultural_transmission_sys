@@ -38,7 +38,7 @@ def get_comment_list_literature(request):
     sql_query = """
         SELECT 
             id, user_id, ip_location, comment_id, comment_text AS content, 
-            like_count, liter_id AS spot_id, create_time, sentiment, 
+            like_count, liter_id AS spot_id, comment_time, sentiment, 
             sentiment_confidence, platform 
         FROM user_comment_literature 
         WHERE liter_id=%s
@@ -56,7 +56,7 @@ def get_comment_list_literature(request):
             'content': comment['content'],
             'like_count': comment['like_count'],
             'spot_id': comment['spot_id'],  # liter_id作为spot_id
-            'create_time': comment['create_time'],
+            'comment_time': comment['comment_time'],
             'sentiment': comment['sentiment'],
             'sentiment_confidence': str(comment['sentiment_confidence']),  # 转换为字符串
             'platform': comment['platform']

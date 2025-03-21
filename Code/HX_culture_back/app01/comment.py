@@ -44,7 +44,7 @@ def get_comment_list_spot(request):
     sql_query = """
         SELECT 
             id, user_id, ip_location, comment_id, content, 
-            like_count, spot_id, create_time, sentiment, 
+            like_count, spot_id, comment_time, sentiment, 
             sentiment_confidence, platform 
         FROM user_comment_spot 
         WHERE spot_id=%s
@@ -62,7 +62,7 @@ def get_comment_list_spot(request):
             'comment_text': comment['content'],
             'like_count': comment['like_count'],
             'spot_id': comment['spot_id'],
-            'comment_time': comment['create_time'],
+            'comment_time': comment['comment_time'],
             'sentiment': comment['sentiment'],
             'sentiment_confidence': str(comment['sentiment_confidence']),  # 转换为字符串
             'platform': comment['platform']
