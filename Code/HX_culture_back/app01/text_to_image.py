@@ -1,17 +1,24 @@
+import os
 from dashscope import ImageSynthesis
 import dashscope
 from urllib.parse import urlparse, unquote
 from pathlib import PurePosixPath
 import requests
-from django.http import JsonResponse
-from django.views.decorators.http import require_http_methods
-import json
-import os
-from datetime import datetime
-from django.conf import settings
+from http import HTTPStatus
+import oss2
+from IPython.display import Image as IPyImage, display
 
-# 配置 API key
-dashscope.api_key = "sk-e184c1f6d2524d00a3eb1de084684530"
+access_key_id = os.getenv("ALIYUN_ACCESS_KEY_ID")
+access_key_secret = os.getenv("ALIYUN_ACCESS_KEY_SECRET")
+endpoint = 'https://oss-cn-wuhan-lr.aliyuncs.com'
+bucket_name = 'hx-cultural-images'
+oss_folder = 'text_to_graph'
+
+dashscope.api_key = API_KEY
+
+# 初始化 OSS bucket
+auth = oss2.Auth(access_key_id, access_key_secret)
+bucket = oss2.Bucket(auth, endpoint, bucket_name)
 
 # 配置图片保存路径
 SAVE_DIR = os.path.join(settings.MEDIA_ROOT, 'generated_images')
@@ -73,53 +80,33 @@ def generate_publicity_image(request):
             size='1024*1024'
         )
 
-        # 处理返回结果
-        if rsp.status_code == 200:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            image_urls = []
-            
-            for idx, result in enumerate(rsp.output.results):
-                # 下载图片
-                img_response = requests.get(result.url)
-                if img_response.status_code != 200:
-                    continue
-                
-                # 生成文件名和路径
-                file_name = f"publicity_{timestamp}_{idx}.png"
-                file_path = os.path.join(SAVE_DIR, file_name)
-                
-                # 保存图片
-                with open(file_path, 'wb') as f:
-                    f.write(img_response.content)
-                
-                # 构建可访问的URL
-                image_url = f"{settings.MEDIA_URL}generated_images/{file_name}"
-                image_urls.append(image_url)
+# 可选：也将文件保存到本地目录
+local_save_dir = '/mnt/oss/text_to_graph/'
+os.makedirs(local_save_dir, exist_ok=True)
 
-            return JsonResponse({
-                'code': 200,
-                'message': 'success',
-                'data': {
-                    'images': image_urls,
-                    'prompt': prompt
-                }
-            })
+if rsp.status_code == HTTPStatus.OK:
+    for result in rsp.output.results:
+        file_name = PurePosixPath(unquote(urlparse(result.url).path)).parts[-1]
+        img_data = requests.get(result.url).content
+
+        # ✅ 上传到 OSS
+        oss_object_name = f"{oss_folder}/{file_name}"
+        upload_result = bucket.put_object(oss_object_name, img_data)
+
+        if upload_result.status == 200:
+            public_url = f"https://{bucket_name}.oss-cn-wuhan-lr.aliyuncs.com/{oss_object_name}"
+            print(f"✅ 上传成功！公网访问地址：{public_url}")
+
+            # ✅ 可选：同时保存到本地（如果你服务器上需要保留备份）
+            save_path = os.path.join(local_save_dir, file_name)
+            with open(save_path, 'wb') as f:
+                f.write(img_data)
+            print(f"本地已保存：{save_path}")
+
+            # ✅ 展示图片（用公网 URL）
+            display(IPyImage(url=public_url))
         else:
-            return JsonResponse({
-                'code': 500,
-                'message': f'图片生成失败: {rsp.message}',
-                'data': None
-            })
-            
-    except json.JSONDecodeError:
-        return JsonResponse({
-            'code': 400,
-            'message': '无效的JSON格式',
-            'data': None
-        })
-    except Exception as e:
-        return JsonResponse({
-            'code': 500,
-            'message': f'生成图片失败：{str(e)}',
-            'data': None
-        })
+            print(f"❌ 上传失败，状态码: {upload_result.status}")
+else:
+    print('❌ 图像生成失败')
+    print(f"status_code: {rsp.status_code}, code: {rsp.code}, message: {rsp.message}")
