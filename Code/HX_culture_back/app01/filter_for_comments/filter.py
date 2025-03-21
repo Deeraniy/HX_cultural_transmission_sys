@@ -26,6 +26,9 @@ def filter_positive_comments():
             print(f"\n处理表: {table}")
             category = table.split('_')[-1]
             
+            # 特殊处理 literature 的字段名
+            id_field = 'liter_id' if category == 'literature' else f'{category}_id'
+            
             insert_query = f"""
             INSERT INTO filtered_user_comment 
             (user_id, comment_text, comment_time, ip_location, 
@@ -42,7 +45,7 @@ def filter_positive_comments():
                 c.platform,
                 0 as checked
             FROM {table} c
-            JOIN tag t ON t.origin_id = c.comment_id 
+            JOIN tag t ON t.origin_id = c.{id_field}
                 AND t.theme_name = '{category}'
             WHERE c.sentiment = 'positive'
             """
