@@ -166,11 +166,12 @@
       </el-form>
     </el-card>
 
-    <!-- 新增：报告展示部分 -->
+    <!-- 修改报告卡片部分 -->
     <el-card class="report-card" v-if="generating || generatedReport">
       <div class="report-header">
-        <h3>生成的报告</h3>
+        <h3>宣传报告</h3>
         <el-button type="primary" @click="copyReport" v-if="generatedReport">
+          <el-icon><Document /></el-icon>
           复制内容
         </el-button>
       </div>
@@ -188,7 +189,7 @@
       <div v-else-if="generatedReport" class="report-content">
         <div class="report-section">
           <div class="platform-info">
-            <el-tag size="small" type="success">{{ report.platform }}</el-tag>
+            <el-tag size="large" effect="dark" type="success">{{ report.platform }}</el-tag>
           </div>
           <div class="tags-info">
             <el-tag
@@ -201,45 +202,57 @@
               {{ tag }}
             </el-tag>
           </div>
-          <div class="content-text">
-            {{ generatedReport }}
-          </div>
+          <div class="content-text markdown-body" v-html="renderedMarkdown"></div>
         </div>
       </div>
     </el-card>
 
-    <!-- 新增：独立的图片生成卡片 -->
+    <!-- 修改图片生成卡片 -->
     <el-card class="image-card" v-if="report.eventName && report.eventType">
       <div class="card-header">
-        <h3>宣传图片生成</h3>
-      </div>
-      
-      <div class="image-section">
-        <el-button
-          type="primary"
-          @click="generateImage"
+        <h3>宣传图片</h3>
+        <el-button 
+          type="primary" 
+          @click="generateImage" 
           :loading="generatingImage"
+          :icon="Picture"
         >
           生成宣传图片
         </el-button>
-
-        <div v-if="generatedImages.length" class="image-gallery">
+      </div>
+      
+      <div class="image-section" v-if="generatedImages.length">
+        <div class="image-gallery">
           <div v-for="(image, index) in generatedImages" :key="index" class="image-item">
-            <el-image
-              :src="image"
-              :preview-src-list="[image]"
-              fit="contain"
-              :initial-index="0"
-            >
-              <template #error>
-                <div class="image-error">
-                  <el-icon><i class="el-icon-picture-outline" /></el-icon>
-                  <span>加载失败</span>
-                </div>
-              </template>
-            </el-image>
+            <div class="image-wrapper">
+              <el-image
+                :src="image"
+                :preview-src-list="generatedImages"
+                :initial-index="index"
+                fit="contain"
+                class="gallery-image"
+              >
+                <template #placeholder>
+                  <div class="image-loading">
+                    <el-icon class="is-loading"><Loading /></el-icon>
+                    <span>加载中...</span>
+                  </div>
+                </template>
+                <template #error>
+                  <div class="image-error">
+                    <el-icon><Picture /></el-icon>
+                    <span>加载失败</span>
+                  </div>
+                </template>
+              </el-image>
+            </div>
             <div class="image-actions">
-              <el-button type="text" @click="handleDownload(image)">
+              <el-button 
+                type="primary" 
+                @click="handleDownload(image)" 
+                class="download-btn"
+              >
+                <el-icon><Download /></el-icon>
                 下载图片
               </el-button>
             </div>
@@ -468,9 +481,11 @@
 }
 
 .content-text {
-  line-height: 1.8;
-  color: #444;
   white-space: pre-wrap;
+  line-height: 1.6;
+  color: #303133;
+  padding: 16px;
+  font-size: 15px;
 }
 
 .preview-meta {
@@ -681,9 +696,126 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 20px;
+  padding: 20px;
   border-bottom: 1px solid #f0f0f0;
+}
+
+.report-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #303133;
+}
+
+.report-content {
+  padding: 20px;
+}
+
+.platform-info {
   margin-bottom: 20px;
+}
+
+.tags-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.report-tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.image-card {
+  margin-top: 30px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #303133;
+}
+
+.image-section {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  width: 100%;
+  padding: 20px;
+}
+
+.image-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  aspect-ratio: 1;
+  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-wrapper {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.image-loading {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+}
+
+.image-loading .el-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.image-error {
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+  background: #f5f7fa;
+}
+
+.image-error .el-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
 }
 
 .loading-state {
@@ -699,100 +831,99 @@
   color: #909399;
 }
 
-.report-content {
-  padding: 20px;
-}
-
-.report-section {
-  margin-bottom: 30px;
-}
-
-.platform-info {
-  margin-bottom: 15px;
-}
-
-.tags-info {
+.image-actions {
+  padding: 12px;
+  background: #fff;
+  border-top: 1px solid #eee;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  justify-content: center;
 }
 
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.download-btn .el-icon {
+  margin-right: 4px;
+}
+
+/* 修改 markdown 样式，确保标题和内容对齐 */
+.markdown-body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.markdown-body :deep(h1),
+.markdown-body :deep(h2),
+.markdown-body :deep(h3) {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  margin: 8px 0 4px 0;
+  line-height: 1.4;
+}
+
+.markdown-body :deep(h1) {
+  font-size: 1.4em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eaecef;
+}
+
+.markdown-body :deep(h2) {
+  font-size: 1.2em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eaecef;
+}
+
+.markdown-body :deep(h3) {
+  font-size: 1.1em;
+}
+
+/* 调整列表样式 */
+.markdown-body :deep(ul),
+.markdown-body :deep(ol) {
+  padding-left: 24px;
+  margin: 4px 0;
+}
+
+.markdown-body :deep(li) {
+  margin: 2px 0;
+  line-height: 1.6;
+  position: relative;
+}
+
+/* 调整段落样式 */
+.markdown-body :deep(p) {
+  margin: 4px 0;
+  line-height: 1.6;
+}
+
+/* 确保内容对齐 */
 .content-text {
   white-space: pre-wrap;
-  line-height: 1.8;
+  line-height: 1.6;
   color: #303133;
-  font-size: 16px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  padding: 16px;
+  font-size: 15px;
 }
 
-.report-tag {
-  margin-right: 8px;
-  margin-bottom: 8px;
-}
-
-.image-section {
-  margin-top: 30px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.image-gallery {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.image-item {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-.image-actions {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  justify-content: center;
-}
-
-.el-image {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-}
-
-.image-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: #909399;
-}
-
-.image-error .el-icon {
-  font-size: 24px;
-  margin-bottom: 8px;
+/* 调整标题和内容的间距 */
+.markdown-body :deep(h1) + p,
+.markdown-body :deep(h2) + p,
+.markdown-body :deep(h3) + p {
+  margin-top: 4px;
 }
 </style>
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
+import MarkdownIt from 'markdown-it';
 import RecommendAPI from '@/api/recommend';
 import TagsAPI from '@/api/tags';
 import ReportAPI from '@/api/report';
-import { Loading } from '@element-plus/icons-vue'
+import { Loading, Document, Picture, Download } from '@element-plus/icons-vue'
 
 const availableTags = [
   "文化", "科技", "教育", "公益", "环境", "健康", "经济", "体育", "艺术", "创新",
@@ -1076,26 +1207,46 @@ const generateImage = async () => {
   }
 };
 
-// 简化的下载方法
+// 修改下载方法
 const handleDownload = (imageUrl) => {
   try {
-    // 创建一个隐藏的 a 标签
+    // 直接使用 a 标签下载
     const a = document.createElement('a');
-    a.href = imageUrl;  // 直接使用图片 URL
-    a.target = '_blank'; // 在新标签页打开
-    a.rel = 'noopener noreferrer';
-    
-    // 设置文件名
-    const fileName = imageUrl.split('/').pop() || 'image.png';
-    a.download = fileName;
-    
-    // 触发点击
+    a.href = imageUrl;
+    a.download = `宣传图片_${Date.now()}.png`;
+    a.target = '_blank';  // 在新标签页打开
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    ElMessage.success('开始下载');
   } catch (error) {
     console.error('下载失败:', error);
     ElMessage.error('下载失败，请重试');
   }
 };
+
+// 初始化 markdown-it
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  breaks: true
+});
+
+// 修改 markdown 渲染计算属性
+const renderedMarkdown = computed(() => {
+  if (!generatedReport.value) return '';
+  
+  // 处理文本，避免话题标签被识别为标题
+  const formattedText = generatedReport.value
+    // 转义话题标签中的 #，但保留真正的标题标记
+    .replace(/(^|\n)#(?!#|\s)/g, '$1\\#')  // 行首的单个#，但不是标题的情况
+    .replace(/\s#(?!#|\s)/g, ' \\#')       // 空格后的#，但不是标题的情况
+    // 确保真正的标题格式正确
+    .replace(/^###(?!#)/gm, '### ')  // 确保 ### 后有空格
+    .replace(/^##(?!#)/gm, '## ')    // 确保 ## 后有空格
+    .replace(/^#(?!#)/gm, '# ');     // 确保 # 后有空格
+
+  return md.render(formattedText);
+});
 </script>
