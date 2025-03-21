@@ -64,7 +64,7 @@ def sentiments_all():
         conn.rollback()
         
         # 获取所有评论
-        cursor.execute("SELECT comment_id, comment_text FROM user_comment_literature WHERE sentiment IS NULL")
+        cursor.execute("SELECT comment_id, comment_text FROM user_comment_literature WHERE sentiment IS NULL OR sentiment = ''")
         comments = cursor.fetchall()
         
         processed_count = 0
@@ -229,7 +229,7 @@ def sentiments_result(request):
                 SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
                 SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
             FROM user_comment_literature 
-            WHERE liter_id = %s AND sentiment IS NOT NULL
+            WHERE literature_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             ORDER BY comment_time
         """
         cursor.execute(comment_sql, (liter_id,))
@@ -442,7 +442,7 @@ def sentiments_result_total_count(request):
                 COUNT(*) as count,
                 COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
             FROM user_comment_literature 
-            WHERE liter_id = %s AND sentiment IS NOT NULL
+            WHERE literature_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             GROUP BY sentiment
         """
         cursor.execute(sentiment_sql, (liter_id,))
