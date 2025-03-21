@@ -86,7 +86,7 @@ onMounted(() => {
   var option;
   const seriesData = [
     {
-      name: 'CPI',
+      name: '居民消费价格指数',
       data: economicData.map(item => item.cpi),
       color: '#5470C6' // 蓝色
     },
@@ -109,14 +109,14 @@ onMounted(() => {
   option =  {
     title: {
       text: '综合经济与情感分析',
-      subtext: '实际数据 vs 预测分析'
+
     },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'cross' }
     },
     legend: {
-      data: ['CPI', '投资', '销售率', '实际情感', '预测情感', '置信区间']
+      data: ['居民消费价格指数', '固定资产投资额累计增长', '工业产品销售率', '实际情感', '预测情感', '置信区间']
     },
     toolbox: {
       show: true,
@@ -130,13 +130,13 @@ onMounted(() => {
     yAxis: [ // 双Y轴配置
       {
         type: 'value',
-        name: 'CPI/销售率',
+        name: '居民消费价格指数/工业产品销售率',
         position: 'left',
         scale: true
       },
       {
         type: 'value',
-        name: '投资/情感',
+        name: '固定资产投资额累计增长/情感',
         position: 'right',
         axisLabel: {
           formatter: '{value}%'
@@ -146,7 +146,7 @@ onMounted(() => {
     ],
     series: [
       {
-        name: 'CPI',
+        name: '居民消费价格指数',
         type: 'line',
         yAxisIndex: 1, // 指定左轴
         data: alignData(economicData, 'cpi'),
@@ -154,7 +154,7 @@ onMounted(() => {
         itemStyle: { color: '#5470C6' }
       },
       {
-        name: '投资',
+        name: '固定资产投资额累计增长',
         type: 'line',
         yAxisIndex: 1, // 指定右轴
         data: alignData(economicData, 'investment'),
@@ -162,7 +162,7 @@ onMounted(() => {
         itemStyle: { color: '#91CC75' }
       },
       {
-        name: '销售率',
+        name: '工业产品销售率',
         type: 'line',
         yAxisIndex: 1,
         data: alignData(economicData, 'sales_rate'),
