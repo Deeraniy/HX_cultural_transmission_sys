@@ -6,12 +6,9 @@ from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
 from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details
-<<<<<<< Updated upstream
 from app01 import text_to_image
 
-=======
 from app01.filter_for_comments.filter import get_filtered_comments_by_tag
->>>>>>> Stashed changes
 urlpatterns = [
 
     url(r'^testdb/$', testdb.testdb),
@@ -88,11 +85,8 @@ urlpatterns = [
     url(r'^api/tag/by_origins$', tags.get_tags_by_theme_and_origins),
     url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
     url(r'^generate_publicity/', publicity.generate_publicity_report),
-<<<<<<< Updated upstream
     path('api/report/generate_image/', text_to_image.generate_publicity_image),
-=======
     url(r'^get_filtered_comments_by_tag/', get_filtered_comments_by_tag),
->>>>>>> Stashed changes
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
