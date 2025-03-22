@@ -216,13 +216,13 @@ const getUserId = () => {
   if (userStore.userId) {
     return userStore.userId;
   }
-  
+
   // 如果 userStore 中没有，尝试从 localStorage 获取
   const userId = localStorage.getItem('userId');
   if (userId) {
     return userId;
   }
-  
+
   // 如果都没有，返回 null 并提示用户登录
   ElMessage.warning('请先登录以使用此功能');
   return null;
@@ -281,7 +281,7 @@ const initWordCloud = () => {
 
   // 初始化echarts实例
   const chart = echarts.init(wordCloudContainer);
-  
+
   // 基础配置
   const option = {
     tooltip: {},
@@ -381,7 +381,7 @@ const fetchTags = async (placeId) => {
 const showPlaceDetails = async (place) => {
   selectedPlace.value = place;
   dialogVisible.value = true;
-  
+
   // 获取该景点的标签数据
   await fetchTags(place.id);
 };
@@ -490,22 +490,22 @@ const onCitySelect = () => {
 const showDetail = async (attraction) => {
   selectedPlace.value = attraction;
   dialogVisible.value = true;
-  
+
   try {
     // 获取标签ID
     const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', attraction.id);
     if (response.code === 200) {
       const tagId = response.data.id;
       console.log(`获取到的标签ID: ${tagId}`);
-      
+
       // 获取用户ID
       const userId = getUserId();
-      
+
       if (userId) {
         // 记录浏览
         await TagsAPI.viewTagAPI(userId, tagId);
         console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
-        
+
         // 获取标签状态
         const statusResponse = await TagsAPI.getTagStatusAPI(userId, tagId);
         if (statusResponse.code === 200) {
@@ -569,16 +569,16 @@ const getImageUrl = (imagePath) => {
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    
+
     // 如果是点赞或收藏图标，使用相对路径
     if (imagePath.includes('setting/')) {
       return new URL(`../../assets/${imagePath}`, import.meta.url).href;
     }
-    
+
     // 移除路径中的 @/assets 前缀
     const cleanPath = imagePath.replace('@/assets/', '');
     console.log('清理后的路径:', cleanPath);
-    
+
     // 使用清理后的路径
     return new URL(`../../assets/${cleanPath}`, import.meta.url).href;
   } catch (e) {
@@ -639,11 +639,11 @@ const getTagStatus = async (attraction) => {
     if (response && typeof response === 'object' && 'code' in response && response.code === 200) {
       const tagId = response.data.id;
       console.log(`获取到的标签ID: ${tagId}`);
-      
+
       // 记录浏览
       await TagsAPI.viewTagAPI(Number(userId), tagId);
       console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
-      
+
       // 获取标签状态
       const statusResponse = await TagsAPI.getTagStatusAPI(Number(userId), tagId);
       if (statusResponse && typeof statusResponse === 'object' && 'code' in statusResponse && statusResponse.code === 200) {
@@ -673,12 +673,12 @@ const toggleLike = async (place) => {
     if (response && typeof response === 'object' && 'code' in response && response.code === 200) {
       const tagId = response.data.id;
       console.log(`获取到的标签ID: ${tagId}`);
-      
+
       console.log(`用户ID: ${userId}, 标签ID: ${tagId}`);
-      
+
       const likeResponse = await TagsAPI.toggleLikeAPI(Number(userId), tagId);
       console.log('点赞响应:', likeResponse);
-      
+
       if (likeResponse && typeof likeResponse === 'object' && 'code' in likeResponse && likeResponse.code === 200) {
         // 更新点赞状态
         console.log('点赞前状态:', { ...tagStatus.value });
@@ -712,7 +712,7 @@ const toggleFavorite = async (place) => {
     const response = await TagsAPI.getTagByThemeAndOriginAPI('spot', place.id);
     if (response && typeof response === 'object' && 'code' in response && response.code === 200) {
       const tagId = response.data.id;
-      
+
       const favoriteResponse = await TagsAPI.toggleFavoriteAPI(Number(userId), tagId);
       if (favoriteResponse && typeof favoriteResponse === 'object' && 'code' in favoriteResponse && favoriteResponse.code === 200) {
         // 更新收藏状态

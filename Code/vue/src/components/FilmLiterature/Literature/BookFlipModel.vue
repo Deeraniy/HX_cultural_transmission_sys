@@ -41,7 +41,7 @@
                 <p>{{ page.front.content }}</p>
               </div>
             </div>
-            
+
             <div class="back" @click="prevPage">
               <!-- 标题页 -->
               <div v-if="page.back.type === 'title'" class="title-page">
@@ -85,18 +85,18 @@ const emit = defineEmits();
 // 修改分割文本逻辑
 const splitText = (text) => {
   if (!text) return [];
-  
+
   // 每页显示的字符数
   const charsPerPage = 300;
-  
+
   // 分割文本为页面内容
   const pages = [];
   let currentPage = '';
   let currentLength = 0;
-  
+
   // 按句子分割文本
   const sentences = text.split(/(?<=[。！？.!?])/);
-  
+
   for (const sentence of sentences) {
     if (currentLength + sentence.length > charsPerPage) {
       // 当前页已满，保存当前页
@@ -110,17 +110,17 @@ const splitText = (text) => {
       currentLength += sentence.length;
     }
   }
-  
+
   // 添加最后一页
   if (currentPage) {
     pages.push(currentPage.trim());
   }
-  
+
   // 如果页数是奇数，添加一个空页确保每个物理页面都有正反面
   if (pages.length % 2 !== 0) {
     pages.push('');
   }
-  
+
   return pages;
 };
 
@@ -132,7 +132,7 @@ const prevPage = () => {
       // 添加翻页动画
       currentPage.isFlipping = true;
       currentPage.isFlipped = false;
-      
+
       setTimeout(() => {
         currentPage.isFlipping = false;
       }, 600); // 与动画时长匹配
@@ -154,11 +154,11 @@ const nextPage = () => {
     // 添加翻页动画
     currentPage.isFlipping = true;
     currentPage.isFlipped = true;
-    
+
     setTimeout(() => {
       currentPage.isFlipping = false;
     }, 600); // 与动画时长匹配
-  } 
+  }
   else if (!isLastPage) {
     currentPage.isActive = false;
     currentPageIndex.value++;
@@ -171,7 +171,7 @@ const nextPage = () => {
 // 修改初始化页面数据的逻辑
 const initializePages = () => {
   const contents = splitText(props.book.text);
-  
+
   // 创建页面数组，从封面开始
   pages.value = [
     // 第一页：封面和标题页

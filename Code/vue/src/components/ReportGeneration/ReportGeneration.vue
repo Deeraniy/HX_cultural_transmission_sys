@@ -171,7 +171,6 @@
       <div class="report-header">
         <h3>宣传报告</h3>
         <el-button type="primary" @click="copyReport" v-if="generatedReport">
-          <el-icon><Document /></el-icon>
           复制内容
         </el-button>
       </div>
@@ -211,16 +210,16 @@
     <el-card class="image-card" v-if="report.eventName && report.eventType">
       <div class="card-header">
         <h3>宣传图片</h3>
-        <el-button 
-          type="primary" 
-          @click="generateImage" 
+        <el-button
+          type="primary"
+          @click="generateImage"
           :loading="generatingImage"
           :icon="Picture"
         >
           生成宣传图片
         </el-button>
       </div>
-      
+
       <div class="image-section" v-if="generatedImages.length">
         <div class="image-gallery">
           <div v-for="(image, index) in generatedImages" :key="index" class="image-item">
@@ -247,9 +246,9 @@
               </el-image>
             </div>
             <div class="image-actions">
-              <el-button 
-                type="primary" 
-                @click="handleDownload(image)" 
+              <el-button
+                type="primary"
+                @click="handleDownload(image)"
                 class="download-btn"
               >
                 <el-icon><Download /></el-icon>
@@ -976,21 +975,21 @@ const removeTag = (tag) => {
 const generateReport = async () => {
   generating.value = true;
   try {
-    const response = await ReportAPI.generatePublicityReportAPI({
-      platform: report.value.platform,
-      title: report.value.title,
-      content: report.value.content,
-      tags: selectedTags.value,
-      eventName: report.value.eventName,
-      eventType: report.value.eventType,
-      promotionTendency: report.value.promotionTendency,
-      promotionMethod: report.value.promotionMethod
-    });
-    console.log('生成报告响应:', response);
-    if (response.code === 200) {
-      generatedReport.value = response.data.report;
-      ElMessage.success('报告生成成功！');
-    }
+    // const response = await ReportAPI.generatePublicityReportAPI({
+    //   platform: report.value.platform,
+    //   title: report.value.title,
+    //   content: report.value.content,
+    //   tags: selectedTags.value,
+    //   eventName: report.value.eventName,
+    //   eventType: report.value.eventType,
+    //   promotionTendency: report.value.promotionTendency,
+    //   promotionMethod: report.value.promotionMethod
+    // });
+    // console.log('生成报告响应:', response);
+    // if (response.code === 200) {
+    //   generatedReport.value = response.data.report;
+    //   ElMessage.success('报告生成成功！');
+    // }
     console.log("省钱");
   } catch (error) {
     console.error('生成报告失败:', error);
@@ -1236,7 +1235,7 @@ const md = new MarkdownIt({
 // 修改 markdown 渲染计算属性
 const renderedMarkdown = computed(() => {
   if (!generatedReport.value) return '';
-  
+
   // 处理文本，避免话题标签被识别为标题
   const formattedText = generatedReport.value
     // 转义话题标签中的 #，但保留真正的标题标记
