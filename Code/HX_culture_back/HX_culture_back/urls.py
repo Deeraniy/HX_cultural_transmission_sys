@@ -10,6 +10,7 @@ from app01 import text_to_image
 from django.contrib import admin
 from django.urls import include
 
+from app01.filter_for_comments.filter import get_filtered_comments_by_tag
 urlpatterns = [
     # path('admin/', admin.site.urls),
     # path('api/ai/', include('AI.urls')),
@@ -90,6 +91,7 @@ urlpatterns = [
     url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
     url(r'^generate_publicity/', publicity.generate_publicity_report),
     path('api/report/generate_image/', text_to_image.generate_publicity_image),
+    url(r'^get_filtered_comments_by_tag/', get_filtered_comments_by_tag),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
