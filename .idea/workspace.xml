@@ -4,9 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="宣传策略初步">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="提交一下">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/cloud.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/cloud.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/liter_sentiments_analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/liter_sentiments_analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/text_to_image.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/text_to_image.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/api/report.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/api/report.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/BookFlipModel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/Literature/BookFlipModel.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
@@ -27,8 +35,8 @@
   <component name="Git.Settings">
     <option name="PUSH_TAGS">
       <GitPushTagMode>
-        <option name="argument" value="--tags" />
-        <option name="title" value="All" />
+        <option name="argument" value="--follow-tags" />
+        <option name="title" value="Current Branch" />
       </GitPushTagMode>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -151,6 +159,7 @@
       <workItem from="1742279858184" duration="5434000" />
       <workItem from="1742300753704" duration="724000" />
       <workItem from="1742344277495" duration="18833000" />
+      <workItem from="1742615859842" duration="1733000" />
     </task>
     <task id="LOCAL-00005" summary="影视艺术页面——古代文学页面+新媒体艺术页面（图片）">
       <option name="closed" value="true" />
@@ -562,8 +571,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="红色文化菜单" />
-    <MESSAGE value="所有导航栏“返回”按钮添加" />
     <MESSAGE value="非遗民俗情感分析前后端连接" />
     <MESSAGE value="非遗民俗界面优化+图片刷新" />
     <MESSAGE value="情感分析界面加载动画" />
@@ -587,7 +594,9 @@
     <MESSAGE value="情感分析界面。。。" />
     <MESSAGE value="知识图谱（红色" />
     <MESSAGE value="宣传策略初步" />
-    <option name="LAST_COMMIT_MESSAGE" value="宣传策略初步" />
+    <MESSAGE value="宣传策略微调" />
+    <MESSAGE value="提交一下" />
+    <option name="LAST_COMMIT_MESSAGE" value="提交一下" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
