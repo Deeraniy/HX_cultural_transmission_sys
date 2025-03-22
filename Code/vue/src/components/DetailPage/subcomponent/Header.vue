@@ -44,34 +44,65 @@
           type="primary"
           :icon="Document"
           size="large"
-          @click="drawer = true"
+          @click="showAIReport = true"
           class="generate-report-btn"
       >
         生成AI报告
       </el-button>
     </div>
 
-    <!-- 抽屉组件 -->
-    <el-drawer v-model="drawer" title="AI Report">
-      <div v-html="markdownContent"></div>
-    </el-drawer>
+    <!-- AI 报告弹窗 -->
+    <el-dialog
+      v-model="showAIReport"
+      title="AI 分析报告"
+      width="65%"
+      class="ai-report-dialog"
+      :close-on-click-modal="false"
+      :destroy-on-close="true"
+    >
+      <div class="ai-report-content">
+        <!-- 加载状态 -->
+        <div v-if="loading" class="loading-container">
+          <el-skeleton :rows="10" animated />
+          <div class="loading-text">
+            <el-icon class="is-loading"><Loading /></el-icon>
+            正在生成 AI 分析报告...
+          </div>
+        </div>
+
+        <!-- 报告内容 -->
+        <div v-else class="report-container markdown-body" v-html="markdownContent"></div>
+      </div>
+
+      <!-- 弹窗底部按钮 -->
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="showAIReport = false">关闭</el-button>
+          <el-button type="primary" @click="handleCopyReport">
+            复制报告
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ArrowLeft, Setting, Document } from "@element-plus/icons-vue";
+import { ArrowLeft, Setting, Document, Loading } from "@element-plus/icons-vue";
 import { ref, onMounted, watch } from 'vue';
 import router from "@/router.js";
 import { marked } from 'marked';
 import SentimentAPI from "@/api/sentiment.ts";
 import { ArrowDown } from '@element-plus/icons-vue'
 import {useRoute} from "vue-router";  // 添加这行
-const drawer = ref(false);
+import { ElMessage } from 'element-plus';
+const showAIReport = ref(false);
 const searchQuery = ref(''); // 搜索框的绑定变量
 const markdownContent = ref(''); // 存储转换后的 HTML 内容
 const props = defineProps({title: String});
 const route = useRoute()
 const selectedType = ref('');
+const loading = ref(false);
 
 const emit = defineEmits(['update:type', 'update:search']);
 // 处理下拉选择
@@ -108,25 +139,48 @@ const onBack = () => {
   console.log("返回按钮被点击");
 };
 
+// 添加复制功能
+const handleCopyReport = () => {
+  if (markdownContent.value) {
+    // 创建一个临时元素来获取纯文本
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = markdownContent.value;
+    const textContent = tempElement.textContent;
+
+    navigator.clipboard.writeText(textContent)
+      .then(() => {
+        ElMessage.success('报告已复制到剪贴板');
+      })
+      .catch(() => {
+        ElMessage.error('复制失败，请手动复制');
+      });
+  }
+};
+
 onMounted(() => {
   console.log("Header组件被加载",route.query.value);
-  SentimentAPI.getSentimentReportAPI(props.title, route.query.value)
+  loading.value = true;
+  
+  // SentimentAPI.getSentimentReportAPI(props.title, route.query.value)
+  //   .then((res) => {
+  //     console.log("AI报告：", props.title);
+  //     console.log("AI 报告原始 Markdown:", res);
 
-      .then((res) => {
-        console.log("AI报告：",props.title)
-        console.log("AI 报告原始 Markdown:", res);
-
-        if (res && res.report) {
-          const cleanedMarkdown = res.report.replace(/^\s+/, "");
-          markdownContent.value = marked(res.report); // 提取 report 字段，并转换为 HTML
-          console.log("AI 报告解析后的 HTML:", markdownContent.value);
-        } else {
-          console.warn("API 返回的内容不包含 'report' 字段:", res);
-        }
-      })
-      .catch((error) => {
-        console.error("加载 AI 报告时出错:", error);
-      });
+  //     if (res && res.report) {
+  //       const cleanedMarkdown = res.report.replace(/^\s+/, "");
+  //       markdownContent.value = marked(cleanedMarkdown);
+  //       console.log("AI 报告解析后的 HTML:", markdownContent.value);
+  //     } else {
+  //       console.warn("API 返回的内容不包含 'report' 字段:", res);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.error("加载 AI 报告时出错:", error);
+  //     ElMessage.error('加载报告失败，请重试');
+  //   })
+  //   .finally(() => {
+  //     loading.value = false;
+  //   });
 });
 </script>
 
@@ -275,5 +329,69 @@ onMounted(() => {
 .el-dropdown-item:hover {
   background-color: #FFC107;  /* 金色 hover 状态 */
   color: black;  /* 高亮显示时字体颜色为黑色 */
+}
+
+/* AI 报告弹窗样式 */
+.ai-report-dialog {
+  :deep(.el-dialog__body) {
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+.ai-report-content {
+  min-height: 400px;
+}
+
+.loading-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.loading-text {
+  margin-top: 20px;
+  color: #909399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.report-container {
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dialog-footer {
+  padding-top: 16px;
+  text-align: right;
+}
+
+/* Markdown 内容样式 */
+.markdown-body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.markdown-body p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 24px;
+  margin: 8px 0;
 }
 </style>
