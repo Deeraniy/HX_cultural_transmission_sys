@@ -13,24 +13,24 @@ logger = logging.getLogger(__name__)
 
 def get_comment_list_spot(request):
     spot_name = request.GET.get('name')
-    
+
     # 创建连接
     conn = pymysql.connect(
-        host='60.215.128.117', 
-        port=15320, 
-        user='root', 
+        host='60.215.128.117',
+        port=15320,
+        user='root',
         passwd='kissme77',
         db='hx_cultural_transmission_sys',
         charset='utf8'
     )
-    
+
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    
+
     # 查询spot_id
     cursor.execute("SELECT spot_id FROM spot WHERE spot_name=%s", (spot_name,))
     spot_result = cursor.fetchone()
-    
+
     if spot_result:
         spot_id = spot_result['spot_id']
         logger.info(f"查到的spot_id: {spot_id}")
@@ -39,19 +39,19 @@ def get_comment_list_spot(request):
         cursor.close()
         conn.close()
         return JsonResponse({"message": "未找到景点"}, status=404)
-    
+
     # 查询评论，获取所有相关字段
     sql_query = """
         SELECT 
             id, user_id, ip_location, comment_id, content, 
-            like_count, spot_id, create_time, sentiment, 
+            like_count, spot_id, comment_time, sentiment, 
             sentiment_confidence, platform 
         FROM user_comment_spot 
         WHERE spot_id=%s
     """
     cursor.execute(sql_query, (spot_id,))
     comment_list = cursor.fetchall()
-    
+
     # 确保返回的格式
     formatted_comments = [
         {
@@ -62,20 +62,20 @@ def get_comment_list_spot(request):
             'comment_text': comment['content'],
             'like_count': comment['like_count'],
             'spot_id': comment['spot_id'],
-            'comment_time': comment['create_time'],
+            'comment_time': comment['comment_time'],
             'sentiment': comment['sentiment'],
             'sentiment_confidence': str(comment['sentiment_confidence']),  # 转换为字符串
             'platform': comment['platform']
         }
         for comment in comment_list
     ]
-    
+
     logger.info(f"查到的评论数: {len(formatted_comments)}")
-    
+
     # 关闭游标和连接
     cursor.close()
     conn.close()
-    
+
     return JsonResponse({"comments": formatted_comments})
 
 def get_comment_list_recent(request):
@@ -105,23 +105,23 @@ def get_comment_list_recent(request):
 
 def get_comment_time_span(request):
     spot_name = request.GET.get('spot_name')
-    
+
     # 创建连接
     conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    
+
     # 查询该地点的评论时间范围
     sql_query = "SELECT MIN(comment_time) AS start_time, MAX(comment_time) AS end_time FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
     cursor.execute(sql_query, (spot_name,))
     time_span = cursor.fetchone()
-    
+
     # 关闭游标
     cursor.close()
     # 关闭连接
     conn.close()
-    
+
     if time_span['start_time'] and time_span['end_time']:
         return HttpResponse(f"评论时间跨度: 从 {time_span['start_time']} 到 {time_span['end_time']}")
     else:
@@ -130,34 +130,34 @@ def get_comment_time_span(request):
 
 def get_comment_ip_count(request):
     spot_name = request.GET.get('spot_name')
-    
+
     # 创建连接
     conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    
+
     # 查询该地点评论的IP地址种类数量
     sql_query = "SELECT COUNT(DISTINCT ip_location) AS ip_count FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
     cursor.execute(sql_query, (spot_name,))
     ip_count = cursor.fetchone()
-    
+
     # 关闭游标
     cursor.close()
     # 关闭连接
     conn.close()
-    
+
     return HttpResponse(f"评论IP地址种类数量: {ip_count['ip_count'] if ip_count['ip_count'] is not None else 0}")
 
 def get_average_score_by_bi_month(request):
     spot_name = request.GET.get('spot_name')
-    
+
     # 创建连接
     conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    
+
     # 获取当前日期
     current_date = datetime.datetime.now()
     last_year_date = current_date - datetime.timedelta(days=365)
@@ -179,10 +179,10 @@ def get_average_score_by_bi_month(request):
         LIMIT 6
     """
 
-    
+
     cursor.execute(sql_query, (spot_name, last_year_date))
     average_scores = cursor.fetchall()
-    
+
     # 关闭游标
     cursor.close()
     # 关闭连接
@@ -192,7 +192,7 @@ def get_average_score_by_bi_month(request):
 
 def get_comment_count_last_12_months(request):
     spot_name = request.GET.get('spot_name')
-    
+
     # 创建连接
     conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
                            db='hx_cultural_transmission_sys', charset='utf8')
@@ -221,12 +221,12 @@ def get_comment_count_last_12_months(request):
 
     cursor.execute(sql_query, (spot_name, last_year_date))
     monthly_comment_counts = cursor.fetchall()
-    
+
     # 关闭游标
     cursor.close()
     # 关闭连接
     conn.close()
-    
+
     #格式化返回的结果
     response_data = ""
     for record in monthly_comment_counts:
@@ -236,24 +236,24 @@ def get_comment_count_last_12_months(request):
 
 def get_comment_list_literature(request):
     liter_name = request.GET.get('name')
-    
+
     # 创建连接
     conn = pymysql.connect(
-        host='60.215.128.117', 
-        port=15320, 
-        user='root', 
+        host='60.215.128.117',
+        port=15320,
+        user='root',
         passwd='kissme77',
         db='hx_cultural_transmission_sys',
         charset='utf8'
     )
-    
+
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    
+
     # 查询liter_id
     cursor.execute("SELECT liter_id FROM literature WHERE liter_name=%s", (liter_name,))
     liter_result = cursor.fetchone()
-    
+
     if liter_result:
         liter_id = liter_result['liter_id']
         logger.info(f"查到的liter_id: {liter_id}")
@@ -262,7 +262,7 @@ def get_comment_list_literature(request):
         cursor.close()
         conn.close()
         return JsonResponse({"message": "未找到文学作品"}, status=404)
-    
+
     # 查询评论，获取所有相关字段
     sql_query = """
         SELECT 
@@ -274,7 +274,7 @@ def get_comment_list_literature(request):
     """
     cursor.execute(sql_query, (liter_id,))
     comment_list = cursor.fetchall()
-    
+
     # 确保返回的格式与get_comment_list一致
     formatted_comments = [
         {
@@ -283,7 +283,7 @@ def get_comment_list_literature(request):
             'comment_id': comment['comment_id'],
             'comment_text': comment['comment_text'],
             'like_count': comment['like_count'],
-            'liter_id': comment['liter_id'], 
+            'liter_id': comment['liter_id'],
             'comment_time': comment['comment_time'],
             'sentiment': comment['sentiment'],
             'sentiment_confidence': str(comment['sentiment_confidence']),  # 转换为字符串
@@ -291,32 +291,32 @@ def get_comment_list_literature(request):
         }
         for comment in comment_list
     ]
-    
+
     logger.info(f"查到的评论数: {len(formatted_comments)}")
-    
+
     # 关闭游标和连接
     cursor.close()
     conn.close()
-    
+
     return JsonResponse({"comments": formatted_comments})
 
 def get_comment_list_food(request):
     """根据食品名称获取评论列表"""
     food_name = request.GET.get('name')
-    
+
     if not food_name:
         return JsonResponse({"status": "error", "message": "食品名称不能为空"}, status=400)
 
     # 创建连接
     conn = pymysql.connect(
-        host='60.215.128.117', 
-        port=15320, 
-        user='root', 
+        host='60.215.128.117',
+        port=15320,
+        user='root',
         passwd='kissme77',
         db='hx_cultural_transmission_sys',
         charset='utf8'
     )
-    
+
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     try:
@@ -376,24 +376,24 @@ def get_comment_list_food(request):
     finally:
         cursor.close()
         conn.close()
-        
+
 def get_comment_list_folk(request):
     """根据食品名称获取评论列表"""
     folk_name = request.GET.get('name')
-    
+
     if not folk_name:
         return JsonResponse({"status": "error", "message": "非遗民俗名称不能为空"}, status=400)
 
     # 创建连接
     conn = pymysql.connect(
-        host='60.215.128.117', 
-        port=15320, 
-        user='root', 
+        host='60.215.128.117',
+        port=15320,
+        user='root',
         passwd='kissme77',
         db='hx_cultural_transmission_sys',
         charset='utf8'
     )
-    
+
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     try:

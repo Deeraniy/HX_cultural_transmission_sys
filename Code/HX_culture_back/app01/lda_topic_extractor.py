@@ -12,8 +12,8 @@ from .spot_sentiments_analyze import process_comments
 # 配置日志
 logger = logging.getLogger(__name__)
 
-def top_words_data_frame(model: LatentDirichletAllocation, 
-                        tf_idf_vectorizer: TfidfVectorizer, 
+def top_words_data_frame(model: LatentDirichletAllocation,
+                        tf_idf_vectorizer: TfidfVectorizer,
                         n_top_words: int) -> pd.DataFrame:
     """获取每个主题的前N个主题词"""
     rows = []
@@ -48,16 +48,16 @@ def lda_analyze(request):
     cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
     spot_id = cursor.fetchone()['spot_id']
     print("id名称为",spot_id)
-    
-    sql_query = "SELECT content FROM user_comment_spot WHERE spot_id=%s"
-    
+
+    sql_query = "SELECT comment_text FROM user_comment_spot WHERE spot_id=%s"
+
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))
     comment_list =cursor.fetchall()
     # print(comment_list)
 
     data = {
-     '回答内容': [comment['content'] for comment in comment_list]  # 假设评论存储在数据库的第一列
+     '回答内容': [comment['comment_text'] for comment in comment_list]  # 假设评论存储在数据库的第一列
  }
 
     df = pd.DataFrame(data).drop_duplicates().rename(columns={
@@ -109,7 +109,7 @@ def lda_analyze(request):
             word_freq[word] = sum(comment.count(word) for comment in comments)
         return word_freq
 
-    
+
 
     def predict_to_data_frame(model: LatentDirichletAllocation, X: np.ndarray) -> pd.DataFrame:
         matrix = model.transform(X)
@@ -136,7 +136,7 @@ def lda_analyze(request):
         result.append({'topic':key,'frequency':value,'sentiment':sentiment})
     # 保存文本主题概率分布到 csv 文件中
     # predict_df.to_csv(predict_topic_csv_path, encoding='utf-8-sig', index=None)
-    
+
     return JsonResponse(result,safe=False)
 
 def lda_analyze_literature(request):
@@ -162,7 +162,7 @@ def lda_analyze_literature(request):
                 'status': 'error',
                 'message': f'未找到文学作品: {liter_name}'
             }, status=404)
-        
+
         liter_id = result['liter_id']
 
         # 获取该文学作品的所有评论
@@ -184,7 +184,7 @@ def lda_analyze_literature(request):
 
         # 设置停用词
         stop_words_set = set(['你', '我'])
-        
+
         # 文本预处理：去重、去缺失、分词
         df['cut'] = (
             df['text']
@@ -232,7 +232,7 @@ def lda_analyze_literature(request):
         sentiments_json = process_comments(keys_list)
         data = sentiments_json
         sentiments_list = [result['sentiment'] for result in data]
-        
+
         result = []
         for key, value, sentiment in zip(keys_list, values_list, sentiments_list):
             result.append({
@@ -240,7 +240,7 @@ def lda_analyze_literature(request):
                 'frequency': value,
                 'sentiment': sentiment
             })
-        
+
         return JsonResponse(result, safe=False)
 
     except Exception as e:
@@ -254,9 +254,9 @@ def lda_analyze_literature(request):
             cursor.close()
         if 'conn' in locals():
             conn.close()
-            
-            
-            
+
+
+
 
 def lda_analyze_food(request):
     """对食品评论进行LDA主题分析"""
@@ -281,7 +281,7 @@ def lda_analyze_food(request):
                 'status': 'error',
                 'message': f'未找到食品: {food_name}'
             }, status=404)
-        
+
         food_id = result['food_id']
 
         # 获取该食品的所有评论
@@ -303,7 +303,7 @@ def lda_analyze_food(request):
 
         # 设置停用词
         stop_words_set = set(['你', '我'])
-        
+
         # 文本预处理：去重、去缺失、分词
         df['cut'] = (
             df['text']
@@ -351,7 +351,7 @@ def lda_analyze_food(request):
         sentiments_json = process_comments(keys_list)
         data = sentiments_json
         sentiments_list = [result['sentiment'] for result in data]
-        
+
         result = []
         for key, value, sentiment in zip(keys_list, values_list, sentiments_list):
             result.append({
@@ -359,7 +359,7 @@ def lda_analyze_food(request):
                 'frequency': value,
                 'sentiment': sentiment
             })
-        
+
         return JsonResponse(result, safe=False)
 
     except Exception as e:
@@ -373,7 +373,7 @@ def lda_analyze_food(request):
             cursor.close()
         if 'conn' in locals():
             conn.close()
-            
+
 def lda_analyze_folk(request):
     """对食品评论进行LDA主题分析"""
     try:
@@ -397,7 +397,7 @@ def lda_analyze_folk(request):
                 'status': 'error',
                 'message': f'未找到非遗民俗: {folk_name}'
             }, status=404)
-        
+
         folk_id = result['folk_id']
 
         # 获取该食品的所有评论
@@ -419,7 +419,7 @@ def lda_analyze_folk(request):
 
         # 设置停用词
         stop_words_set = set(['你', '我'])
-        
+
         # 文本预处理：去重、去缺失、分词
         df['cut'] = (
             df['text']
@@ -467,7 +467,7 @@ def lda_analyze_folk(request):
         sentiments_json = process_comments(keys_list)
         data = sentiments_json
         sentiments_list = [result['sentiment'] for result in data]
-        
+
         result = []
         for key, value, sentiment in zip(keys_list, values_list, sentiments_list):
             result.append({
@@ -475,7 +475,7 @@ def lda_analyze_folk(request):
                 'frequency': value,
                 'sentiment': sentiment
             })
-        
+
         return JsonResponse(result, safe=False)
 
     except Exception as e:

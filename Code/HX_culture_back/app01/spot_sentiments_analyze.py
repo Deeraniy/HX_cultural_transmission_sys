@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # 初始化情感分析模型
 distilled_student_sentiment_classifier = pipeline(
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
+    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
     return_all_scores=True
 )
 
@@ -27,7 +27,7 @@ def get_sentiment_label(text):
         max_length = 512
         if len(text) > max_length:
             text = text[:max_length]
-            
+
         results = distilled_student_sentiment_classifier(text)[0]  # 获取分析结果
         # 找出得分最高的标签
         max_score_label = max(results, key=lambda x: x['score'])
@@ -73,11 +73,11 @@ def sentiments_all():
     try:
         # 建立数据库连接，添加超时设置
         conn = pymysql.connect(
-            host='60.215.128.117', 
-            port=15320, 
-            user='root', 
+            host='60.215.128.117',
+            port=15320,
+            user='root',
             passwd='kissme77',
-            db='hx_cultural_transmission_sys', 
+            db='hx_cultural_transmission_sys',
             charset='utf8',
             connect_timeout=10,        # 连接超时
             read_timeout=30,           # 读取超时
@@ -85,21 +85,21 @@ def sentiments_all():
             autocommit=True            # 自动提交
         )
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
+
         # 确保开始前没有未完成的事务
         conn.rollback()
-        
+
         # 获取所有评论
-        cursor.execute("SELECT comment_id, content FROM user_comment_spot WHERE sentiment IS NULL")
+        cursor.execute("SELECT comment_id, comment_text FROM user_comment_spot WHERE sentiment IS NULL OR sentiment = ''")
         comments = cursor.fetchall()
-        
+
         processed_count = 0
-        
+
         for comment in comments:
             try:
-                sentiment_label, confidence = get_sentiment_label(comment['content'])
+                sentiment_label, confidence = get_sentiment_label(comment['comment_text'])
                 logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
-                
+
                 # 更新数据库
                 update_sql = """
                     UPDATE user_comment_spot 
@@ -108,20 +108,20 @@ def sentiments_all():
                 """
                 cursor.execute(update_sql, (sentiment_label, confidence, comment['comment_id']))
                 processed_count += 1
-                
+
                 if processed_count % 10 == 0:  # 每10条记录输出一次进度
                     logger.info(f"已处理 {processed_count} 条评论")
-                    
+
             except pymysql.Error as e:
                 logger.error(f"数据库操作出错 (评论ID: {comment['comment_id']}): {str(e)}")
                 # 尝试重新连接
                 if not conn.open:
                     conn = pymysql.connect(
-                        host='60.215.128.117', 
-                        port=15320, 
-                        user='root', 
+                        host='60.215.128.117',
+                        port=15320,
+                        user='root',
                         passwd='kissme77',
-                        db='hx_cultural_transmission_sys', 
+                        db='hx_cultural_transmission_sys',
                         charset='utf8',
                         connect_timeout=10,
                         read_timeout=30,
@@ -132,9 +132,9 @@ def sentiments_all():
             except Exception as e:
                 logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
                 continue
-            
+
         logger.info(f"所有景点评论的情感分析已完成，共处理 {processed_count} 条评论")
-        
+
     except Exception as e:
         logger.error(f"情感分析过程中出错: {str(e)}")
     finally:
@@ -142,7 +142,7 @@ def sentiments_all():
             cursor.close()
         if 'conn' in locals() and conn.open:
             conn.close()
-    
+
 
 def sentiment_month_analyze(sentiments):
     """
@@ -152,7 +152,7 @@ def sentiment_month_analyze(sentiments):
     # 计算加权得分：positive=1, neutral=0.5, negative=0
     score = 0
     total_comments = len(sentiments)
-    
+
     for sent, conf in sentiments:
         if sent == 'positive':
             score += conf * 1
@@ -160,10 +160,10 @@ def sentiment_month_analyze(sentiments):
             score += conf * 0.5
         elif sent == 'negative':
             score += conf * 0
-    
+
     # 计算平均分
     avg_score = score / total_comments if total_comments > 0 else 0
-    
+
     # 确定主导情感
     if avg_score > 0.7:
         dominant_sentiment = 'positive'
@@ -171,7 +171,7 @@ def sentiment_month_analyze(sentiments):
         dominant_sentiment = 'negative'
     else:
         dominant_sentiment = 'neutral'
-        
+
     return avg_score, dominant_sentiment
 
 def sentiments_result_total_count(request):
@@ -183,12 +183,12 @@ def sentiments_result_total_count(request):
                 'status': 'error',
                 'message': '景点名称不能为空'
             }, status=400)
-            
+
         logger.info(f"正在查询景点: {name}")
-            
+
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root',
+                             passwd='kissme77', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
@@ -196,15 +196,15 @@ def sentiments_result_total_count(request):
         spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s"
         cursor.execute(spot_sql, (name,))
         spot_result = cursor.fetchone()
-        
+
         if not spot_result:
             return JsonResponse({
                 'status': 'error',
                 'message': f'未找到景点: {name}'
             }, status=404)
-            
+
         spot_id = spot_result['spot_id']
-        
+
         # 查询各情感类型的评论数量和占比
         sentiment_sql = """
             SELECT 
@@ -212,12 +212,12 @@ def sentiments_result_total_count(request):
                 COUNT(*) as count,
                 COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
             FROM user_comment_spot 
-            WHERE spot_id = %s AND sentiment IS NOT NULL
+            WHERE spot_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             GROUP BY sentiment
         """
         cursor.execute(sentiment_sql, (spot_id,))
         results = cursor.fetchall()
-        
+
         # 初始化结果字典
         sentiment_stats = {
             'positive': 0,
@@ -225,7 +225,7 @@ def sentiments_result_total_count(request):
             'negative': 0,
             'total_count': 0
         }
-        
+
         # 处理查询结果
         for row in results:
             if row['sentiment'] in sentiment_stats:
@@ -264,45 +264,45 @@ def sentiments_result(request):
                 'status': 'error',
                 'message': '景点名称不能为空'
             }, status=400)
-            
+
         logger.info(f"正在查询景点: {name}")
-            
+
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root',
+                             passwd='kissme77', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
+
         # 修正：使用正确的字段名 spot_name 而不是 name
         spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s LIMIT 1"
         cursor.execute(spot_sql, (name,))
         spot_result = cursor.fetchone()
-        
+
         if not spot_result:
             return JsonResponse({
                 'status': 'error',
                 'message': f'未找到景点: {name}'
             }, status=404)
-            
+
         # 修正：使用正确的字段名 spot_id 而不是 id
         spot_id = spot_result['spot_id']  # 改用 'spot_id' 而不是 'id'
         logger.info(f"找到景点ID: {spot_id}")
-        
+
         # 查询评论数据
         comment_sql = """
             SELECT 
                 sentiment, 
                 sentiment_confidence, 
-                SUBSTRING_INDEX(LEFT(create_time, 7), '-', 1) as year,
-                SUBSTRING_INDEX(LEFT(create_time, 7), '-', -1) as month
+                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
+                SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
             FROM user_comment_spot 
-            WHERE spot_id = %s AND sentiment IS NOT NULL
-            ORDER BY create_time
+            WHERE spot_id = %s AND sentiment IS NOT NULL AND sentiment != ''
+            ORDER BY comment_time
         """
         cursor.execute(comment_sql, (spot_id,))
         results = cursor.fetchall()
         # print(results)
-        
+
         if not results:
             return JsonResponse({
                 'status': 'success',
@@ -313,7 +313,7 @@ def sentiments_result(request):
                 },
                 'message': '该景点暂无评论数据'
             })
-        
+
         # 按年月分组数据
         print(results)
         monthly_data = {}
@@ -321,19 +321,19 @@ def sentiments_result(request):
             date_key = f"{row['year']}-{row['month']}"
             if date_key not in monthly_data:
                 monthly_data[date_key] = []
-            
+
             if row['sentiment'] and row['sentiment_confidence']:
                 monthly_data[date_key].append(
                     (row['sentiment'], float(row['sentiment_confidence']))
                 )
-        
+
         # 计算每月的情感分析结果
         analysis_results = []
         for year_month, sentiments in monthly_data.items():
             year, month = map(int, year_month.split('-'))
             # 直接使用元组列表
             sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
-            
+
             analysis_results.append({
                 'year': year,
                 'month': month,
@@ -341,10 +341,10 @@ def sentiments_result(request):
                 'sentiment': dominant_sentiment,
                 'comment_count': len(sentiments)
             })
-        
+
         # 按时间排序
         analysis_results.sort(key=lambda x: (x['year'], x['month']))
-        
+
         return JsonResponse({
             'status': 'success',
             'data': analysis_results,
@@ -353,7 +353,7 @@ def sentiments_result(request):
                 'id': spot_id
             }
         })
-        
+
     except Exception as e:
         logger.error(f"处理景点 {name} 的情感分析时出错: {str(e)}")
         return JsonResponse({
@@ -393,7 +393,7 @@ def generate_report(request):
             }, status=400)
 
         data = sentiment_data['data']
-        
+
         # 处理数据，计算每个月的统计信息
         monthly_stats = {}
         for entry in data:
@@ -402,7 +402,7 @@ def generate_report(request):
             sentiment = entry['sentiment']
             sentiment_score = entry['sentiment_score']
             comment_count = entry['comment_count']
-            
+
             key = (year, month)
             if key not in monthly_stats:
                 monthly_stats[key] = {
@@ -465,7 +465,7 @@ def generate_report(request):
         )
 
         report = response.choices[0].message.content.strip()
-        
+
         return JsonResponse({
             'status': 'success',
             'report': report,

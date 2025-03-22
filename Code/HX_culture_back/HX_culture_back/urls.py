@@ -7,9 +7,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details
 from app01 import text_to_image
+from django.contrib import admin
+from django.urls import include
 
 urlpatterns = [
-
+    # path('admin/', admin.site.urls),
+    # path('api/ai/', include('AI.urls')),
+    # 添加 HXCulture_DIalog 的路由
+    # path('api/dialog/', include('HXCulture_DIalog.urls')),
     url(r'^testdb/$', testdb.testdb),
     # 上传头像
 #     path('upload/avatar', views.UploadAvatar.as_view(), name='upload_avatar'),
