@@ -89,7 +89,7 @@ def get_comment_list_recent(request):
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    cursor.execute("SELECT spot_id FROM spot WHERE spot_name=%s",(spot_name))
     spot_id=cursor.fetchone()['spot_id']
     sql_query = "SELECT * FROM user_comment_spot WHERE spot_id=%s AND YEAR(comment_time)=%s AND MONTH(comment_time)=%s"
     # 执行SQL，并返回收影响行数
@@ -113,7 +113,7 @@ def get_comment_time_span(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     # 查询该地点的评论时间范围
-    sql_query = "SELECT MIN(comment_time) AS start_time, MAX(comment_time) AS end_time FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
+    sql_query = "SELECT MIN(comment_time) AS start_time, MAX(comment_time) AS end_time FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM spot WHERE spot_name=%s)"
     cursor.execute(sql_query, (spot_name,))
     time_span = cursor.fetchone()
 
@@ -138,7 +138,7 @@ def get_comment_ip_count(request):
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     # 查询该地点评论的IP地址种类数量
-    sql_query = "SELECT COUNT(DISTINCT ip_location) AS ip_count FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM scenicspot WHERE spot_name=%s)"
+    sql_query = "SELECT COUNT(DISTINCT ip_location) AS ip_count FROM user_comment_spot WHERE spot_id=(SELECT spot_id FROM spot WHERE spot_name=%s)"
     cursor.execute(sql_query, (spot_name,))
     ip_count = cursor.fetchone()
 
@@ -170,7 +170,7 @@ def get_average_score_by_bi_month(request):
         FROM 
             user_comment_spot
         WHERE 
-            spot_id = (SELECT spot_id FROM scenicspot WHERE spot_name = %s) 
+            spot_id = (SELECT spot_id FROM spot WHERE spot_name = %s) 
             AND comment_time >= %s
         GROUP BY 
             DATE_FORMAT(comment_time, '%%Y-%%m')  -- 这里也是双百分号
@@ -211,7 +211,7 @@ def get_comment_count_last_12_months(request):
         FROM 
             user_comment_spot
         WHERE 
-            spot_id = (SELECT spot_id FROM scenicspot WHERE spot_name = %s)
+            spot_id = (SELECT spot_id FROM spot WHERE spot_name = %s)
             AND comment_time >= %s
         GROUP BY 
             DATE_FORMAT(comment_time, '%%Y-%%m')

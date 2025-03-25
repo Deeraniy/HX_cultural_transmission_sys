@@ -54,7 +54,7 @@ def sentiments_analyze(request):
                            db='hx_cultural_transmission_sys',charset='utf8')
 
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    spot_id=cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(name))
+    spot_id=cursor.execute("SELECT spot_id FROM spot WHERE spot_name=%s",(name))
     sql_query = "SELECT content FROM user_comment_spot WHERE spot_id=%s"
     # 执行SQL，并返回收影响行数
     effect_row = cursor.execute(sql_query, (spot_id))

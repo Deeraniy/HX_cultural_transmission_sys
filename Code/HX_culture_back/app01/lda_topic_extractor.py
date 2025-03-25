@@ -45,7 +45,7 @@ def lda_analyze(request):
 
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    cursor.execute("SELECT spot_id FROM spot WHERE spot_name=%s",(spot_name))
     spot_id = cursor.fetchone()['spot_id']
     print("id名称为",spot_id)
 

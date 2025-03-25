@@ -40,7 +40,7 @@ def process_spot_tokens(spot_name):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
         # 获取spot_id
-        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
+        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s"
         cursor.execute(spot_sql, (spot_name,))
         spot_result = cursor.fetchone()
         
@@ -178,7 +178,7 @@ def get_word_frequency(request):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
         # 获取spot_id
-        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
+        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s"
         cursor.execute(spot_sql, (spot_name,))
         spot_result = cursor.fetchone()
 
@@ -230,7 +230,7 @@ if __name__ == "__main__":
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
         # 获取所有景点
-        spots_sql = "SELECT spot_name FROM scenicspot"
+        spots_sql = "SELECT spot_name FROM spot"
         cursor.execute(spots_sql)
         spots = [row['spot_name'] for row in cursor.fetchall()]
         

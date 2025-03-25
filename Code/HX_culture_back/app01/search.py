@@ -35,7 +35,7 @@ def get_all_node(request):
 
     try:
         # 查询景点数据并关联到 "名胜古迹"
-        cursor.execute("SELECT * FROM scenicspot")
+        cursor.execute("SELECT * FROM spot")
         spot_list = cursor.fetchall()
         for spot in spot_list:
             node = {
