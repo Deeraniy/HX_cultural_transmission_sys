@@ -40,7 +40,7 @@ def process_spot_tokens(spot_name):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
         # 获取spot_id
-        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
+        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s"
         cursor.execute(spot_sql, (spot_name,))
         spot_result = cursor.fetchone()
         
@@ -103,10 +103,10 @@ def process_spot_tokens(spot_name):
 def get_db_connection():
     """获取数据库连接"""
     return pymysql.connect(
-        host='60.215.128.117', 
-        port=15320, 
+        host='8.148.26.99', 
+        port=3306, 
         user='root', 
-        passwd='kissme77', 
+        passwd='song', 
         db='hx_cultural_transmission_sys', 
         charset='utf8',
         connect_timeout=10,
@@ -178,7 +178,7 @@ def get_word_frequency(request):
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
         # 获取spot_id
-        spot_sql = "SELECT spot_id FROM scenicspot WHERE spot_name = %s"
+        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s"
         cursor.execute(spot_sql, (spot_name,))
         spot_result = cursor.fetchone()
 
@@ -224,13 +224,13 @@ def get_word_frequency(request):
 if __name__ == "__main__":
     try:
         # 连接数据库获取所有景点
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                             passwd='song', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
         # 获取所有景点
-        spots_sql = "SELECT spot_name FROM scenicspot"
+        spots_sql = "SELECT spot_name FROM spot"
         cursor.execute(spots_sql)
         spots = [row['spot_name'] for row in cursor.fetchall()]
         

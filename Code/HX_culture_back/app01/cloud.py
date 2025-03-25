@@ -13,13 +13,13 @@ def get_cloud(request):
     spot_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     # SQL查询，根据spot_name查找评论
-    cursor.execute("SELECT spot_id FROM scenicspot WHERE spot_name=%s",(spot_name))
+    cursor.execute("SELECT spot_id FROM spot WHERE spot_name=%s",(spot_name))
     spot_id=cursor.fetchone()['spot_id']
     cursor.execute("SELECT * FROM user_comment_spot WHERE spot_id = %s", (spot_id))
     comments = cursor.fetchall()
@@ -51,7 +51,7 @@ def get_cloud_literature(request):
     liter_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -86,7 +86,7 @@ def get_cloud_food(request):
     food_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
@@ -121,7 +121,7 @@ def get_cloud_folk(request):
     folk_name = request.GET.get('name')
 
     # 创建连接
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                            db='hx_cultural_transmission_sys', charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
