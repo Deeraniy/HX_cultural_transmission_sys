@@ -4,22 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="前面修改内容整合">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析页面样式调整">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/边城_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/边城_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/api/comment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/api/comment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/api/sentiment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/api/sentiment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/BasicInfo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/BasicInfo.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/CommentAnalysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/CommentAnalysis.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/SentimentAnalysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/SentimentAnalysis.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/BarChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/BarChart.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/PieChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/PieChart.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -179,15 +165,7 @@
       <workItem from="1742344277495" duration="18833000" />
       <workItem from="1742615859842" duration="6829000" />
       <workItem from="1742736308363" duration="1234000" />
-      <workItem from="1742884746904" duration="1858000" />
-    </task>
-    <task id="LOCAL-00007" summary="影视艺术页面(前端完成)">
-      <option name="closed" value="true" />
-      <created>1736237509112</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1736237509112</updated>
+      <workItem from="1742884746904" duration="3816000" />
     </task>
     <task id="LOCAL-00008" summary="影视艺术页面(前后端连接完成)">
       <option name="closed" value="true" />
@@ -573,7 +551,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742649859546</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="情感分析页面样式调整">
+      <option name="closed" value="true" />
+      <created>1742899799405</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1742899799407</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -597,7 +583,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="情感分析界面加载动画" />
     <MESSAGE value="情感分析界面+民俗展示界面bug修复" />
     <MESSAGE value="数据库设计" />
     <MESSAGE value="个人中心优化" />
@@ -622,7 +607,8 @@
     <MESSAGE value="提交一下" />
     <MESSAGE value="之前修改内容整合" />
     <MESSAGE value="前面修改内容整合" />
-    <option name="LAST_COMMIT_MESSAGE" value="前面修改内容整合" />
+    <MESSAGE value="情感分析页面样式调整" />
+    <option name="LAST_COMMIT_MESSAGE" value="情感分析页面样式调整" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
