@@ -57,6 +57,10 @@ def process_comments_lda(comments, n_topics=5, n_top_words=5):
     # 获取主题词
     return top_words_data_frame(lda, tf_idf_vectorizer, n_top_words)
 
+def calculate_word_frequency(comments, word):
+    """计算词语在所有评论中的出现频次"""
+    return sum(comment.count(word) for comment in comments)
+
 def process_all_topics():
     """处理所有类型的评论并存储主题"""
     conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
@@ -112,11 +116,14 @@ def process_all_topics():
                 # 存储主题词
                 for topic_idx, topic_words in enumerate(topic_words_df.values, 1):
                     for word_idx, word in enumerate(topic_words, 1):
+                        # 计算词频
+                        frequency = calculate_word_frequency(comment_texts, word)
+                        
                         cursor.execute(f"""
                             INSERT INTO {topic_table} 
-                            (topic_id, topic_word, {id_field}, area)
-                            VALUES (%s, %s, %s, %s)
-                        """, [topic_id_counter, word, item_id, word_idx])
+                            (topic_id, topic_word, {id_field}, area, frequency)
+                            VALUES (%s, %s, %s, %s, %s)
+                        """, [topic_id_counter, word, item_id, word_idx, frequency])
                         topic_id_counter += 1
                 
                 conn.commit()
