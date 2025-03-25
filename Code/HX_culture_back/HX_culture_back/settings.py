@@ -94,10 +94,10 @@ DATABASES = {
     {
         'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
         'NAME': 'hx_cultural_transmission_sys', # 数据库名称
-        'HOST': '60.215.128.117', # 数据库地址，本机 ip 地址 127.0.0.1
-        'PORT': 15320, # 端口
+        'HOST': '8.148.26.99', # 数据库地址，本机 ip 地址 127.0.0.1
+        'PORT': 3306, # 端口
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'kissme77', # 数据库密码
+        'PASSWORD': 'song', # 数据库密码
     }
 }
 

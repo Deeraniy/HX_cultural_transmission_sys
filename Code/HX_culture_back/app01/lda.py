@@ -59,8 +59,8 @@ def process_comments_lda(comments, n_topics=5, n_top_words=5):
 
 def process_all_topics():
     """处理所有类型的评论并存储主题"""
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                          passwd='kissme77', db='hx_cultural_transmission_sys', 
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                          passwd='song', db='hx_cultural_transmission_sys', 
                           charset='utf8')
     cursor = conn.cursor()
     
@@ -76,47 +76,51 @@ def process_all_topics():
         for comment_table, topic_table, id_field, ref_table in tables:
             print(f"\n处理 {comment_table} 表...")
             
-            # 获取所有不同的ID
-            cursor.execute(f"SELECT DISTINCT {id_field} FROM {comment_table}")
-            all_ids = cursor.fetchall()
-            
-            # 清空主题表
+            # 清空对应的主题表
+            print(f"清空 {topic_table} 表...")
             cursor.execute(f"TRUNCATE TABLE {topic_table}")
             conn.commit()
+            
+            # 获取所有不同的ID，直接从原始表获取
+            cursor.execute(f"SELECT DISTINCT {id_field} FROM {ref_table}")
+            all_ids = cursor.fetchall()
+            print(f"找到 {len(all_ids)} 个{ref_table}")
+            
+            # 为每个表重置 topic_id 计数
+            topic_id_counter = 1
             
             # 对每个ID进行处理
             for (item_id,) in all_ids:
                 # 获取该ID的所有评论
                 cursor.execute(f"""
-                    SELECT comment_id, comment_text 
+                    SELECT comment_text 
                     FROM {comment_table} 
                     WHERE {id_field} = %s
                 """, [item_id])
                 comments = cursor.fetchall()
                 
                 if not comments:
+                    print(f"跳过 {ref_table} ID: {item_id} (无评论)")
                     continue
                 
                 # 提取评论文本
-                comment_texts = [c[1] for c in comments]
-                comment_ids = [c[0] for c in comments]
+                comment_texts = [c[0] for c in comments]
                 
                 # LDA处理
                 topic_words_df = process_comments_lda(comment_texts)
                 
                 # 存储主题词
-                topic_id = 1
-                for topic_idx, topic_words in enumerate(topic_words_df.values):
-                    for area, word in enumerate(topic_words, 1):
+                for topic_idx, topic_words in enumerate(topic_words_df.values, 1):
+                    for word_idx, word in enumerate(topic_words, 1):
                         cursor.execute(f"""
                             INSERT INTO {topic_table} 
-                            (topic_id, topic_word, {id_field}, area, comment_id)
-                            VALUES (%s, %s, %s, %s, %s)
-                        """, [topic_id, word, item_id, area, comment_ids[0]])
-                        topic_id += 1
+                            (topic_id, topic_word, {id_field}, area)
+                            VALUES (%s, %s, %s, %s)
+                        """, [topic_id_counter, word, item_id, word_idx])
+                        topic_id_counter += 1
                 
                 conn.commit()
-                print(f"已处理 {ref_table} ID: {item_id}, 生成 {topic_id-1} 个主题词")
+                print(f"已处理 {ref_table} ID: {item_id}, 生成 {len(topic_words_df.values) * 5} 个主题词")
             
         print("\n所有主题处理完成")
         
