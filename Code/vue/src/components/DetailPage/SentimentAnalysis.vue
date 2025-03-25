@@ -20,11 +20,12 @@
         <template v-if="currentChart === 'time'">
           <el-skeleton v-if="isTimeChartLoading" :rows="3" animated />
           <LineRace
-            v-else
+            v-else-if="timeData && timeData.length > 0"
             :timeData="timeData"
             :height="'100%'"
             :width="'100%'"
           />
+          <div v-else class="no-data">暂无数据</div>
         </template>
         
         <!-- 三线图 -->
@@ -70,88 +71,68 @@ const isThreeLineLoading = ref(true);
 const currentChart = ref('time'); // 当前显示的图表类型
 
 // 修改数据处理函数
-const processTimeData = (data: any) => {
-  // 检查数据格式
-  if (!Array.isArray(data)) {
-    console.warn('Invalid time data format:', data);
+const processTimeData = (timeResponse: any) => {
+  if (!timeResponse?.data || !Array.isArray(timeResponse.data)) {
+    console.warn('Invalid time data format:', timeResponse);
     return [];
   }
 
-  // 按月份统计情感分数
-  const monthlyStats = data.reduce((acc: any, item: any) => {
-    if (!item.comment || !item.sentiment) return acc;
-    
-    // 提取时间信息（假设评论中包含时间信息）
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const key = `${year}-${month.toString().padStart(2, '0')}`;
-    
-    if (!acc[key]) {
-      acc[key] = {
-        count: 0,
-        totalScore: 0,
-        sentiment: {
-          positive: 0,
-          neutral: 0,
-          negative: 0
-        }
-      };
-    }
-    
-    acc[key].count++;
-    // 根据情感类型计数
-    acc[key].sentiment[item.sentiment.toLowerCase()]++;
-    
-    return acc;
-  }, {});
+  // 按时间排序
+  const sortedData = [...timeResponse.data].sort((a, b) => {
+    const dateA = new Date(`${a.year}-${a.month}`);
+    const dateB = new Date(`${b.year}-${b.month}`);
+    return dateA.getTime() - dateB.getTime();
+  });
 
-  // 转换为图表所需格式
-  return Object.entries(monthlyStats).map(([date, stats]: [string, any]) => ({
-    date,
-    value: stats.count,
-    type: Object.entries(stats.sentiment).reduce((a, [k, v]) => v > stats.sentiment[a] ? k : a, 'neutral')
+  // 转换数据格式
+  return sortedData.map(item => ({
+    date: `${item.year}-${item.month.toString().padStart(2, '0')}`,
+    value: parseFloat(item.sentiment_score.toFixed(3)), // 保留三位小数
+    type: item.sentiment || 'neutral',
+    count: item.comment_count || 0
   }));
 };
 
+// 修改 processThreeLineData 函数
 const processThreeLineData = (data: any) => {
   // 检查数据格式
-  if (!Array.isArray(data)) {
+  if (!data || !data.data || !Array.isArray(data.data)) {
     console.warn('Invalid data format:', data);
     return [];
   }
 
-  // 按月份统计不同情感类型的数量
-  const monthlyStats = data.reduce((acc: any, item: any) => {
-    if (!item.comment || !item.sentiment) return acc;
+  // 直接使用原始数据，按月份分组统计
+  const monthlyStats = new Map();
+
+  data.data.forEach(item => {
+    const key = `${item.year}-${item.month.toString().padStart(2, '0')}`;
     
-    // 提取时间信息
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const key = `${year}-${month.toString().padStart(2, '0')}`;
-    
-    if (!acc[key]) {
-      acc[key] = {
+    if (!monthlyStats.has(key)) {
+      monthlyStats.set(key, {
+        date: key,
         positive: 0,
         neutral: 0,
         negative: 0
-      };
+      });
     }
-    
-    // 统计各种情感类型的数量
-    acc[key][item.sentiment.toLowerCase()]++;
-    
-    return acc;
-  }, {});
 
-  // 转换为图表所需格式
-  return Object.entries(monthlyStats).map(([date, counts]: [string, any]) => ({
-    date,
-    positive: counts.positive,
-    neutral: counts.neutral,
-    negative: counts.negative
-  }));
+    const stats = monthlyStats.get(key);
+    // 根据情感类型累加评论数量
+    if (item.sentiment === 'positive') {
+      stats.positive += item.comment_count;
+    } else if (item.sentiment === 'negative') {
+      stats.negative += item.comment_count;
+    } else {
+      stats.neutral += item.comment_count;
+    }
+  });
+
+  // 转换为数组并排序
+  const result = Array.from(monthlyStats.values())
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  console.log('Processed three line data:', result);
+  return result;
 };
 
 // 修改 loadData 函数
@@ -161,29 +142,76 @@ const loadData = async () => {
     
     // 加载时间序列数据
     try {
-      const timeResponse = await SentimentAPI.getSentimentAnalyzeAPI(props.name, Number(props.pageType));
-      console.log('Time response:', timeResponse);
+      isTimeChartLoading.value = true;
       
-      // 直接处理响应数据
-      timeData.value = processTimeData(timeResponse);
-      console.log('Processed time data:', timeData.value);
-      isTimeChartLoading.value = false;
+      const timeResponse = await SentimentAPI.getSentimentResultAPI(props.name, Number(props.pageType));
+      console.log('Raw time response:', timeResponse);
+
+      if (timeResponse?.status === 'success') {
+        const processedData = processTimeData(timeResponse);
+        if (processedData.length > 0) {
+          timeData.value = processedData;
+          console.log('Processed time data:', processedData);
+        } else {
+          console.warn('No data after processing');
+          timeData.value = [];
+        }
+      } else {
+        console.warn('Invalid API response:', timeResponse);
+        timeData.value = [];
+      }
     } catch (error) {
       console.error('Error loading time data:', error);
+      timeData.value = [];
+      ElMessage.error('加载时间数据失败，请稍后重试');
+    } finally {
       isTimeChartLoading.value = false;
     }
 
     // 加载三线图数据
     try {
-      const threeLineResponse = await SentimentAPI.getSentimentResultAPI(props.name, Number(props.pageType));
-      console.log('Three line response:', threeLineResponse);
+      isThreeLineLoading.value = true;
       
-      // 直接处理整个响应
-      threeLineData.value = processThreeLineData(threeLineResponse);
-      console.log('Processed three line data:', threeLineData.value);
-      isThreeLineLoading.value = false;
+      // 使用相同的数据源
+      const threeLineResponse = await SentimentAPI.getSentimentResultAPI(props.name, Number(props.pageType));
+      
+      if (threeLineResponse && threeLineResponse.status === 'success' && Array.isArray(threeLineResponse.data)) {
+        // 处理三线图数据
+        const monthlyStats = new Map();
+        
+        threeLineResponse.data.forEach(item => {
+          const key = `${item.year}-${item.month.toString().padStart(2, '0')}`;
+          
+          if (!monthlyStats.has(key)) {
+            monthlyStats.set(key, {
+              date: key,
+              positive: 0,
+              neutral: 0,
+              negative: 0
+            });
+          }
+          
+          const stats = monthlyStats.get(key);
+          if (item.sentiment === 'positive') {
+            stats.positive += item.comment_count;
+          } else if (item.sentiment === 'negative') {
+            stats.negative += item.comment_count;
+          } else {
+            stats.neutral += item.comment_count;
+          }
+        });
+
+        threeLineData.value = Array.from(monthlyStats.values())
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      } else {
+        console.warn('Invalid three line response:', threeLineResponse);
+        threeLineData.value = [];
+      }
     } catch (error) {
       console.error('Error loading three line data:', error);
+      threeLineData.value = [];
+      ElMessage.error('加载情感分布数据失败，请稍后重试');
+    } finally {
       isThreeLineLoading.value = false;
     }
   } catch (error) {
@@ -212,6 +240,11 @@ watch(
   },
   { immediate: true, deep: true }
 );
+
+// 添加数据监听，用于调试
+watch(timeData, (newValue) => {
+  console.log('timeData changed:', newValue);
+}, { deep: true });
 
 onMounted(async () => {
   console.log('SentimentAnalysis mounted with props:', props);
@@ -255,7 +288,8 @@ onMounted(async () => {
 }
 
 .chart-container {
-  height: calc(100vh - 200px);
+  height: 100%;
+  min-height: 400px;
   background-color: white;
   border-radius: 8px;
   padding: 20px;
@@ -287,5 +321,14 @@ onMounted(async () => {
 :deep(.el-skeleton) {
   width: 100%;
   height: 100%;
+}
+
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #909399;
+  font-size: 14px;
 }
 </style>

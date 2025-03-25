@@ -975,21 +975,21 @@ const removeTag = (tag) => {
 const generateReport = async () => {
   generating.value = true;
   try {
-    // const response = await ReportAPI.generatePublicityReportAPI({
-    //   platform: report.value.platform,
-    //   title: report.value.title,
-    //   content: report.value.content,
-    //   tags: selectedTags.value,
-    //   eventName: report.value.eventName,
-    //   eventType: report.value.eventType,
-    //   promotionTendency: report.value.promotionTendency,
-    //   promotionMethod: report.value.promotionMethod
-    // });
-    // console.log('生成报告响应:', response);
-    // if (response.code === 200) {
-    //   generatedReport.value = response.data.report;
-    //   ElMessage.success('报告生成成功！');
-    // }
+    const response = await ReportAPI.generatePublicityReportAPI({
+      platform: report.value.platform,
+      title: report.value.title,
+      content: report.value.content,
+      tags: selectedTags.value,
+      eventName: report.value.eventName,
+      eventType: report.value.eventType,
+      promotionTendency: report.value.promotionTendency,
+      promotionMethod: report.value.promotionMethod
+    });
+    console.log('生成报告响应:', response);
+    if (response.code === 200) {
+      generatedReport.value = response.data.report;
+      ElMessage.success('报告生成成功！');
+    }
     console.log("省钱");
   } catch (error) {
     console.error('生成报告失败:', error);

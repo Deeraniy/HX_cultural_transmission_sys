@@ -1,127 +1,143 @@
 <template>
-  <div ref="lineRaceChart" style="width: 100%; height: 600px;"></div>
+  <div class="line-race-container">
+    <div ref="chartRef" class="chart"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, watch, onUnmounted } from 'vue';
 import * as echarts from 'echarts';
-import { onMounted, ref, watch } from 'vue';
 
-// 定义 props 类型
-type Props = {
-  timeData: Array<{
-    date: string;
-    sentimentScore: number;
-    sentiment: string;
-    commentCount: number;
-  }>;
+const props = defineProps({
+  timeData: {
+    type: Array,
+    required: true
+  },
+  width: {
+    type: String,
+    default: '100%'
+  },
+  height: {
+    type: String,
+    default: '100%'
+  }
+});
+
+const chartRef = ref(null);
+let chart: echarts.ECharts | null = null;
+
+const initChart = () => {
+  if (!chartRef.value) return;
+  
+  chart = echarts.init(chartRef.value);
+  updateChart();
 };
 
-// 接收父组件传递的时间情感数据
-const props = defineProps<Props>();
+const updateChart = () => {
+  if (!chart || !props.timeData.length) return;
 
-const lineRaceChart = ref(null);
-let chartInstance = null;
-
-// 初始化图表并设置选项
-function initChart(data) {
-  if (!lineRaceChart.value) {
-    console.error("图表容器未挂载");
-    return;
-  }
-  console.log("11111子组件接收到的 timeData:", data)
-  chartInstance = echarts.init(lineRaceChart.value);
-  const option = setChartOption(data);
-  chartInstance.setOption(option);
-}
-
-
-// 设置图表选项
-function setChartOption(data) {
-  console.log("22222子组件接收到的 timeData:", data)
-  const chartData = data.map(item => ({
-    date: item.date,
-    sentimentScore: item.sentimentScore * 100,
-  }));
-  console.log("33333子组件接收到的 timeData:", chartData)
-  return {
-    title: {
-      text: '情感变化趋势',
-      left: 'center',
+  const option = {
+    grid: {
+      top: '5%',
+      left: '3%',
+      right: '4%',
+      bottom: '8%',
+      containLabel: true
     },
     tooltip: {
       trigger: 'axis',
-      formatter: function (params) {
-        const point = params[0].data;
-        return `
-          日期: ${point.date || '未知'}<br/>
-          情感分数: ${point.sentimentScore || '未知'}
-        `;
-      },
+      formatter: function(params: any) {
+        const data = params[0];
+        return `${data.name}<br/>
+                情感得分: ${data.value}<br/>
+                评论数量: ${data.data.count}<br/>
+                情感类型: ${data.data.type}`;
+      }
     },
     xAxis: {
       type: 'category',
-      name: '日期',
-      nameLocation: 'middle',
-      nameGap: 55,
-      data: chartData.map(item => item.date),
+      data: props.timeData.map(item => item.date),
       axisLabel: {
-        interval: 1,
-        rotate: 45,
-      },
+        interval: 'auto',
+        rotate: 45
+      }
     },
     yAxis: {
       type: 'value',
-      name: '情感分数',
-    },
-    grid: {
-      left: '10%',
-      right: '10%',
-      bottom: '15%',
-    },
-    series: [
-      {
-        type: 'line',
-        name: '情感变化',
-        data: chartData.map(item => ({
-          value: item.sentimentScore,
-          date: item.date,
-          sentimentScore: item.sentimentScore, // 确保 tooltip 能访问到
-        })),
-        showSymbol: true,
-        symbolSize: 8,
+      name: '情感得分',
+      min: 0,
+      max: 1,
+      splitLine: {
+        show: true,
         lineStyle: {
-          width: 2,
-        },
-      },
-    ],
-  };
-}
-
-// 监听 props 数据的变化
-watch(
-    () => props.timeData,
-    newData => {
-      if (newData && newData.length) {
-        initChart(newData);
+          type: 'dashed'
+        }
       }
     },
-    { immediate: true }
-);
+    series: [{
+      data: props.timeData.map(item => ({
+        value: item.value,
+        itemStyle: {
+          color: item.type === 'positive' ? '#67C23A' :
+                item.type === 'negative' ? '#F56C6C' : '#E6A23C'
+        },
+        count: item.count,
+        type: item.type
+      })),
+      type: 'line',
+      smooth: true,
+      symbolSize: 8,
+      lineStyle: {
+        width: 2
+      }
+    }]
+  };
 
-// 添加 onMounted 钩子
-onMounted(() => {
-  if (props.timeData && props.timeData.length) {
-    console.log("子组件接收到的 timeData:", props.timeData);
-    initChart(props.timeData); // 初始化图表
-  } else {
-    console.warn("props.timeData 数据为空或未传递");
+  chart.setOption(option);
+};
+
+// 监听数据变化
+watch(() => props.timeData, () => {
+  if (chart) {
+    updateChart();
   }
+}, { deep: true });
+
+// 监听容器大小变化
+const handleResize = () => {
+  if (chart) {
+    chart.resize();
+  }
+};
+
+onMounted(() => {
+  initChart();
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  if (chart) {
+    chart.dispose();
+  }
+  window.removeEventListener('resize', handleResize);
 });
 </script>
 
 <style scoped>
-#lineRaceChart {
+.line-race-container {
   width: 100%;
-  height: 600px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.chart {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
 }
 </style>

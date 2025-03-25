@@ -5,7 +5,7 @@
       <div class="table-section">
         <!-- 切换按钮 -->
         <div class="switch-buttons">
-          <el-radio-group v-model="currentTable" size="large">
+          <el-radio-group v-model="currentTable" size="large" @change="handleTableChange">
             <el-radio-button label="sentiment">情感分析</el-radio-button>
             <el-radio-button label="topic">主题聚类</el-radio-button>
           </el-radio-group>
@@ -31,8 +31,10 @@
       <div class="chart-section">
         <el-skeleton v-if="isBarChartLoading" :rows="3" animated />
         <BarChart
+          ref="barChartRef"
           v-else
-          :chartData="sentiment"
+          :chartData="currentChartData"
+          :chartType="currentTable"
           style="width: 100%; height: 100%;"
         />
       </div>
@@ -41,13 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed, nextTick, onActivated } from 'vue';
 import BarChart from "@/components/DetailPage/subcomponent/BarChart.vue";
 import TopicCluster from "@/components/DetailPage/subcomponent/TopicCluster.vue";
 import SentimentStats from "@/components/DetailPage/subcomponent/SentimentStats.vue";
 import LdaAPI from "@/api/lda";
 import SentimentAPI from "@/api/sentiment";
 import { ElMessage } from 'element-plus';
+import { useRoute } from 'vue-router';
 
 // Props 定义
 interface Props {
@@ -68,6 +71,17 @@ const topic = ref<any>([]);
 const isBarChartLoading = ref(true);
 const isSentimentStatsLoading = ref(true);
 const currentTable = ref('sentiment'); // 当前显示的表格类型
+
+// 计算属性：根据当前选择的表格类型返回对应的数据
+const currentChartData = computed(() => {
+  return currentTable.value === 'sentiment' ? topic.value : sentiment.value;
+});
+
+// 处理表格类型变化
+const handleTableChange = (value) => {
+  console.log('Table type changed to:', value);
+  // 不需要额外操作，计算属性会自动更新图表数据
+};
 
 // 加载数据
 const loadData = async () => {
@@ -135,6 +149,31 @@ onMounted(async () => {
   console.log('CommentAnalysis mounted with props:', props);
   await loadData();
 });
+
+const barChartRef = ref(null);
+
+// 添加 activated 钩子
+onActivated(() => {
+  // 在组件激活时重置图表大小
+  nextTick(() => {
+    if (barChartRef.value) {
+      barChartRef.value.resizeChart();
+    }
+  });
+});
+
+// 监听路由变化
+const route = useRoute();
+watch(
+  () => route.path,
+  () => {
+    nextTick(() => {
+      if (barChartRef.value) {
+        barChartRef.value.resizeChart();
+      }
+    });
+  }
+);
 </script>
 
 <style scoped>
@@ -143,19 +182,20 @@ onMounted(async () => {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  overflow: auto;
+
+  overflow: hidden; /* 防止滚动 */
 }
 
 .analysis-container {
   display: flex;
   gap: 20px;
-  height: calc(100vh - 200px); /* 调整高度以适应页面 */
-  width: 100%;
+  height: calc(100vh - 180px);
+  width: 100%; /* 减小宽度，防止溢出 */
+  margin: 0 auto; /* 居中显示 */
 }
 
 .table-section {
-  flex: 0 0 33.333%; /* 固定宽度为1/3 */
+  flex: 0 0 28%; /* 进一步减小表格区域的宽度 */
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -180,13 +220,14 @@ onMounted(async () => {
 }
 
 .chart-section {
-  flex: 1; /* 占据剩余空间 */
+  flex: 0 0 64%; /* 固定宽度，防止溢出 */
   background-color: white;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 /* 确保图表容器占满可用空间 */

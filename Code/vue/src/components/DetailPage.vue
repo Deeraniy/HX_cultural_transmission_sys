@@ -168,13 +168,13 @@ const themeType = ref(currentThemeType.value)
 
 <style scoped>
 .common-layout {
-  height: 100vh;
+  height: 97.8vh;
   display: flex;
   flex-direction: column;
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .header {
@@ -187,46 +187,64 @@ const themeType = ref(currentThemeType.value)
   display: flex;
   flex-direction: column;
   padding: 0;
-  overflow: visible;
+  margin-top: -20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
 }
 
 .content-area {
   flex: 1;
   position: relative;
-  margin: 20px;
   min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .tab-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .tab-inner {
   height: 100%;
+  margin-top: -10px;
   padding: 20px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .tab-inner h2 {
   margin: 0 0 20px 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ebeef5;
-  color: #303133;
+  color: #fff8f0;
 }
 
 .nav-tabs {
-  height: 60px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-top: 1px solid #e4e7ed;
-  margin: 0 20px 20px 20px;
+  height: 58px;
+  background-image: url('@/assets/img/a333.jpg');
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-tabs::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.4);
+  z-index: 0;
 }
 
 .tab-menu {
@@ -234,12 +252,18 @@ const themeType = ref(currentThemeType.value)
   justify-content: space-around;
   height: 100%;
   background: transparent;
+  position: relative;
+  z-index: 1;
 }
 
 :deep(.el-menu--horizontal) {
   border-bottom: none;
   height: 100%;
   background: transparent;
+}
+
+:deep(.el-menu--horizontal > .el-menu-item) {
+  background-color: transparent !important;
 }
 
 :deep(.el-menu-item) {
@@ -249,21 +273,32 @@ const themeType = ref(currentThemeType.value)
   height: 100%;
   line-height: 1.2;
   padding: 8px 20px;
+  color: #000000;
+  font-weight: bold;
+  background-color: transparent !important;
+}
+
+:deep(.el-menu-item:hover) {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+:deep(.el-menu-item.is-active) {
+  color: #409eff;
+  border-bottom: 2px solid #409eff;
+  background-color: transparent !important;
 }
 
 :deep(.el-menu-item .el-icon) {
   margin-right: 0;
   margin-bottom: 4px;
   font-size: 20px;
+  color: #ffffff;
 }
 
 :deep(.el-menu-item span) {
   font-size: 14px;
-}
-
-:deep(.el-menu-item.is-active) {
-  color: #409eff;
-  border-bottom: 2px solid #409eff;
+  color: #ffffff;
+  letter-spacing: 0.5px;
 }
 
 .image-danmu-container {

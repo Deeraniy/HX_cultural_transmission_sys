@@ -376,7 +376,7 @@
     // 使用重试机制
     try {
       const commentResponse = await fetchWithRetry(() => 
-        CommentAPI.getCommentList(nowName.value, pageTypeNum.value)
+        CommentAPI.getPostiveComment(nowName.value)
       );
       // 评论改了格式，要记得修改
       console.log("原始评论数据:", commentResponse);
@@ -656,9 +656,8 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-    overflow: auto;
+    padding: 10px;
+    overflow: hidden; /* 改为 hidden，防止滚动 */
   }
   
   .image-danmu-container {
@@ -666,27 +665,18 @@
     justify-content: space-between;
     align-items: stretch;
     gap: 20px;
-    min-height: 300px;
-    width: 100%;
+    min-height: 280px;
+    width: 97%;
   }
   
   .city-image-container,
   .wordcloud-container {
     flex: 0 0 auto;
     width: 300px;
-    background-color: white;
+    height: 300px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  }
-  
-  .danmu-container {
-    flex: 1;
-    min-width: 300px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
   }
   
   .city-image,
@@ -694,6 +684,17 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  
+  .danmu-container {
+    flex: 1;
+    height: 93.5%;
+    min-width: 250px;
+    padding-top: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
   }
   
   .danmu {
@@ -705,16 +706,18 @@
   .charts-container {
     display: flex;
     gap: 20px;
-    height: 400px;
+    height: 265px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
+    justify-content: flex-start;
   }
   
   .pie-chart-container {
-    flex: 0 0 400px;
+    flex: 0 0 420px;
+    padding: 10px;
+    padding-left: 30px;
     background-color: white;
     border-radius: 8px;
-    padding: 20px;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
     height: 100%;
   }
@@ -722,20 +725,19 @@
   .comments-ranking {
     flex: 1;
     min-width: 0;
+    max-width: 835px;
     background-color: white;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 92.5%;
   }
   
   .comments-ranking h3 {
-    margin: 0 0 16px 0;
-    color: #303133;
-    font-size: 18px;
-    font-weight: 600;
+    margin: 0 0 12px 0;
+    font-size: 16px;
   }
   
   .comments-list {
@@ -753,7 +755,8 @@
   }
   
   .comment-item {
-    padding: 12px;
+    padding: 8px;
+    font-size: 13px;
     border-bottom: 1px solid #ebeef5;
     transition: background-color 0.3s;
   }
