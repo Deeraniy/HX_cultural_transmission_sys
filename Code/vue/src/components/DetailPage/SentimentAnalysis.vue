@@ -30,12 +30,12 @@
 
         <!-- 三线图 -->
         <template v-else>
-          我是三线图
-          <el-skeleton v-if="isThreeLineLoading" :rows="3" animated />
-          <ThreeLineChart
-              v-if="threeLineData && threeLineData.length > 0"
-              :timeData="threeLineData"
 
+          <el-skeleton v-show="isThreeLineLoading" :rows="3" animated />
+          <ThreeLineChart
+              v-show="threeLineData && threeLineData.length > 0"
+              :timeData="threeLineData"
+              style="height: 1000px;width: 1000px"
           />
         </template>
       </div>
