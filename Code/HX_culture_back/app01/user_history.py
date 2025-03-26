@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, HttpResponse
 import pymysql
 import json
 from django.http import JsonResponse

@@ -98,6 +98,7 @@ DATABASES = {
         'PORT': 3306, # 端口
         'USER': 'root',  # 数据库用户名
         'PASSWORD': 'song', # 数据库密码
+
     }
 }
 
