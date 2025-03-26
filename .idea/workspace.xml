@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析页面样式调整">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="提交一下">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
@@ -165,15 +165,8 @@
       <workItem from="1742344277495" duration="18833000" />
       <workItem from="1742615859842" duration="6829000" />
       <workItem from="1742736308363" duration="1234000" />
-      <workItem from="1742884746904" duration="3816000" />
-    </task>
-    <task id="LOCAL-00008" summary="影视艺术页面(前后端连接完成)">
-      <option name="closed" value="true" />
-      <created>1736323233739</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1736323233739</updated>
+      <workItem from="1742884746904" duration="4408000" />
+      <workItem from="1742980890679" duration="761000" />
     </task>
     <task id="LOCAL-00009" summary="美食文化页面嵌入">
       <option name="closed" value="true" />
@@ -559,7 +552,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742899799407</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="提交一下">
+      <option name="closed" value="true" />
+      <created>1742910186078</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1742910186078</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -604,11 +605,11 @@
     <MESSAGE value="知识图谱（红色" />
     <MESSAGE value="宣传策略初步" />
     <MESSAGE value="宣传策略微调" />
-    <MESSAGE value="提交一下" />
     <MESSAGE value="之前修改内容整合" />
     <MESSAGE value="前面修改内容整合" />
     <MESSAGE value="情感分析页面样式调整" />
-    <option name="LAST_COMMIT_MESSAGE" value="情感分析页面样式调整" />
+    <MESSAGE value="提交一下" />
+    <option name="LAST_COMMIT_MESSAGE" value="提交一下" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
