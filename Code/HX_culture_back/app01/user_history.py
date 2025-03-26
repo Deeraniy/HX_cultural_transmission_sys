@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect, HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, HttpResponse
 import pymysql
-
+import json
+from django.http import JsonResponse
+from datetime import datetime
 # 获取用户浏览记录
 def get_all_history(request):
     if request.method == 'GET':
@@ -43,14 +45,14 @@ def get_all_history(request):
 # 添加浏览记录
 def add_history(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
-        type_ = request.POST.get('type')
-        name = request.POST.get('name')
-        image_url = request.POST.get('image_url')
-        describe = request.POST.get('describe')
-        time = request.POST.get('time')
+        data = json.loads(request.body)
+        uid = data.get('uid')
+        type = data.get('type')
+        name = data.get('name')
+        img_url = data.get('img_url')
+        describe = data.get('describe')
 
-        if uid and type_ and name and image_url and describe:
+        if uid:
             # 创建连接
             conn = pymysql.connect(host='120.233.26.237', port=3306, user='root', passwd='song',
                                    db='hx_cultural_transmission_sys', charset='utf8')
@@ -58,8 +60,9 @@ def add_history(request):
             cursor = conn.cursor()
             try:
                 # 执行SQL插入语句
-                sql = "INSERT INTO user_history (username, type, name, image_url, describe,time) VALUES (%s, %s, %s, %s, %s,%s)"
-                cursor.execute(sql, (uid, type_, name, image_url, describe, time))
+                time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                sql = "INSERT INTO user_history (uid, type, name, img_url, history_describe,history_time) VALUES (%s, %s, %s, %s, %s,%s)"
+                cursor.execute(sql, (uid, type, name, img_url, describe, time))
                 conn.commit()
                 return HttpResponse("添加成功")
             except Exception as e:

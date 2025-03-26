@@ -6,7 +6,7 @@ from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
 from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details
-from app01 import text_to_image
+from app01 import text_to_image,user_history
 from django.contrib import admin
 from django.urls import include
 
@@ -22,7 +22,10 @@ urlpatterns = [
 #     url(r'^search-form/$', search.search_form),
 #     url(r'^search/$', search.search),
 #     url(r'^search-post/$', search2.search_post),
+
     url(r'^classes/',view.classes),
+    url(r'^add_user_history/',user_history.add_history),
+    url(r'^get_all_history/',user_history.get_all_history),
     url(r'^register/',user.register_user),
     url(r'^login/',user.verify_user),
     url(r'^get_city/',city.get_city_list),

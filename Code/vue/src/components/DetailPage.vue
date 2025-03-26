@@ -15,7 +15,7 @@
         <div class="content-area">
           <!-- 基本信息页面 -->
           <div v-show="currentTab === 'basic'" class="tab-content">
-            <BasicInfo 
+            <BasicInfo
               :name="currentName"
               :page-type="pageType"
               :theme-type="themeType"
@@ -25,7 +25,7 @@
 
           <!-- 评论分析页面 -->
           <div v-show="currentTab === 'comments'" class="tab-content">
-            <CommentAnalysis 
+            <CommentAnalysis
               :name="name"
               :pageType="value"
               :themeType="theme"
@@ -34,7 +34,7 @@
 
           <!-- 情感分析页面 -->
           <div v-show="currentTab === 'sentiment'" class="tab-content">
-            <SentimentAnalysis 
+            <SentimentAnalysis
               :name="name"
               :pageType="value"
               :themeType="theme"
@@ -43,7 +43,7 @@
 
           <!-- AI 报告页面 -->
           <div v-show="currentTab === 'report'" class="tab-content">
-            <AIReport 
+            <AIReport
               :name="name"
               :pageType="value"
               :themeType="theme"
@@ -92,6 +92,7 @@ import BasicInfo from "@/components/DetailPage/BasicInfo.vue"
 import CommentAnalysis from "@/components/DetailPage/CommentAnalysis.vue"
 import SentimentAnalysis from "@/components/DetailPage/SentimentAnalysis.vue"
 import AIReport from "@/components/DetailPage/AIReport.vue"
+import ThreeLineChart from "@/components/DetailPage/subcomponent/ThreeLineChart.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -134,7 +135,7 @@ onMounted(() => {
     const routeName = route.query.name as string
     const routeValue = route.query.value as string
     const routeTheme = route.query.theme as string
-    
+
     if (!routeName || !routeValue) {
       ElMessage.error('缺少必要的参数')
       return

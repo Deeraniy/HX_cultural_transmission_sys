@@ -27,15 +27,15 @@
           />
           <div v-else class="no-data">暂无数据</div>
         </template>
-        
+
         <!-- 三线图 -->
         <template v-else>
-          <el-skeleton v-if="isThreeLineLoading" :rows="3" animated />
+
+          <el-skeleton v-show="isThreeLineLoading" :rows="3" animated />
           <ThreeLineChart
-            v-else
-            :timeData="threeLineData"
-            :height="'100%'"
-            :width="'100%'"
+              v-show="threeLineData && threeLineData.length > 0"
+              :timeData="threeLineData"
+              style="height: 1000px;width: 1000px"
           />
         </template>
       </div>
@@ -106,7 +106,7 @@ const processThreeLineData = (data: any) => {
 
   data.data.forEach(item => {
     const key = `${item.year}-${item.month.toString().padStart(2, '0')}`;
-    
+
     if (!monthlyStats.has(key)) {
       monthlyStats.set(key, {
         date: key,
@@ -139,11 +139,11 @@ const processThreeLineData = (data: any) => {
 const loadData = async () => {
   try {
     console.log('Loading sentiment analysis data for:', props.name, props.pageType);
-    
+
     // 加载时间序列数据
     try {
       isTimeChartLoading.value = true;
-      
+
       const timeResponse = await SentimentAPI.getSentimentResultAPI(props.name, Number(props.pageType));
       console.log('Raw time response:', timeResponse);
 
@@ -170,48 +170,26 @@ const loadData = async () => {
 
     // 加载三线图数据
     try {
-      isThreeLineLoading.value = true;
-      
-      // 使用相同的数据源
-      const threeLineResponse = await SentimentAPI.getSentimentResultAPI(props.name, Number(props.pageType));
-      
-      if (threeLineResponse && threeLineResponse.status === 'success' && Array.isArray(threeLineResponse.data)) {
-        // 处理三线图数据
-        const monthlyStats = new Map();
-        
-        threeLineResponse.data.forEach(item => {
-          const key = `${item.year}-${item.month.toString().padStart(2, '0')}`;
-          
-          if (!monthlyStats.has(key)) {
-            monthlyStats.set(key, {
-              date: key,
-              positive: 0,
-              neutral: 0,
-              negative: 0
-            });
-          }
-          
-          const stats = monthlyStats.get(key);
-          if (item.sentiment === 'positive') {
-            stats.positive += item.comment_count;
-          } else if (item.sentiment === 'negative') {
-            stats.negative += item.comment_count;
-          } else {
-            stats.neutral += item.comment_count;
-          }
-        });
+      const threeLineResponse = await SentimentAPI.getCasualImpactAPI(props.name);
+      console.log("三线图原始数据为:", threeLineResponse);
 
-        threeLineData.value = Array.from(monthlyStats.values())
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      // 检查数据结构是否符合预期
+      if (threeLineResponse &&
+          typeof threeLineResponse === 'object' &&
+          'economic_data' in threeLineResponse &&
+          'sentiment_data' in threeLineResponse &&
+          'casual_impact_analysis' in threeLineResponse) {
+
+        threeLineData.value = threeLineResponse;
+        console.log("三线图数据处理成功");
       } else {
-        console.warn('Invalid three line response:', threeLineResponse);
-        threeLineData.value = [];
+        console.warn("三线图数据格式不符合预期:", threeLineResponse);
+        threeLineData.value = []; // 设置为空数组避免渲染错误
       }
     } catch (error) {
-      console.error('Error loading three line data:', error);
-      threeLineData.value = [];
-      ElMessage.error('加载情感分布数据失败，请稍后重试');
-    } finally {
+      console.error("加载三线图数据时出错:", error);
+      threeLineData.value = []; // 出错时也设置为空数组
+    }finally {
       isThreeLineLoading.value = false;
     }
   } catch (error) {

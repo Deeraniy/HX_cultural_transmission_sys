@@ -14,6 +14,13 @@ interface UserUpdateData {
     mobile?: string;
     location?: string;
 }
+interface UserHistoryData {
+    uid: number;    // 对应后端的username参数
+    type: string;        // 记录类型
+    name: string;        // 项目名称
+    img_url: string;   // 图片URL
+    describe: string;    // 描述
+}
 
 class UserAPI {
     // 用户注册
@@ -86,6 +93,8 @@ class UserAPI {
         });
     }
 
+
+
     // 删除用户
     static deleteUser(userId: string) {
         return request({
@@ -93,6 +102,40 @@ class UserAPI {
             method: 'delete'
         });
     }
+
+    // 用户浏览记录添加（对应后端的add_history）
+    static AddUserHistory(data: UserHistoryData) {
+        return request({
+            url: `${BASE_URL}/add_user_history/`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                uid: data.uid,
+                type: data.type,
+                name: data.name,
+                img_url: data.img_url,
+                describe: data.describe,
+            }
+        }).catch(error => {
+            console.error('Add history error:', error.response?.data || error);
+            throw error;
+        });
+    }
+
+    // 用户浏览记录获取
+    static GetUserHistory(uid: number) {
+        return request({
+            url: `${BASE_URL}/get_all_history/`,
+            method: 'get',
+            params: { uid }
+        });
+    }
+
+
+    //用户浏览记录表
+
 }
 
 export default UserAPI ;
