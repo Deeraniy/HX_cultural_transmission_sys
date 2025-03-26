@@ -26,11 +26,10 @@ const props = defineProps({
 const chartRef = ref(null);
 let chart: echarts.ECharts | null = null;
 
-const initChart = () => {
-  if (!chartRef.value) return;
-  
-  chart = echarts.init(chartRef.value);
-  updateChart();
+const resizeChart = () => {
+  if (chart) {
+    chart.resize();
+  }
 };
 
 const updateChart = () => {
@@ -38,10 +37,10 @@ const updateChart = () => {
 
   const option = {
     grid: {
-      top: '5%',
+      top: '10%',
       left: '3%',
       right: '4%',
-      bottom: '8%',
+      bottom: '15%',
       containLabel: true
     },
     tooltip: {
@@ -59,7 +58,8 @@ const updateChart = () => {
       data: props.timeData.map(item => item.date),
       axisLabel: {
         interval: 'auto',
-        rotate: 45
+        rotate: 45,
+        margin: 14
       }
     },
     yAxis: {
@@ -67,6 +67,8 @@ const updateChart = () => {
       name: '情感得分',
       min: 0,
       max: 1,
+      scale: true,
+      splitNumber: 3,
       splitLine: {
         show: true,
         lineStyle: {
@@ -86,7 +88,7 @@ const updateChart = () => {
       })),
       type: 'line',
       smooth: true,
-      symbolSize: 8,
+      symbolSize: 6,
       lineStyle: {
         width: 2
       }
@@ -96,48 +98,65 @@ const updateChart = () => {
   chart.setOption(option);
 };
 
-// 监听数据变化
-watch(() => props.timeData, () => {
-  if (chart) {
+const initChart = () => {
+  if (!chartRef.value) return;
+  chart = echarts.init(chartRef.value);
+  updateChart();
+};
+
+onMounted(() => {
+  chart = echarts.init(chartRef.value);
+  updateChart();
+  
+  const handleResize = () => {
+    if (chart) {
+      chart.resize();
+    }
+  };
+  
+  const resizeObserver = new ResizeObserver(() => {
+    handleResize();
+  });
+  
+  if (chartRef.value) {
+    resizeObserver.observe(chartRef.value);
+  }
+  
+  window.addEventListener('resize', handleResize);
+  
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+    resizeObserver.disconnect();
+    if (chart) {
+      chart.dispose();
+    }
+  });
+});
+
+watch(() => props.timeData, (newData) => {
+  if (newData && chart) {
     updateChart();
   }
 }, { deep: true });
 
-// 监听容器大小变化
-const handleResize = () => {
-  if (chart) {
-    chart.resize();
-  }
-};
-
-onMounted(() => {
-  initChart();
-  window.addEventListener('resize', handleResize);
-});
-
-onUnmounted(() => {
-  if (chart) {
-    chart.dispose();
-  }
-  window.removeEventListener('resize', handleResize);
+defineExpose({
+  resizeChart
 });
 </script>
 
 <style scoped>
 .line-race-container {
   width: 100%;
-  height: 100%;
+  height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 
 .chart {
   width: 100%;
   height: 100%;
-  min-height: 400px;
+  min-height: 250px;
 }
 </style>
