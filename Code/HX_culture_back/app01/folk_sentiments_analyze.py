@@ -46,10 +46,10 @@ def sentiments_all():
     """对所有民间评论进行情感分析并更新数据库"""
     try:
         conn = pymysql.connect(
-            host='60.215.128.117',
-            port=15320,
+            host='8.148.26.99',
+            port=3306,
             user='root',
-            passwd='kissme77',
+            passwd='song',
             db='hx_cultural_transmission_sys',
             charset='utf8',
             connect_timeout=10,
@@ -102,10 +102,10 @@ def sentiments_analyze(request):
     folk_name = request.GET.get('name')
     try:
         conn = pymysql.connect(
-            host='60.215.128.117',
-            port=15320,
+            host='8.148.26.99',
+            port=3306,
             user='root',
-            passwd='kissme77',
+            passwd='song',
             db='hx_cultural_transmission_sys',
             charset='utf8'
         )
@@ -180,8 +180,8 @@ def sentiments_result_total_count(request):
         logger.info(f"正在查询非遗民俗: {name}")
 
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root',
-                             passwd='kissme77', db='hx_cultural_transmission_sys',
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
+                             passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
@@ -259,8 +259,8 @@ def sentiments_result(request):
 
         logger.info(f"正在查询民间: {folk_name}")
 
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root',
-                             passwd='kissme77', db='hx_cultural_transmission_sys',
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
+                             passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 

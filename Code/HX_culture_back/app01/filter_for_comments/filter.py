@@ -10,8 +10,8 @@ def load_sensitive_words(file_path='./app01/filter_for_comments/sensitive_words_
         return set()
 
 def filter_positive_comments():
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                          passwd='kissme77', db='hx_cultural_transmission_sys', 
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                          passwd='song', db='hx_cultural_transmission_sys', 
                           charset='utf8')
     cursor = conn.cursor()
     
@@ -70,8 +70,8 @@ def get_filtered_comments_by_tag(request):
         if not tag_name:
             return JsonResponse({'error': '请提供tag_name参数'}, status=400)
             
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                             passwd='song', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(pymysql.cursors.DictCursor)  # 使用字典游标
         

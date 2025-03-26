@@ -24,7 +24,8 @@ class SentimentAPI {
             method: "get",
             params: {
                 name: name
-            }
+            },
+            timeout: 120000 // 增加超时时间到 120 秒
         });
     }
 
@@ -49,7 +50,8 @@ class SentimentAPI {
             method: "get",
             params: {
                 name: name
-            }
+            },
+            timeout: 120000 // 增加超时时间到 120 秒
         });
     }
 

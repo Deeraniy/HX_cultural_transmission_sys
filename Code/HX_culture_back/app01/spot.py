@@ -7,13 +7,13 @@ def get_spot_list(request):
     # 访问classes的时候展示班级
 
     # 创建连接
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
     # 执行SQL，并返回收影响行数
-    effect_row = cursor.execute("select * from scenicspot")
+    effect_row = cursor.execute("select * from spot")
     spot_list =cursor.fetchall()
     print(spot_list)
 
@@ -27,11 +27,11 @@ def get_spot_list(request):
 
 def get_spot_by_name(request):
     spot_name=request.GET.get('spot_name')
-    conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+    conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                            db='hx_cultural_transmission_sys',charset='utf8')
     # 创建游标
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    sql_query = "select * from scenicspot where spot_name like %s"
+    sql_query = "select * from spot where spot_name like %s"
     effect_row=cursor.execute(sql_query,('%'+spot_name+'%'))
     spot_list=cursor.fetchall()
     cursor.close()

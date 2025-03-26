@@ -72,6 +72,7 @@ urlpatterns = [
     url(r'^spot_get_cloud/',cloud.get_cloud),
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
     url(r'^food_get_cloud/',cloud.get_cloud_food),
+    url(r'^folk_get_cloud/',cloud.get_cloud_folk),
     url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_food_influence/',food.get_food_influence),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_folkcustom/',folk.get_folkcustom_list),# get_folkcustom_list获取 folkcustom全部详细信息，把名称和图片等展示

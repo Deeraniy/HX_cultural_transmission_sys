@@ -101,8 +101,8 @@ def sentiments_time_series(request):
         logger.info(f"正在查询标签: {tag_name}")
         
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                             passwd='song', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
@@ -432,8 +432,8 @@ def test_casual_impact():
     """测试因果推理功能"""
     try:
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                             passwd='song', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
