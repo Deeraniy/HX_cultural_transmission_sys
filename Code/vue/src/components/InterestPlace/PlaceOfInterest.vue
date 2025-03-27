@@ -19,7 +19,7 @@
             </el-option>
           </el-select>
           <div>
-            <h3 style="text-align: center;font-family: 'HelveticaNeue', serif;font-size: 25px">地理位置</h3>
+            <h3 class="location-title">地理位置</h3>
             <div v-if="selectedCityInfoLocal" class="city-info">
               <div class="image-container">
                 <img :src="selectedCityInfoLocal.image" alt="城市图片" class="city-image" />
@@ -139,8 +139,6 @@
       </div>
     </el-dialog>
 
-    <!-- 添加词云图容器 -->
-    <div id="wordCloudChart" style="width: 100%; height: 300px;"></div>
   </el-main>
 </template>
 
@@ -733,6 +731,70 @@ watch(tags, (newTags) => {
   }
 }, { deep: true });
 
+const initMap = () => {
+  if (!chartsDOM.value) return;
+
+  // 创建一个新的主题
+  const mapTheme = {
+    textStyle: {
+      fontFamily: 'ZhuanTi, serif',
+      fontSize: 14
+    }
+  };
+  // 注册一个专门的地图主题
+  echarts.registerTheme('mapTheme', mapTheme);
+  // 使用新主题初始化地图
+  myChart = echarts.init(chartsDOM.value, 'mapTheme');
+
+  // 注册地图数据
+  echarts.registerMap('hunan', hunanMapData);
+
+  // 地图配置项
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b}',
+      textStyle: {
+        fontFamily: 'ZhuanTi, serif',
+        fontSize: 14
+      }
+    },
+    series: [{
+      name: '湖南',
+      type: 'map',
+      map: 'hunan',
+      roam: false,
+      zoom: 1.2,
+      center: [111.5, 27.3],
+      label: {
+        show: true,
+        fontFamily: 'ZhuanTi, serif',
+        fontSize: 14,
+        color: '#333'
+      },
+      itemStyle: {
+        areaColor: '#fff8f0',
+        borderColor: '#B71C1C'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontFamily: 'ZhuanTi, serif',
+          fontSize: 16,
+          color: '#333'
+        },
+        itemStyle: {
+          areaColor: '#B71C1C',
+          borderColor: '#B71C1C'
+        }
+      },
+      data: []
+    }]
+  };
+
+  myChart.setOption(option);
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -878,9 +940,9 @@ watch(tags, (newTags) => {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .fancy-name {
-  font-family: 'ZhuanTi', serif; /* 使用纂体字体 */
-  font-size: 13px; /* 根据需要调整字体大小 */
-  color: #555; /* 设置字体颜色 */
+  font-family: 'ZhuanTi', serif !important;
+  font-size: 13px;
+  color: #555;
 }
 
 .attraction-card:hover {
@@ -1170,5 +1232,12 @@ watch(tags, (newTags) => {
       color: #333;
     }
   }
+}
+
+/* 地理位置标题使用特殊字体 */
+.location-title {
+  text-align: center;
+  font-family: 'ZhuanTi', serif !important; /* 使用纂体字体 */
+  font-size: 25px;
 }
 </style>

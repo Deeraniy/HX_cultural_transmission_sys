@@ -414,7 +414,7 @@ const goToFoodHome = () => {
 
 .el-dialog__header {
   font-family: 'HelveticaNeue', serif  !important;;  /* 与其他部分保持一致的字体 */
-  font-size: 28px ;  /* 标题大小 */
+  font-size: 24px ;  /* 标题大小 */
   font-weight: bold; /* 加粗 */
   color: #333 ; /* 字体颜色 */
   text-align: center; /* 让标题居中 */
@@ -428,7 +428,7 @@ const goToFoodHome = () => {
   border-radius: 20px; /* 圆角按钮 */
 
   transition: background-color 0.3s, color 0.3s;
-  font-size: 16px; /* 按钮文字大小 */
+  font-size: 12px; /* 按钮文字大小 */
 }
 
 /* 按钮悬浮和点击效果 */
@@ -487,7 +487,7 @@ const goToFoodHome = () => {
 
 /* 标题样式 */
 .food-detail-dialog h2 {
-  font-size: 28px;
+  font-size: 20px;
   color: #333;
   margin-bottom: 10px;
   font-weight: bold;
@@ -495,7 +495,7 @@ const goToFoodHome = () => {
 
 /* 描述样式 */
 .food-detail-dialog p {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
   line-height: 1.6;
   margin-bottom: 20px;
@@ -641,8 +641,8 @@ margin-left: 390px;
 }
 
 .food-card-sidebar h3 {
-  font-size: 28px;
-  margin: 0;
+  font-size: 22px;
+  margin: 5px;
 }
 
 /* Main content 样式 */
@@ -692,7 +692,7 @@ margin-left: 390px;
   width: 220px;
   height: 330px;
   font-family: 'HelveticaNeue', serif;
-  font-size: 30px;
+  font-size: 24px;
   transform-origin: center center;
   transition: transform 1s ease;
 }

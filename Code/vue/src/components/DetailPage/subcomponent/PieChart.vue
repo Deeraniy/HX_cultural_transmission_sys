@@ -22,7 +22,7 @@ const pieChart = ref(null)
 let chartInstance = null
 
 // 自定义颜色和标签样式
-const chartColors = ['#57A773', '#FF6B6B', '#4ECDC4'] // 颜色数组
+const chartColors = ['#57A773', '#FFD166', '#FF6B6B'] // 绿、黄、红对应正面、中性、负面
 const labelOptions = {
   show: true,
   position: 'inside',
@@ -33,7 +33,8 @@ const labelOptions = {
   borderRadius: 5,
   padding: [5, 10], // 内边距使标签不贴边
   color: '#FFF', // 字体颜色
-  fontWeight: 'bold' // 加粗字体
+  fontFamily: 'HelveticaNeue, serif',
+  fontSize: 14,
 }
 
 // 初始化和更新图表的函数
@@ -41,7 +42,11 @@ const updateChart = (chart, data) => {
   const option = {
     tooltip: {
       trigger: 'item',
-      formatter: '{a} <br/>{b}: {c} ({d}%)'
+      formatter: '{a} <br/>{b}: {c} ({d}%)',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
     },
     legend: {
       orient: 'vertical',  // 垂直方向
@@ -50,7 +55,8 @@ const updateChart = (chart, data) => {
       data: data.map(item => item.name), // 根据数据动态生成图例
       textStyle: {
         color: '#333', // 图例文本颜色
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: 'HelveticaNeue, serif'
       },
       itemWidth: 15,      // 图例标记的宽度
       itemHeight: 15,     // 图例标记的高度
@@ -69,7 +75,8 @@ const updateChart = (chart, data) => {
         emphasis: {
           label: {
             show: true,
-            fontSize: '16',
+            fontSize: 16,
+            fontFamily: 'HelveticaNeue, serif',
             fontWeight: 'bold'
           }
         },

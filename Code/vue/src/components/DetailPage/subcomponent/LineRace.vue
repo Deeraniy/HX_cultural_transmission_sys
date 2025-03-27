@@ -59,7 +59,9 @@ const updateChart = () => {
       axisLabel: {
         interval: 'auto',
         rotate: 45,
-        margin: 14
+        margin: 14,
+        fontFamily: 'HelveticaNeue, serif', // ✅ 确保 x 轴字体正确
+        fontSize: 14
       }
     },
     yAxis: {
@@ -74,6 +76,16 @@ const updateChart = () => {
         lineStyle: {
           type: 'dashed'
         }
+      },
+      nameTextStyle: { // ✅ 这里确保 y 轴 "情感得分" 文字的字体正确
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 14,
+        color: '#333' // 可调整颜色
+      },
+      axisLabel: { // ✅ 这里确保 y 轴刻度的字体正确
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 14,
+        color: '#666' // 可调整颜色
       }
     },
     series: [{

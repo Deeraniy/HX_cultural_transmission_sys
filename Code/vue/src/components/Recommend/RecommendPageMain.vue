@@ -996,7 +996,7 @@ onMounted(async () => {
 
 .row-header h3 {
   margin: 0;
-  font-size: 1.5em;
+  font-size: 1.3em;
   color: white; /* 改为白色文字 */
   display: flex;
   flex-direction: column;

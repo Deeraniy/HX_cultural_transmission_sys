@@ -164,15 +164,16 @@ onUnmounted(() => stopAutoPlay());
 
 .text-container h2 {
   font-family: 'HelveticaNeue', serif;
-margin-top: -110px;
+margin-top: -90px;
   margin-bottom: 0;
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 .text-container p {
   font-family: 'HelveticaNeue', serif;
-  margin: 10px 0;
-  font-size: 1.5rem;
+  margin: 15px;
+  margin-top: 30px;
+  font-size: 1.3rem;
 }
 
 .text-container.special-text {

@@ -38,7 +38,8 @@
         <!-- 语言选择 -->
         <el-dropdown trigger="click" @command="handleLanguageChange">
           <el-button type="primary">
-            {{ language || '中文' }} <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            {{ language || '中文' }}
+            <el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
@@ -108,19 +109,27 @@ watch(
 if (route.path === '/placeOfInterest') activeIndex.value = '3';
 else if (route.path === '/filmLiterature') activeIndex.value = '4';
 else if (route.path === '/food') activeIndex.value = '5';
+
 const language = ref('中文');
 
 // 获取问候语
 const greeting = computed(() => {
   const hour = new Date().getHours();
-  if (hour < 6) return '凌晨好！';
-  if (hour < 9) return '早上好！';
-  if (hour < 12) return '上午好！';
-  if (hour < 14) return '中午好！';
-  if (hour < 17) return '下午好！';
-  if (hour < 19) return '傍晚好！';
-  if (hour < 22) return '晚上好！';
-  return '夜深了！';
+  if (language.value === '中文') {
+    if (hour < 6) return '凌晨好！';
+    if (hour < 9) return '早上好！';
+    if (hour < 12) return '上午好！';
+    if (hour < 14) return '中午好！';
+    if (hour < 17) return '下午好！';
+    if (hour < 19) return '傍晚好！';
+    if (hour < 22) return '晚上好！';
+    return '夜深了！';
+  } else {
+    if (hour < 6) return 'Good Early Morning!';
+    if (hour < 12) return 'Good Morning!';
+    if (hour < 18) return 'Good Afternoon!';
+    return 'Good Evening!';
+  }
 });
 
 // 处理菜单选择
@@ -184,33 +193,15 @@ const handleCommand = (command: string) => {
 };
 
 // 处理语言切换
-const handleLanguageChange = (command: string) => {
+const handleLanguageChange = (command) => {
   switch (command) {
     case 'normal':
       language.value = '系统字体';
       document.documentElement.setAttribute('data-font-style', 'normal');
-      // 先重置所有元素的字体大小
-      document.querySelectorAll('[data-font-style="normal"] *').forEach(el => {
-        el.style.removeProperty('font-size');  // 移除之前设置的内联样式
-      });
-      // 然后应用新的字体大小
-      setTimeout(() => {  // 使用 setTimeout 确保样式重置后再应用新样式
-        document.querySelectorAll('[data-font-style="normal"] *').forEach(el => {
-          if (!el.hasAttribute('data-preserve-font')) {
-            const defaultSize = window.getComputedStyle(el).fontSize;
-            const newSize = Math.max(parseFloat(defaultSize) - 2, 10) + "px";
-            el.style.fontSize = newSize;
-          }
-        });
-      }, 0);
       break;
     case 'styled':
       language.value = '风格字体';
       document.documentElement.setAttribute('data-font-style', 'styled');
-      // 重置所有元素的字体大小
-      document.querySelectorAll('[data-font-style="styled"] *').forEach(el => {
-        el.style.removeProperty('font-size');  // 移除之前设置的内联样式
-      });
       break;
   }
 };

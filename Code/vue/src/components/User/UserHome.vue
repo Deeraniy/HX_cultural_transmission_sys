@@ -2,7 +2,11 @@
 <script setup>
 import UserHomeLeft from '@/components/User/components/left/UserHomeLeft.vue';
 import UserHomeMain from "@/components/User/components/main/UserHomeMain.vue";
+import { provide } from 'vue';
 // import LayoutFooter from '@/components/User/components/LayoutFooter.vue';
+
+// 提供默认头像给子组件使用
+provide('defaultAvatar', new URL('@/assets/default-avatar.png', import.meta.url).href);
 </script>
 
 <template>
