@@ -49,6 +49,7 @@ import LineRace from "@/components/DetailPage/subcomponent/LineRace.vue";
 import ThreeLineChart from "@/components/DetailPage/subcomponent/ThreeLineChart.vue";
 import SentimentAPI from "@/api/sentiment";
 import { ElMessage } from 'element-plus';
+import { initChart } from '@/utils/echartConfig';
 
 // Props 定义
 interface Props {
@@ -227,7 +228,80 @@ watch(timeData, (newValue) => {
 onMounted(async () => {
   console.log('SentimentAnalysis mounted with props:', props);
   await loadData();
+
+  const chartDom = document.getElementById('myChart');
+  if (chartDom) {
+    const chart = initChart(chartDom);
+    chart.setOption(option);
+  }
 });
+
+const initChartOption = () => {
+  // 获取当前字体样式
+  const fontStyle = document.documentElement.getAttribute('data-font-style');
+  const fontFamily = fontStyle === 'normal' ? 
+    'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' : 
+    'HelveticaNeue, serif';
+  const fontSize = fontStyle === 'normal' ? 14 : 16;
+
+  return {
+    // 全局字体设置
+    textStyle: {
+      fontFamily: 'HelveticaNeue, serif',
+      fontSize: 16
+    },
+    title: {
+      text: '情感分析',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 20  // 标题字体稍大
+      }
+    },
+    tooltip: {
+      trigger: 'axis',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    xAxis: {
+      type: 'category',
+      data: [],
+      axisLabel: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    legend: {
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    // ... 其他配置
+  };
+};
+
+// 监听字体样式变化
+watch(
+  () => document.documentElement.getAttribute('data-font-style'),
+  () => {
+    if (chart.value) {
+      const option = initChartOption();
+      // 更新已有数据
+      option.xAxis.data = chart.value.getOption().xAxis[0].data;
+      option.series = chart.value.getOption().series;
+      chart.value.setOption(option);
+    }
+  }
+);
 </script>
 
 <style scoped>

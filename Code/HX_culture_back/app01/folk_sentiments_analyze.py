@@ -203,12 +203,15 @@ def sentiments_result_total_count(request):
             SELECT 
                 sentiment,
                 COUNT(*) as count,
-                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) 
+                    FROM user_comment_folk 
+                    WHERE folk_id = %s AND sentiment IS NOT NULL AND sentiment != ''
+                ), 2) as percentage
             FROM user_comment_folk 
             WHERE folk_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             GROUP BY sentiment
         """
-        cursor.execute(sentiment_sql, (folk_id,))
+        cursor.execute(sentiment_sql, (folk_id, folk_id))
         results = cursor.fetchall()
 
         # 初始化结果字典
@@ -350,20 +353,18 @@ def sentiments_result(request):
             conn.close()
 
 def generate_report(request):
-    """生成民间评论的情感分析报告"""
+    """生成AI分析报告"""
     try:
-        folk_name = request.GET.get('name', '').strip()
-        if not folk_name:
+        name = request.GET.get('name', '').strip()
+        if not name:
             return JsonResponse({
                 'status': 'error',
-                'message': '民间名称不能为空'
+                'message': '非遗民俗名称不能为空'
             }, status=400)
 
-        logger.info(f"正在生成民间 {folk_name} 的情感分析报告")
-
         # 获取情感分析结果
-        sentiment_response = sentiments_result_total_count(request)
-        sentiment_data = json.loads(sentiment_response.content)
+        sentiment_response = sentiments_result(request)
+        sentiment_data = sentiment_response.content if isinstance(sentiment_response.content, dict) else json.loads(sentiment_response.content.decode('utf-8'))
 
         if sentiment_data['status'] != 'success':
             return JsonResponse({
@@ -371,16 +372,25 @@ def generate_report(request):
                 'message': sentiment_data.get('message', '获取情感分析数据失败')
             }, status=400)
 
-        data = sentiment_data['data']
+        data = sentiment_data.get('data', [])
 
         # 处理数据，计算每个月的统计信息
         monthly_stats = {}
+        timeline_data = []  # 新增：用于存储时间轴数据
         for entry in data:
             year = entry['year']
             month = entry['month']
             sentiment = entry['sentiment']
             sentiment_score = entry['sentiment_score']
             comment_count = entry['comment_count']
+
+            # 添加到时间轴数据
+            timeline_data.append({
+                'date': f'{year}-{month:02d}',
+                'sentiment': sentiment,
+                'score': sentiment_score,
+                'count': comment_count
+            })
 
             key = (year, month)
             if key not in monthly_stats:
@@ -434,16 +444,20 @@ def generate_report(request):
 
         # 调用 ZhipuAI 的聊天模型
         response = client.chat.completions.create(
-            model="chatglm_std",
+            model="chatglm_lite",
             messages=[{"role": "user", "content": prompt}]
         )
 
         report = response.choices[0].message.content.strip()
 
+        # 按日期排序时间轴数据
+        timeline_data.sort(key=lambda x: x['date'])
+
         return JsonResponse({
             'status': 'success',
             'report': report,
-            'folk_name': folk_name
+            'folk_name': name,
+            'timeline': timeline_data  # 新增：返回时间轴数据
         })
 
     except Exception as e:

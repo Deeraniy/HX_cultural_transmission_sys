@@ -109,35 +109,71 @@ const renderChart = () => {
     option =  {
       tooltip: {
         trigger: 'axis',
-        axisPointer: { type: 'cross' }
+        axisPointer: { type: 'cross' },
+        textStyle: {
+          fontFamily: 'HelveticaNeue, serif'
+        }
       },
       legend: {
-        data: ['居民消费价格指数', '固定资产投资额累计增长', '工业产品销售率', '实际情感', '预测情感', '置信区间']
+        data: ['居民消费价格指数', '固定资产投资额累计增长', '工业产品销售率', '实际情感', '预测情感', '置信区间'],
+        textStyle: {
+          fontFamily: 'HelveticaNeue, serif'
+        }
       },
       toolbox: {
         show: true,
-        feature: { saveAsImage: {} }
+        feature: { saveAsImage: {} },
+        right: '40px',     // 设置右侧距离
+        top: '10px',       // 设置顶部距离
+        itemSize: 20,      // 设置图标大小
+        itemGap: 10        // 设置图标间距
       },
       xAxis: {
         type: 'category',
         data: allDates,
-        axisLabel: { rotate: 45 }
+        axisLabel: {
+          rotate: 45,
+          fontFamily: 'HelveticaNeue, serif'
+        }
       },
       yAxis: [ // 双Y轴配置
         {
           type: 'value',
           name: '居民消费价格指数/工业产品销售率',
           position: 'left',
-          scale: true
+          scale: true,
+          nameLocation: 'middle',
+          nameGap: 50,
+          nameRotate: 90,
+          splitNumber: 5,
+          nameTextStyle: {
+            fontFamily: 'HelveticaNeue, serif'
+          },
+          axisLabel: {
+            fontFamily: 'HelveticaNeue, serif',
+            fontSize: 14
+          }
         },
         {
           type: 'value',
           name: '固定资产投资额累计增长/情感',
           position: 'right',
           axisLabel: {
-            formatter: '{value}%'
+            formatter: '{value}%',
+            fontFamily: 'HelveticaNeue, serif',
+            fontSize: 14
           },
-          offset: 0
+          nameLocation: 'middle',
+          nameGap: 50,
+          nameRotate: -90,
+          splitNumber: 5,
+          offset: 20,
+          nameTextStyle: {
+            fontFamily: 'HelveticaNeue, serif'
+          },
+          axisLabel: {
+            fontFamily: 'HelveticaNeue, serif'
+          }
         }
       ],
       series: [
@@ -147,7 +183,10 @@ const renderChart = () => {
           yAxisIndex: 1, // 指定左轴
           data: alignData(economicData, 'cpi'),
           smooth: true,
-          itemStyle: { color: '#5470C6' }
+          itemStyle: { color: '#5470C6' },
+          label: {
+            fontFamily: 'HelveticaNeue, serif'
+          }
         },
         {
           name: '固定资产投资额累计增长',
@@ -155,7 +194,10 @@ const renderChart = () => {
           yAxisIndex: 1, // 指定右轴
           data: alignData(economicData, 'investment'),
           smooth: true,
-          itemStyle: { color: '#91CC75' }
+          itemStyle: { color: '#91CC75' },
+          label: {
+            fontFamily: 'HelveticaNeue, serif'
+          }
         },
         {
           name: '工业产品销售率',
@@ -163,7 +205,10 @@ const renderChart = () => {
           yAxisIndex: 1,
           data: alignData(economicData, 'sales_rate'),
           smooth: true,
-          itemStyle: { color: '#FAC858' }
+          itemStyle: { color: '#FAC858' },
+          label: {
+            fontFamily: 'HelveticaNeue, serif'
+          }
         },
         {
           name: '实际情感',
@@ -179,8 +224,12 @@ const renderChart = () => {
             label: {
               position: 'end',
               formatter: '突变点\n{@score}',
-              backgroundColor: 'rgba(255,107,107,0.3)'
+              backgroundColor: 'rgba(255,107,107,0.3)',
+              fontFamily: 'HelveticaNeue, serif'
             }
+          },
+          label: {
+            fontFamily: 'HelveticaNeue, serif'
           }
         },
         {
@@ -198,7 +247,11 @@ const renderChart = () => {
               100
           ),
           smooth: true,
-          itemStyle: { color: '#A685E2' }
+          itemStyle: { color: '#A685E2' },
+          label: {
+            fontFamily: 'HelveticaNeue, serif',
+            fontSize: 14
+          }
         },
         {
           name: '置信区间',
@@ -220,7 +273,10 @@ const renderChart = () => {
           },
           lineStyle: { opacity: 0 },
           stack: 'confidence',
-          symbol: 'none'
+          symbol: 'none',
+          label: {
+            fontFamily: 'HelveticaNeue, serif'
+          }
         },
         {
           name: '置信区间',
@@ -239,14 +295,39 @@ const renderChart = () => {
           areaStyle: { color: 'rgba(166,133,226,0.2)' },
           lineStyle: { opacity: 0 },
           stack: 'confidence',
-          symbol: 'none'
+          symbol: 'none',
+          label: {
+            fontFamily: 'HelveticaNeue, serif',
+            fontSize: 14
+          }
         }
       ],
-      dataZoom: [{
-        type: 'inside',
-        start: 50,
-        end: 100
-      }]
+      dataZoom: [
+        {
+          type: 'slider',  // 使用滑动条类型
+          show: true,
+          xAxisIndex: [0],
+          bottom: 10,      // 距离底部的距离
+          height: 20,      // 滑动条高度
+          start: 0,        // 初始显示全部数据
+          end: 100,
+          handleSize: '110%',  // 两侧手柄大小
+          handleStyle: {
+            color: '#fff',
+            shadowBlur: 3,
+            shadowColor: 'rgba(0,0,0,0.3)',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2
+          }
+        }
+      ],
+      grid: {
+        top: '20%',
+        left: '0%',
+        right: '8%',
+        bottom: '15%',
+        containLabel: true
+      }
     };
 
     chart.setOption(option);
@@ -324,16 +405,20 @@ onUnmounted(() => {
     <el-dialog
       v-model="showReport"
       title="因果推理分析报告"
-      width="60%"
+      width="50%"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      :show-close="true"
+      class="report-dialog"
     >
       <div class="analysis-report">
-        <pre class="report-content">{{ props.timeData?.casual_impact_analysis?.impact_report || '暂无报告' }}</pre>
+        <div class="report-text">
+          {{ props.timeData?.casual_impact_analysis?.impact_report || '暂无报告' }}
+        </div>
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="showReport = false">关闭</el-button>
+          <el-button type="primary" @click="showReport = false">确定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -352,7 +437,7 @@ onUnmounted(() => {
   height: 100%;
   position: relative;
   border-radius: 8px;
-  padding: 20px;
+  padding: 20px 40px;
 }
 
 .chart-container {
@@ -370,46 +455,71 @@ onUnmounted(() => {
 .analysis-report {
   max-height: 60vh;
   overflow-y: auto;
-  padding: 0 20px;
+  padding: 20px 30px;
 }
 
-.report-content {
-  font-family: 'Microsoft YaHei', sans-serif;
+.report-text {
+  color: #606266;
+  font-size: 14px;
   white-space: pre-wrap;
-  line-height: 1.6;
-  background: #f8f9fa;
-  border-radius: 4px;
-  padding: 15px;
-  margin: 0;
+  word-break: break-word;
+  line-height: 1.8;
+  font-family: 'Microsoft YaHei', sans-serif;
 }
 
 /* Dialog 样式 */
-:deep(.el-dialog__body) {
-  padding: 20px 0;
+:deep(.el-dialog) {
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 :deep(.el-dialog__header) {
-  padding: 20px;
+  padding: 20px 30px;
   margin-right: 0;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid #fff;
+  background-color: #fff;
+}
+
+:deep(.el-dialog__title) {
+  font-size: 16px;
+  font-weight: 600;
+  color: #303133;
+}
+
+:deep(.el-dialog__body) {
+  padding: 0;
+  background-color: #ffffff;
 }
 
 :deep(.el-dialog__footer) {
-  padding: 20px;
-  border-top: 1px solid #ebeef5;
+  padding: 15px 30px;
+  border-top: 1px solid #fff;
+  background-color: #fff;
 }
 
 /* 滚动条样式 */
 .analysis-report::-webkit-scrollbar {
   width: 6px;
+  display: block;
 }
 
 .analysis-report::-webkit-scrollbar-thumb {
-  background-color: #909399;
+  background-color: #C0C4CC;
   border-radius: 3px;
+  &:hover {
+    background-color: #909399;
+  }
 }
 
 .analysis-report::-webkit-scrollbar-track {
-  background-color: #f5f7fa;
+  background-color: #F4F4F5;
+  border-radius: 3px;
+}
+
+/* 确保滚动条始终显示 */
+.analysis-report {
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: #909399;
+  }
 }
 </style>

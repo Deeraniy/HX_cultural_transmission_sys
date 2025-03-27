@@ -1,5 +1,8 @@
 <script setup>
 import router from "@/router.js";
+
+// 设置默认使用风格字体
+document.documentElement.setAttribute('data-font-style', 'styled');
 </script>
 
 <template>
@@ -38,5 +41,30 @@ header {
     place-items: flex-start;
     flex-wrap: wrap;
   }
+}
+</style>
+
+<style>
+/* 默认字体样式 */
+:root {
+  --font-family-base: 'HelveticaNeue2', serif;
+  --font-family-styled: 'HelveticaNeue', serif;
+}
+
+/* 普通字体模式 */
+[data-font-style="normal"] * {
+  font-family: var(--font-family-base) !important;
+}
+
+/* 风格字体模式 */
+[data-font-style="styled"] * {
+  font-family: var(--font-family-styled) !important;
+}
+
+/* 允许特定元素保持自己的字体和大小 */
+[data-font-style="styled"] [data-preserve-font],
+[data-font-style="normal"] [data-preserve-font] {
+  font-family: inherit !important;
+  font-size: inherit !important;
 }
 </style>

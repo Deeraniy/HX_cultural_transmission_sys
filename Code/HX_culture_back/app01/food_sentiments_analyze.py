@@ -207,12 +207,15 @@ def sentiments_result_total_count(request):
             SELECT 
                 sentiment,
                 COUNT(*) as count,
-                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) 
+                    FROM user_comment_food 
+                    WHERE food_id = %s AND sentiment IS NOT NULL AND sentiment != ''
+                ), 2) as percentage
             FROM user_comment_food 
             WHERE food_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             GROUP BY sentiment
         """
-        cursor.execute(sentiment_sql, (food_id,))
+        cursor.execute(sentiment_sql, (food_id, food_id))
         results = cursor.fetchall()
 
         # 初始化结果字典

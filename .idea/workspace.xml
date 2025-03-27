@@ -4,11 +4,40 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="提交一下">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面美化完成+字体更换+用户初始头像">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/casual_impact.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/casual_impact.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/folk_sentiments_analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/folk_sentiments_analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/food_sentiments_analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/food_sentiments_analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/liter_sentiments_analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/liter_sentiments_analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/spot_sentiments_analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/spot_sentiments_analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/边城_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/边城_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/font/font.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/font/font.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/AIReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/AIReport.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/SentimentAnalysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/SentimentAnalysis.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/BarChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/BarChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/Header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/Header.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/LineRace.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/LineRace.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/PieChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/PieChart.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/ThreeLineChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/ThreeLineChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/FilmLiteratureMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/FilmLiteratureMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustomMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustomMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/LunBo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/LunBo.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodShow.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodShow.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterestMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterestMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/RedCultureHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/RedCultureHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/UserHome.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/UserHome.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/main/UserHomeMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/main/UserHomeMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/main.js" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -169,15 +198,8 @@
       <workItem from="1742615859842" duration="6829000" />
       <workItem from="1742736308363" duration="1234000" />
       <workItem from="1742884746904" duration="4408000" />
-      <workItem from="1742980890679" duration="2137000" />
-    </task>
-    <task id="LOCAL-00010" summary="情感分析页面搜索功能实现">
-      <option name="closed" value="true" />
-      <created>1736410611162</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1736410611162</updated>
+      <workItem from="1742980890679" duration="2278000" />
+      <workItem from="1743059320800" duration="1763000" />
     </task>
     <task id="LOCAL-00011" summary="美食页面优化">
       <option name="closed" value="true" />
@@ -563,7 +585,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742984516786</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="情感分析界面美化">
+      <option name="closed" value="true" />
+      <created>1742990474811</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1742990474811</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -587,8 +617,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="情感分析界面+民俗展示界面bug修复" />
-    <MESSAGE value="数据库设计" />
     <MESSAGE value="个人中心优化" />
     <MESSAGE value="登录界面优化" />
     <MESSAGE value="个性推荐页面demo+前后端连接" />
@@ -612,7 +640,9 @@
     <MESSAGE value="前面修改内容整合" />
     <MESSAGE value="情感分析页面样式调整" />
     <MESSAGE value="提交一下" />
-    <option name="LAST_COMMIT_MESSAGE" value="提交一下" />
+    <MESSAGE value="情感分析界面美化" />
+    <MESSAGE value="情感分析界面美化完成+字体更换+用户初始头像" />
+    <option name="LAST_COMMIT_MESSAGE" value="情感分析界面美化完成+字体更换+用户初始头像" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

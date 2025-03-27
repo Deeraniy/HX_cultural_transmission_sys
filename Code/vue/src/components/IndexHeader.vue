@@ -1,5 +1,5 @@
 <template>
-  <div class="whole">
+  <div class="whole" :class="{ 'styled-font': fontStore.isStyled }">
     <div class="total">
       <!-- 左侧Logo -->
       <div class="logo">
@@ -15,15 +15,20 @@
       >
         <!-- 作品总览菜单项 -->
 
-        <el-menu-item index="3">名胜古迹</el-menu-item>
-        <el-menu-item index="4">影视文学</el-menu-item>
-        <el-menu-item index="5">美食文化</el-menu-item>
-        <el-menu-item index="6">非遗民俗</el-menu-item>
-        <el-menu-item index="7">红色文化</el-menu-item>
+        <el-sub-menu index="culture">
+         <template #title>特色文化展示</template>
+         <el-menu-item index="3">名胜古迹</el-menu-item>
+         <el-menu-item index="4">影视文学</el-menu-item>
+         <el-menu-item index="5">美食文化</el-menu-item>
+         <el-menu-item index="6">非遗民俗</el-menu-item>
+         <el-menu-item index="7">红色文化</el-menu-item>
+       </el-sub-menu>
         <el-menu-item index="8">情感分析</el-menu-item>
         <el-menu-item index="9">个性推荐</el-menu-item>
         <el-menu-item index="10">宣传报告生成</el-menu-item>
         <el-menu-item index="11">全球传播情况</el-menu-item>
+        <el-menu-item index="12">背景介绍</el-menu-item>
+        <el-menu-item index="13">关于我们</el-menu-item>
       </el-menu>
       <!-- 右侧用户信息 -->
       <div class="user-info">
@@ -33,15 +38,12 @@
         <!-- 语言选择 -->
         <el-dropdown trigger="click" @command="handleLanguageChange">
           <el-button type="primary">
-            {{ language || '语言' }} <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            {{ language || '中文' }} <el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="1">中文</el-dropdown-item>
-              <el-dropdown-item command="2">English</el-dropdown-item>
-              <el-dropdown-item command="3">日本語</el-dropdown-item>
-              <el-dropdown-item command="4">한국어</el-dropdown-item>
-              <el-dropdown-item command="5">Français</el-dropdown-item>
+              <el-dropdown-item command="normal">系统字体</el-dropdown-item>
+              <el-dropdown-item command="styled">风格字体</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -79,10 +81,12 @@ import {ArrowDown} from "@element-plus/icons-vue";
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user'
 import UserAPI from '@/api/user'; // 导入UserAPI
+import { useFontStore } from '@/stores/font'
 
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const fontStore = useFontStore()
 
 // 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
 // Sync the activeIndex with the route path
@@ -182,38 +186,51 @@ const handleCommand = (command: string) => {
 // 处理语言切换
 const handleLanguageChange = (command: string) => {
   switch (command) {
-    case '1':
-      language.value = '中文';
+    case 'normal':
+      language.value = '系统字体';
+      document.documentElement.setAttribute('data-font-style', 'normal');
+      // 先重置所有元素的字体大小
+      document.querySelectorAll('[data-font-style="normal"] *').forEach(el => {
+        el.style.removeProperty('font-size');  // 移除之前设置的内联样式
+      });
+      // 然后应用新的字体大小
+      setTimeout(() => {  // 使用 setTimeout 确保样式重置后再应用新样式
+        document.querySelectorAll('[data-font-style="normal"] *').forEach(el => {
+          if (!el.hasAttribute('data-preserve-font')) {
+            const defaultSize = window.getComputedStyle(el).fontSize;
+            const newSize = Math.max(parseFloat(defaultSize) - 2, 10) + "px";
+            el.style.fontSize = newSize;
+          }
+        });
+      }, 0);
       break;
-    case '2':
-      language.value = 'English';
-      break;
-    case '3':
-      language.value = '日本語';
-      break;
-    case '4':
-      language.value = '한국어';
-      break;
-    case '5':
-      language.value = 'Français';
+    case 'styled':
+      language.value = '风格字体';
+      document.documentElement.setAttribute('data-font-style', 'styled');
+      // 重置所有元素的字体大小
+      document.querySelectorAll('[data-font-style="styled"] *').forEach(el => {
+        el.style.removeProperty('font-size');  // 移除之前设置的内联样式
+      });
       break;
   }
 };
 
 // 用户数据，包含头像
 const userData = ref({
-  avatar: '@/assets/Video1.jpg', // 默认头像
+  username: '',
+  avatar: new URL('@/assets/default-avatar.png', import.meta.url).href,  // 设置默认头像
+  // ... 其他用户数据
 });
 
 // 获取用户信息
-const refreshUserInfo = async () => {
+const getUserInfo = async () => {
   try {
     if (userStore.isLoggedIn && userStore.userId) {
       const res = await UserAPI.getUserFullInfo(userStore.userId);
       if (res && res.status === 'success' && res.data) {
         userData.value = {
           ...userData.value,
-          avatar: res.data.avatar || '@/assets/Video1.jpg',
+          avatar: res.data.avatar || new URL('@/assets/default-avatar.png', import.meta.url).href,
         };
       }
     }
@@ -225,15 +242,20 @@ const refreshUserInfo = async () => {
 // 在组件挂载时获取用户信息
 onMounted(() => {
   if (userStore.isLoggedIn) {
-    refreshUserInfo();
+    getUserInfo();
   }
 
   // 监听用户信息更新事件
-  window.addEventListener('user-info-updated', refreshUserInfo);
+  window.addEventListener('user-info-updated', getUserInfo);
 });
 </script>
 
 <style>
+:root {
+  --el-menu-item-font-size: 20px !important;
+  --el-font-size-base: 20px !important;
+}
+
 /* 全局样式覆盖 */
 .el-menu,
 .el-menu--horizontal,
@@ -320,12 +342,19 @@ onMounted(() => {
   padding: 0;
 }
 
+/* 标题样式 */
 .menu-title {
   transform: translateY(25px);
-  font-family: 'HelveticaNeue', serif;
-  font-size: 40px;
   color: #fff8f0;
   margin-right: 510px;
+  font-family: 'HelveticaNeue', serif !important;
+  font-size: 30px !important;
+}
+
+/* 系统字体时的标题样式 */
+[data-font-style="normal"] .menu-title {
+  font-family: var(--font-family-base) !important;
+  font-size: 30px !important;
 }
 
 .el-menu-demo {
@@ -343,9 +372,8 @@ onMounted(() => {
   padding: 0 15px;
   background-color: #B71C1C64 !important;
   color: #fff8f0 !important;
-  font-size: 25px;
-  font-family: 'HelveticaNeue', serif !important;
-  border-bottom: none !important;
+  height: 60px;  /* 确保菜单项高度足够 */
+  line-height: 60px;  /* 垂直居中文字 */
 }
 
 .el-menu-item.is-active,
@@ -358,10 +386,12 @@ onMounted(() => {
   padding: 0 15px;
   color: #fff8f0 !important;
   background-color: #B71C1C64 !important;
-  font-family: 'HelveticaNeue', serif !important;
-  font-size: 25px;
+  height: 60px;  /* 确保菜单项高度足够 */
+  line-height: 60px;  /* 垂直居中文字 */
   white-space: nowrap;
   overflow: hidden;
+  font-size: 20px !important;
+  margin-right: -30px;
   text-overflow: ellipsis;
   cursor: pointer;
 }
@@ -452,4 +482,64 @@ onMounted(() => {
   white-space: nowrap;
 }
 
+/* 为了确保其他需要保持特定大小的元素也不受影响，可以添加 data-preserve-font 属性 */
+[data-preserve-font] {
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+.styled-font {
+  font-family: 'HelveticaNeue', serif;
+}
+
+/* 非风格字体时的样式 */
+.whole:not(.styled-font) {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 子菜单的样式 */
+:deep(.el-menu--popup) {
+  min-width: 120px !important;
+  background-color: rgba(183, 28, 28, 0.9) !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+:deep(.el-menu--popup .el-menu-item) {
+  height: 50px !important;
+  line-height: 50px !important;
+  color: #fff8f0 !important;
+  font-family: 'HelveticaNeue', serif !important;
+  padding: 0 20px !important;
+}
+
+:deep(.el-menu--popup .el-menu-item:hover) {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffd700 !important;
+}
+
+/* 添加新的样式规则来控制字体 */
+[data-font-style="styled"] .el-menu-item,
+[data-font-style="styled"] :deep(.el-sub-menu__title),
+[data-font-style="styled"] :deep(.el-menu--popup .el-menu-item) {
+  font-family: 'HelveticaNeue', serif !important;
+  font-size: 20px !important;
+}
+
+[data-font-style="normal"] .el-menu-item,
+[data-font-style="normal"] :deep(.el-sub-menu__title),
+[data-font-style="normal"] :deep(.el-menu--popup .el-menu-item .el-font-size-base)  {
+  font-family: var(--font-family-base) !important;
+  font-size: 20px !important;
+}
+
+/* 确保下拉菜单的样式不受全局字体切换影响 */
+:deep(.el-popper.is-light) {
+  border: none !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+:deep(.el-popper.is-light .el-menu--popup) {
+  background-color: rgba(183, 28, 28, 0.9) !important;
+}
 </style>
