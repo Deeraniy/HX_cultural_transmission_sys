@@ -4,9 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="宣传策略初步">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="前面修改内容整合">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/publicity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/HX_culture_back/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/边城_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/边城_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/api/comment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/api/comment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/api/sentiment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/api/sentiment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/BasicInfo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/BasicInfo.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/CommentAnalysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/CommentAnalysis.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/SentimentAnalysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/SentimentAnalysis.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/BarChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/BarChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/PieChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/PieChart.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportGeneration.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
@@ -27,11 +39,25 @@
   <component name="Git.Settings">
     <option name="PUSH_TAGS">
       <GitPushTagMode>
-        <option name="argument" value="--tags" />
-        <option name="title" value="All" />
+        <option name="argument" value="--follow-tags" />
+        <option name="title" value="Current Branch" />
       </GitPushTagMode>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Deeraniy&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="4444e44a-1ae6-4bb3-8f49-7afe3a251761" />
+        <option name="url" value="git@github.com:Deeraniy/HX_cultural_transmission_sys.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -151,22 +177,9 @@
       <workItem from="1742279858184" duration="5434000" />
       <workItem from="1742300753704" duration="724000" />
       <workItem from="1742344277495" duration="18833000" />
-    </task>
-    <task id="LOCAL-00005" summary="影视艺术页面——古代文学页面+新媒体艺术页面（图片）">
-      <option name="closed" value="true" />
-      <created>1736167786885</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1736167786885</updated>
-    </task>
-    <task id="LOCAL-00006" summary="影视艺术页面(前端完成)">
-      <option name="closed" value="true" />
-      <created>1736237483521</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1736237483521</updated>
+      <workItem from="1742615859842" duration="6829000" />
+      <workItem from="1742736308363" duration="1234000" />
+      <workItem from="1742884746904" duration="1858000" />
     </task>
     <task id="LOCAL-00007" summary="影视艺术页面(前端完成)">
       <option name="closed" value="true" />
@@ -544,7 +557,23 @@
       <option name="project" value="LOCAL" />
       <updated>1742382326794</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="之前修改内容整合">
+      <option name="closed" value="true" />
+      <created>1742617957064</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1742617957065</updated>
+    </task>
+    <task id="LOCAL-00055" summary="前面修改内容整合">
+      <option name="closed" value="true" />
+      <created>1742649859546</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1742649859546</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -555,17 +584,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="红色文化菜单" />
-    <MESSAGE value="所有导航栏“返回”按钮添加" />
-    <MESSAGE value="非遗民俗情感分析前后端连接" />
-    <MESSAGE value="非遗民俗界面优化+图片刷新" />
     <MESSAGE value="情感分析界面加载动画" />
     <MESSAGE value="情感分析界面+民俗展示界面bug修复" />
     <MESSAGE value="数据库设计" />
@@ -587,7 +618,11 @@
     <MESSAGE value="情感分析界面。。。" />
     <MESSAGE value="知识图谱（红色" />
     <MESSAGE value="宣传策略初步" />
-    <option name="LAST_COMMIT_MESSAGE" value="宣传策略初步" />
+    <MESSAGE value="宣传策略微调" />
+    <MESSAGE value="提交一下" />
+    <MESSAGE value="之前修改内容整合" />
+    <MESSAGE value="前面修改内容整合" />
+    <option name="LAST_COMMIT_MESSAGE" value="前面修改内容整合" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

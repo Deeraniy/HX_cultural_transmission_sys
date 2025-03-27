@@ -3,7 +3,7 @@
     <div class="modal-content" @click.stop>
       <!-- 右上角关闭按钮 -->
       <button class="close-button" @click="closeModal">X</button>
-      
+
       <!-- 添加右侧交互图标 -->
       <div class="side-interaction-icons">
         <div class="icon-wrapper" @click="toggleLike">
@@ -27,27 +27,32 @@
       <div class="scene">
         <article class="book">
           <section
-              v-for="(page, index) in pages"
-              :key="index"
-              :class="['page', { active: page.isActive, flipped: page.isFlipped }]">
-            <div class="front" @click="handlePageClick(index, 'front')">
-              <!-- 第一页展示封面，后续展示书名/描述 -->
-              <div v-if="index === 0">
-                <img :src="book.image_url" alt="Book Cover" class="book-cover" />
+            v-for="page in pages"
+            :key="page.pageNumber"
+            :class="['page', { active: page.isActive, flipped: page.isFlipped }]"
+          >
+            <div class="front" @click="nextPage">
+              <!-- 封面 -->
+              <div v-if="page.front.type === 'cover'" class="cover">
+                <img :src="page.front.content" alt="Book Cover" class="book-cover" />
               </div>
-              <div v-else>
-                <p>{{ page.frontText }}</p>
+              <!-- 内容页 -->
+              <div v-else class="content">
+                <p>{{ page.front.content }}</p>
               </div>
             </div>
-            <div class="back" @click="handlePageClick(index, 'back')">
-              <div v-if="index === 0">
-                <h2 class="centered-title">{{ page.title }}</h2>
+
+            <div class="back" @click="prevPage">
+              <!-- 标题页 -->
+              <div v-if="page.back.type === 'title'" class="title-page">
+                <h2 class="centered-title">{{ page.back.content }}</h2>
                 <div class="button-container">
-                  <button class="jump-button" @click="handlePageClick(index, 'button')">情感分析</button>
+                  <button class="jump-button" @click.stop="analyze">情感分析</button>
                 </div>
               </div>
-              <div v-else>
-                <p>{{ page.backText }}</p>
+              <!-- 内容页 -->
+              <div v-else class="content">
+                <p>{{ page.back.content }}</p>
               </div>
             </div>
           </section>
@@ -63,6 +68,7 @@ import router from "@/router.js";
 import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
 import { ElMessage } from 'element-plus';
+import UserAPI  from "@/api/user.ts";
 // 直接导入图片
 import likeIcon from '@/assets/setting/赞.png'
 import likeActiveIcon from '@/assets/setting/赞 (1).png'
@@ -74,47 +80,172 @@ const props = defineProps({
   book: Object
 });
 
+const addHistory = async () => {
+  try {
+    const userId = getUserId();
+    if (!userId){
+      return;
+    }// 未登录用户不记录
+
+    const historyData = {
+      uid: userId,
+      type: "literature",
+      name: props.book.liter_name,
+      img_url: props.book.image_url,
+      describe: props.book.text?.substring(0, 100) || "文学作品", // 截取前100字作为描述
+    };
+    const response=UserAPI.AddUserHistory(historyData);
+    console.log(historyData)
+    console.log(response)
+  } catch (error) {
+    console.error('添加历史记录失败:', error);
+  }
+};
 // 定义 emit 事件
 const emit = defineEmits();
 
-// 分割文本逻辑
-const splitText = (text, maxLength) => {
-  if (text.length <= maxLength) {
-    return [text, ''];
-  } else {
-    const frontText = text.substring(0, maxLength);
-    const backText = text.substring(maxLength);
-    return [frontText, backText];
+// 修改分割文本逻辑
+const splitText = (text) => {
+  if (!text) return [];
+
+  // 每页显示的字符数
+  const charsPerPage = 300;
+
+  // 分割文本为页面内容
+  const pages = [];
+  let currentPage = '';
+  let currentLength = 0;
+
+  // 按句子分割文本
+  const sentences = text.split(/(?<=[。！？.!?])/);
+
+  for (const sentence of sentences) {
+    if (currentLength + sentence.length > charsPerPage) {
+      // 当前页已满，保存当前页
+      if (currentPage) {
+        pages.push(currentPage.trim());
+      }
+      currentPage = sentence;
+      currentLength = sentence.length;
+    } else {
+      currentPage += sentence;
+      currentLength += sentence.length;
+    }
+  }
+
+  // 添加最后一页
+  if (currentPage) {
+    pages.push(currentPage.trim());
+  }
+
+  // 如果页数是奇数，添加一个空页确保每个物理页面都有正反面
+  if (pages.length % 2 !== 0) {
+    pages.push('');
+  }
+
+  return pages;
+};
+
+// 修改翻页逻辑
+const prevPage = () => {
+  if (currentPageIndex.value > 0) {
+    const currentPage = pages.value[currentPageIndex.value];
+    if (currentPage.isFlipped) {
+      // 添加翻页动画
+      currentPage.isFlipping = true;
+      currentPage.isFlipped = false;
+
+      setTimeout(() => {
+        currentPage.isFlipping = false;
+      }, 600); // 与动画时长匹配
+    } else {
+      currentPage.isActive = false;
+      currentPageIndex.value--;
+      const prevPage = pages.value[currentPageIndex.value];
+      prevPage.isActive = true;
+      prevPage.isFlipped = false; // 确保前一页是未翻转状态
+    }
   }
 };
 
-// 初始化页面数据，第一页为封面，后续页为书名和描述
-const pages = ref([
-  {
-    frontImage: props.book.image_url,
-    backImage: 'https://placeimg.com/480/640/any?4',
-    title: props.book.liter_name,
-    frontText: '',
-    backText: '',
-    isActive: true,
-    isFlipped: false
-  }, // 封面
-  {
-    frontImage: '',
-    backImage: 'https://placeimg.com/480/640/any?4',
-    title: '',
-    frontText: '',
-    backText: '',
-    isActive: false,
-    isFlipped: false
-  }  // 书名和描述
-]);
+const nextPage = () => {
+  const currentPage = pages.value[currentPageIndex.value];
+  const isLastPage = currentPageIndex.value === pages.value.length - 1;
 
-// 在初始化时分割文本
-const maxTextLength = 491; // 假设每页最多显示 150 个字符
-const [frontText, backText] = splitText(props.book.text, maxTextLength);
-pages.value[1].frontText = frontText;
-pages.value[1].backText = backText;
+  if (!currentPage.isFlipped) {
+    // 添加翻页动画
+    currentPage.isFlipping = true;
+    currentPage.isFlipped = true;
+
+    setTimeout(() => {
+      currentPage.isFlipping = false;
+    }, 600); // 与动画时长匹配
+  }
+  else if (!isLastPage) {
+    currentPage.isActive = false;
+    currentPageIndex.value++;
+    const nextPage = pages.value[currentPageIndex.value];
+    nextPage.isActive = true;
+    nextPage.isFlipped = false; // 确保下一页是未翻转状态
+  }
+};
+
+// 修改初始化页面数据的逻辑
+const initializePages = () => {
+  const contents = splitText(props.book.text);
+
+  // 创建页面数组，从封面开始
+  pages.value = [
+    // 第一页：封面和标题页
+    {
+      pageNumber: 0,
+      front: {
+        type: 'cover',
+        content: props.book.image_url
+      },
+      back: {
+        type: 'title',
+        content: props.book.liter_name
+      },
+      isActive: true,
+      isFlipped: false
+    }
+  ];
+
+  // 添加内容页，每两页内容组成一个物理页面（正反面）
+  for (let i = 0; i < contents.length; i += 2) {
+    const nextContent = contents[i + 1] || ''; // 如果没有下一页内容，使用空字符串
+    pages.value.push({
+      pageNumber: Math.floor(i/2) + 1,
+      front: {
+        type: 'content',
+        content: contents[i]
+      },
+      back: {
+        type: 'content',
+        content: nextContent,
+        isEmpty: !nextContent // 标记是否为空页
+      },
+      isActive: false,
+      isFlipped: false
+    });
+  }
+};
+
+// 页面数组
+const pages = ref([]);
+
+// 在组件挂载时初始化页面
+onMounted(() => {
+  initializePages();
+  addHistory()
+  // 确保有 book.liter_id 才初始化标签状态
+  if (props.book && props.book.liter_id) {
+    initTagStatus();
+  } else {
+    console.warn('Book ID is missing, cannot initialize tag status');
+  }
+});
 
 // 触摸事件变量
 let touchStartX = 0;
@@ -137,13 +268,13 @@ const getUserId = () => {
   if (userStore.userId) {
     return userStore.userId;
   }
-  
+
   // 如果 userStore 中没有，尝试从 localStorage 获取
   const userId = localStorage.getItem('userId');
   if (userId) {
     return userId;
   }
-  
+
   // 如果都没有，返回 null
   console.warn('User ID is missing');
   return null;
@@ -168,7 +299,7 @@ const initTagStatus = async () => {
     const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
     if (response.code === 200) {
       const tagId = response.data.id;
-      
+
       const userId = getUserId();
       if (!userId) {
         console.warn('Cannot initialize tag status: User not logged in');
@@ -181,13 +312,13 @@ const initTagStatus = async () => {
         };
         return;
       }
-      
+
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
-      
+
       // 记录浏览
       await TagsAPI.viewTagAPI(numericUserId, tagId);
-      
+
       // 获取标签状态
       const statusResponse = await TagsAPI.getTagStatusAPI(numericUserId, tagId);
       if (statusResponse.code === 200) {
@@ -207,14 +338,14 @@ const toggleLike = async () => {
       ElMessage.warning('请先登录后再点赞');
       return;
     }
-    
+
     const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
     if (response.code === 200) {
       const tagId = response.data.id;
-      
+
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
-      
+
       const likeResponse = await TagsAPI.toggleLikeAPI(numericUserId, tagId);
       if (likeResponse.code === 200) {
         tagStatus.value = {
@@ -233,18 +364,19 @@ const toggleLike = async () => {
 const toggleFavorite = async () => {
   try {
     const userId = getUserId();
+    await addHistory()
     if (!userId) {
       ElMessage.warning('请先登录后再收藏');
       return;
     }
-    
+
     const response = await TagsAPI.getTagByThemeAndOriginAPI('literature', props.book.liter_id);
     if (response.code === 200) {
       const tagId = response.data.id;
-      
+
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
-      
+
       const favoriteResponse = await TagsAPI.toggleFavoriteAPI(numericUserId, tagId);
       if (favoriteResponse.code === 200) {
         tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
@@ -255,75 +387,13 @@ const toggleFavorite = async () => {
   }
 };
 
-// 在组件挂载时初始化标签状态
-onMounted(() => {
-  // 确保有 book.liter_id 才初始化标签状态
-  if (props.book && props.book.liter_id) {
-    initTagStatus();
-  } else {
-    console.warn('Book ID is missing, cannot initialize tag status');
-  }
-});
-
-// 翻转到背面
-const flipPageToBack = (page) => {
-  page.isFlipped = true;
-  page.isActive = false;
-
-  const nextPage = pages.value[pages.value.indexOf(page) + 1];
-  if (nextPage) {
-    nextPage.isActive = true;
-  }
-};
-
-// 翻转到正面
-const flipPageToFront = (page) => {
-  page.isFlipped = false; // 修正翻转到正面时的状态
-  page.isActive = false;
-
-  const prevPage = pages.value[pages.value.indexOf(page) - 1];
-  if (prevPage) {
-    prevPage.isActive = true;
-  }
-};
+// 当前页码
+const currentPageIndex = ref(0);
 
 // 关闭模态框
 const closeModal = () => {
   emit('close');
 };
-
-// 处理点击事件：判断点击位置
-const handlePageClick = (index, side) => {
-  const activePage = pages.value.find(page => page.isActive);
-  if (!activePage) return; // 如果没有活动页面，返回
-
-  const currentPageIndex = pages.value.indexOf(activePage);
-  const nextPage = pages.value[currentPageIndex + 1];
-  const prevPage = pages.value[currentPageIndex - 1];
-
-  // 如果点击的是跳转按钮，执行跳转操作
-  if (side === 'button') {
-    analyze(); // 触发跳转逻辑
-    return;
-  }
-
-  if (side === 'front') {
-    // 点击正面，翻到上一页
-    if (!activePage.isFlipped) {
-      flipPageToBack(activePage);
-    } else {
-      flipPageToFront(activePage);
-    }
-  } else if (side === 'back') {
-    // 点击背面，翻到下一页
-    if (!activePage.isFlipped) {
-      flipPageToBack(activePage);
-    } else {
-      flipPageToFront(activePage);
-    }
-  }
-};
-
 
 const analyze = () => {
   // 跳转到 PlaceDetail 页面，带上书名和2的参数
@@ -331,36 +401,6 @@ const analyze = () => {
     path: '/detail',
     query: { name: props.book.liter_name, value: 2 ,theme:props.book.type_id}
   });
-};
-
-
-
-// 翻到下一页
-const goToNextPage = () => {
-  const activePage = pages.value.find(page => page.isActive);
-  if (!activePage) return;
-
-  const currentPageIndex = pages.value.indexOf(activePage);
-  const nextPage = pages.value[currentPageIndex + 1];
-
-  if (nextPage) {
-    nextPage.isActive = true;
-    flipPageToBack(activePage);
-  }
-};
-
-// 翻到上一页
-const goToPrevPage = () => {
-  const activePage = pages.value.find(page => page.isActive);
-  if (!activePage) return;
-
-  const currentPageIndex = pages.value.indexOf(activePage);
-  const prevPage = pages.value[currentPageIndex - 1];
-
-  if (prevPage) {
-    prevPage.isActive = true;
-    flipPageToFront(activePage); // 确保翻转回正面
-  }
 };
 </script>
 
@@ -408,10 +448,9 @@ const goToPrevPage = () => {
 }
 
 .scene {
-  width: 400px; /* 减小宽度 */
-  height: 540px; /* 减小高度 */
-  margin: 16px auto;
-  perspective: 1500px; /* 提高透视效果 */
+  width: 400px;
+  height: 540px;
+  perspective: 2400px;
 }
 .jump-button {
   position: absolute;
@@ -445,27 +484,142 @@ const goToPrevPage = () => {
 }
 
 .page {
-  cursor: pointer;
   position: absolute;
-  color: black;
   width: 100%;
   height: 100%;
-  transition: 1.5s transform;
-  transform-style: preserve-3d;
   transform-origin: left center;
-
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-.front,
-.back {
+/* 正面左侧阴影 */
+.front::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to right,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.1) 50%,
+    transparent);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* 背面右侧阴影 */
+.back::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to left,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.1) 50%,
+    transparent);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* 翻页时的动态阴影 */
+.page.flipping .front::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right,
+    transparent,
+    rgba(0, 0, 0, 0.1) 40%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.1) 60%,
+    transparent);
+  opacity: 0;
+  animation: shadowMove 0.8s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes shadowMove {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* 翻页动画 */
+@keyframes pageFlipForward {
+  0% {
+    transform: rotateY(0);
+  }
+  50% {
+    transform: rotateY(-100deg) scale(0.98);
+  }
+  100% {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes pageFlipBackward {
+  0% {
+    transform: rotateY(-180deg);
+  }
+  50% {
+    transform: rotateY(-80deg) scale(0.98);
+  }
+  100% {
+    transform: rotateY(0);
+  }
+}
+
+/* 应用翻页动画 */
+.page.flipping:not(.flipped) {
+  animation: pageFlipBackward 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+.page.flipping.flipped {
+  animation: pageFlipForward 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+/* 书脊阴影 */
+.book::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  background: linear-gradient(to right,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.1) 70%,
+    transparent);
+  transform: translateX(-100%);
+}
+
+.front, .back {
   position: absolute;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
   backface-visibility: hidden;
-  background-color: #fff8f0; /* 书页背景色 */
-  padding: 25px; /* 增加边距 */
-  overflow: hidden; /* 防止内容溢出 */
+  background-color: #fff8f0;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: inset -20px 0 50px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.back {
+  transform: rotateY(180deg);
 }
 
 .front img,
@@ -476,10 +630,6 @@ const goToPrevPage = () => {
   width: 100%;
   height: 100%;
   object-fit: cover; /* 确保图片填充书页区域 */
-}
-
-.back {
-  transform: rotateY(180deg);
 }
 
 .page.active {
@@ -496,21 +646,20 @@ const goToPrevPage = () => {
 
 .book-cover {
   width: 100%;
-  height: auto;
-  max-height: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .centered-title {
   font-size: 60px;
   font-family: 'HelveticaNeue', serif;
   writing-mode: vertical-rl; /* 竖排文本 */
-  transform: rotate(180deg); /* 如果你想调整方向，可以旋转 */
 }
 
 .button-container {
   position: absolute;
   bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 精确居中 */
   width: 40%; /* 减小容器宽度 */
 }
 
@@ -612,5 +761,141 @@ const goToPrevPage = () => {
   font-size: 12px;
   color: #666;
   text-align: center;
+}
+
+/* 移除点击区域相关样式 */
+.page-click-area {
+  display: none;
+}
+
+/* 添加点击效果 */
+.front, .back {
+  cursor: pointer;
+}
+
+.front:hover, .back:hover {
+  background-color: #fff3e0;
+}
+
+/* 确保按钮点击不会触发翻页 */
+.button-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* 修改内容显示样式 */
+.content {
+  padding: 30px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* 移除滚动条 */
+}
+
+.content p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.8;
+  text-align: justify;
+  height: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 调整书页大小以适应更多文本 */
+.scene {
+  width: 400px;
+  height: 540px;
+}
+
+/* 优化翻页效果 */
+.page {
+  transform-origin: left center;
+  transition: transform 0.6s ease;
+}
+
+.page.flipped {
+  transform: rotateY(-180deg);
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background-color: #fff8f0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+/* 确保封面图片正确显示 */
+.cover {
+  padding: 0;
+  height: 100%;
+}
+
+.book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 封面背面样式 */
+.title-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.centered-title {
+  font-size: 48px;
+  font-family: 'HelveticaNeue', serif;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  margin: 0 auto;
+}
+
+.button-container {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.jump-button {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.jump-button:hover {
+  background-color: #3367d6;
+}
+
+/* 添加空页样式 */
+.back[data-empty="true"] {
+  background-color: #f8f4e6;
+}
+
+/* 确保最后一页可以翻转 */
+.page:last-child.flipped {
+  z-index: 2;
 }
 </style>

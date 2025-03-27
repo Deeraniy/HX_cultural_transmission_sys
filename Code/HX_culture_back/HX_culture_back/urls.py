@@ -6,15 +6,26 @@ from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
 from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details
-urlpatterns = [
+from app01 import text_to_image,user_history
+from django.contrib import admin
+from django.urls import include
 
+from app01.filter_for_comments.filter import get_filtered_comments_by_tag
+urlpatterns = [
+    # path('admin/', admin.site.urls),
+    # path('api/ai/', include('AI.urls')),
+    # 添加 HXCulture_DIalog 的路由
+    # path('api/dialog/', include('HXCulture_DIalog.urls')),
     url(r'^testdb/$', testdb.testdb),
     # 上传头像
 #     path('upload/avatar', views.UploadAvatar.as_view(), name='upload_avatar'),
 #     url(r'^search-form/$', search.search_form),
 #     url(r'^search/$', search.search),
 #     url(r'^search-post/$', search2.search_post),
+
     url(r'^classes/',view.classes),
+    url(r'^add_user_history/',user_history.add_history),
+    url(r'^get_all_history/',user_history.get_all_history),
     url(r'^register/',user.register_user),
     url(r'^login/',user.verify_user),
     url(r'^get_city/',city.get_city_list),
@@ -61,6 +72,7 @@ urlpatterns = [
     url(r'^spot_get_cloud/',cloud.get_cloud),
     url(r'^liter_get_cloud/',cloud.get_cloud_literature),
     url(r'^food_get_cloud/',cloud.get_cloud_food),
+    url(r'^folk_get_cloud/',cloud.get_cloud_folk),
     url(r'^get_food/',food.get_food_list),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_food_influence/',food.get_food_influence),# get_food_list获取美食全部详细信息，把名称和图片展示asider.sider.bar
     url(r'^get_folkcustom/',folk.get_folkcustom_list),# get_folkcustom_list获取 folkcustom全部详细信息，把名称和图片等展示
@@ -82,6 +94,8 @@ urlpatterns = [
     url(r'^api/tag/by_origins$', tags.get_tags_by_theme_and_origins),
     url(r'^get_casual_impact/', casual_impact.sentiments_time_series),
     url(r'^generate_publicity/', publicity.generate_publicity_report),
+    path('api/report/generate_image/', text_to_image.generate_publicity_image),
+    url(r'^get_filtered_comments_by_tag/', get_filtered_comments_by_tag),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

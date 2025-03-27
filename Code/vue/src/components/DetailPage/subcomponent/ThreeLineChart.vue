@@ -34,6 +34,16 @@ const props = defineProps({
 
 const showReport = ref(false);
 onMounted(() => {
+  console.log("调用三线图")
+  console.log("子组件接收到的 timeData:", props.timeData);
+  if (!props.timeData ||
+      !props.timeData.economic_data ||
+      !props.timeData.sentiment_data) {
+    console.error('Invalid timeData structure');
+    return;
+  }
+
+  const timeData = props.timeData;
   const economicData = [...props.timeData.economic_data]
       .sort((a, b) => a.year - b.year || a.month - b.month); // 按时间排序
   const sentimentData = [...props.timeData.sentiment_data]
@@ -61,13 +71,14 @@ onMounted(() => {
   };
 
   // 突变点信息
-  const changePoint = timeData.casual_impact_analysis.change_point_info.date;
+  const changePoint = props.timeData.casual_impact_analysis.change_point_info.date;
   const changePointIndex = allDates.findIndex(d =>
       d === `${changePoint.year}-${changePoint.month.toString().padStart(2, '0')}`
   );
   var chartDom = document.getElementById('main');
   var myChart = echarts.init(chartDom);
   myChart.on('click', (params) => {
+    console.log("点击事件触发")
     if (params.componentType === 'markLine') {
       showReport.value = true;
     }
@@ -76,7 +87,7 @@ onMounted(() => {
   var option;
   const seriesData = [
     {
-      name: 'CPI',
+      name: '居民消费价格指数',
       data: economicData.map(item => item.cpi),
       color: '#5470C6' // 蓝色
     },
@@ -99,14 +110,14 @@ onMounted(() => {
   option =  {
     title: {
       text: '综合经济与情感分析',
-      subtext: '实际数据 vs 预测分析'
+
     },
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'cross' }
     },
     legend: {
-      data: ['CPI', '投资', '销售率', '实际情感', '预测情感', '置信区间']
+      data: ['居民消费价格指数', '固定资产投资额累计增长', '工业产品销售率', '实际情感', '预测情感', '置信区间']
     },
     toolbox: {
       show: true,
@@ -120,13 +131,13 @@ onMounted(() => {
     yAxis: [ // 双Y轴配置
       {
         type: 'value',
-        name: 'CPI/销售率',
+        name: '居民消费价格指数/工业产品销售率',
         position: 'left',
         scale: true
       },
       {
         type: 'value',
-        name: '投资/情感',
+        name: '固定资产投资额累计增长/情感',
         position: 'right',
         axisLabel: {
           formatter: '{value}%'
@@ -136,7 +147,7 @@ onMounted(() => {
     ],
     series: [
       {
-        name: 'CPI',
+        name: '居民消费价格指数',
         type: 'line',
         yAxisIndex: 1, // 指定左轴
         data: alignData(economicData, 'cpi'),
@@ -144,7 +155,7 @@ onMounted(() => {
         itemStyle: { color: '#5470C6' }
       },
       {
-        name: '投资',
+        name: '固定资产投资额累计增长',
         type: 'line',
         yAxisIndex: 1, // 指定右轴
         data: alignData(economicData, 'investment'),
@@ -152,7 +163,7 @@ onMounted(() => {
         itemStyle: { color: '#91CC75' }
       },
       {
-        name: '销售率',
+        name: '工业产品销售率',
         type: 'line',
         yAxisIndex: 1,
         data: alignData(economicData, 'sales_rate'),
@@ -248,25 +259,12 @@ onMounted(() => {
 </script>
 
 <template>
-
   <div id="main" style="width: 100%; height: 400px;"></div>
   <!-- 因果推理报告 Drawer -->
-  <el-drawer
-      v-model="showReport"
-      title="因果推理报告"
-      direction="rtl"
-      size="40%"
-      :before-close="handleClose"
-  >
-    <template #default>
-      <pre style="white-space: pre-wrap; padding: 20px">{{ timeData.casual_impact_analysis.impact_report }}</pre>
-    </template>
-    <template #footer>
-      <div style="flex: auto">
-        <el-button @click="showReport = false">关闭报告</el-button>
-      </div>
-    </template>
-  </el-drawer>
+  <section class="analysis-report" style="overflow-y: scroll">
+    <h3 class="report-title">因果推理分析报告</h3>
+    <pre class="report-content">{{ props.timeData.casual_impact_analysis.impact_report }}</pre>
+  </section>
 </template>
 
 <style scoped>

@@ -24,7 +24,8 @@ class SentimentAPI {
             method: "get",
             params: {
                 name: name
-            }
+            },
+            timeout: 120000 // 增加超时时间到 120 秒
         });
     }
 
@@ -49,7 +50,8 @@ class SentimentAPI {
             method: "get",
             params: {
                 name: name
-            }
+            },
+            timeout: 120000 // 增加超时时间到 120 秒
         });
     }
 
@@ -134,6 +136,54 @@ class SentimentAPI {
             method: "get",
             params: {
                 name: name
+            }
+        });
+    }
+
+    // 获取情感分析饼图数据
+    getSentimentPieAPI(name: string, pageType: string | number) {
+        return request({
+            url: '/sentiment/pie/',
+            method: 'get',
+            params: {
+                name,
+                page_type: pageType
+            }
+        });
+    }
+
+    // 获取情感分析时间序列数据
+    getSentimentTimeAPI(name: string, pageType: string | number) {
+        return request({
+            url: '/sentiment/time/',
+            method: 'get',
+            params: {
+                name,
+                page_type: pageType
+            }
+        });
+    }
+
+    // 获取三线图数据
+    getThreeLineAPI(name: string, pageType: string | number) {
+        return request({
+            url: '/sentiment/three_line/',
+            method: 'get',
+            params: {
+                name,
+                page_type: pageType
+            }
+        });
+    }
+
+    // 获取词频统计数据
+    getSentimentWordAPI(name: string, pageType: string | number) {
+        return request({
+            url: '/sentiment/word/',
+            method: 'get',
+            params: {
+                name,
+                page_type: pageType
             }
         });
     }

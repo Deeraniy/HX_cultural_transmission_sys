@@ -11,10 +11,20 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# 在 INSTALLED_APPS 之前添加
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DIALOG_PATH = os.path.join(os.path.dirname(PROJECT_ROOT), 'HXCulture_DIalog')
+sys.path.insert(0, DIALOG_PATH)
+
+# 添加环境变量
+os.environ.setdefault('PYTHONPATH', DIALOG_PATH)
+os.environ.setdefault('CONFIG_PATH', os.path.join(DIALOG_PATH, 'config'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -30,7 +40,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,10 +49,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'TestModel',               # 添加此项
     'corsheaders',
-)
+    # 'AI',
+    # 'HXulture_DIalog',
+]
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # 必须在最前面
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'HX_culture_back.urls'
@@ -82,10 +94,11 @@ DATABASES = {
     {
         'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
         'NAME': 'hx_cultural_transmission_sys', # 数据库名称
-        'HOST': '60.215.128.117', # 数据库地址，本机 ip 地址 127.0.0.1
-        'PORT': 15320, # 端口
+        'HOST': '8.148.26.99', # 数据库地址，本机 ip 地址 127.0.0.1
+        'PORT': 3306, # 端口
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'kissme77', # 数据库密码
+        'PASSWORD': 'song', # 数据库密码
+
     }
 }
 
@@ -120,7 +133,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True  # 开发环境使用
 CORS_ALLOW_CREDENTIAL = True
 CORS_ALLOW_HEADERS = ('*')
 
@@ -150,3 +163,5 @@ MEDIA_BASE_URL = f"{BACKEND_URL}{MEDIA_URL}"
 
 USER_MEDIA_URL = 'http://127.0.0.1:8080/upload/user/avatar/'
 USER_AVATAR_ROOT = os.path.join(BASE_DIR, 'upload/user/avatar')
+# 加载 .env 文件中的环境变量
+load_dotenv()

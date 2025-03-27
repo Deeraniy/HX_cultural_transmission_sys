@@ -166,15 +166,15 @@
       </el-form>
     </el-card>
 
-    <!-- 新增：报告展示部分 -->
+    <!-- 修改报告卡片部分 -->
     <el-card class="report-card" v-if="generating || generatedReport">
       <div class="report-header">
-        <h3>生成的报告</h3>
+        <h3>宣传报告</h3>
         <el-button type="primary" @click="copyReport" v-if="generatedReport">
           复制内容
         </el-button>
       </div>
-      
+
       <!-- 加载状态 -->
       <div v-if="generating" class="loading-state">
         <el-skeleton :rows="10" animated />
@@ -188,7 +188,7 @@
       <div v-else-if="generatedReport" class="report-content">
         <div class="report-section">
           <div class="platform-info">
-            <el-tag size="small" type="success">{{ report.platform }}</el-tag>
+            <el-tag size="large" effect="dark" type="success">{{ report.platform }}</el-tag>
           </div>
           <div class="tags-info">
             <el-tag
@@ -201,8 +201,60 @@
               {{ tag }}
             </el-tag>
           </div>
-          <div class="content-text">
-            {{ generatedReport }}
+          <div class="content-text markdown-body" v-html="renderedMarkdown"></div>
+        </div>
+      </div>
+    </el-card>
+
+    <!-- 修改图片生成卡片 -->
+    <el-card class="image-card" v-if="report.eventName && report.eventType">
+      <div class="card-header">
+        <h3>宣传图片</h3>
+        <el-button
+          type="primary"
+          @click="generateImage"
+          :loading="generatingImage"
+          :icon="Picture"
+        >
+          生成宣传图片
+        </el-button>
+      </div>
+
+      <div class="image-section" v-if="generatedImages.length">
+        <div class="image-gallery">
+          <div v-for="(image, index) in generatedImages" :key="index" class="image-item">
+            <div class="image-wrapper">
+              <el-image
+                :src="image"
+                :preview-src-list="generatedImages"
+                :initial-index="index"
+                fit="contain"
+                class="gallery-image"
+              >
+                <template #placeholder>
+                  <div class="image-loading">
+                    <el-icon class="is-loading"><Loading /></el-icon>
+                    <span>加载中...</span>
+                  </div>
+                </template>
+                <template #error>
+                  <div class="image-error">
+                    <el-icon><Picture /></el-icon>
+                    <span>加载失败</span>
+                  </div>
+                </template>
+              </el-image>
+            </div>
+            <div class="image-actions">
+              <el-button
+                type="primary"
+                @click="handleDownload(image)"
+                class="download-btn"
+              >
+                <el-icon><Download /></el-icon>
+                下载图片
+              </el-button>
+            </div>
           </div>
         </div>
       </div>
@@ -428,9 +480,11 @@
 }
 
 .content-text {
-  line-height: 1.8;
-  color: #444;
   white-space: pre-wrap;
+  line-height: 1.6;
+  color: #303133;
+  padding: 16px;
+  font-size: 15px;
 }
 
 .preview-meta {
@@ -641,9 +695,126 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 20px;
+  padding: 20px;
   border-bottom: 1px solid #f0f0f0;
+}
+
+.report-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #303133;
+}
+
+.report-content {
+  padding: 20px;
+}
+
+.platform-info {
   margin-bottom: 20px;
+}
+
+.tags-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.report-tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.image-card {
+  margin-top: 30px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #303133;
+}
+
+.image-section {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  width: 100%;
+  padding: 20px;
+}
+
+.image-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  aspect-ratio: 1;
+  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-wrapper {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.image-loading {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+}
+
+.image-loading .el-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.image-error {
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+  background: #f5f7fa;
+}
+
+.image-error .el-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
 }
 
 .loading-state {
@@ -659,324 +830,422 @@
   color: #909399;
 }
 
-.report-content {
-  padding: 20px;
-}
-
-.report-section {
-  margin-bottom: 30px;
-}
-
-.platform-info {
-  margin-bottom: 15px;
-}
-
-.tags-info {
+.image-actions {
+  padding: 12px;
+  background: #fff;
+  border-top: 1px solid #eee;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  justify-content: center;
 }
 
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.download-btn .el-icon {
+  margin-right: 4px;
+}
+
+/* 修改 markdown 样式，确保标题和内容对齐 */
+.markdown-body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+.markdown-body :deep(h1),
+.markdown-body :deep(h2),
+.markdown-body :deep(h3) {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  margin: 8px 0 4px 0;
+  line-height: 1.4;
+}
+
+.markdown-body :deep(h1) {
+  font-size: 1.4em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eaecef;
+}
+
+.markdown-body :deep(h2) {
+  font-size: 1.2em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eaecef;
+}
+
+.markdown-body :deep(h3) {
+  font-size: 1.1em;
+}
+
+/* 调整列表样式 */
+.markdown-body :deep(ul),
+.markdown-body :deep(ol) {
+  padding-left: 24px;
+  margin: 4px 0;
+}
+
+.markdown-body :deep(li) {
+  margin: 2px 0;
+  line-height: 1.6;
+  position: relative;
+}
+
+/* 调整段落样式 */
+.markdown-body :deep(p) {
+  margin: 4px 0;
+  line-height: 1.6;
+}
+
+/* 确保内容对齐 */
 .content-text {
   white-space: pre-wrap;
-  line-height: 1.8;
+  line-height: 1.6;
   color: #303133;
-  font-size: 16px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  padding: 16px;
+  font-size: 15px;
 }
 
-.report-tag {
-  margin-right: 8px;
-  margin-bottom: 8px;
+/* 调整标题和内容的间距 */
+.markdown-body :deep(h1) + p,
+.markdown-body :deep(h2) + p,
+.markdown-body :deep(h3) + p {
+  margin-top: 4px;
 }
 </style>
 
-<script>
+<script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
+import MarkdownIt from 'markdown-it';
 import RecommendAPI from '@/api/recommend';
 import TagsAPI from '@/api/tags';
 import ReportAPI from '@/api/report';
-import { Loading } from '@element-plus/icons-vue'
+import { Loading, Document, Picture, Download } from '@element-plus/icons-vue'
 
-export default {
-  components: {
-    Loading
-  },
-  setup() {
-    const availableTags = [
-      "文化", "科技", "教育", "公益", "环境", "健康", "经济", "体育", "艺术", "创新",
-      "社会", "旅游", "历史", "政治", "法律", "军事", "生态", "企业", "金融", "城市"
-    ];
+const availableTags = [
+  "文化", "科技", "教育", "公益", "环境", "健康", "经济", "体育", "艺术", "创新",
+  "社会", "旅游", "历史", "政治", "法律", "军事", "生态", "企业", "金融", "城市"
+];
 
-    const report = reactive({
-      platform: '',
-      title: '',
-      content: '',
-      tags: [],
-      eventName: '',
-      eventType: '',
-      promotionTendency: '',
-      promotionMethod: '',
-    });
+const report = ref({
+  platform: '',
+  title: '',
+  content: '',
+  tags: [],
+  eventName: '',
+  eventType: '',
+  promotionTendency: '',
+  promotionMethod: '',
+});
 
-    const selectedTags = ref([]);
-    const generatedReport = ref(null);
-    const dialogVisible = ref(false);
-    const generating = ref(false);
+const selectedTags = ref([]);
+const generatedReport = ref(null);
+const dialogVisible = ref(false);
+const generating = ref(false);
 
-    // 用户偏好相关
-    const userPreferences = ref([]);
-    const tagDialogVisible = ref(false);
-    const tagSearchQuery = ref('');
-    const maxVisibleTags = 8;
+// 用户偏好相关
+const userPreferences = ref([]);
+const tagDialogVisible = ref(false);
+const tagSearchQuery = ref('');
+const maxVisibleTags = 8;
 
-    const isTagSelected = (tag) => selectedTags.value.includes(tag);
+const isTagSelected = (tag) => selectedTags.value.includes(tag);
 
-    const toggleTagSelection = (tag) => {
-      if (isTagSelected(tag)) {
-        removeTag(tag);
-      } else {
-        if (selectedTags.value.length < 5) {
-          selectedTags.value.push(tag);
-        } else {
-          ElMessage.warning('最多只能选择5个标签');
-        }
-      }
-    };
-
-    const removeTag = (tag) => {
-      const index = selectedTags.value.indexOf(tag);
-      if (index !== -1) {
-        selectedTags.value.splice(index, 1);
-      }
-    };
-
-    const generateReport = async () => {
-      generating.value = true;
-      try {
-        const response = await ReportAPI.generatePublicityReportAPI({
-          platform: report.platform,
-          title: report.title,
-          content: report.content,
-          tags: selectedTags.value,
-          eventName: report.eventName,
-          eventType: report.eventType,
-          promotionTendency: report.promotionTendency,
-          promotionMethod: report.promotionMethod
-        });
-        console.log('生成报告响应:', response);
-        if (response.code === 200) {
-          generatedReport.value = response.data.report;
-          ElMessage.success('报告生成成功！');
-        }
-      } catch (error) {
-        console.error('生成报告失败:', error);
-        ElMessage.error('生成报告失败，请重试');
-      } finally {
-        generating.value = false;
-      }
-    };
-
-    const resetForm = () => {
-      Object.keys(report).forEach(key => report[key] = '');
-      selectedTags.value = [];
-      ElMessage.success('表单已重置');
-    };
-
-    const copyReport = () => {
-      if (generatedReport.value) {
-        navigator.clipboard.writeText(generatedReport.value)
-          .then(() => {
-            ElMessage.success('内容已复制到剪贴板');
-          })
-          .catch(() => {
-            ElMessage.error('复制失败，请手动复制');
-          });
-      }
-    };
-
-    // 获取用户偏好标签
-    const fetchUserPreferences = async () => {
-      try {
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-          ElMessage.warning('请先登录');
-          return;
-        }
-
-        // 使用 RecommendAPI 获取用户偏好
-        const preferenceResponse = await RecommendAPI.getPerferenceAPI(userId);
-        console.log('偏好数据响应:', preferenceResponse);
-
-        if (preferenceResponse.status === "ok" && preferenceResponse.data) {
-          const detailedPreferences = preferenceResponse.data.detailed_preferences || {};
-
-          // 收集所有主题的标签ID
-          const allTags = [];
-          const tagIds = [];
-
-          // 处理每个主题下的标签
-          Object.entries(detailedPreferences).forEach(([theme, tags]) => {
-            if (Array.isArray(tags)) {
-              tags.forEach(tagInfo => {
-                allTags.push({
-                  theme,
-                  tag_id: tagInfo.tag_id,
-                  score: tagInfo.score || 0
-                });
-                tagIds.push(tagInfo.tag_id);
-              });
-            }
-          });
-
-          console.log('收集到的所有标签:', allTags);
-
-          // 获取标签详细信息
-          const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
-          console.log('标签详细信息响应:', tagDetailsResponse);
-          if (tagDetailsResponse.status === 'success' && tagDetailsResponse.tag_details) {
-            // 创建标签ID到名称的映射
-            const tagMap = new Map(
-              tagDetailsResponse.tag_details.map(tag => [tag.tag_id, tag.tag_name])
-            );
-            
-            // 按分数排序并过滤掉分数过低的标签
-            const sortedTags = allTags
-              .filter(tag => tag.score > 0.05)
-              .sort((a, b) => b.score - a.score)
-              .map(tag => ({
-                ...tag,
-                name: tagMap.get(tag.tag_id)
-              }))
-              .filter(tag => tag.name); // 过滤掉没有找到名称的标签
-
-            console.log('排序后的标签:', sortedTags);
-
-            // 使用标签名
-            userPreferences.value = sortedTags.map(tag => tag.name);
-            console.log('最终的偏好标签列表:', userPreferences.value);
-          }
-        }
-      } catch (error) {
-        console.error('获取用户偏好标签失败:', error);
-        ElMessage.error('获取用户偏好标签失败');
-      }
-    };
-
-    // 计算可见的偏好标签
-    const visiblePreferences = computed(() => {
-      return userPreferences.value.slice(0, maxVisibleTags);
-    });
-
-    // 主题名称映射
-    const themeDisplayNames = {
-      folk: '民俗文化',
-      food: '饮食文化',
-      spot: '文化景点',
-      literature: '文学艺术',
-      other: '其他'
-    };
-
-    // 获取主题显示名称
-    const getThemeDisplayName = (theme) => {
-      return themeDisplayNames[theme] || theme;
-    };
-
-    // 按主题分组的标签
-    const groupedTags = ref({});
-
-    // 获取所有标签
-    const fetchAllTags = async () => {
-      try {
-        const response = await TagsAPI.getAllTagsAPI();
-        if (response.code === 200 && Array.isArray(response.data)) {
-          // 按主题分组标签
-          const grouped = response.data.reduce((acc, tag) => {
-            const theme = tag.theme_name || 'other'; // 使用 theme_name 而不是 theme
-            if (!acc[theme]) {
-              acc[theme] = [];
-            }
-            acc[theme].push({
-              id: tag.id,
-              name: tag.tag_name, // 使用 tag_name 而不是 name
-              theme: theme,
-              total_likes: tag.total_likes,
-              total_clicks: tag.total_clicks
-            });
-            return acc;
-          }, {});
-          
-          // 按照主题名称排序
-          const orderedGroups = {};
-          const themeOrder = ['folk', 'food', 'spot', 'literature'];
-          
-          // 先添加有序的主题
-          themeOrder.forEach(theme => {
-            if (grouped[theme]) {
-              orderedGroups[theme] = grouped[theme];
-            }
-          });
-          
-          // 添加其他主题
-          Object.keys(grouped)
-            .filter(theme => !themeOrder.includes(theme))
-            .forEach(theme => {
-              orderedGroups[theme] = grouped[theme];
-            });
-          
-          groupedTags.value = orderedGroups;
-          console.log('分组后的标签:', groupedTags.value);
-        }
-      } catch (error) {
-        console.error('获取所有标签失败:', error);
-      }
-    };
-
-    // 根据搜索过滤标签
-    const filterTagsBySearch = (tags) => {
-      if (!tagSearchQuery.value) return tags;
-      return tags.filter(tag => 
-        tag.name.toLowerCase().includes(tagSearchQuery.value.toLowerCase())
-      );
-    };
-
-    // 显示所有标签
-    const showAllTags = () => {
-      tagDialogVisible.value = true;
-    };
-
-    // 在组件挂载时获取所有标签
-    onMounted(() => {
-      fetchUserPreferences();
-      fetchAllTags(); // 添加获取所有标签的调用
-    });
-
-    return {
-      availableTags,
-      report,
-      selectedTags,
-      generatedReport,
-      dialogVisible,
-      generating,
-      isTagSelected,
-      toggleTagSelection,
-      removeTag,
-      generateReport,
-      resetForm,
-      copyReport,
-      userPreferences,
-      visiblePreferences,
-      tagDialogVisible,
-      tagSearchQuery,
-      groupedTags,
-      getThemeDisplayName,
-      filterTagsBySearch,
-      showAllTags,
-    };
+const toggleTagSelection = (tag) => {
+  if (isTagSelected(tag)) {
+    removeTag(tag);
+  } else {
+    if (selectedTags.value.length < 5) {
+      selectedTags.value.push(tag);
+    } else {
+      ElMessage.warning('最多只能选择5个标签');
+    }
   }
 };
+
+const removeTag = (tag) => {
+  const index = selectedTags.value.indexOf(tag);
+  if (index !== -1) {
+    selectedTags.value.splice(index, 1);
+  }
+};
+
+const generateReport = async () => {
+  generating.value = true;
+  try {
+    const response = await ReportAPI.generatePublicityReportAPI({
+      platform: report.value.platform,
+      title: report.value.title,
+      content: report.value.content,
+      tags: selectedTags.value,
+      eventName: report.value.eventName,
+      eventType: report.value.eventType,
+      promotionTendency: report.value.promotionTendency,
+      promotionMethod: report.value.promotionMethod
+    });
+    console.log('生成报告响应:', response);
+    if (response.code === 200) {
+      generatedReport.value = response.data.report;
+      ElMessage.success('报告生成成功！');
+    }
+    console.log("省钱");
+  } catch (error) {
+    console.error('生成报告失败:', error);
+    ElMessage.error('生成报告失败，请重试');
+  } finally {
+    generating.value = false;
+  }
+};
+
+const resetForm = () => {
+  Object.keys(report.value).forEach(key => report.value[key] = '');
+  selectedTags.value = [];
+  ElMessage.success('表单已重置');
+};
+
+const copyReport = () => {
+  if (generatedReport.value) {
+    navigator.clipboard.writeText(generatedReport.value)
+      .then(() => {
+        ElMessage.success('内容已复制到剪贴板');
+      })
+      .catch(() => {
+        ElMessage.error('复制失败，请手动复制');
+      });
+  }
+};
+
+// 获取用户偏好标签
+const fetchUserPreferences = async () => {
+  try {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      ElMessage.warning('请先登录');
+      return;
+    }
+
+    // 使用 RecommendAPI 获取用户偏好
+    const preferenceResponse = await RecommendAPI.getPerferenceAPI(userId);
+    console.log('偏好数据响应:', preferenceResponse);
+
+    if (preferenceResponse.status === "ok" && preferenceResponse.data) {
+      const detailedPreferences = preferenceResponse.data.detailed_preferences || {};
+
+      // 收集所有主题的标签ID
+      const allTags = [];
+      const tagIds = [];
+
+      // 处理每个主题下的标签
+      Object.entries(detailedPreferences).forEach(([theme, tags]) => {
+        if (Array.isArray(tags)) {
+          tags.forEach(tagInfo => {
+            allTags.push({
+              theme,
+              tag_id: tagInfo.tag_id,
+              score: tagInfo.score || 0
+            });
+            tagIds.push(tagInfo.tag_id);
+          });
+        }
+      });
+
+      console.log('收集到的所有标签:', allTags);
+
+      // 获取标签详细信息
+      const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
+      console.log('标签详细信息响应:', tagDetailsResponse);
+      if (tagDetailsResponse.status === 'success' && tagDetailsResponse.tag_details) {
+        // 创建标签ID到名称的映射
+        const tagMap = new Map(
+          tagDetailsResponse.tag_details.map(tag => [tag.tag_id, tag.tag_name])
+        );
+
+        // 按分数排序并过滤掉分数过低的标签
+        const sortedTags = allTags
+          .filter(tag => tag.score > 0.05)
+          .sort((a, b) => b.score - a.score)
+          .map(tag => ({
+            ...tag,
+            name: tagMap.get(tag.tag_id)
+          }))
+          .filter(tag => tag.name); // 过滤掉没有找到名称的标签
+
+        console.log('排序后的标签:', sortedTags);
+
+        // 使用标签名
+        userPreferences.value = sortedTags.map(tag => tag.name);
+        console.log('最终的偏好标签列表:', userPreferences.value);
+      }
+    }
+  } catch (error) {
+    console.error('获取用户偏好标签失败:', error);
+    ElMessage.error('获取用户偏好标签失败');
+  }
+};
+
+// 计算可见的偏好标签
+const visiblePreferences = computed(() => {
+  return userPreferences.value.slice(0, maxVisibleTags);
+});
+
+// 主题名称映射
+const themeDisplayNames = {
+  folk: '民俗文化',
+  food: '饮食文化',
+  spot: '文化景点',
+  literature: '文学艺术',
+  other: '其他'
+};
+
+// 获取主题显示名称
+const getThemeDisplayName = (theme) => {
+  return themeDisplayNames[theme] || theme;
+};
+
+// 按主题分组的标签
+const groupedTags = ref({});
+
+// 获取所有标签
+const fetchAllTags = async () => {
+  try {
+    const response = await TagsAPI.getAllTagsAPI();
+    if (response.code === 200 && Array.isArray(response.data)) {
+      // 按主题分组标签
+      const grouped = response.data.reduce((acc, tag) => {
+        const theme = tag.theme_name || 'other'; // 使用 theme_name 而不是 theme
+        if (!acc[theme]) {
+          acc[theme] = [];
+        }
+        acc[theme].push({
+          id: tag.id,
+          name: tag.tag_name, // 使用 tag_name 而不是 name
+          theme: theme,
+          total_likes: tag.total_likes,
+          total_clicks: tag.total_clicks
+        });
+        return acc;
+      }, {});
+
+      // 按照主题名称排序
+      const orderedGroups = {};
+      const themeOrder = ['folk', 'food', 'spot', 'literature'];
+
+      // 先添加有序的主题
+      themeOrder.forEach(theme => {
+        if (grouped[theme]) {
+          orderedGroups[theme] = grouped[theme];
+        }
+      });
+
+      // 添加其他主题
+      Object.keys(grouped)
+        .filter(theme => !themeOrder.includes(theme))
+        .forEach(theme => {
+          orderedGroups[theme] = grouped[theme];
+        });
+
+      groupedTags.value = orderedGroups;
+      console.log('分组后的标签:', groupedTags.value);
+    }
+  } catch (error) {
+    console.error('获取所有标签失败:', error);
+  }
+};
+
+// 根据搜索过滤标签
+const filterTagsBySearch = (tags) => {
+  if (!tagSearchQuery.value) return tags;
+  return tags.filter(tag =>
+    tag.name.toLowerCase().includes(tagSearchQuery.value.toLowerCase())
+  );
+};
+
+// 显示所有标签
+const showAllTags = () => {
+  tagDialogVisible.value = true;
+};
+
+// 在组件挂载时获取所有标签
+onMounted(() => {
+  fetchUserPreferences();
+  fetchAllTags(); // 添加获取所有标签的调用
+});
+
+// 在 setup 中添加
+const generatingImage = ref(false);
+const generatedImages = ref([]);
+
+// 生成图片方法
+const generateImage = async () => {
+  if (!report.value.eventName || !report.value.eventType) {
+    ElMessage.warning('请先填写活动名称和类型');
+    return;
+  }
+
+  generatingImage.value = true;
+  try {
+    const response = await ReportAPI.generatePublicityImageAPI({
+      eventName: report.value.eventName,
+      eventType: report.value.eventType,
+      tags: selectedTags.value,
+      title: report.value.title,
+      content: report.value.content
+    });
+
+    if (response.code === 200) {
+      generatedImages.value = response.data.images;
+      ElMessage.success('图片生成成功！');
+    }
+  } catch (error) {
+    console.error('生成图片失败:', error);
+    ElMessage.error('生成图片失败，请重试');
+  } finally {
+    generatingImage.value = false;
+  }
+};
+
+// 修改下载方法
+const handleDownload = (imageUrl) => {
+  try {
+    // 直接使用 a 标签下载
+    const a = document.createElement('a');
+    a.href = imageUrl;
+    a.download = `宣传图片_${Date.now()}.png`;
+    a.target = '_blank';  // 在新标签页打开
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    ElMessage.success('开始下载');
+  } catch (error) {
+    console.error('下载失败:', error);
+    ElMessage.error('下载失败，请重试');
+  }
+};
+
+// 初始化 markdown-it
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  breaks: true
+});
+
+// 修改 markdown 渲染计算属性
+const renderedMarkdown = computed(() => {
+  if (!generatedReport.value) return '';
+
+  // 处理文本，避免话题标签被识别为标题
+  const formattedText = generatedReport.value
+    // 转义话题标签中的 #，但保留真正的标题标记
+    .replace(/(^|\n)#(?!#|\s)/g, '$1\\#')  // 行首的单个#，但不是标题的情况
+    .replace(/\s#(?!#|\s)/g, ' \\#')       // 空格后的#，但不是标题的情况
+    // 确保真正的标题格式正确
+    .replace(/^###(?!#)/gm, '### ')  // 确保 ### 后有空格
+    .replace(/^##(?!#)/gm, '## ')    // 确保 ## 后有空格
+    .replace(/^#(?!#)/gm, '# ');     // 确保 # 后有空格
+
+  return md.render(formattedText);
+});
 </script>

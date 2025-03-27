@@ -25,10 +25,10 @@ def filter_words(word, min_length=2):
 def get_db_connection():
     """获取数据库连接"""
     return pymysql.connect(
-        host='60.215.128.117', 
-        port=15320, 
+        host='8.148.26.99', 
+        port=3306, 
         user='root', 
-        passwd='kissme77', 
+        passwd='song', 
         db='hx_cultural_transmission_sys', 
         charset='utf8',
         connect_timeout=10,

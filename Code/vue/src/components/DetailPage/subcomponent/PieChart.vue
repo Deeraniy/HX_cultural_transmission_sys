@@ -4,7 +4,7 @@
 
 <script setup>
 import * as echarts from 'echarts'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, onUnmounted } from 'vue'
 import { defineProps } from 'vue'
 
 // 引入 props
@@ -44,19 +44,24 @@ const updateChart = (chart, data) => {
       formatter: '{a} <br/>{b}: {c} ({d}%)'
     },
     legend: {
-      orient: 'horizontal',
-      bottom: '10%',
+      orient: 'vertical',  // 垂直方向
+      right: '5%',         // 放置在右侧
+      top: 'middle',       // 垂直居中
       data: data.map(item => item.name), // 根据数据动态生成图例
       textStyle: {
         color: '#333', // 图例文本颜色
         fontSize: 14
-      }
+      },
+      itemWidth: 15,      // 图例标记的宽度
+      itemHeight: 15,     // 图例标记的高度
+      itemGap: 15         // 图例项之间的间距
     },
     series: [
       {
         name: '情感分析',
         type: 'pie',
-        radius: ['40%', '70%'], // 设置环形饼图的内外半径
+        radius: ['45%', '93%'], // 调整环形饼图的内外半径
+        center: ['35%', '50%'], // 将饼图更靠左，为右侧图例腾出更多空间
         avoidLabelOverlap: false,
         data: data,
         color: chartColors,
@@ -79,6 +84,13 @@ const updateChart = (chart, data) => {
   chart.setOption(option)
 }
 
+// 添加一个重置图表大小的函数
+const resizeChart = () => {
+  if (chartInstance) {
+    chartInstance.resize();
+  }
+}
+
 onMounted(() => {
   console.log('子组件接收到的 chartData:', props.chartData)
   // 初始化图表实例
@@ -86,13 +98,46 @@ onMounted(() => {
 
   // 首次渲染图表
   updateChart(chartInstance, props.chartData)
+  
+  // 使用防抖函数处理 resize 事件
+  const handleResize = () => {
+    if (chartInstance) {
+      chartInstance.resize()
+    }
+  }
+  
+  // 添加 ResizeObserver 监听容器大小变化
+  const resizeObserver = new ResizeObserver(() => {
+    handleResize();
+  });
+  
+  if (pieChart.value) {
+    resizeObserver.observe(pieChart.value);
+  }
+  
+  // 添加窗口大小变化的监听器
+  window.addEventListener('resize', handleResize)
+  
+  // 在组件卸载时清理
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+    resizeObserver.disconnect();
+    if (chartInstance) {
+      chartInstance.dispose()
+    }
+  })
 })
 
 // 监听数据变化并更新图表
 watch(() => props.chartData, (newChartData) => {
-  if (newChartData) {
+  if (newChartData && chartInstance) {
     updateChart(chartInstance, newChartData)
   }
+})
+
+// 导出 resizeChart 方法供父组件调用
+defineExpose({
+  resizeChart
 })
 </script>
 
@@ -101,5 +146,6 @@ watch(() => props.chartData, (newChartData) => {
 div[ref="pieChart"] {
   width: 100%;
   height: 100%;
+  min-height: 300px; /* 添加最小高度 */
 }
 </style>
