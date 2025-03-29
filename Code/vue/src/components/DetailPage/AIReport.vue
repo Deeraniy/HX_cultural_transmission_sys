@@ -445,7 +445,7 @@ const getTimelineItemStyle = (score: number) => {
 }
 
 .timeline-item.active .timeline-date {
-  color: #409EFF;
+  color: #b71c1c;
   font-weight: bold;
 }
 

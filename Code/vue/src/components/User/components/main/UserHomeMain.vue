@@ -278,7 +278,7 @@ onUnmounted(() => {
   font-weight: bold;
   margin: 0;
   padding-left: 12px;
-  border-left: 4px solid #409EFF;
+  border-left: 4px solid #b71c1c;
   min-width: 100px;
 }
 

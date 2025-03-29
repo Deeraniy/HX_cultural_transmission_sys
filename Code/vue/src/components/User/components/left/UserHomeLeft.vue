@@ -212,7 +212,7 @@ const handleMenuClick = (index) => {
   background-color: #f4f4f4 !important;
   
   * {
-    color: #409EFF !important;
+    color: #b71c1c !important;
   }
 }
 
@@ -221,7 +221,7 @@ const handleMenuClick = (index) => {
   background-color: #ecf5ff !important;
   
   * {
-    color: #409EFF !important;
+    color: #b71c1c !important;
   }
   &:not(:hover) {
     background-color: transparent !important;

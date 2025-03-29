@@ -774,7 +774,7 @@
   
   .user-name {
     font-weight: 600;
-    color: #409eff;
+    color: #b71c1c;
   }
   
   .sentiment-score {

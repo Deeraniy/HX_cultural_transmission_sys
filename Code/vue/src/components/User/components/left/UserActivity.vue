@@ -84,7 +84,7 @@ onMounted(() => {
             value: [85, 70, 90, 65, 88, 75],
             name: '当前分布',
             lineStyle: {
-              color: '#409EFF'
+              color: '#b71c1c'
             },
             areaStyle: {
               color: 'rgba(64, 158, 255, 0.2)'

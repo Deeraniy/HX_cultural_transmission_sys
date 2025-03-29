@@ -7,7 +7,8 @@
           <div class="logo">
             <img src="@/assets/333.png" alt="logo" />
           </div>
-          <h1 class="title">湖湘文化数智化传播系统</h1>
+          <h1 class="title">湖湘文化</h1>
+          <h1 class="title">数智化传播系统</h1>
           <p class="subtitle">数联万里湖湘 · 智汇千年文脉</p>
         </div>
         <!-- 登录表单 -->

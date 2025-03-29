@@ -372,7 +372,7 @@
   }
   &.selected {
     background-color: #f0f2f5 !important;
-    color: #409eff;
+    color: #b71c1c;
   }
 }
 
@@ -415,7 +415,7 @@
 }
 
 .tag-item.selected {
-  background-color: #409EFF;
+  background-color: #b71c1c;
   color: white;
 }
 
@@ -562,7 +562,7 @@
 
 .more-tags-btn {
   font-size: 14px;
-  color: #409EFF;
+  color: #b71c1c;
   padding: 0 12px;
 }
 
@@ -595,9 +595,9 @@
   }
 
   &.selected {
-    background-color: #409EFF;
+    background-color: #b71c1c;
     color: white;
-    border-color: #409EFF;
+    border-color: #b71c1c;
   }
 }
 
@@ -679,9 +679,9 @@
 }
 
 .tag-item.selected {
-  background-color: #409EFF;
+  background-color: #b71c1c;
   color: white;
-  border-color: #409EFF;
+  border-color: #b71c1c;
 }
 
 .report-card {

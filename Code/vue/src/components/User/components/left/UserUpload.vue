@@ -240,7 +240,7 @@ onMounted(() => {
 }
 
 :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px #409eff inset;
+  box-shadow: 0 0 0 1px #b71c1c inset;
 }
 
 :deep(.el-textarea__inner) {

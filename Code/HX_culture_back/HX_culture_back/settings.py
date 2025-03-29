@@ -17,14 +17,14 @@ import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 在 INSTALLED_APPS 之前添加
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DIALOG_PATH = os.path.join(os.path.dirname(PROJECT_ROOT), 'HXCulture_DIalog')
-sys.path.insert(0, DIALOG_PATH)
+# # 在 INSTALLED_APPS 之前添加
+# PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# DIALOG_PATH = os.path.join(os.path.dirname(PROJECT_ROOT), 'HXCulture_DIalog')
+# sys.path.insert(0, DIALOG_PATH)
 
-# 添加环境变量
-os.environ.setdefault('PYTHONPATH', DIALOG_PATH)
-os.environ.setdefault('CONFIG_PATH', os.path.join(DIALOG_PATH, 'config'))
+# # 添加环境变量
+# os.environ.setdefault('PYTHONPATH', DIALOG_PATH)
+# os.environ.setdefault('CONFIG_PATH', os.path.join(DIALOG_PATH, 'config'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -94,11 +94,10 @@ DATABASES = {
     {
         'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
         'NAME': 'hx_cultural_transmission_sys', # 数据库名称
-        'HOST': '8.148.26.99', # 数据库地址，本机 ip 地址 127.0.0.1
-        'PORT': 3306, # 端口
+        'HOST': '60.215.128.117', # 数据库地址，本机 ip 地址 127.0.0.1
+        'PORT': 15320, # 端口
         'USER': 'root',  # 数据库用户名
-        'PASSWORD': 'song', # 数据库密码
-
+        'PASSWORD': 'kissme77', # 数据库密码
     }
 }
 
