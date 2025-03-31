@@ -296,7 +296,6 @@ const sentimentAnalysis = (item) => {
       name: item.name, // 传递菜品名字
       value: 3,  // 这里的 3 表示美食类型
       theme: 1,  // 可以在这里添加额外的参数
-      from: 'food' // 添加来源标记，便于返回
     }
   });
 };

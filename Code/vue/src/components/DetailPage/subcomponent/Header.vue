@@ -449,42 +449,18 @@ const handleLiteratureTypeChange = async (typeId) => {
   }
 };
 
-// 添加返回历史记录的函数
-const goBackToNonDetail = () => {
-  // 获取历史记录
-  const history = window.history.state?.back || [];
-  
-  // 如果没有历史记录，直接返回首页
-  if (!history.length) {
-    router.push('/index');
-    return;
-  }
-  
-  // 遍历历史记录，找到第一个不是 detail 页面的 URL
-  for (let i = history.length - 1; i >= 0; i--) {
-    const url = history[i];
-    // 如果是首页或其他非详情页面
-    if (!url.includes('/detail') && url !== '/') {
-      window.location.href = url;
-      return;
-    }
-  }
-  
-  // 如果所有历史记录都是 detail 页面或登录页，返回首页
-  router.push('/index');
-};
-
 // 修改返回按钮处理函数
 const onBack = () => {
-  // 如果当前 URL 只有 /detail，返回首页
-  if (route.fullPath === '/detail') {
-    router.push('/index');
-    return;
-  }
+  // 获取当前历史记录
+  const currentHistory = window.history;
+  const currentPath = route.fullPath;
   
-  // 如果是详情页面，查找历史记录中第一个非详情页面
-  if (route.query.name) {
-    goBackToNonDetail();
+  // 如果当前路径是 /detail（没有参数）或前一个路径包含 detail，返回首页
+  if (currentPath === '/detail' || 
+      (currentHistory.state && currentHistory.state.back && 
+       currentHistory.state.back.includes('/detail'))) {
+    // 直接返回首页
+    router.push('/index');
     return;
   }
   

@@ -827,6 +827,7 @@ onMounted(async () => {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;  /* 调整内容宽度 */
+
 }
 
 /* 活动页面的特效 */
@@ -877,6 +878,7 @@ onMounted(async () => {
   align-items: center;
   padding: 0 5%;
   margin-left: 20px; /* 添加左边距使其与"您的偏好"标签对齐 */
+  margin-bottom: 30px;
 }
 
 .main-description {
@@ -926,9 +928,17 @@ onMounted(async () => {
 .sub-content {
   width: 90%;
   margin: 0 auto;
-  padding-top: 40px;
-  padding-left: 20px; /* 添加左边距使内容对齐 */
+  padding-top: 20px;
+  padding-left: 10px; /* 添加左边距使内容对齐 */
   max-width: 1300px; /* 限制最大宽度 */
+  height: 300px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  margin-top: -10px;
+  padding-bottom: -10px;
 }
 
 .cards-row {
@@ -1429,7 +1439,7 @@ onMounted(async () => {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 10;
+    z-index: 1;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 }
