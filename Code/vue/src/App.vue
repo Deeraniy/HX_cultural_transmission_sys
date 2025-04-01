@@ -2,6 +2,8 @@
 import router from "@/router.js";
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
+import BackgroundIntro from "@/components/Background/BackgroundIntro.vue";
+import AboutUs from "@/components/About/AboutUs.vue";
 
 const route = useRoute();
 
@@ -46,6 +48,7 @@ watch(
   <div id="app">
     <router-view/>
   </div>
+<!--  <background-intro/>-->
 </template>
 
 <style scoped>
