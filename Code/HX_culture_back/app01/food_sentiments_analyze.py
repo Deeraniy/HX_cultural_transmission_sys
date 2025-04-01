@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # 初始化情感分析模型
 sentiment_classifier = pipeline(
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student", 
+    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
     return_all_scores=True
 )
 
@@ -48,11 +48,11 @@ def sentiments_all():
     """对所有食品评论进行情感分析并更新数据库"""
     try:
         conn = pymysql.connect(
-            host='60.215.128.117', 
-            port=15320, 
-            user='root', 
-            passwd='kissme77',
-            db='hx_cultural_transmission_sys', 
+            host='8.148.26.99',
+            port=3306,
+            user='root',
+            passwd='song',
+            db='hx_cultural_transmission_sys',
             charset='utf8',
             connect_timeout=10,
             read_timeout=30,
@@ -60,17 +60,17 @@ def sentiments_all():
             autocommit=True
         )
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
-        cursor.execute("SELECT comment_id, comment_text FROM user_comment_food WHERE sentiment IS NULL")
+
+        cursor.execute("SELECT comment_id, comment_text FROM user_comment_food WHERE sentiment IS NULL OR sentiment = ''")
         comments = cursor.fetchall()
-        
+
         processed_count = 0
-        
+
         for comment in comments:
             try:
                 sentiment_label, confidence = get_food_sentiment_label(comment['comment_text'])
                 logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
-                
+
                 update_sql = """
                     UPDATE user_comment_food 
                     SET sentiment = %s, sentiment_confidence = %s 
@@ -78,19 +78,19 @@ def sentiments_all():
                 """
                 cursor.execute(update_sql, (sentiment_label, confidence, comment['comment_id']))
                 processed_count += 1
-                
+
                 if processed_count % 10 == 0:
                     logger.info(f"已处理 {processed_count} 条评论")
-                    
+
             except pymysql.Error as e:
                 logger.error(f"数据库操作出错 (评论ID: {comment['comment_id']}): {str(e)}")
                 continue
             except Exception as e:
                 logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
                 continue
-            
+
         logger.info(f"所有食品评论的情感分析已完成，共处理 {processed_count} 条评论")
-        
+
     except Exception as e:
         logger.error(f"情感分析过程中出错: {str(e)}")
     finally:
@@ -104,10 +104,10 @@ def sentiments_analyze(request):
     name = request.GET.get('name')
     try:
         conn = pymysql.connect(
-            host='60.215.128.117', 
-            port=15320, 
-            user='root', 
-            passwd='kissme77',
+            host='8.148.26.99',
+            port=3306,
+            user='root',
+            passwd='song',
             db='hx_cultural_transmission_sys',
             charset='utf8'
         )
@@ -125,18 +125,18 @@ def sentiments_analyze(request):
         sql_query = "SELECT comment_text FROM user_comment_food WHERE food_id=%s"
         cursor.execute(sql_query, (food_result['food_id'],))
         comment_list = cursor.fetchall()
-        
+
         comment_list = [comment['comment_text'] for comment in comment_list]
-        
+
         results = process_food_comments(comment_list)
-        
+
         cursor.close()
         conn.close()
-        
+
         results_list = results.to_dict('records')
-        
+
         return JsonResponse(results_list, safe=False)
-        
+
     except Exception as e:
         logger.error(f"处理食品评论情感分析时出错: {str(e)}")
         return JsonResponse({
@@ -151,7 +151,7 @@ def sentiment_month_analyze(sentiments):
     """
     score = 0
     total_comments = len(sentiments)
-    
+
     for sent, conf in sentiments:
         if sent == 'positive':
             score += conf * 1
@@ -159,16 +159,16 @@ def sentiment_month_analyze(sentiments):
             score += conf * 0.5
         elif sent == 'negative':
             score += conf * 0
-    
+
     avg_score = score / total_comments if total_comments > 0 else 0
-    
+
     if avg_score > 0.7:
         dominant_sentiment = 'positive'
     elif avg_score < 0.3:
         dominant_sentiment = 'negative'
     else:
         dominant_sentiment = 'neutral'
-        
+
     return avg_score, dominant_sentiment
 
 def sentiments_result_total_count(request):
@@ -180,12 +180,12 @@ def sentiments_result_total_count(request):
                 'status': 'error',
                 'message': '食品名称不能为空'
             }, status=400)
-            
+
         logger.info(f"正在查询食品: {name}")
-            
+
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
+                             passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
@@ -193,28 +193,31 @@ def sentiments_result_total_count(request):
         food_sql = "SELECT food_id FROM food WHERE food_name = %s"
         cursor.execute(food_sql, (name,))
         food_result = cursor.fetchone()
-        
+
         if not food_result:
             return JsonResponse({
                 'status': 'error',
                 'message': f'未找到食品: {name}'
             }, status=404)
-            
+
         food_id = food_result['food_id']
-        
+
         # 查询各情感类型的评论数量和占比
         sentiment_sql = """
             SELECT 
                 sentiment,
                 COUNT(*) as count,
-                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
+                ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) 
+                    FROM user_comment_food 
+                    WHERE food_id = %s AND sentiment IS NOT NULL AND sentiment != ''
+                ), 2) as percentage
             FROM user_comment_food 
-            WHERE food_id = %s AND sentiment IS NOT NULL
+            WHERE food_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             GROUP BY sentiment
         """
-        cursor.execute(sentiment_sql, (food_id,))
+        cursor.execute(sentiment_sql, (food_id, food_id))
         results = cursor.fetchall()
-        
+
         # 初始化结果字典
         sentiment_stats = {
             'positive': 0,
@@ -222,7 +225,7 @@ def sentiments_result_total_count(request):
             'negative': 0,
             'total_count': 0
         }
-        
+
         # 处理查询结果
         for row in results:
             if row['sentiment'] in sentiment_stats:
@@ -250,7 +253,7 @@ def sentiments_result_total_count(request):
             cursor.close()
         if 'conn' in locals():
             conn.close()
-            
+
 def sentiments_result(request):
     """根据文学作品名称获取情感分析时间序列结果"""
     try:
@@ -260,26 +263,26 @@ def sentiments_result(request):
                 'status': 'error',
                 'message': '食品名称不能为空'
             }, status=400)
-            
+
         logger.info(f"正在查询食品: {name}")
-            
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
+                             passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        
+
         cursor.execute("SELECT food_id FROM food WHERE food_name = %s LIMIT 1", (name,))
         food_result = cursor.fetchone()
-        
+
         if not food_result:
             return JsonResponse({
                 'status': 'error',
                 'message': f'未找到食品: {name}'
             }, status=404)
-            
+
         food_id = food_result['food_id']
         logger.info(f"找到食品ID: {food_id}")
-        
+
         comment_sql = """
             SELECT 
                 sentiment, 
@@ -287,12 +290,12 @@ def sentiments_result(request):
                 SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
                 SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
             FROM user_comment_food 
-            WHERE food_id = %s AND sentiment IS NOT NULL
+            WHERE food_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             ORDER BY comment_time
         """
         cursor.execute(comment_sql, (food_id,))
         results = cursor.fetchall()
-        
+
         if not results:
             return JsonResponse({
                 'status': 'success',
@@ -303,25 +306,25 @@ def sentiments_result(request):
                 },
                 'message': '该食品暂无评论数据'
             })
-        
+
         # 按年月分组数据
         monthly_data = {}
         for row in results:
             date_key = f"{row['year']}-{row['month']}"
             if date_key not in monthly_data:
                 monthly_data[date_key] = []
-            
+
             if row['sentiment'] and row['sentiment_confidence']:
                 monthly_data[date_key].append(
                     (row['sentiment'], float(row['sentiment_confidence']))
                 )
-        
+
         # 计算每月的情感分析结果
         analysis_results = []
         for year_month, sentiments in monthly_data.items():
             year, month = map(int, year_month.split('-'))
             sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
-            
+
             analysis_results.append({
                 'year': year,
                 'month': month,
@@ -329,9 +332,9 @@ def sentiments_result(request):
                 'sentiment': dominant_sentiment,
                 'comment_count': len(sentiments)
             })
-        
+
         analysis_results.sort(key=lambda x: (x['year'], x['month']))
-        
+
         return JsonResponse({
             'status': 'success',
             'data': analysis_results,
@@ -340,7 +343,7 @@ def sentiments_result(request):
                 'id': food_id
             }
         })
-        
+
     except Exception as e:
         logger.error(f"处理食品 {name} 的情感分析时出错: {str(e)}")
         return JsonResponse({
@@ -364,7 +367,7 @@ def generate_report(request):
             }, status=400)
 
         logger.info(f"正在生成食品 {name} 的情感分析报告")
-        
+
         # 获取情感分析结果
         sentiment_response = sentiments_result_total_count(request)
         sentiment_data = json.loads(sentiment_response.content)
@@ -376,7 +379,7 @@ def generate_report(request):
             }, status=400)
 
         data = sentiment_data['data']
-        
+
         # 处理数据，计算每个月的统计信息
         monthly_stats = {}
         for entry in data:
@@ -385,7 +388,7 @@ def generate_report(request):
             sentiment = entry['sentiment']
             sentiment_score = entry['sentiment_score']
             comment_count = entry['comment_count']
-            
+
             key = (year, month)
             if key not in monthly_stats:
                 monthly_stats[key] = {
@@ -443,7 +446,7 @@ def generate_report(request):
         )
 
         report = response.choices[0].message.content.strip()
-        
+
         return JsonResponse({
             'status': 'success',
             'report': report,
@@ -465,10 +468,10 @@ if __name__ == "__main__":
         "食物的分量很足，性价比高。",
         "这道菜的味道一般，没有特别惊艳的地方。"
     ]
-    
+
     # 处理评论
     results_df = process_food_comments(food_comments)
     logger.info(f"食品评论情感分析完成，结果如下：\n{results_df}")
-    
+
     # 运行批量情感分析
     sentiments_all()

@@ -13,7 +13,8 @@
           <img src="@/assets/index-back3.jpg" alt="Image 3" style="width: 100%; height: 100%; object-fit: cover;" />
           <!-- 添加蒙版和文字 -->
           <div class="carousel-overlay">
-            <span class="overlay-text">湖湘文化国际传播效果分析系统</span>
+            <span class="overlay-text">湖湘文化</span>
+            <span class="overlay-text">数智传播网</span>
           </div>
         </div>
         <!-- 第一个视频项 -->
@@ -50,7 +51,7 @@
           </div>
         </el-carousel-item>
       </el-carousel>
-      <div class="iframe-section" style="max-height: 1440px">
+      <div class="iframe-section" style="max-height: 940px">
         <iframe
             src="../../static/index.html"
             width="100%"
@@ -59,6 +60,9 @@
             sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-top-navigation"
 
         ></iframe>
+      </div>
+      <div class="knowledge-graph">
+        <div ref="chart" style="height: 800px; width: 100%;"></div>
       </div>
 
       <div class="block4" style="display: flex;">
@@ -141,20 +145,149 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import IndexMain from "@/components/IndexMain.vue";
 // 使用 import 语法加载视频文件
 import videoFile from '@/assets/湖南形象宣传片国际版《This is Hunan》.mp4';
-
+import data from '../../static/data.json'
 const activeIndex = ref(0); // 当前轮播项的索引
 const videoUrl = ref(videoFile); // 将视频路径赋值给变量
 const shouldAutoplay = ref(false); // 控制是否自动播放轮播图
 let carouselTimer = null; // 用于存储定时器
 // 视频播放结束后的回调
 // 视频播放结束后的处理
+import * as echarts from 'echarts';
+const chart = ref(null);
+
 const onVideoEnded = () => {
   console.log('视频播放结束');
   shouldAutoplay.value = true; // 启用轮播
   activeIndex.value = 1; // 切换到第二项
   startCarousel(); // 开始轮播
 };
+const processData = (rawData) => {
+  const categories = [
+    { name: '核心文化' },
+    { name: '主题分类' },
+    { name: '景点' },
+    { name: '文学' },
+    { name: '饮食' },
+    { name: '民俗' }
+  ];
 
+  const nodes = [];
+  const links = [];
+  const coreNode = rawData.data.find(item => item.type === "Core");
+
+  // 处理核心节点（颜色索引0）
+  nodes.push({
+    id: coreNode.id,
+    name: coreNode.name,
+    category: 0,
+    symbolSize: 50
+  });
+
+  rawData.data.forEach(item => {
+    if (item.type !== "Core") {
+      let categoryIndex;
+      const type = item.categories || item.type;
+      switch (type) {
+        case 'Theme': categoryIndex = 1; break;
+        case 'Spot': categoryIndex = 2; break;
+        case 'Literature': categoryIndex = 3; break;
+        case 'Food': categoryIndex = 4; break;
+        case 'Folk': categoryIndex = 5; break;
+        default: categoryIndex = 1;
+      }
+
+      // 创建节点并指定分类索引
+      nodes.push({
+        id: item.id,
+        name: item.name,
+        category: categoryIndex,
+        symbolSize: categoryIndex === 1 ? 35 : 25
+      });
+
+      // 建立关联关系
+      if (item.type === 'Theme') {
+        links.push({ source: coreNode.id, target: item.id });
+      }
+      if (item.categories === 'Spot' && item.properties?.city_id) {
+        links.push({ source: `city_${item.properties.city_id}`, target: item.id });
+      }
+    }
+  });
+
+  return { nodes, links, categories };
+};
+
+const initChart = () => {
+  const myChart = echarts.init(chart.value);
+  const graphData = processData(data);
+
+  // 颜色映射数组（索引对应分类）
+  const colorPalette = [
+    '#5470c6', // 0:核心文化
+    '#91cc75', // 1:主题分类
+    '#fac858', // 2:景点
+    '#73c0de', // 3:文学
+    '#ee6666', // 4:饮食
+    '#3ba272'  // 5:民俗
+  ];
+  const option = {
+    title: {
+      text: '湖湘文化知识图谱',
+      top: 20,
+      left: 'center'
+    },
+    tooltip: {},
+    legend: {
+      data: graphData.categories.map(c => c.name),
+      selected: {
+        '核心文化': true,
+        '主题分类': false,
+        '景点': false,
+        '文学': false,
+        '饮食': false,
+        '民俗': false
+      },
+      top: 50
+    },
+    series: [{
+      type: 'graph',
+      layout: 'force',
+      force: {
+        repulsion: 200,
+        edgeLength: 100,
+        gravity: 0.1
+      },
+      draggable: true,
+      data: graphData.nodes,
+      links: graphData.links,
+      categories: graphData.categories,
+      edgeSymbol: ['none', 'arrow'],
+      edgeSymbolSize: [0, 10],
+      label: {
+        show: true,
+        position: 'right',
+        fontSize: 12
+      },
+      lineStyle: {
+        color: '#aaa',
+        curveness: 0.2
+      },
+      emphasis: {
+        focus: 'adjacency',
+        label: {
+          show: true,
+          fontSize: 14
+        }
+      },
+      itemStyle: {
+        color: params => colorPalette[params.data.category]
+      }
+    }]
+  };
+
+  myChart.setOption(option);
+  window.addEventListener('resize', () => myChart.resize());
+};
 // 开始轮播的函数
 const startCarousel = () => {
   if (carouselTimer) clearInterval(carouselTimer);
@@ -182,7 +315,11 @@ const iframeRef = ref(null);
 
 // 动态设置 iframe 高度
 onMounted(() => {
+  initChart();
   shouldAutoplay.value = false;
+
+
+  // 窗口大小变化时自适应
 
   // 监听 iframe 加载完成
   if (iframeRef.value) {
@@ -203,12 +340,13 @@ onMounted(() => {
 @import '@/assets/font/font.css';
 .carousel-overlay {
   position: absolute;
-  top: 0;
+  top: -30px;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色蒙版 */
   display: flex;
+  flex-direction: column; /* 改为纵向排列 */
   justify-content: center;
   align-items: center;
   z-index: 2;
@@ -216,13 +354,19 @@ onMounted(() => {
 
 .overlay-text {
   font-family: 'HelveticaNeue', serif;
-  margin-top: -250px;
   color: white;
-  font-size: 10rem;
+  font-size: 14rem;
   font-weight: bold;
   text-align: center;
   padding: 0px;
-  //text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  line-height: 1.2; /* 控制行间距 */
+  display: block; /* 确保每个文本块独占一行 */
+  margin-top: -30px; /* 调整上边距，使两行文字更紧凑 */
+}
+
+/* 为第一行文字添加特殊样式 */
+.overlay-text:first-child {
+  margin-top: -250px; /* 保持原来的上边距 */
 }
 
 html, body {

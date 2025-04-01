@@ -101,8 +101,8 @@ def sentiments_time_series(request):
         logger.info(f"正在查询标签: {tag_name}")
         
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                             passwd='song', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         
@@ -383,8 +383,6 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
         
         # 生成详细的报告文本
         report_text = f"""
-情感分析因果推理报告
-
 1. 变化点信息:
    - 变化点位置: 第{change_point}个月
    - 变化点日期: {dates[change_point].year}年{dates[change_point].month}月
@@ -432,8 +430,8 @@ def test_casual_impact():
     """测试因果推理功能"""
     try:
         # 数据库连接
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', 
-                             passwd='kissme77', db='hx_cultural_transmission_sys', 
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', 
+                             passwd='song', db='hx_cultural_transmission_sys', 
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
         

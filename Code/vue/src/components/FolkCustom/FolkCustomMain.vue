@@ -39,16 +39,40 @@ import FolkSentimentAnalyze from "@/components/FolkCustom/FolkSentimentAnalyze.v
 import router from '@/router'
 import Carousel from "@/components/RedCulture/Carousel.vue";
 import RedCultureMain from "@/components/RedCulture/RedCultureMain.vue";
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
+// 导入背景图片
+import backgroundImage from '@/assets/img_4.png';
+
 const goBack = () => {
-  router.go(-1);  // 返回上一页
+  // 使用 router.back() 返回上一页
+  router.back();
 }
+
 const activeIndex = ref('2')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
   activeIndex.value = key;  // 更新 activeIndex
 }
 
+// 在组件挂载时确保顶栏样式正确
+onMounted(() => {
+  nextTick(() => {
+    // 强制刷新顶栏样式
+    const totalElement = document.querySelector('.total');
+    if (totalElement) {
+      // 使用类型断言告诉 TypeScript 这是一个 HTMLElement
+      const htmlElement = totalElement as HTMLElement;
+      
+      // 触发重排以刷新样式
+      htmlElement.style.display = 'none';
+      void htmlElement.offsetWidth;
+      htmlElement.style.display = 'flex';
+      
+      // 确保背景图片正确加载 - 使用导入的图片
+      htmlElement.style.backgroundImage = `url(${backgroundImage})`;
+    }
+  });
+});
 </script>
 
 <style>
@@ -59,10 +83,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
   color: #fff8f0 !important;
   margin-bottom: 15px;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 720px; /* 给按钮添加右边距 */
+  margin-right: 700px; /* 给按钮添加右边距 */
 }
 .el-menu--popup .el-menu-item,
 .el-menu .el-menu-item {
@@ -115,7 +139,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 }
 
 .whole {
-  margin-top: -70px;
+  margin-top: -55px;
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   background-size: cover;
@@ -129,9 +153,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .menu-title {
   transform: translateY(25px);
   font-family: 'HelveticaNeue', serif;
-  font-size: 30px;
+  font-size: 24px;
   color: #fff8f0;
   margin-right: 50px;
+  margin-bottom: 10px;
 }
 
 .el-menu-demo {

@@ -1,4 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import { createPinia } from 'pinia';
 
 import UserHome from "@/components/User/UserHome.vue";
 import UserHomeMain from "@/components/User/components/main/UserHomeMain.vue";
@@ -8,6 +10,10 @@ import UserArticle from "@/components/User/components/left/UserArticle.vue";
 import UserStar from "@/components/User/components/left/UserStar.vue"
 import UserUpload from "@/components/User/components/left/UserUpload.vue"
 import UserActivity from "@/components/User/components/left/UserActivity.vue";
+import Login from "@/components/login.vue"
+// 创建 Pinia 实例
+const pinia = createPinia();
+
 // 定义路由
 const routes = [
     {
@@ -16,6 +22,10 @@ const routes = [
     },
     {
         path: '/login',
+        component:() => import('./components/login.vue'),
+    },
+    {
+        path: '/',
         component:() => import('./components/login.vue'),
     },
     {
@@ -53,11 +63,15 @@ const routes = [
     },
     {
         path: '/recommend',
-        component:() => import('./components/Recommend/RecommendPageMain.vue'),
+        component:() => import('./components/Recommend/RecommendPage.vue'),
     },
     {
         path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
+    },
+    {
+        path: '/report',
+        component:() => import('./components/ReportGeneration/ReportMain.vue'),
     },
     {
         path: '/index',
@@ -156,9 +170,46 @@ const routes = [
 ];
 
 // 创建路由器实例
-const router =createRouter({
-    history:createWebHashHistory(),
+const router = createRouter({
+    history: createWebHashHistory(),
     routes
+});
+
+// 添加全局导航守卫
+const scrollPositions = {};
+
+router.beforeEach((to, from, next) => {
+    // 需要认证的路由
+    const authRoutes = [
+        '/userHome',
+        '/recommend',
+        '/placeOfInterest',
+        '/placeDetail',
+        '/detail',
+        '/platform'
+    ];
+
+    // 从 localStorage 直接检查登录状态
+    const isLoggedIn = !!localStorage.getItem('userId');
+
+    if (authRoutes.includes(to.path) && !isLoggedIn) {
+        next('/login');
+    } else {
+        // 保存离开页面的滚动位置
+        if (from.path === '/recommend') {
+            scrollPositions[from.path] = window.scrollY;
+        }
+        next();
+    }
+});
+
+router.afterEach((to, from) => {
+    // 恢复页面的滚动位置
+    if (to.path === '/recommend' && scrollPositions[to.path]) {
+        nextTick(() => {
+            window.scrollTo(0, scrollPositions[to.path]);
+        });
+    }
 });
 
 export default router;

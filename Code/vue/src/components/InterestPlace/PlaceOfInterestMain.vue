@@ -17,20 +17,7 @@
         <el-menu-item index="4">风景名胜3D展示</el-menu-item>
         <el-menu-item index="5">社交分享信息展示</el-menu-item>
         <el-menu-item index="6">沉浸式故事叙述</el-menu-item>
-        <el-sub-menu index="1">
-          <template #title>
-            <span class="work">工作台</span>
-          </template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-          <el-menu-item index="1-3">item three</el-menu-item>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-            <el-menu-item index="1-4-2">item two</el-menu-item>
-            <el-menu-item index="1-4-3">item three</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
+      
       </el-menu>
     </div>
     <el-main>
@@ -53,7 +40,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 // 返回上一页
 const goBack = () => {
-  router.go(-1);  // 返回上一页
+  // 直接导航到推荐页面，而不是使用浏览器历史
+  router.back();
 }
 </script>
 
@@ -64,7 +52,7 @@ const goBack = () => {
   background-color: transparent !important;
   color: #fff8f0 !important;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -99,7 +87,7 @@ const goBack = () => {
 .fixed-title {
   color: #fff8f0;
   font-family: 'HelveticaNeue', serif;
-  font-size: 45px;
+  font-size: 34px;
   margin: 0;
   white-space: nowrap; /* 防止标题换行 */
 }
@@ -116,7 +104,7 @@ const goBack = () => {
 
 .el-menu-item {
   color: #fff8f0 !important;
-  font-size: 20px;
+  font-size: 18px;
   font-family: 'HelveticaNeue', serif !important;
   padding: 0 15px !important;
   min-width: auto !important;

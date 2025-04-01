@@ -7,7 +7,8 @@
           <div class="logo">
             <img src="@/assets/333.png" alt="logo" />
           </div>
-          <h1 class="title">湖湘文化数智化传播系统</h1>
+          <h1 class="title">湖湘文化</h1>
+          <h1 class="title">数智化传播系统</h1>
           <p class="subtitle">数联万里湖湘 · 智汇千年文脉</p>
         </div>
         <!-- 登录表单 -->
@@ -143,6 +144,7 @@ import { User, Lock, Calendar } from '@element-plus/icons-vue';
 import { regionData } from 'element-china-area-data';
 import { ElMessage } from 'element-plus';
 import UserAPI from '@/api/user';
+import { useUserStore } from '@/stores/user';
 
 const router = useRouter();
 const loading = ref(false);
@@ -224,6 +226,14 @@ interface ApiResponse {
   username: string;
 }
 
+// 在 setup 中
+const userStore = useUserStore();
+
+// 获取用户信息
+const userId = userStore.userId;
+const username = userStore.username;
+const isLoggedIn = userStore.isLoggedIn;
+
 // 处理登录
 const handleLogin = async () => {
   if (!loginFormRef.value) return;
@@ -238,19 +248,22 @@ const handleLogin = async () => {
     };
 
     try {
-      const response = await UserAPI.loginAPI(loginData);
+      const response = await UserAPI.loginAPI(loginData) as ApiResponse;
       console.log('Login response:', response);
 
       if (response.status === "success") {
         ElMessage.success('登录成功');
-        
-        localStorage.setItem('userId', String(response.user_id));
-        localStorage.setItem('username', response.username);
-        
+
+        // 使用 store 保存用户信息
+        userStore.setUser(
+          String(response.user_id),
+          response.username
+        );
+
         if (rememberMe.value) {
           localStorage.setItem('rememberMe', 'true');
         }
-        
+
         router.push('/index');
       } else {
         ElMessage.error(response.msg || '登录失败');

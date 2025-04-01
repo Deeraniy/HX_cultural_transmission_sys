@@ -80,7 +80,27 @@
       width="50%"
       :before-close="closeFoodDetail"
   >
-    <div class="food-detail-dialog" >
+    <!-- 添加右侧交互图标 -->
+    <div class="side-interaction-icons">
+      <div class="icon-wrapper" @click="toggleLike">
+        <img
+          :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
+          :class="['icon', { 'active': tagStatus.is_liked }]"
+          alt="赞"
+        />
+        <span>{{ tagStatus.total_likes || 0 }}</span>
+      </div>
+      <div class="icon-wrapper" @click="toggleFavorite">
+        <img
+          :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
+          :class="['icon', { 'active': tagStatus.is_favorite }]"
+          alt="收藏"
+        />
+        <span>收藏</span>
+      </div>
+    </div>
+
+    <div class="food-detail-dialog">
       <div v-if="foodDetail.description.startsWith('http')">
         <a :href="foodDetail.description" target="_blank" rel="noopener noreferrer">
           <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
@@ -100,6 +120,14 @@ import food3 from '@/assets/foodImg/food3.jpg'
 import food4 from '@/assets/foodImg/food4.jpg'
 import food5 from '@/assets/foodImg/food5.jpg'
 import FoodAPI from '@/api/food';
+import TagsAPI from '@/api/tags';
+import { useUserStore } from '@/stores/user';
+import { ElMessage } from 'element-plus';
+// 导入图标
+import likeIcon from '@/assets/setting/赞.png'
+import likeActiveIcon from '@/assets/setting/赞 (1).png'
+import favoriteIcon from '@/assets/setting/收藏.png'
+import favoriteActiveIcon from '@/assets/setting/收藏(1).png'
 
 const searchQuery = ref('');
 const rotationAngle = ref(0); // 旋转角度
@@ -107,6 +135,156 @@ const tiltAngle = ref(0); // 俯视仰视角度
 const currentPage = ref(1); // 当前页码
 const selectedIndex = ref(0);
 import { reactive } from 'vue';
+
+const userStore = useUserStore();
+const router = useRouter();
+
+// 标签状态
+const tagStatus = ref({
+  is_liked: false,
+  is_favorite: false,
+  total_likes: 0
+});
+
+// 获取用户ID
+const getUserId = () => {
+  // 首先从 userStore 中获取
+  if (userStore.userId) {
+    return userStore.userId;
+  }
+  
+  // 如果 userStore 中没有，尝试从 localStorage 获取
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    return userId;
+  }
+  
+  // 如果都没有，返回 null
+  console.warn('User ID is missing');
+  return null;
+};
+
+// 初始化标签状态
+const initializeTagStatus = async (foodId) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      console.warn('Cannot initialize tag status: User not logged in');
+      // 未登录用户设置默认状态：未点赞、未收藏
+      tagStatus.value = {
+        is_liked: false,
+        is_favorite: false,
+        total_likes: 0
+      };
+      return;
+    }
+    
+    console.log(`Initializing tag status with ID: ${foodId}`);
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
+    
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      const statusResponse = await TagsAPI.getTagStatusAPI(numericUserId, tagId);
+      
+      if (statusResponse.code === 200) {
+        tagStatus.value = statusResponse.data;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to initialize tag status:', error);
+  }
+};
+
+// 点赞功能
+const toggleLike = async () => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再点赞');
+      return;
+    }
+
+    // 尝试从多个可能的来源获取 food_id
+    const foodId = foodDetail.item?.food_id || foodDetail.item?.id || foodDetail.id;
+    
+    if (!foodId) {
+      console.error('Food ID is missing, detail:', foodDetail);
+      ElMessage.warning('无法获取食品ID，请重试');
+      return;
+    }
+
+    console.log('Toggling like for food ID:', foodId);
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      const likeResponse = await TagsAPI.toggleLikeAPI(numericUserId, tagId);
+      
+      if (likeResponse.code === 200) {
+        tagStatus.value = {
+          ...tagStatus.value,
+          is_liked: likeResponse.data.is_liked,
+          total_likes: likeResponse.data.total_likes
+        };
+      }
+    }
+  } catch (error) {
+    console.error('点赞操作失败:', error);
+  }
+};
+
+// 收藏功能
+const toggleFavorite = async () => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录后再收藏');
+      return;
+    }
+
+    // 尝试从多个可能的来源获取 food_id
+    const foodId = foodDetail.item?.food_id || foodDetail.item?.id || foodDetail.id;
+    
+    if (!foodId) {
+      console.error('Food ID is missing, detail:', foodDetail);
+      ElMessage.warning('无法获取食品ID，请重试');
+      return;
+    }
+
+    console.log('Toggling favorite for food ID:', foodId);
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      const favoriteResponse = await TagsAPI.toggleFavoriteAPI(numericUserId, tagId);
+      
+      if (favoriteResponse.code === 200) {
+        tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
+      }
+    }
+  } catch (error) {
+    console.error('收藏操作失败:', error);
+  }
+};
+
+// 显示食品详情
+const showFoodDetail = async (item) => {
+  foodDetail.visible = true;
+  foodDetail.name = item.name;
+  foodDetail.description = item.description;
+  foodDetail.img = item.img;
+  foodDetail.item = item;
+  foodDetail.id = item.food_id || item.id;
+
+  // 初始化标签状态
+  await initializeTagStatus(foodDetail.id);
+};
 
 // 情感分析按钮点击事件
 const sentimentAnalysis = (item) => {
@@ -116,30 +294,25 @@ const sentimentAnalysis = (item) => {
     path: '/detail',
     query: {
       name: item.name, // 传递菜品名字
-      value: 3,  // 这里的 1 可以根据需要设置，如果是固定值，可以保留
-      theme: 1  // 可以在这里添加额外的参数，例如 theme
+      value: 3,  // 这里的 3 表示美食类型
+      theme: 1,  // 可以在这里添加额外的参数
     }
   });
 };
+
 const foodDetail = reactive({
   visible: false,
   name: '',
   img: '',
-  description: '', // 菜品描述
+  description: '',
+  id: null, // 确保有 id 字段
 });
+
 // 点击左侧菜品，更新右侧展示的菜品
 const selectFoodItem = (index) => {
   selectedIndex.value = index;
   const angle = (360 / paginatedFoodItems.value.length) * index;
   rotationAngle.value = angle; // 通过旋转角度更新 Carousel
-};
-
-// 打开详情弹窗
-const showFoodDetail = (food) => {
-  foodDetail.visible = true;
-  foodDetail.name = food.name;
-  foodDetail.img = food.img;
-  foodDetail.description = food.description; // 动态显示每个菜品的独特描述
 };
 
 // 关闭详情弹窗
@@ -165,14 +338,14 @@ async function fetchFoodData() {
   try {
     const response = await FoodAPI.getFoodAPI();
     foodItems.value = response.data.map(item => ({
+      id: item.food_id, // 确保添加 id
       name: item.food_name,
-      img: item.image_url|| '',
+      img: item.image_url || '',
       description: item.description || ''
     }));
     console.log('Food data:', foodItems.value);
   } catch (error) {
     console.error('Error fetching food data:', error);
-    // 处理错误
   }
 }
 
@@ -194,9 +367,6 @@ const paginatedFoodItems = computed(() => {
   const startIndex = (currentPage.value - 1) * 6;
   return filteredFoodItems.value.slice(startIndex, startIndex + 6);
 });
-
-// Get the router instance to navigate
-const router = useRouter();
 
 // Click event handler for navigating to food detail
 const goToSentimentAnalysis = (foodName) => {
@@ -231,6 +401,11 @@ const getItemStyle = (index) => {
     transform: `rotateY(-${angle}deg) translateZ(${translateZ}px)`
   };
 };
+
+// 添加返回到美食主页的方法
+const goToFoodHome = () => {
+  router.push('/food/home');
+};
 </script>
 
 <style scoped>
@@ -238,7 +413,7 @@ const getItemStyle = (index) => {
 
 .el-dialog__header {
   font-family: 'HelveticaNeue', serif  !important;;  /* 与其他部分保持一致的字体 */
-  font-size: 28px ;  /* 标题大小 */
+  font-size: 24px ;  /* 标题大小 */
   font-weight: bold; /* 加粗 */
   color: #333 ; /* 字体颜色 */
   text-align: center; /* 让标题居中 */
@@ -252,7 +427,7 @@ const getItemStyle = (index) => {
   border-radius: 20px; /* 圆角按钮 */
 
   transition: background-color 0.3s, color 0.3s;
-  font-size: 16px; /* 按钮文字大小 */
+  font-size: 12px; /* 按钮文字大小 */
 }
 
 /* 按钮悬浮和点击效果 */
@@ -311,7 +486,7 @@ const getItemStyle = (index) => {
 
 /* 标题样式 */
 .food-detail-dialog h2 {
-  font-size: 28px;
+  font-size: 20px;
   color: #333;
   margin-bottom: 10px;
   font-weight: bold;
@@ -319,7 +494,7 @@ const getItemStyle = (index) => {
 
 /* 描述样式 */
 .food-detail-dialog p {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
   line-height: 1.6;
   margin-bottom: 20px;
@@ -465,8 +640,8 @@ margin-left: 390px;
 }
 
 .food-card-sidebar h3 {
-  font-size: 28px;
-  margin: 0;
+  font-size: 22px;
+  margin: 5px;
 }
 
 /* Main content 样式 */
@@ -516,7 +691,7 @@ margin-left: 390px;
   width: 220px;
   height: 330px;
   font-family: 'HelveticaNeue', serif;
-  font-size: 30px;
+  font-size: 24px;
   transform-origin: center center;
   transition: transform 1s ease;
 }
@@ -574,5 +749,55 @@ margin-left: 390px;
 
 .el-button {
   margin: 0 10px;
+}
+
+.side-interaction-icons {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 100;
+}
+
+.icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 8px;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.icon-wrapper:hover {
+  transform: scale(1.1);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.icon.active {
+  opacity: 1;
+}
+
+.icon-wrapper span {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+/* 调整弹窗内容以适应右侧图标 */
+.el-dialog {
+  position: relative;
+  margin-right: 60px !important;
 }
 </style>

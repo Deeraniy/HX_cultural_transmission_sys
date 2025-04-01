@@ -14,7 +14,7 @@ def get_tag_details(request):
         tag_id_list = tag_ids.split(',')
         print(f"处理后的tag_id列表: {tag_id_list}")
         
-        conn = pymysql.connect(host='60.215.128.117', port=15320, user='root', passwd='kissme77',
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                                db='hx_cultural_transmission_sys', charset='utf8')
         cursor = conn.cursor()
         
@@ -40,8 +40,8 @@ def get_tag_details(request):
                     theme_table_map = {
                         'folk': ('folk', 'folk_id'),
                         'food': ('food', 'food_id'),
-                        'literature': ('literature', 'literature_id'),
-                        'spot': ('scenic_spot', 'spot_id'),
+                        'literature': ('literature', 'liter_id'),
+                        'spot': ('spot', 'spot_id'),
                         'history': ('history', 'history_id')
                     }
                     

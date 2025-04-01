@@ -155,6 +155,17 @@ class CommentAPI {
             }
         });
     }
+    static getPostiveComment(name: string) {
+        let urlPath = 'get_filtered_comments_by_tag';
+        
+        return request({
+            url: `${DICT_BASE_URL}/${urlPath}/`,
+            method: "get",
+            params: {
+                name: name
+            }
+        });
+    }
 }
 
 export default CommentAPI;

@@ -1,11 +1,6 @@
-//import './jquery.js'; // 先引入 jQuery
-//import * as jQuery from 'jquery';  // 使用这种方式来导入 jQuery
-// console.log('jQuery:', jQuery);
-// window.$ = window.jQuery = jQuery; // 将 jQuery 绑定到 window 对象
-// console.log('window.$', window.$)
-// console.log('window.jQuery', window.jQuery)
 import './assets/main.css'
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import App from '@/App.vue'
@@ -13,7 +8,15 @@ import router from "@/router.js";
 import * as echarts from 'echarts'
 import 'swiper/css'
 import 'swiper/css/effect-cards'
+import './utils/echartConfig.js'  // 引入 ECharts 配置
+
 const app = createApp(App)
+const pinia = createPinia()
+
 app.config.globalProperties.$echarts = echarts
+
 // 使用 Vue 插件
-app.use(ElementPlus).use(router).mount('#app')
+app.use(pinia)
+   .use(ElementPlus)
+   .use(router)
+   .mount('#app')
