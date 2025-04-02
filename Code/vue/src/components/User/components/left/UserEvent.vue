@@ -203,7 +203,7 @@ import { ElButton } from 'element-plus'
 .stat-value {
   font-size: 24px;
   font-weight: 600;
-  color: #409EFF;
+  color: #b71c1c;
   margin-bottom: 5px;
 }
 

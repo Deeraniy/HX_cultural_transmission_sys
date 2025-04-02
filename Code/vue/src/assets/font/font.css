@@ -1,6 +1,12 @@
 @font-face {
     font-family: 'HelveticaNeue';
-    src: url('./qiji-combo.ttf') format('truetype');
+    src: url('./汇文明朝体.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'HelveticaNeue2';
+    src: url('./qiji-fallback.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }

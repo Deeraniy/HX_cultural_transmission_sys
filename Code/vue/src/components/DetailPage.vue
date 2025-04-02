@@ -10,12 +10,12 @@
         />
       </el-header>
 
-      <el-main class="main">
+      <el-main v-if="hasRequiredParams" class="main">
         <!-- 内容展示区域 -->
         <div class="content-area">
           <!-- 基本信息页面 -->
           <div v-show="currentTab === 'basic'" class="tab-content">
-            <BasicInfo 
+            <BasicInfo
               :name="currentName"
               :page-type="pageType"
               :theme-type="themeType"
@@ -25,7 +25,7 @@
 
           <!-- 评论分析页面 -->
           <div v-show="currentTab === 'comments'" class="tab-content">
-            <CommentAnalysis 
+            <CommentAnalysis
               :name="name"
               :pageType="value"
               :themeType="theme"
@@ -34,7 +34,7 @@
 
           <!-- 情感分析页面 -->
           <div v-show="currentTab === 'sentiment'" class="tab-content">
-            <SentimentAnalysis 
+            <SentimentAnalysis
               :name="name"
               :pageType="value"
               :themeType="theme"
@@ -43,7 +43,7 @@
 
           <!-- AI 报告页面 -->
           <div v-show="currentTab === 'report'" class="tab-content">
-            <AIReport 
+            <AIReport
               :name="name"
               :pageType="value"
               :themeType="theme"
@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { InfoFilled, ChatDotRound, TrendCharts, Document } from '@element-plus/icons-vue'
 import Header from "@/components/DetailPage/subcomponent/Header.vue"
@@ -92,6 +92,7 @@ import BasicInfo from "@/components/DetailPage/BasicInfo.vue"
 import CommentAnalysis from "@/components/DetailPage/CommentAnalysis.vue"
 import SentimentAnalysis from "@/components/DetailPage/SentimentAnalysis.vue"
 import AIReport from "@/components/DetailPage/AIReport.vue"
+import ThreeLineChart from "@/components/DetailPage/subcomponent/ThreeLineChart.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -101,15 +102,55 @@ const value = ref('')
 const theme = ref('')
 const title = ref('')
 
-// 监听路由参数变化
+// 保存上一次的路由参数用于比较
+const previousQuery = ref({
+  name: '',
+  value: '',
+  theme: ''
+});
+
+// 检查是否有必要的路由参数
+const hasRequiredParams = computed(() => {
+  return route.query.name && route.query.value && route.query.theme;
+});
+
+// 修改路由参数监听
 watch(
   () => route.query,
-  (query) => {
-    name.value = query.name as string
-    value.value = query.value as string
-    theme.value = query.theme as string
+  async (newQuery) => {
+    // 如果没有必要的参数，不进行刷新
+    if (!hasRequiredParams.value) {
+      return;
+    }
+
+    // 检查参数是否真的发生变化
+    const hasChanged = 
+      newQuery.name !== previousQuery.value.name ||
+      newQuery.value !== previousQuery.value.value ||
+      newQuery.theme !== previousQuery.value.theme;
+
+    if (hasChanged) {
+      // 更新上一次的参数
+      previousQuery.value = {
+        name: newQuery.name as string,
+        value: newQuery.value as string,
+        theme: newQuery.theme as string
+      };
+
+      name.value = newQuery.name as string
+      value.value = newQuery.value as string
+      theme.value = newQuery.theme as string
+      
+      // 更新当前显示的名称和类型
+      currentName.value = newQuery.name as string
+      pageType.value = newQuery.value as string
+      themeType.value = newQuery.theme as string
+
+      // 只在参数变化时刷新页面
+      window.location.reload()
+    }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 
 // 处理标签页切换
@@ -127,24 +168,33 @@ const handleSearchChange = (searchText: string) => {
   console.log('Search text:', searchText)
 }
 
-// 组件挂载时加载数据
+// 修改组件挂载逻辑
 onMounted(() => {
   try {
     // 获取路由参数
     const routeName = route.query.name as string
     const routeValue = route.query.value as string
     const routeTheme = route.query.theme as string
-    
-    if (!routeName || !routeValue) {
-      ElMessage.error('缺少必要的参数')
-      return
+
+    // 只有在有必要参数时才进行初始化
+    if (hasRequiredParams.value) {
+      // 更新响应式变量
+      name.value = routeName
+      value.value = routeValue
+      theme.value = routeTheme
+      
+      // 更新当前显示的名称和类型
+      currentName.value = routeName
+      pageType.value = routeValue
+      themeType.value = routeTheme
+
+      // 初始化上一次的参数
+      previousQuery.value = {
+        name: routeName,
+        value: routeValue,
+        theme: routeTheme
+      };
     }
-
-    // 更新响应式变量
-    name.value = routeName
-    value.value = routeValue
-    theme.value = routeTheme
-
   } catch (error) {
     console.error('数据加载失败:', error)
     ElMessage.error('数据加载失败，请重试')
@@ -283,8 +333,8 @@ const themeType = ref(currentThemeType.value)
 }
 
 :deep(.el-menu-item.is-active) {
-  color: #409eff;
-  border-bottom: 2px solid #409eff;
+  color: #b71c1c;
+  border-bottom: 2px solid #b71c1c;
   background-color: transparent !important;
 }
 

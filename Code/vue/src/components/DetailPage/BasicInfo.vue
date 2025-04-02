@@ -373,40 +373,7 @@
       }
     }
   
-    // 使用重试机制
-    try {
-      const commentResponse = await fetchWithRetry(() => 
-        CommentAPI.getPostiveComment(nowName.value)
-      );
-      // 评论改了格式，要记得修改
-      console.log("原始评论数据:", commentResponse);
-  
-      // 确保返回的数据包含 comments 数组
-      if (commentResponse && typeof commentResponse === 'object' && 'comments' in commentResponse && Array.isArray(commentResponse.comments)) {
-        const commentsArray = commentResponse.comments;
-  
-        // 映射到弹幕数据
-        danmus.value = commentsArray.map(comment => ({
-          name: comment.user_id || '匿名用户',
-          text: comment.comment_text || '',  // 使用新的字段 comment_text
-          sentiment: comment.sentiment || '',  // 如果需要，可以把情感分析加入
-          sentiment_confidence: comment.sentiment_confidence || '',  // 情感分析置信度
-          platform: comment.platform || ''  // 评论平台
-        }));
-        isDanmuLoading.value=false;
-        console.log("成功解析的评论数组:", commentsArray);
-      } else {
-        throw new Error("返回的数据格式不正确，未找到有效的评论数组。");
-      }
-    } catch (error) {
-      console.error("评论数据加载失败（已重试）:", error);
-      // 设置默认空数组，避免界面报错
-      danmus.value = [];
-      isDanmuLoading.value = false;
-      // 可以显示一个友好的错误提示
-      ElMessage.error('评论数据加载失败，请稍后重试');
-    }
-  
+
     // 加载词云数据
     try {
       const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageTypeNum.value);
@@ -458,6 +425,40 @@
       ];
       isPieChartLoading.value = false;
     }
+        // 使用重试机制
+        try {
+      const commentResponse = await fetchWithRetry(() => 
+        CommentAPI.getPostiveComment(nowName.value)
+      );
+      // 评论改了格式，要记得修改
+      console.log("原始评论数据:", commentResponse);
+  
+      // 确保返回的数据包含 comments 数组
+      if (commentResponse && typeof commentResponse === 'object' && 'comments' in commentResponse && Array.isArray(commentResponse.comments)) {
+        const commentsArray = commentResponse.comments;
+  
+        // 映射到弹幕数据
+        danmus.value = commentsArray.map(comment => ({
+          name: comment.user_id || '匿名用户',
+          text: comment.comment_text || '',  // 使用新的字段 comment_text
+          sentiment: comment.sentiment || '',  // 如果需要，可以把情感分析加入
+          sentiment_confidence: comment.sentiment_confidence || '',  // 情感分析置信度
+          platform: comment.platform || ''  // 评论平台
+        }));
+        isDanmuLoading.value=false;
+        console.log("成功解析的评论数组:", commentsArray);
+      } else {
+        throw new Error("返回的数据格式不正确，未找到有效的评论数组。");
+      }
+    } catch (error) {
+      console.error("评论数据加载失败（已重试）:", error);
+      // 设置默认空数组，避免界面报错
+      danmus.value = [];
+      isDanmuLoading.value = false;
+      // 可以显示一个友好的错误提示
+      ElMessage.error('评论数据加载失败，请稍后重试');
+    }
+  
   
   
   }
@@ -774,7 +775,7 @@
   
   .user-name {
     font-weight: 600;
-    color: #409eff;
+    color: #b71c1c;
   }
   
   .sentiment-score {

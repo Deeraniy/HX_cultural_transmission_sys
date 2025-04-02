@@ -360,8 +360,8 @@ def sentiments_result(request):
 def generate_report(request):
     """获取民俗评论的情感分析报告"""
     try:
-        folk_name = request.GET.get('name', '').strip()
-        if not folk_name:
+        name = request.GET.get('name', '').strip()
+        if not name:
             return JsonResponse({
                 'status': 'error',
                 'message': '民俗名称不能为空'
@@ -402,10 +402,14 @@ def generate_report(request):
         cursor.close()
         conn.close()
 
+        # 按日期排序时间轴数据
+        timeline_data.sort(key=lambda x: x['date'])
+
         return JsonResponse({
             'status': 'success',
             'report': report,
-            'folk_name': folk_name
+            'folk_name': name,
+            'timeline': timeline_data  # 新增：返回时间轴数据
         })
 
     except Exception as e:

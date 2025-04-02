@@ -6,7 +6,7 @@ from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
 from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details
-from app01 import text_to_image
+from app01 import text_to_image,user_history
 from django.contrib import admin
 from django.urls import include
 
@@ -22,7 +22,10 @@ urlpatterns = [
 #     url(r'^search-form/$', search.search_form),
 #     url(r'^search/$', search.search),
 #     url(r'^search-post/$', search2.search_post),
+
     url(r'^classes/',view.classes),
+    url(r'^add_user_history/',user_history.add_history),
+    url(r'^get_all_history/',user_history.get_all_history),
     url(r'^register/',user.register_user),
     url(r'^login/',user.verify_user),
     url(r'^get_city/',city.get_city_list),
@@ -82,6 +85,7 @@ urlpatterns = [
     url(r'^user$', user.get_user_info, name='get_user_info'),  # GET 请求获取用户信息
     url(r'^user/update$', user.update_user_info, name='update_user'),  # PUT 请求处理更新用户信息
     url(r'^user/upload$', user.upload_avatar, name='upload_avatar'),  # 添加头像上传路由
+    url(r'^user/distribution$', user.get_user_distribution, name='get_user_distribution'),  # 获取用户分布数据
     url(r'^api/tag/view$', tags.view_tag),
     url(r'^api/tag/like$', tags.toggle_like),
     url(r'^api/tag/favorite$', tags.toggle_favorite),

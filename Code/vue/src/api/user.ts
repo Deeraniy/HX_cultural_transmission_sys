@@ -15,6 +15,29 @@ interface UserUpdateData {
     location?: string;
 }
 
+interface UserHistoryData {
+    uid: number;    // 对应后端的username参数
+    type: string;        // 记录类型
+    name: string;        // 项目名称
+    img_url: string;   // 图片URL
+    describe: string;    // 描述
+}
+
+interface UserDistributionData {
+    status: string;
+    data: {
+        [region: string]: {
+            total: number;
+            themes: {
+                '名胜古迹': number;
+                '美食文化': number;
+                '影视文学': number;
+                '非遗民俗': number;
+            };
+        };
+    };
+}
+
 class UserAPI {
     // 用户注册
     static registerAPI(data: {
@@ -93,6 +116,49 @@ class UserAPI {
             method: 'delete'
         });
     }
+
+    // 用户浏览记录添加（对应后端的add_history）
+    static AddUserHistory(data: UserHistoryData) {
+        return request({
+            url: `${BASE_URL}/add_user_history/`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                uid: data.uid,
+                type: data.type,
+                name: data.name,
+                img_url: data.img_url,
+                describe: data.describe,
+            }
+        }).catch(error => {
+            console.error('Add history error:', error.response?.data || error);
+            throw error;
+        });
+    }
+
+    // 用户浏览记录获取
+    static GetUserHistory(uid: number) {
+        return request({
+            url: `${BASE_URL}/get_all_history/`,
+            method: 'get',
+            params: { uid }
+        });
+    }
+
+    // 获取用户地区分布数据
+    static getUserDistribution(): Promise<UserDistributionData> {
+        return request({
+            url: `${DICT_BASE_URL}/user/distribution`,
+            method: 'get'
+        }).catch(error => {
+            console.error('Get user distribution error:', error.response?.data || error);
+            throw error;
+        });
+    }
+
+    //用户浏览记录表
 }
 
 export default UserAPI ;

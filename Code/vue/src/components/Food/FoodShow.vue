@@ -55,7 +55,7 @@ const goBack = () => {
 }
 
 .whole {
-  margin-top: -70px;
+  margin-top: -55px;
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   background-size: cover;
@@ -69,13 +69,14 @@ const goBack = () => {
 .menu-title {
   transform: translateY(25px);
   font-family: 'HelveticaNeue', serif;
-  font-size: 30px;
+  font-size: 24px;
   color: #fff8f0;
-  margin-right: 730px;
+  margin-right: 700px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .el-menu-demo {
@@ -137,7 +138,8 @@ const goBack = () => {
   background-color: transparent !important;
   color: #fff8f0 !important;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
+  margin-bottom: 5px;
 
   cursor: pointer;
   transition: background-color 0.3s ease;

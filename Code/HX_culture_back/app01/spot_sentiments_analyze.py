@@ -215,7 +215,7 @@ def sentiments_result_total_count(request):
             GROUP BY YEAR(comment_time), MONTH(comment_time), sentiment
             ORDER BY year, month
         """
-        cursor.execute(sentiment_sql, (spot_id,))
+        cursor.execute(sentiment_sql, (spot_id, spot_id))
         results = cursor.fetchall()
 
         if not results:

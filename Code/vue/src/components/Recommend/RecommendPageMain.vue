@@ -104,12 +104,16 @@
                     <div class="cards-container">
                       <div v-for="(card, cardIndex) in userPreferenceCards.slice(0, 5)"
                            :key="'pref-' + cardIndex"
-                           class="sub-card">
+                           class="sub-card"
+                           @click="navigateToSentiment(card)">
                         <img :src="getImageUrl(card.image)"
                              :alt="card.folk_name || card.tag_name"
                              @error="(e) => e.target.src = defaultEmptyImg">
                         <div class="card-overlay">
                           <p class="title">{{ card.folk_name || card.tag_name }}</p>
+                        </div>
+                        <div class="hover-mask">
+                          <span class="mask-text">点我跳转情感分析</span>
                         </div>
                       </div>
                     </div>
@@ -133,12 +137,16 @@
                     <div class="cards-container">
                       <div v-for="(card, cardIndex) in similarUserCards.slice(0, 5)"
                            :key="'similar-' + cardIndex"
-                           class="sub-card">
+                           class="sub-card"
+                           @click="navigateToSentiment(card)">
                         <img :src="getImageUrl(card.image)"
                              :alt="card.folk_name || card.tag_name"
                              @error="(e) => e.target.src = defaultEmptyImg">
                         <div class="card-overlay">
                           <p class="title">{{ card.folk_name || card.tag_name }}</p>
+                        </div>
+                        <div class="hover-mask">
+                          <span class="mask-text">点我跳转情感分析</span>
                         </div>
                       </div>
                     </div>
@@ -155,29 +163,10 @@
         </div>
       </div>
 
-      <div v-if="currentIndex === 5" class="map-container">
-        <div class="map-controls">
-          <button v-if="isMapZoomed"
-                  @click="handleBackToWorld"
-                  class="back-button">
-            返回世界地图
-          </button>
-        </div>
-
-        <div class="map-wrapper" :class="{ 'zoomed': isMapZoomed }">
-          <div v-if="!isMapZoomed" class="world-map">
-            <!-- 世界地图 SVG 或图片 -->
-            <div class="map-region china"
-                 @click="handleMapClick('china')">
-              <div class="region-tooltip">
-                中国地区: {{ mapData.global.asia }}位相似用户
-              </div>
-            </div>
-            <!-- 其他地区类似 -->
-          </div>
-
-          <div v-else class="china-map">
-            <!-- 中国地图 SVG 或图片 -->
+      <div v-if="currentIndex === 4" class="map-container">
+        <div class="map-wrapper">
+          <div class="china-map">
+            <!-- 中国地图部分 -->
             <div v-for="(count, province) in mapData.china"
                  :key="province"
                  class="province-region"
@@ -218,10 +207,8 @@ import Swiper from 'swiper'
 import { EffectCards } from 'swiper/modules'
 import RecommendAPI from "@/api/recommend"
 import TagsAPI from "@/api/tags"
-import 'swiper/css'
-import 'swiper/css/effect-cards'
-import { useUserStore } from '@/stores/user' // 导入用户存储
-import { useRouter } from 'vue-router' // 导入路由
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 
 // 导入默认图片以备用
 import defaultEmptyImg from '@/assets/BookB.jpg'
@@ -229,12 +216,18 @@ import defaultEmptyImg from '@/assets/BookB.jpg'
 const currentIndex = ref(0)
 const isAnimating = ref(false)
 const loading = ref(true)
-const userStore = useUserStore() // 使用用户存储
+const userStore = useUserStore()
+const router = useRouter()
 const selectedCard = ref(null) // 当前选中的卡片
-const router = useRouter() // 使用路由
 
 // 定义所有标签页
-const tabs = ['名胜古迹', '美食文化', '影视文学', '非遗民俗', '红色人物', '发现更多']
+const tabs = ref([
+  '名胜古迹',
+  '美食文化',
+  '影视文学',
+  '非遗民俗',
+  '发现更多'
+])
 
 // 初始化slides数据结构
 const slides = ref([
@@ -263,12 +256,6 @@ const slides = ref([
     subCards: []
   },
   {
-    title: '红色人物',
-    description: '追忆湖南革命历史',
-    favoriteCards: [],
-    subCards: []
-  },
-  {
     title: '发现更多',
     description: '探索更多湖南文化',
     favoriteCards: [],
@@ -277,22 +264,13 @@ const slides = ref([
 ])
 
 // 添加地图相关的状态
-const isMapZoomed = ref(false)
-const selectedRegion = ref(null)
 const mapData = ref({
-  global: {
-    // 示例数据：各地区用户数量
-    asia: 1200,
-    europe: 850,
-    america: 650,
-    africa: 320,
-  },
   china: {
-    // 示例数据：中国各省份用户数量
-    beijing: 150,
+    hunan: 200,
+    guangdong: 150,
+    beijing: 120,
     shanghai: 180,
-    guangdong: 200,
-    // ... 其他省份
+    // ... 其他省份数据
   }
 })
 
@@ -341,18 +319,25 @@ const getImageUrl = (url) => {
   return url;
 };
 
-// 获取用户推荐数据和标签信息
+// 修改数据获取逻辑
 const fetchData = async () => {
+  loading.value = true;
   try {
-    loading.value = true;
     console.log("fetchData 开始执行");
-
-    // 获取当前登录用户的ID
-    const userId = userStore.user?.id || 1; // 如果没有登录用户，则使用默认ID 1
+    // 从 userStore 获取当前登录用户的 ID
+    const userId = userStore.userId;
     console.log("当前用户ID:", userId);
 
-    const preferenceResponse = await RecommendAPI.getPerferenceAPI(userId);
-    const tagsResponse = await TagsAPI.getAllTagsAPI();
+    if (!userId) {
+      console.log("用户未登录，使用默认数据");
+      // 可以选择重定向到登录页面或使用默认数据
+      return;
+    }
+
+    const [preferenceResponse, tagsResponse] = await Promise.all([
+      RecommendAPI.getPerferenceAPI(userId),
+      TagsAPI.getAllTagsAPI()
+    ]);
 
     console.log('所有标签数据:', tagsResponse.data);
     console.log('用户偏好数据:', preferenceResponse.data);
@@ -554,34 +539,52 @@ const fetchData = async () => {
         }
       }
     }
+
+    // 成功获取数据后更新store
+    if (slides.value.length > 0) {
+      console.log('更新缓存数据:', slides.value);
+      userStore.setRecommendData(slides.value);
+    }
+
   } catch (error) {
     console.error("获取数据失败:", error);
-    // 创建一些示例数据以确保界面不为空
-    for (let i = 0; i < slides.value.length; i++) {
-      if (slides.value[i].favoriteCards.length === 0) {
-        slides.value[i].favoriteCards = Array(5).fill(0).map((_, idx) => ({
-          title: `示例标签 ${idx + 1}`,
-          image: defaultEmptyImg,
-          rating: '7.0',
-          userPreference: true
-        }));
-      }
+    // 如果获取失败且有缓存数据，尝试使用缓存
+    if (userStore.recommendSlides.length > 0) {
+      console.log('获取失败，使用缓存数据');
+      slides.value = userStore.recommendSlides;
+    } else {
+      // 确保在错误情况下也设置一些默认数据
+      for (let i = 0; i < slides.value.length; i++) {
+        if (!slides.value[i].favoriteCards.length) {
+          slides.value[i].favoriteCards = Array(5).fill(0).map((_, idx) => ({
+            title: `示例标签 ${idx + 1}`,
+            image: defaultEmptyImg,
+            rating: '7.0',
+            userPreference: true
+          }));
+        }
 
-      if (slides.value[i].subCards.length === 0) {
-        slides.value[i].subCards = Array(8).fill(0).map((_, idx) => ({
-          title: `示例标签 ${idx + 1}`,
-          image: defaultEmptyImg,
-          description: '示例描述',
-          userPreference: idx < 5
-        }));
+        if (!slides.value[i].subCards.length) {
+          slides.value[i].subCards = Array(8).fill(0).map((_, idx) => ({
+            title: `示例标签 ${idx + 1}`,
+            image: defaultEmptyImg,
+            description: '示例描述',
+            userPreference: idx < 5
+          }));
+        }
       }
     }
   } finally {
     loading.value = false;
-    console.log("fetchData 执行完成");
+    // 确保在数据加载完成后初始化 Swiper
+    nextTick(() => {
+      initSwiper();
+      if (slides.value[currentIndex.value]?.favoriteCards?.length > 0) {
+        selectedCard.value = slides.value[currentIndex.value].favoriteCards[0];
+      }
+    });
   }
 };
-
 
 // 计算滑动样式
 const slideStyle = computed(() => ({
@@ -615,15 +618,13 @@ const handleWheel = (e) => {
 // 处理地图点击事件
 const handleMapClick = (region) => {
   if (region === 'china') {
-    isMapZoomed.value = true
-    selectedRegion.value = region
+    // 实现地图放大逻辑
   }
 }
 
 // 处理返回世界地图
 const handleBackToWorld = () => {
-  isMapZoomed.value = false
-  selectedRegion.value = null
+  // 实现返回世界地图逻辑
 }
 
 // 初始化 Swiper
@@ -719,27 +720,79 @@ const hasPreferences = (slide) => {
   return slide.favoriteCards.length > 0 || slide.subCards.length > 0;
 };
 
-// 导航到相应页面
+// 修改跳转到情感分析页面的方法
+const navigateToSentiment = (card) => {
+  const name = card.folk_name || card.tag_name;
+  // 获取当前路由的 query 参数
+  const query = {
+    name: name,
+    value: '1',
+    theme: '1'
+  };
+  
+  // 根据卡片类型设置不同的 theme 和 value 值
+  if (currentIndex.value === 0) {
+    query.theme = '1';
+    query.value = '1';
+  } else if (currentIndex.value === 1) {
+    query.theme = '1';
+    query.value = '3';
+  } else if (currentIndex.value === 2) {
+    // 这里需要根据文学子类型设置不同的 theme
+    const literatureType = getLiteratureType(card);
+    query.theme = literatureType;
+    query.value = '2';
+  } else if (currentIndex.value === 3) {
+    query.theme = '1';
+    query.value = '4';
+  }
+
+  router.push({
+    path: '/detail',
+    query,
+  });
+};
+
+// 添加判断文学子类型的函数
+const getLiteratureType = (card) => {
+  // 这里需要根据卡片的具体信息来判断属于哪个子类型
+  // 假设卡片中有一个 type 字段表示子类型
+  if (card.type === '表演艺术') {
+    return '2';
+  } else if (card.type === '新媒体艺术') {
+    return '3';
+  } else if (card.type === '古诗词') {
+    return '4';
+  } else {
+    return '1'; // 默认为文学类型
+  }
+};
+
+// 修改页面跳转方法
 const navigateToPage = (index) => {
-  // 根据索引确定要跳转的路由
-  let route = '';
+  let route = '/';
+
   switch (index) {
-    case 0: route = '/placeOfInterest'; break;
-    case 1: route = '/food'; break;
-    case 2: route = '/filmLiterature'; break;
-    case 3: route = '/folkCustom'; break;
-    case 4: route = '/red'; break;
-    case 5: route = '/discover'; break;
+    case 0:
+      route = '/placeOfInterest';
+      break;
+    case 1:
+      route = '/food';
+      break;
+    case 2:
+      route = '/filmLiterature';
+      break;
+    case 3:
+      route = '/folkCustom';
+      break;
+    case 4:
+      route = '/recommendMap';
+      break;
     default: route = '/';
   }
 
-  // 在跳转前清理状态
-  selectedCard.value = null;
-
-  // 使用 nextTick 确保状态更新后再跳转
-  nextTick(() => {
-    // 使用 push 而不是 replace，保留历史记录
-    router.push(route);
+  router.push({
+    path: route
   });
 };
 
@@ -754,24 +807,19 @@ watch(currentIndex, (newIndex) => {
 });
 
 onMounted(async () => {
-  // 确保用户数据已加载
+  // 检查用户登录状态
   if (!userStore.isLoggedIn) {
-    console.log("用户未登录，使用默认用户数据");
-  } else {
-    console.log("当前登录用户:", userStore.user);
+    console.log("用户未登录，重定向到登录页面");
+    router.push('/login');
+    return;
   }
 
-  await fetchData();
-
-  // 初始化轮播
-  nextTick(() => {
-    initSwiper();
-    // 立即设置第一个卡片为选中状态
-    if (slides.value[currentIndex.value]?.favoriteCards?.length > 0) {
-      selectedCard.value = slides.value[currentIndex.value].favoriteCards[0];
-      console.log('初始选中卡片:', selectedCard.value);
-    }
+  console.log("当前登录用户:", {
+    userId: userStore.userId,
+    username: userStore.username
   });
+
+  await fetchData();
 });
 </script>
 
@@ -827,6 +875,7 @@ onMounted(async () => {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;  /* 调整内容宽度 */
+
 }
 
 /* 活动页面的特效 */
@@ -849,7 +898,7 @@ onMounted(async () => {
 .sidebar-tabs {
   position: fixed;
   left: 0;
-  top: 50%;
+  top: 54%;
   transform: translateY(-50%);
   z-index: 100;
   background-color: rgba(255, 255, 255, 0.9);
@@ -877,6 +926,7 @@ onMounted(async () => {
   align-items: center;
   padding: 0 5%;
   margin-left: 20px; /* 添加左边距使其与"您的偏好"标签对齐 */
+  margin-bottom: 30px;
 }
 
 .main-description {
@@ -926,9 +976,17 @@ onMounted(async () => {
 .sub-content {
   width: 90%;
   margin: 0 auto;
-  padding-top: 40px;
-  padding-left: 20px; /* 添加左边距使内容对齐 */
+  padding-top: 20px;
+  padding-left: 10px; /* 添加左边距使内容对齐 */
   max-width: 1300px; /* 限制最大宽度 */
+  height: 300px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  margin-top: -10px;
+  padding-bottom: -10px;
 }
 
 .cards-row {
@@ -951,7 +1009,7 @@ onMounted(async () => {
 /* 更多按钮样式 */
 .more-button {
   writing-mode: vertical-lr; /* 竖排文字 */
-  padding: 15px 8px;
+  padding: 15px 7px;
   background-color: #b71c1c;
   color: white;
   border-radius: 6px;
@@ -959,7 +1017,7 @@ onMounted(async () => {
   transition: background-color 0.3s;
   white-space: nowrap;
   font-size: 1.2em;
-  height: 105px; /* 与卡片高度一致 */
+  height: 101px; /* 与卡片高度一致 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -982,11 +1040,11 @@ onMounted(async () => {
 
 .row-header {
   display: flex;
-  height: 105px;
+  height: 101px;
   flex-direction: column;
   align-items: center;
   justify-content: center; /* 添加垂直居中 */
-  padding: 15px 10px;
+  padding: 15px 5px;
   background-color: #b71c1c; /* 改为红色背景 */
   border-radius: 8px;
   margin-right: 5px;
@@ -996,7 +1054,7 @@ onMounted(async () => {
 
 .row-header h3 {
   margin: 0;
-  font-size: 1.5em;
+  font-size: 1.2em;
   color: white; /* 改为白色文字 */
   display: flex;
   flex-direction: column;
@@ -1013,22 +1071,29 @@ onMounted(async () => {
   letter-spacing: 2px;
 }
 
-.user-preferences .sub-card {
-  border: 2px solid #b71c1c;
-}
 
 .similar-users .sub-card {
   border: 1px solid #ddd;
 }
 
 .sub-card {
-  flex: 0 0 180px; /* 减小卡片宽度 */
+  flex: 0 0 180px;
   height: 130px;
   position: relative;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
+  cursor: pointer;
+  
+  /* 添加悬停效果 */
+  &:hover {
+    transform: translateY(-5px);
+    
+    .hover-mask {
+      opacity: 1;
+    }
+  }
 }
 
 .sub-card img {
@@ -1078,49 +1143,35 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   background: #f5f5f5;
-}
-
-.map-controls {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 10;
-}
-
-.back-button {
-  padding: 10px 20px;
-  background: #b71c1c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.back-button:hover {
-  background: #7f0c07;
+  padding: 20px;
 }
 
 .map-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
-  transition: all 0.5s ease;
 }
 
-.world-map, .china-map {
+.china-map {
   width: 100%;
   height: 100%;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.map-region {
+.province-region {
   cursor: pointer;
   transition: all 0.3s;
-}
-
-.map-region:hover {
-  filter: brightness(1.1);
+  
+  &:hover {
+    filter: brightness(1.1);
+    
+    .region-tooltip {
+      opacity: 1;
+    }
+  }
 }
 
 .region-tooltip {
@@ -1129,28 +1180,10 @@ onMounted(async () => {
   color: white;
   padding: 5px 10px;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s;
-  font-family: 'HelveticaNeue', serif;
-}
-
-.map-region:hover .region-tooltip {
-  opacity: 1;
-}
-
-.province-region {
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.province-region:hover {
-  filter: brightness(1.1);
-}
-
-.zoomed {
-  transform: scale(1.5);
 }
 
 /* 添加 Swiper 相关样式 */
@@ -1429,7 +1462,7 @@ onMounted(async () => {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 10;
+    z-index: 1;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 }
@@ -1456,6 +1489,32 @@ onMounted(async () => {
 .region-tooltip,
 .loading-spinner {
   font-family: 'HelveticaNeue', serif;
+}
+
+/* 修改悬停蒙版样式为淡灰色 */
+.hover-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);  /* 改为淡灰色 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mask-text {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  padding: 8px 12px;
+  border: 1px solid white;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
 }
 </style>
 

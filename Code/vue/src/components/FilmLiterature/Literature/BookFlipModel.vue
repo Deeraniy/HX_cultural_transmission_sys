@@ -68,6 +68,7 @@ import router from "@/router.js";
 import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
 import { ElMessage } from 'element-plus';
+import UserAPI  from "@/api/user.ts";
 // 直接导入图片
 import likeIcon from '@/assets/setting/赞.png'
 import likeActiveIcon from '@/assets/setting/赞 (1).png'
@@ -79,6 +80,27 @@ const props = defineProps({
   book: Object
 });
 
+const addHistory = async () => {
+  try {
+    const userId = getUserId();
+    if (!userId){
+      return;
+    }// 未登录用户不记录
+
+    const historyData = {
+      uid: userId,
+      type: "literature",
+      name: props.book.liter_name,
+      img_url: props.book.image_url,
+      describe: props.book.text?.substring(0, 100) || "文学作品", // 截取前100字作为描述
+    };
+    const response=UserAPI.AddUserHistory(historyData);
+    console.log(historyData)
+    console.log(response)
+  } catch (error) {
+    console.error('添加历史记录失败:', error);
+  }
+};
 // 定义 emit 事件
 const emit = defineEmits();
 
@@ -216,6 +238,7 @@ const pages = ref([]);
 // 在组件挂载时初始化页面
 onMounted(() => {
   initializePages();
+  addHistory()
   // 确保有 book.liter_id 才初始化标签状态
   if (props.book && props.book.liter_id) {
     initTagStatus();
@@ -341,6 +364,7 @@ const toggleLike = async () => {
 const toggleFavorite = async () => {
   try {
     const userId = getUserId();
+    await addHistory()
     if (!userId) {
       ElMessage.warning('请先登录后再收藏');
       return;
@@ -433,7 +457,7 @@ const analyze = () => {
   bottom: 20px; /* 距离底部 20px */
   left: 50%; /* 水平居中 */
   transform: translateX(-50%); /* 精确居中 */
-  background-color: #007bff;
+  background-color: #b71c1c;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -445,7 +469,7 @@ const analyze = () => {
 }
 
 .jump-button:hover {
-  background-color: #0056b3;
+  background-color: #9c1818;
 }
 
 .jump-button:focus {
@@ -647,7 +671,7 @@ const analyze = () => {
 }
 
 .jump-button {
-  background-color: #4285f4;
+  background-color: #b71c1c;
   color: white;
   border: none;
   padding: 8px 16px; /* 减小内边距 */
@@ -659,7 +683,7 @@ const analyze = () => {
 }
 
 .jump-button:hover {
-  background-color: #3367d6;
+  background-color: #9c1818;
 }
 
 .interaction-icons {
@@ -851,7 +875,7 @@ const analyze = () => {
 }
 
 .jump-button {
-  background-color: #4285f4;
+  background-color: #b71c1c;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -862,7 +886,7 @@ const analyze = () => {
 }
 
 .jump-button:hover {
-  background-color: #3367d6;
+  background-color: #9c1818;
 }
 
 /* 添加空页样式 */
