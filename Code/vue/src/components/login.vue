@@ -106,8 +106,12 @@
           <el-form-item prop="region" label="所在地区">
             <el-cascader
                 v-model="registerForm.region"
-                :options="regionData"
+                :options="globalRegions"
                 placeholder="请选择所在地区"
+                :props="{
+                  expandTrigger: 'hover',
+                  checkStrictly: true
+                }"
             />
           </el-form-item>
 
@@ -141,7 +145,6 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { User, Lock, Calendar } from '@element-plus/icons-vue';
-import { regionData } from 'element-china-area-data';
 import { ElMessage } from 'element-plus';
 import UserAPI from '@/api/user';
 import { useUserStore } from '@/stores/user';
@@ -233,6 +236,110 @@ const userStore = useUserStore();
 const userId = userStore.userId;
 const username = userStore.username;
 const isLoggedIn = userStore.isLoggedIn;
+
+// 全球地区数据
+const globalRegions = [
+  {
+    value: 'asia',
+    label: '亚洲',
+    children: [
+      {
+        value: 'china',
+        label: '中国',
+        children: [
+          { value: 'beijing', label: '北京' },
+          { value: 'tianjin', label: '天津' },
+          { value: 'shanghai', label: '上海' },
+          { value: 'chongqing', label: '重庆' },
+          { value: 'hebei', label: '河北' },
+          { value: 'shanxi', label: '山西' },
+          { value: 'neimenggu', label: '内蒙古' },
+          { value: 'liaoning', label: '辽宁' },
+          { value: 'jilin', label: '吉林' },
+          { value: 'heilongjiang', label: '黑龙江' },
+          { value: 'jiangsu', label: '江苏' },
+          { value: 'zhejiang', label: '浙江' },
+          { value: 'anhui', label: '安徽' },
+          { value: 'fujian', label: '福建' },
+          { value: 'jiangxi', label: '江西' },
+          { value: 'shandong', label: '山东' },
+          { value: 'henan', label: '河南' },
+          { value: 'hubei', label: '湖北' },
+          { value: 'hunan', label: '湖南' },
+          { value: 'guangdong', label: '广东' },
+          { value: 'guangxi', label: '广西' },
+          { value: 'hainan', label: '海南' },
+          { value: 'sichuan', label: '四川' },
+          { value: 'guizhou', label: '贵州' },
+          { value: 'yunnan', label: '云南' },
+          { value: 'xizang', label: '西藏' },
+          { value: 'shaanxi', label: '陕西' },
+          { value: 'gansu', label: '甘肃' },
+          { value: 'qinghai', label: '青海' },
+          { value: 'ningxia', label: '宁夏' },
+          { value: 'xinjiang', label: '新疆' },
+          { value: 'xianggang', label: '香港' },
+          { value: 'aomen', label: '澳门' },
+          { value: 'taiwan', label: '台湾' }
+        ]
+      },
+      { value: 'japan', label: '日本' },
+      { value: 'korea', label: '韩国' },
+      { value: 'singapore', label: '新加坡' },
+          { value: 'india', label: '印度' },
+          { value: 'thailand', label: '泰国' },
+          { value: 'vietnam', label: '越南' },
+          { value: 'malaysia', label: '马来西亚' },
+          { value: 'indonesia', label: '印度尼西亚' }
+    ]
+  },
+  {
+    value: 'europe',
+    label: '欧洲',
+    children: [
+      { value: 'uk', label: '英国' },
+      { value: 'france', label: '法国' },
+      { value: 'germany', label: '德国' },
+      { value: 'italy', label: '意大利' },
+      // ... 其他欧洲国家
+    ]
+  },
+  {
+    value: 'namerica',
+    label: '北美洲',
+    children: [
+      { value: 'usa', label: '美国' },
+      { value: 'canada', label: '加拿大' },
+      { value: 'mexico', label: '墨西哥' },
+    ]
+  },
+  {
+    value: 'samerica',
+    label: '南美洲',
+    children: [
+      { value: 'brazil', label: '巴西' },
+      { value: 'argentina', label: '阿根廷' },
+      { value: 'chile', label: '智利' },
+    ]
+  },
+  {
+    value: 'africa',
+    label: '非洲',
+    children: [
+      { value: 'egypt', label: '埃及' },
+      { value: 'southafrica', label: '南非' },
+      { value: 'nigeria', label: '尼日利亚' },
+    ]
+  },
+  {
+    value: 'oceania',
+    label: '大洋洲',
+    children: [
+      { value: 'australia', label: '澳大利亚' },
+      { value: 'newzealand', label: '新西兰' },
+    ]
+  }
+];
 
 // 处理登录
 const handleLogin = async () => {
@@ -553,5 +660,18 @@ const toggleForm = () => {
 /* 调整列间距 */
 .el-col {
     padding: 0 10px;
+}
+
+/* 调整级联选择器的样式 */
+:deep(.el-cascader) {
+  width: 100%;
+}
+
+:deep(.el-cascader__dropdown) {
+  max-height: 300px;
+}
+
+:deep(.el-cascader-panel) {
+  max-height: 300px;
 }
 </style>
