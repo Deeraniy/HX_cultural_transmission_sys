@@ -177,14 +177,12 @@ def sentiment_month_analyze(sentiments):
 def sentiments_result_total_count(request):
     """获取景点的情感分析占比统计"""
     try:
-        name = request.GET.get('name', '').strip()
-        if not name:
-            return JsonResponse({
+        spot_name = request.GET.get('name', '')
+        if not spot_name:
+            return {
                 'status': 'error',
                 'message': '景点名称不能为空'
-            }, status=400)
-
-        logger.info(f"正在查询景点: {name}")
+            }
 
         # 数据库连接
         conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
@@ -192,62 +190,61 @@ def sentiments_result_total_count(request):
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 首先获取景点ID
-        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s"
-        cursor.execute(spot_sql, (name,))
+        # 获取景点ID
+        cursor.execute("SELECT spot_id FROM spot WHERE spot_name = %s", (spot_name,))
         spot_result = cursor.fetchone()
 
         if not spot_result:
-            return JsonResponse({
+            return {
                 'status': 'error',
-                'message': f'未找到景点: {name}'
-            }, status=404)
+                'message': f'未找到景点: {spot_name}'
+            }
 
         spot_id = spot_result['spot_id']
 
-        # 查询各情感类型的评论数量和占比
+        # 按月份统计情感分析结果
         sentiment_sql = """
             SELECT 
+                YEAR(comment_time) as year,
+                MONTH(comment_time) as month,
                 sentiment,
-                COUNT(*) as count,
-                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
+                COUNT(*) as comment_count,
+                AVG(sentiment_confidence) as sentiment_score
             FROM user_comment_spot 
-            WHERE spot_id = %s AND sentiment IS NOT NULL AND sentiment != ''
-            GROUP BY sentiment
+            WHERE spot_id = %s AND sentiment IS NOT NULL
+            GROUP BY YEAR(comment_time), MONTH(comment_time), sentiment
+            ORDER BY year, month
         """
         cursor.execute(sentiment_sql, (spot_id,))
         results = cursor.fetchall()
 
-        # 初始化结果字典
-        sentiment_stats = {
-            'positive': 0,
-            'neutral': 0,
-            'negative': 0,
-            'total_count': 0
+        if not results:
+            return {
+                'status': 'error',
+                'message': f'未找到评论数据: {spot_name}'
+            }
+
+        # 转换为列表格式
+        data = []
+        for row in results:
+            data.append({
+                'year': row['year'],
+                'month': row['month'],
+                'sentiment': row['sentiment'],
+                'comment_count': row['comment_count'],
+                'sentiment_score': float(row['sentiment_score'])
+            })
+
+        return {
+            'status': 'success',
+            'data': data
         }
 
-        # 处理查询结果
-        for row in results:
-            if row['sentiment'] in sentiment_stats:
-                sentiment_stats[row['sentiment']] = round(row['percentage'], 2)
-                sentiment_stats['total_count'] += row['count']
-
-        return JsonResponse({
-            'status': 'success',
-            'data': {
-                'positive_percentage': sentiment_stats['positive'],
-                'neutral_percentage': sentiment_stats['neutral'],
-                'negative_percentage': sentiment_stats['negative'],
-                'total_comments': sentiment_stats['total_count']
-            }
-        })
-
     except Exception as e:
-        logger.error(f"获取情感统计时出错: {str(e)}")
-        return JsonResponse({
+        return {
             'status': 'error',
             'message': str(e)
-        }, status=500)
+        }
     finally:
         if 'cursor' in locals():
             cursor.close()
@@ -370,110 +367,58 @@ from zhipuai import ZhipuAI
 client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")  # 请替换为您的真实API密钥
 
 def generate_report(request):
-    """
-    基于情感分析结果生成报告的API
-    """
+    """获取景点评论的情感分析报告"""
     try:
-        # 获取景点名称
-        name = request.GET.get('name', '').strip()
-        if not name:
+        spot_name = request.GET.get('name', '').strip()
+        if not spot_name:
             return JsonResponse({
                 'status': 'error',
                 'message': '景点名称不能为空'
             }, status=400)
 
-        # 调用情感分析API获取数据
-        sentiment_response = sentiments_result(request)
-        sentiment_data = json.loads(sentiment_response.content)
+        logger.info(f"正在获取景点 {spot_name} 的情感分析报告")
 
-        if sentiment_data['status'] != 'success':
+        # 数据库连接
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
+                              passwd='song', db='hx_cultural_transmission_sys',
+                              charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+
+        # 查询tag_id - 修改这里的SQL，移除 tag_type 条件
+        cursor.execute("SELECT tag_id FROM tag WHERE tag_name = %s", (spot_name,))
+        tag_result = cursor.fetchone()
+
+        if not tag_result:
             return JsonResponse({
                 'status': 'error',
-                'message': sentiment_data.get('message', '获取情感分析数据失败')
-            }, status=400)
+                'message': f'未找到景点对应的标签: {spot_name}'
+            }, status=404)
 
-        data = sentiment_data['data']
+        tag_id = tag_result['tag_id']
 
-        # 处理数据，计算每个月的统计信息
-        monthly_stats = {}
-        for entry in data:
-            year = entry['year']
-            month = entry['month']
-            sentiment = entry['sentiment']
-            sentiment_score = entry['sentiment_score']
-            comment_count = entry['comment_count']
+        # 查询报告内容
+        cursor.execute("SELECT content FROM report WHERE tag_id = %s", (tag_id,))
+        report_result = cursor.fetchone()
 
-            key = (year, month)
-            if key not in monthly_stats:
-                monthly_stats[key] = {
-                    'total_comments': 0,
-                    'sentiment_counts': {'positive': 0, 'neutral': 0, 'negative': 0},
-                    'sentiment_scores': {'positive': [], 'neutral': [], 'negative': []},
-                }
-            monthly_stats[key]['total_comments'] += comment_count
-            monthly_stats[key]['sentiment_counts'][sentiment] += comment_count
-            monthly_stats[key]['sentiment_scores'][sentiment].append(sentiment_score * comment_count)
+        if not report_result:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'未找到景点的报告: {spot_name}'
+            }, status=404)
 
-        # 计算百分比和平均情感得分
-        for key in monthly_stats:
-            stats = monthly_stats[key]
-            total_comments = stats['total_comments']
-            for sentiment in ['positive', 'neutral', 'negative']:
-                count = stats['sentiment_counts'][sentiment]
-                percentage = (count / total_comments) * 100 if total_comments > 0 else 0
-                total_score = sum(stats['sentiment_scores'][sentiment])
-                avg_score = (total_score / count) if count > 0 else 0
-                stats['sentiment_counts'][sentiment] = {'count': count, 'percentage': percentage}
-                stats['sentiment_scores'][sentiment] = avg_score
+        report = report_result['content']
 
-            # 构建提示语
-        prompt = "我已经完成了情感分析，分析结果如下：\n\n"
-        for key in sorted(monthly_stats.keys()):
-            year, month = key
-            stats = monthly_stats[key]
-            prompt += f"{year}年{month}月:\n"
-            total_comments = stats['total_comments']
-            prompt += f"- 总评论数：{total_comments}\n"
-            for sentiment in ['positive', 'neutral', 'negative']:
-                count_info = stats['sentiment_counts'][sentiment]
-                avg_score = stats['sentiment_scores'][sentiment]
-                sentiment_chinese = {'positive': '正面', 'neutral': '中性', 'negative': '负面'}[sentiment]
-                # 仅在评论数大于0时添加描述
-                if count_info['count'] > 0:
-                    if count_info['percentage'] == 100:
-                        prompt += f"  - {sentiment_chinese}评论占比居多\n"
-                    else:
-                        prompt += f"  - {sentiment_chinese}反馈：{count_info['count']}条，占比{count_info['percentage']:.2f}%\n"
-                    prompt += f"    - 平均情感得分：{avg_score:.2f}\n"
-            prompt += "\n"
-
-        # 修改提示语，要求使用幽默的语调，并不包括改进建议
-        prompt += (
-            "请基于以上数据，帮助我生成一份情感分析报告，包括每个月的情感趋势和总体总结，"
-            "使用幽默的语调,并在报告中多使用emoji和颜文字请不要包括改进建议。"
-            "请在总结部分详细分析整体情感趋势，深入探讨可能的原因和影响，多写一些内容。"
-        )
-
-
-        # 调用 ZhipuAI 的聊天模型
-        client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")
-        response = client.chat.completions.create(
-            model="chatglm_std",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-
-        report = response.choices[0].message.content.strip()
+        cursor.close()
+        conn.close()
 
         return JsonResponse({
             'status': 'success',
             'report': report,
-            'spot_name': name
+            'spot_name': spot_name
         })
 
     except Exception as e:
-        logger.error(f"生成报告时出错: {str(e)}")
+        logger.error(f"获取报告时出错: {str(e)}")
         return JsonResponse({
             'status': 'error',
             'message': str(e)
