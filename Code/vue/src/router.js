@@ -166,7 +166,17 @@ const routes = [
         component:()=>import('./components/FolkCustom/header.vue'), // 美食详情页面
 
     },
-
+    {
+        path:'/background',//背景介绍
+        name: 'background',
+        component:()=>import('./components/Background/BackgroundIntro.vue'),
+    }
+    ,
+    {
+        path:'/about',//关于我们
+        name: 'about',
+        component:()=>import('./components/About/AboutUs.vue'),
+    }
 ];
 
 // 创建路由器实例

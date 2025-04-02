@@ -168,6 +168,13 @@ const handleSelect = (key: string, keyPath: string[]) => {
     case '11':
       router.push('/global');
       break;
+    case '12':
+      router.push('/background');
+      break;
+    case '13':
+      router.push('/about');
+      break;
+
       // Add more cases for other menu items if needed
     default:
       break;
