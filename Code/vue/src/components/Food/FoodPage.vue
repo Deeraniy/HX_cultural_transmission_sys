@@ -273,7 +273,31 @@ const toggleFavorite = async () => {
   }
 };
 
-// 显示食品详情
+// 记录点击事件
+const recordClick = async (foodId) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      console.log('未登录用户的点击不记录');
+      return;
+    }
+    
+    // 获取美食对应的标签
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      // 使用 viewTagAPI 记录点击
+      await TagsAPI.viewTagAPI(numericUserId, tagId);
+      console.log(`记录用户 ${userId} 对美食 ${foodId} 的点击`);
+    }
+  } catch (error) {
+    console.error('记录点击失败:', error);
+  }
+};
+
+// 修改显示食品详情的函数
 const showFoodDetail = async (item) => {
   foodDetail.visible = true;
   foodDetail.name = item.name;
@@ -284,20 +308,38 @@ const showFoodDetail = async (item) => {
 
   // 初始化标签状态
   await initializeTagStatus(foodDetail.id);
+  // 记录点击
+  await recordClick(foodDetail.id);
 };
 
-// 情感分析按钮点击事件
-const sentimentAnalysis = (item) => {
-  console.log('点击了情感分析按钮',item.name);
-  // 使用 router.push 进行页面跳转，并传递美食名字
+// 修改情感分析函数
+const sentimentAnalysis = async (item) => {
+  console.log('点击了情感分析按钮', item.name);
+  // 记录点击
+  await recordClick(item.food_id || item.id);
+  
+  // 使用 router.push 进行页面跳转
   router.push({
     path: '/detail',
     query: {
-      name: item.name, // 传递菜品名字
-      value: 3,  // 这里的 3 表示美食类型
-      theme: 1,  // 可以在这里添加额外的参数
+      name: item.name,
+      value: 3,
+      theme: 1,
     }
   });
+};
+
+// 点击左侧菜品，更新右侧展示的菜品
+const selectFoodItem = async (index) => {
+  selectedIndex.value = index;
+  const angle = (360 / paginatedFoodItems.value.length) * index;
+  rotationAngle.value = angle; // 通过旋转角度更新 Carousel
+
+  // 记录点击
+  const item = paginatedFoodItems.value[index];
+  if (item) {
+    await recordClick(item.food_id || item.id);
+  }
 };
 
 const foodDetail = reactive({
@@ -307,13 +349,6 @@ const foodDetail = reactive({
   description: '',
   id: null, // 确保有 id 字段
 });
-
-// 点击左侧菜品，更新右侧展示的菜品
-const selectFoodItem = (index) => {
-  selectedIndex.value = index;
-  const angle = (360 / paginatedFoodItems.value.length) * index;
-  rotationAngle.value = angle; // 通过旋转角度更新 Carousel
-};
 
 // 关闭详情弹窗
 const closeFoodDetail = () => {

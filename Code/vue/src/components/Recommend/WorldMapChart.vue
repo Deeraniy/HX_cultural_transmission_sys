@@ -8,27 +8,44 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import * as echarts from 'echarts';
 import worldJson from '@/json/world.json';
+import UserAPI from '@/api/user';
 
 const chartContainer = ref(null);
 let chart = null;
 
-// 生成随机饼图数据
-const generatePieData = (region) => {
-  const themes = ['名胜古迹', '美食文化', '影视文学', '非遗民俗'];
-  return themes.map(theme => ({
-    value: Math.round(Math.random() * 100),
-    name: theme
+const hoveredRegion = ref(null);
+
+// 创建饼图数据
+const createPieData = (themeData) => {
+  const result = Object.entries(themeData).map(([name, value]) => ({
+    name,
+    value: value || 0
   }));
+  return result;
 };
 
 // 创建饼图系列
-const createPieSeries = (center, radius, regionName) => {
+const createPieSeries = (center, radius, regionName, themeData) => {
+  // 转换主题数据为数组格式
+  const pieData = Object.entries(themeData).map(([name, value]) => ({
+    name,
+    value: parseInt(value) || 0
+  })).filter(item => item.value > 0);
+
+  // 如果是中国或者有数据才显示
+  if (regionName !== 'China' && pieData.length === 0) {
+    return null;
+  }
+
+  console.log(`${regionName} 的饼图数据:`, pieData);
+
   return {
     type: 'pie',
     coordinateSystem: 'geo',
+    name: '主题分布',
     tooltip: {
       formatter: (params) => {
-        return `${regionName}<br/>${params.name}: ${params.value} (${params.percent}%)`
+        return `${regionName}<br/>${params.name}: ${params.value}`;
       }
     },
     label: {
@@ -40,68 +57,304 @@ const createPieSeries = (center, radius, regionName) => {
     animationDuration: 0,
     radius,
     center,
-    data: generatePieData(regionName)
+    data: pieData
   };
 };
 
 const initChart = async () => {
   if (!chartContainer.value) return;
 
+  // 用于统计未找到坐标的国家
+  const missingCoordinates = new Set();
+
   // 创建 ECharts 实例
   chart = echarts.init(chartContainer.value);
   chart.showLoading();
 
+  // 标准化地区名称的函数
+  const normalizeRegionName = (name) => {
+    if (!name) return '';
+    return name.trim()
+      .replace(/\s+/g, ' ')
+      .replace(/\([^)]*\)/g, '')
+      .trim();
+  };
+
+  // 地区名称映射表
+  const regionNameMap = {
+    'United States': 'USA',
+    'United States of America': 'USA',
+    'Democratic Republic of the Congo': 'Dem. Rep. Congo',
+    'Congo': 'Dem. Rep. Congo',
+    'Republic of the Congo': 'Congo',
+    'Russian Federation': 'Russia',
+    'United Republic of Tanzania': 'Tanzania',
+    'United Kingdom': 'UK',
+    'Korea': 'South Korea',
+    'Republic of Korea': 'South Korea',
+    'Democratic People\'s Republic of Korea': 'North Korea',
+  };
+
   try {
+    const response = await UserAPI.getUserDistribution();
+    if (response.status !== 'success') {
+      throw new Error(response.message || '获取数据失败');
+    }
+    const distributionData = response.data;
+
+    // 创建标准化的数据映射
+    const normalizedData = {};
+    Object.entries(distributionData).forEach(([region, data]) => {
+      let normalizedRegion = normalizeRegionName(region);
+      // 使用映射表转换地区名称
+      normalizedRegion = regionNameMap[normalizedRegion] || normalizedRegion;
+      normalizedData[normalizedRegion] = data;
+      console.log(`地区数据: ${normalizedRegion}`, data);
+    });
+
     // 注册世界地图
     echarts.registerMap('world', worldJson);
 
-    // 配置项
+    // 基础配置
+    const baseGeoConfig = {
+      map: 'world',
+      roam: true,
+      zoom: 1.2,
+      center: [10, 30],
+      itemStyle: {
+        areaColor: '#e7e8ea',
+        borderColor: '#ccc'
+      },
+      emphasis: {
+        itemStyle: {
+          areaColor: '#b71c1c',
+          borderColor: '#fff',
+          borderWidth: 1,
+          shadowBlur: 10,
+          shadowColor: 'rgba(183, 28, 28, 0.3)'
+        },
+        label: {
+          show: true,
+          color: '#fff'
+        }
+      }
+    };
+
     const option = {
       backgroundColor: '#f5f5f5',
-      geo: {
-        map: 'world',
-        roam: true,
-        zoom: 1.2,
-        center: [10, 30],
-        itemStyle: {
-          areaColor: '#e7e8ea',
-          borderColor: '#ccc'
-        },
-        emphasis: {
-          itemStyle: {
-            areaColor: '#b71c1c',
-            borderColor: '#fff'
-          }
-        }
-      },
+      geo: baseGeoConfig,
       tooltip: {
-        trigger: 'item'
-      },
-      legend: {
-        data: ['名胜古迹', '美食文化', '影视文学', '非遗民俗'],
-        orient: 'vertical',
-        right: 10,
-        top: 'center',
+        show: true,
+        trigger: 'item',
+        enterable: true,
+        confine: true,
+        triggerOn: 'mousemove',
+        position: 'right',
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: [10, 15],
         textStyle: {
-          color: '#333'
+          color: '#333',
+          fontSize: 14
         }
       },
       series: [
-        // 主要地区的饼图
-        createPieSeries([116.4, 39.9], 20, '中国'),
-        createPieSeries([-95, 39.8], 15, '美国'),
-        createPieSeries([37, 55], 15, '俄罗斯'),
-        createPieSeries([139, 35], 15, '日本'),
-        createPieSeries([10, 51], 15, '欧洲')
+        ...Object.entries(normalizedData)
+          .map(([region, data]) => {
+            const coordinates = getRegionCoordinates(region, missingCoordinates);
+            return {
+              name: region,
+              type: 'pie',
+              coordinateSystem: 'geo',
+              center: coordinates,
+              radius: 15,
+              data: Object.entries(data.themes).map(([name, value]) => ({
+                name,
+                value: value || 0
+              })).filter(item => item.value > 0),
+              label: { show: false },
+              labelLine: { show: false },
+              tooltip: {
+                formatter: (params) => {
+                  const regionData = normalizedData[region];
+                  if (!regionData) return '';
+
+                  let html = `
+                    <div style="min-width: 200px">
+                      <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px; 
+                                 padding-bottom: 8px; border-bottom: 1px solid #eee">
+                        ${region}
+                      </div>
+                      <div style="color: #666; margin-bottom: 8px">
+                        <span style="color: #b71c1c; font-weight: bold">
+                          ${regionData.total}
+                        </span> 位用户
+                      </div>
+                      <div style="margin-top: 5px">
+                        <div style="font-weight: bold; margin-bottom: 5px">主题偏好：</div>
+                    `;
+
+                  Object.entries(regionData.themes).forEach(([theme, count]) => {
+                    if (count > 0) {
+                      const percentage = ((count / regionData.total) * 100).toFixed(1);
+                      html += `
+                        <div style="display: flex; justify-content: space-between; 
+                                    margin: 4px 0; align-items: center">
+                          <span style="color: #666">${theme}</span>
+                          <span style="color: #b71c1c">
+                            ${count} (${percentage}%)
+                          </span>
+                        </div>
+                      `;
+                    }
+                  });
+
+                  html += `
+                      </div>
+                    </div>
+                  `;
+
+                  return html;
+                }
+              }
+            };
+          })
+          .filter(Boolean)
       ]
     };
 
+    console.log('最终的图表配置:', option);
     chart.hideLoading();
     chart.setOption(option);
+
+    // 在所有处理完成后，输出统计信息
+    if (missingCoordinates.size > 0) {
+      console.log('\n=== 坐标获取统计 ===');
+      console.log(`共有 ${missingCoordinates.size} 个国家未找到坐标:`);
+      console.log(Array.from(missingCoordinates).sort().join(', '));
+      console.log('=====================\n');
+    }
+
   } catch (error) {
     console.error('加载世界地图数据失败:', error);
+    console.error('详细错误信息:', error.stack);
     chart.hideLoading();
   }
+};
+
+// 获取地区坐标
+const getRegionCoordinates = (region, missingCoordinates) => {
+  // 从 world.json 中获取国家中心点坐标
+  const getCountryCentroid = (countryName) => {
+    // 添加国家名称映射
+    const countryNameMap = {
+      'Bolivia ': 'Bolivia',
+      // 可以添加其他需要映射的国家名称
+    };
+
+    // 尝试获取标准名称
+    const standardName = countryNameMap[countryName] || countryName;
+
+    const feature = worldJson.features.find(f => 
+      f.properties.name === standardName || 
+      f.properties.name.toLowerCase() === standardName.toLowerCase()
+    );
+    
+    // 如果找到了对应的国家
+    if (feature) {
+      // 从 geometry 中计算中心点
+      if (feature.geometry && feature.geometry.coordinates) {
+        if (feature.geometry.type === 'Polygon') {
+          // 对于单个多边形，取第一个环的坐标平均值
+          const coords = feature.geometry.coordinates[0];
+          const center = coords.reduce((acc, curr) => {
+            return [acc[0] + curr[0], acc[1] + curr[1]];
+          }, [0, 0]);
+          return [center[0] / coords.length, center[1] / coords.length];
+        } else if (feature.geometry.type === 'MultiPolygon') {
+          // 对于多个多边形，取第一个多边形的中心点
+          const coords = feature.geometry.coordinates[0][0];
+          const center = coords.reduce((acc, curr) => {
+            return [acc[0] + curr[0], acc[1] + curr[1]];
+          }, [0, 0]);
+          return [center[0] / coords.length, center[1] / coords.length];
+        }
+      }
+    }
+    return null;
+  };
+
+  // 预定义的坐标映射（用于常用国家，确保位置准确）
+  const coordinates = {
+    'China': [116.4, 39.9],
+    'USA': [-95, 39.8],
+    'Russia': [37, 55],
+    'Japan': [139, 35],
+    'UK': [0, 51],
+    'South Africa': [25, -29],
+    'New Zealand': [174, -41],
+    'Bahrain': [50.5, 26],
+    'Montenegro': [19.2, 42.8],
+    'Sierra Leone': [-11.8, 8.5],
+    'Guinea-Bissau': [-15.2, 11.8],
+    // 添加缺失的国家坐标
+    'Antigua and Barbuda': [-61.8, 17.1],
+    'Bolivia (Plurinational State of)': [-65.2, -19.0],
+    'Bosnia and Herzegovina': [17.8, 44.0],
+    'Brunei Darussalam': [114.7, 4.5],
+    'Cabo Verde': [-23.5, 15.1],
+    'Central African Republic': [20.9, 6.6],
+    'Czech Republic': [15.5, 49.8],
+    'Democratic People\'s Republic of Korea': [127.5, 40.0],
+    'Democratic Republic of the Congo': [23.7, -2.9],
+    'Dominican Republic': [-70.2, 18.7],
+    'Equatorial Guinea': [10.3, 1.7],
+    'Eswatini': [31.5, -26.5],
+    'Iran (Islamic Republic of)': [53.7, 32.4],
+    'Lao People\'s Democratic Republic': [102.5, 19.9],
+    'Maldives': [73.5, 4.2],
+    'Marshall Islands': [171.2, 7.1],
+    'Micronesia (Federated States of)': [150.6, 7.4],
+    'Monaco': [7.4, 43.7],
+    'Nauru': [166.9, -0.5],
+    'North Macedonia': [21.7, 41.6],
+    'Republic of Korea': [127.8, 36.0],
+    'Republic of Moldova': [28.4, 47.2],
+    'Russian Federation': [37.6, 55.8],
+    'San Marino': [12.4, 43.9],
+    'Solomon Islands': [160.2, -9.6],
+    'South Sudan': [31.6, 4.9],
+    'St. Kitts and Nevis': [-62.7, 17.3],
+    'St. Lucia': [-61.0, 13.9],
+    'St. Vincent and the Grenadines': [-61.2, 13.2],
+    'Syrian Arab Republic': [38.3, 35.0],
+    'São Tomé and Príncipe': [6.6, 0.3],
+    'Tuvalu': [179.2, -8.5],
+    'United Republic of Tanzania': [34.9, -6.4],
+    'Venezuela (Bolivarian Republic of)': [-66.6, 6.4],
+    'Viet Nam': [108.3, 14.1]
+  };
+
+  // 先尝试从预定义映射获取
+  let result = coordinates[region];
+  
+  // 如果没有预定义坐标，尝试从 world.json 获取
+  if (!result) {
+    const centroid = getCountryCentroid(region);
+    if (centroid) {
+      // 确保经度在 -180 到 180 之间
+      centroid[0] = ((centroid[0] + 180) % 360) - 180;
+      result = centroid;
+    } else {
+      console.warn(`警告: 未找到地区 ${region} 的坐标配置`);
+      missingCoordinates.add(region);
+      result = [0, 0];
+    }
+  }
+
+  console.log(`地区 ${region} 的最终坐标:`, result);
+  return result;
 };
 
 onMounted(() => {

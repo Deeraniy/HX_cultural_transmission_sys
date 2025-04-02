@@ -85,6 +85,7 @@ urlpatterns = [
     url(r'^user$', user.get_user_info, name='get_user_info'),  # GET 请求获取用户信息
     url(r'^user/update$', user.update_user_info, name='update_user'),  # PUT 请求处理更新用户信息
     url(r'^user/upload$', user.upload_avatar, name='upload_avatar'),  # 添加头像上传路由
+    url(r'^user/distribution$', user.get_user_distribution, name='get_user_distribution'),  # 获取用户分布数据
     url(r'^api/tag/view$', tags.view_tag),
     url(r'^api/tag/like$', tags.toggle_like),
     url(r'^api/tag/favorite$', tags.toggle_favorite),

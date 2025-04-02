@@ -14,12 +14,28 @@ interface UserUpdateData {
     mobile?: string;
     location?: string;
 }
+
 interface UserHistoryData {
     uid: number;    // 对应后端的username参数
     type: string;        // 记录类型
     name: string;        // 项目名称
     img_url: string;   // 图片URL
     describe: string;    // 描述
+}
+
+interface UserDistributionData {
+    status: string;
+    data: {
+        [region: string]: {
+            total: number;
+            themes: {
+                '名胜古迹': number;
+                '美食文化': number;
+                '影视文学': number;
+                '非遗民俗': number;
+            };
+        };
+    };
 }
 
 class UserAPI {
@@ -93,8 +109,6 @@ class UserAPI {
         });
     }
 
-
-
     // 删除用户
     static deleteUser(userId: string) {
         return request({
@@ -133,9 +147,18 @@ class UserAPI {
         });
     }
 
+    // 获取用户地区分布数据
+    static getUserDistribution(): Promise<UserDistributionData> {
+        return request({
+            url: `${DICT_BASE_URL}/user/distribution`,
+            method: 'get'
+        }).catch(error => {
+            console.error('Get user distribution error:', error.response?.data || error);
+            throw error;
+        });
+    }
 
     //用户浏览记录表
-
 }
 
 export default UserAPI ;
