@@ -2,15 +2,11 @@
   <div class="world-map-container">
     <div ref="chartContainer" class="chart-container"></div>
     <div class="zoom-controls">
-      <el-button @click="handleZoom('in')" circle>
-        <i class="el-icon-plus"></i>
-      </el-button>
-      <el-button @click="handleZoom('out')" circle>
-        <i class="el-icon-minus"></i>
-      </el-button>
-      <el-button @click="resetZoom" circle>
+      <button @click="handleZoom('in')" class="zoom-btn">+</button>
+      <button @click="handleZoom('out')" class="zoom-btn">-</button>
+      <button @click="resetZoom" class="zoom-btn">
         <i class="el-icon-refresh"></i>
-      </el-button>
+      </button>
     </div>
   </div>
 </template>
@@ -33,21 +29,21 @@ const MAX_ZOOM = 2.5;
 
 const handleZoom = (type) => {
   if (!chart) return;
-  
+
   const option = chart.getOption();
   if (type === 'in' && currentZoom.value < MAX_ZOOM) {
     currentZoom.value += ZOOM_STEP;
   } else if (type === 'out' && currentZoom.value > MIN_ZOOM) {
     currentZoom.value -= ZOOM_STEP;
   }
-  
+
   option.geo[0].zoom = currentZoom.value;
   chart.setOption(option);
 };
 
 const resetZoom = () => {
   if (!chart) return;
-  
+
   currentZoom.value = 1.2;
   const option = chart.getOption();
   option.geo[0].zoom = currentZoom.value;
@@ -160,7 +156,7 @@ const initChart = async () => {
       map: 'world',
       roam: 'move',
       zoom: 1.2,
-      center: [10, 30],
+      center: [5, 15],
       itemStyle: {
         areaColor: '#e7e8ea',
         borderColor: '#ccc'
@@ -181,7 +177,7 @@ const initChart = async () => {
     };
 
     const option = {
-      backgroundColor: '#f5f5f5',
+      backgroundColor: '#fff',
       geo: baseGeoConfig,
       tooltip: {
         show: true,
@@ -191,9 +187,9 @@ const initChart = async () => {
         triggerOn: 'mousemove',
         position: 'right',
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        borderColor: '#ccc',
+        borderColor: '#fff',
         borderWidth: 1,
-        padding: [10, 15],
+        padding: [0,0],
         textStyle: {
           color: '#333',
           fontSize: 14
@@ -221,8 +217,8 @@ const initChart = async () => {
                   if (!regionData) return '';
 
                   let html = `
-                    <div style="min-width: 200px">
-                      <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px; 
+                    <div style="min-width: 200px;padding: 10px">
+                      <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;
                                  padding-bottom: 8px; border-bottom: 1px solid #eee">
                         ${region}
                       </div>
@@ -239,7 +235,7 @@ const initChart = async () => {
                     if (count > 0) {
                       const percentage = ((count / regionData.total) * 100).toFixed(1);
                       html += `
-                        <div style="display: flex; justify-content: space-between; 
+                        <div style="display: flex; justify-content: space-between;
                                     margin: 4px 0; align-items: center">
                           <span style="color: #666">${theme}</span>
                           <span style="color: #b71c1c">
@@ -296,11 +292,11 @@ const getRegionCoordinates = (region, missingCoordinates) => {
     // 尝试获取标准名称
     const standardName = countryNameMap[countryName] || countryName;
 
-    const feature = worldJson.features.find(f => 
-      f.properties.name === standardName || 
+    const feature = worldJson.features.find(f =>
+      f.properties.name === standardName ||
       f.properties.name.toLowerCase() === standardName.toLowerCase()
     );
-    
+
     // 如果找到了对应的国家
     if (feature) {
       // 从 geometry 中计算中心点
@@ -378,7 +374,7 @@ const getRegionCoordinates = (region, missingCoordinates) => {
 
   // 先尝试从预定义映射获取
   let result = coordinates[region];
-  
+
   // 如果没有预定义坐标，尝试从 world.json 获取
   if (!result) {
     const centroid = getCountryCentroid(region);
@@ -399,7 +395,7 @@ const getRegionCoordinates = (region, missingCoordinates) => {
 
 onMounted(() => {
   initChart();
-  
+
   // 添加窗口大小变化的监听
   window.addEventListener('resize', () => {
     chart?.resize();
@@ -417,53 +413,58 @@ onUnmounted(() => {
 
 <style scoped>
 .world-map-container {
-  width: 100%;
-  height: 100%;
-  background: #f5f5f5;
+  width: 90%;
+  height: 90%;
+  background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   position: relative;
+padding: 10px;
+  margin-top: -15px;
+  margin-left: 30px;
 }
 
 .chart-container {
+
   width: 100%;
   height: 100%;
   min-height: 500px;
-  padding: 20px;
+
   box-sizing: border-box;
 }
 
 .zoom-controls {
   position: absolute;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 20px;
+  right: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   z-index: 100;
 }
 
-.zoom-controls .el-button {
+.zoom-btn {
   width: 36px;
   height: 36px;
-  padding: 0;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid #dcdfe6;
+  font-size: 18px;
+  cursor: pointer;
   transition: all 0.3s;
 }
 
-.zoom-controls .el-button:hover {
-  background-color: #fff;
+.zoom-btn:hover {
+  background-color: #f5f5f5;
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.zoom-controls .el-button i {
-  font-size: 18px;
-  color: #606266;
+.zoom-btn:active {
+  background-color: #e8e8e8;
+  transform: scale(0.95);
 }
-</style> 
+</style>

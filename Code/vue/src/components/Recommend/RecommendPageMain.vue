@@ -871,7 +871,7 @@ onMounted(async () => {
 .empty-slide.slide-2 { background-color: rgba(241, 196, 15, 0.2); }  /* 半透明黄色 */
 .empty-slide.slide-3 { background-color: rgba(231, 76, 60, 0.2); }   /* 半透明红色 */
 .empty-slide.slide-4 { background-color: rgba(241, 196, 15, 0.2); }  /* 半透明黄色 */
-.empty-slide.slide-5 { background-color: rgba(231, 76, 60, 0.2); }   /* 半透明红色 */
+.empty-slide.slide-5 { background-color: transparent; }   /* 发现更多模块不需要蒙版 */
 .empty-slide.slide-6 { background-color: rgba(52, 152, 219, 0.2); }  /* 半透明蓝色 */
 
 .slide-content {
@@ -1147,8 +1147,7 @@ onMounted(async () => {
   position: relative;
   width: 100%;
   height: 100%;
-  background: #f5f5f5;
-  padding: 20px;
+  padding: 40px;
 }
 
 .map-wrapper {
