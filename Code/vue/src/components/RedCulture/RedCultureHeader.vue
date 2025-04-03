@@ -71,7 +71,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   background-color: #fff8f0;
   background-size: cover;
   background-position: center;
-  min-height: 100vh;
+  min-height: 97vh;
   overflow-y: auto;
 }
 
