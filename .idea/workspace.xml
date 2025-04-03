@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="个性推荐页面优化">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="个性推荐地图插入">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/WorldMapChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/WorldMapChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/folk_sentiments_analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/folk_sentiments_analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/AIReport.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/AIReport.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/BasicInfo.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/BasicInfo.vue" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,14 +177,7 @@
       <workItem from="1743409281479" duration="2477000" />
       <workItem from="1743489965816" duration="595000" />
       <workItem from="1743551683096" duration="3409000" />
-    </task>
-    <task id="LOCAL-00017" summary="民俗轮播图微调">
-      <option name="closed" value="true" />
-      <created>1736514293199</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1736514293199</updated>
+      <workItem from="1743666282692" duration="1829000" />
     </task>
     <task id="LOCAL-00018" summary="首页美化">
       <option name="closed" value="true" />
@@ -567,7 +563,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743564423608</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="个性推荐地图插入">
+      <option name="closed" value="true" />
+      <created>1743666329250</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1743666329251</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -591,7 +595,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="后端user.py中get_info代码修正（表格是user" />
     <MESSAGE value="个性推荐前后端连接" />
     <MESSAGE value="登陆注册实现" />
     <MESSAGE value="logo置换" />
@@ -616,7 +619,8 @@
     <MESSAGE value="情感分析界面跳转（返回按键有问题" />
     <MESSAGE value="小优化" />
     <MESSAGE value="个性推荐页面优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="个性推荐页面优化" />
+    <MESSAGE value="个性推荐地图插入" />
+    <option name="LAST_COMMIT_MESSAGE" value="个性推荐地图插入" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
