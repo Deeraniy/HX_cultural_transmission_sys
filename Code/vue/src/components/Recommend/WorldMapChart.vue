@@ -1,6 +1,17 @@
 <template>
   <div class="world-map-container">
     <div ref="chartContainer" class="chart-container"></div>
+    <div class="zoom-controls">
+      <el-button @click="handleZoom('in')" circle>
+        <i class="el-icon-plus"></i>
+      </el-button>
+      <el-button @click="handleZoom('out')" circle>
+        <i class="el-icon-minus"></i>
+      </el-button>
+      <el-button @click="resetZoom" circle>
+        <i class="el-icon-refresh"></i>
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -14,6 +25,35 @@ const chartContainer = ref(null);
 let chart = null;
 
 const hoveredRegion = ref(null);
+
+const currentZoom = ref(1.2);
+const ZOOM_STEP = 0.2;
+const MIN_ZOOM = 0.8;
+const MAX_ZOOM = 2.5;
+
+const handleZoom = (type) => {
+  if (!chart) return;
+  
+  const option = chart.getOption();
+  if (type === 'in' && currentZoom.value < MAX_ZOOM) {
+    currentZoom.value += ZOOM_STEP;
+  } else if (type === 'out' && currentZoom.value > MIN_ZOOM) {
+    currentZoom.value -= ZOOM_STEP;
+  }
+  
+  option.geo[0].zoom = currentZoom.value;
+  chart.setOption(option);
+};
+
+const resetZoom = () => {
+  if (!chart) return;
+  
+  currentZoom.value = 1.2;
+  const option = chart.getOption();
+  option.geo[0].zoom = currentZoom.value;
+  option.geo[0].center = [10, 30];
+  chart.setOption(option);
+};
 
 // 创建饼图数据
 const createPieData = (themeData) => {
@@ -118,7 +158,7 @@ const initChart = async () => {
     // 基础配置
     const baseGeoConfig = {
       map: 'world',
-      roam: true,
+      roam: 'move',
       zoom: 1.2,
       center: [10, 30],
       itemStyle: {
@@ -382,6 +422,7 @@ onUnmounted(() => {
   background: #f5f5f5;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .chart-container {
@@ -390,5 +431,39 @@ onUnmounted(() => {
   min-height: 500px;
   padding: 20px;
   box-sizing: border-box;
+}
+
+.zoom-controls {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.zoom-controls .el-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #dcdfe6;
+  transition: all 0.3s;
+}
+
+.zoom-controls .el-button:hover {
+  background-color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-controls .el-button i {
+  font-size: 18px;
+  color: #606266;
 }
 </style> 

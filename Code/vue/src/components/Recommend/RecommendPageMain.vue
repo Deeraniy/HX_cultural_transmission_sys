@@ -165,17 +165,7 @@
 
       <div v-if="currentIndex === 4" class="map-container">
         <div class="map-wrapper">
-          <div class="china-map">
-            <!-- 中国地图部分 -->
-            <div v-for="(count, province) in mapData.china"
-                 :key="province"
-                 class="province-region"
-                 :class="province">
-              <div class="region-tooltip">
-                {{ province }}: {{ count }}位相似用户
-              </div>
-            </div>
-          </div>
+          <world-map-chart />
         </div>
       </div>
     </template>
@@ -209,6 +199,7 @@ import RecommendAPI from "@/api/recommend"
 import TagsAPI from "@/api/tags"
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import WorldMapChart from './WorldMapChart.vue'
 
 // 导入默认图片以备用
 import defaultEmptyImg from '@/assets/BookB.jpg'
@@ -280,9 +271,23 @@ const userPreferenceCards = computed(() =>
 );
 
 // 计算属性：相似用户卡片
-const similarUserCards = computed(() =>
-  slides.value[currentIndex.value]?.subCards.filter(card => !card.userPreference) || []
-);
+const similarUserCards = computed(() => {
+  const currentSlide = slides.value[currentIndex.value];
+  if (!currentSlide) return [];
+  
+  // 获取当前用户的偏好
+  const userPreferences = new Set(
+    currentSlide.subCards
+      .filter(card => card.userPreference)
+      .map(card => card.folk_name || card.tag_name)
+  );
+  
+  // 过滤掉与用户偏好重复的推荐
+  return currentSlide.subCards.filter(card => {
+    const cardName = card.folk_name || card.tag_name;
+    return !card.userPreference && !userPreferences.has(cardName);
+  });
+});
 
 // 弹窗控制
 const showAllPreferencesDialog = ref(false);
