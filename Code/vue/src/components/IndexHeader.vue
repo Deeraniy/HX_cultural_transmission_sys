@@ -166,7 +166,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
       router.push('/report');
       break;
     case '11':
-      router.push('/global');
+      router.push('/globe');
       break;
     case '12':
       router.push('/background');

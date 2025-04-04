@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="知识图谱（红色）维修">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面地图">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/芙蓉镇_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/芙蓉镇_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/WorldMapChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/WorldMapChart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,15 +180,8 @@
       <workItem from="1743409281479" duration="2477000" />
       <workItem from="1743489965816" duration="595000" />
       <workItem from="1743551683096" duration="3409000" />
-      <workItem from="1743666282692" duration="4841000" />
-    </task>
-    <task id="LOCAL-00020" summary="首页导航栏美化">
-      <option name="closed" value="true" />
-      <created>1736558976473</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1736558976473</updated>
+      <workItem from="1743666282692" duration="5407000" />
+      <workItem from="1743742365429" duration="3586000" />
     </task>
     <task id="LOCAL-00021" summary="美食旋转木马微调">
       <option name="closed" value="true" />
@@ -568,7 +567,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743679247323</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="情感分析界面地图">
+      <option name="closed" value="true" />
+      <created>1743681203276</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1743681203276</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -592,7 +599,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="logo置换" />
     <MESSAGE value="用户界面+点赞收藏（未完成" />
     <MESSAGE value="图片" />
     <MESSAGE value="个性化介面" />
@@ -617,7 +623,8 @@
     <MESSAGE value="个性推荐地图插入" />
     <MESSAGE value="情感分析界面优化" />
     <MESSAGE value="知识图谱（红色）维修" />
-    <option name="LAST_COMMIT_MESSAGE" value="知识图谱（红色）维修" />
+    <MESSAGE value="情感分析界面地图" />
+    <option name="LAST_COMMIT_MESSAGE" value="情感分析界面地图" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
