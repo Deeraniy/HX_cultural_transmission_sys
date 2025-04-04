@@ -11,6 +11,7 @@ import UserStar from "@/components/User/components/left/UserStar.vue"
 import UserUpload from "@/components/User/components/left/UserUpload.vue"
 import UserActivity from "@/components/User/components/left/UserActivity.vue";
 import Login from "@/components/login.vue"
+import RecommendMap from "@/components/Recommend/WorldMapChart.vue"
 // 创建 Pinia 实例
 const pinia = createPinia();
 
@@ -66,12 +67,21 @@ const routes = [
         component:() => import('./components/Recommend/RecommendPage.vue'),
     },
     {
+        path: '/recommendMap',
+        component:() => import('./components/Recommend/WorldMapChart.vue'),
+    },
+    {
         path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
     {
         path: '/report',
         component:() => import('./components/ReportGeneration/ReportMain.vue'),
+    },
+    {
+        path: '/globe',
+        name: 'Globe3D',
+        component: () => import('@/components/Spread/Globe3D.vue')
     },
     {
         path: '/index',
@@ -166,7 +176,17 @@ const routes = [
         component:()=>import('./components/FolkCustom/header.vue'), // 美食详情页面
 
     },
-
+    {
+        path:'/background',//背景介绍
+        name: 'background',
+        component:()=>import('./components/Background/BackgroundIntro.vue'),
+    }
+    ,
+    {
+        path:'/about',//关于我们
+        name: 'about',
+        component:()=>import('./components/About/AboutUs.vue'),
+    }
 ];
 
 // 创建路由器实例

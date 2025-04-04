@@ -383,8 +383,6 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
         
         # 生成详细的报告文本
         report_text = f"""
-情感分析因果推理报告
-
 1. 变化点信息:
    - 变化点位置: 第{change_point}个月
    - 变化点日期: {dates[change_point].year}年{dates[change_point].month}月

@@ -340,7 +340,7 @@ onMounted(() => {
 @import '@/assets/font/font.css';
 .carousel-overlay {
   position: absolute;
-  top: 0;
+  top: -30px;
   left: 0;
   right: 0;
   bottom: 0;

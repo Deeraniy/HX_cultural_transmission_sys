@@ -1,43 +1,43 @@
 <template>
   <div class="sentiment-analysis">
-    <div class="sentiment-analysis-header">
-      <div class="sentiment-analysis-header-title">
-        <div class="sentiment-analysis-header-title-text">
-          情感分析
-        </div>
-      </div>
-      <!-- 添加切换按钮 -->
-      <div class="chart-switch">
-        <el-radio-group v-model="currentChart" size="large">
-          <el-radio-button label="time">时间趋势</el-radio-button>
-          <el-radio-button label="threeLine">情感分布</el-radio-button>
-        </el-radio-group>
-      </div>
-    </div>
     <div class="sentiment-analysis-content">
       <div class="chart-container">
-        <!-- 折线图 -->
-        <template v-if="currentChart === 'time'">
-          <el-skeleton v-if="isTimeChartLoading" :rows="3" animated />
-          <LineRace
-            v-else-if="timeData && timeData.length > 0"
-            :timeData="timeData"
-            :height="'100%'"
-            :width="'100%'"
-          />
-          <div v-else class="no-data">暂无数据</div>
-        </template>
+        <!-- 标题和切换按钮放在一起 -->
+        <div class="chart-header">
+          <div class="chart-title">情感分析</div>
+          <div class="chart-switch">
+            <el-radio-group v-model="currentChart" size="large">
+              <el-radio-button label="time">时间趋势</el-radio-button>
+              <el-radio-button label="threeLine">情感分布</el-radio-button>
+            </el-radio-group>
+          </div>
+        </div>
 
-        <!-- 三线图 -->
-        <template v-else>
+        <!-- 图表区域 -->
+        <div class="chart-area">
+          <!-- 折线图 -->
+          <template v-if="currentChart === 'time'">
+            <el-skeleton v-if="isTimeChartLoading" :rows="3" animated />
+            <LineRace
+              v-else-if="timeData && timeData.length > 0"
+              :timeData="timeData"
+              :height="'100%'"
+              :width="'100%'"
+            />
+            <div v-else class="no-data">暂无数据</div>
+          </template>
 
-          <el-skeleton v-show="isThreeLineLoading" :rows="3" animated />
-          <ThreeLineChart
-              v-show="threeLineData && threeLineData.length > 0"
+          <!-- 三线图 -->
+          <template v-else>
+            <el-skeleton v-if="isThreeLineLoading" :rows="3" animated />
+            <ThreeLineChart
+              v-else
+              v-show="threeLineData && Object.keys(threeLineData).length > 0"
               :timeData="threeLineData"
-              style="height: 1000px;width: 1000px"
-          />
-        </template>
+              class="three-line-chart"
+            />
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -49,6 +49,7 @@ import LineRace from "@/components/DetailPage/subcomponent/LineRace.vue";
 import ThreeLineChart from "@/components/DetailPage/subcomponent/ThreeLineChart.vue";
 import SentimentAPI from "@/api/sentiment";
 import { ElMessage } from 'element-plus';
+import { initChart } from '@/utils/echartConfig';
 
 // Props 定义
 interface Props {
@@ -227,53 +228,120 @@ watch(timeData, (newValue) => {
 onMounted(async () => {
   console.log('SentimentAnalysis mounted with props:', props);
   await loadData();
+
+  const chartDom = document.getElementById('myChart');
+  if (chartDom) {
+    const chart = initChart(chartDom);
+    chart.setOption(option);
+  }
 });
+
+const initChartOption = () => {
+  // 获取当前字体样式
+  const fontStyle = document.documentElement.getAttribute('data-font-style');
+  const fontFamily = fontStyle === 'normal' ? 
+    'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' : 
+    'HelveticaNeue, serif';
+  const fontSize = fontStyle === 'normal' ? 14 : 16;
+
+  return {
+    // 全局字体设置
+    textStyle: {
+      fontFamily: 'HelveticaNeue, serif',
+      fontSize: 16
+    },
+    title: {
+      text: '情感分析',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 20  // 标题字体稍大
+      }
+    },
+    tooltip: {
+      trigger: 'axis',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    xAxis: {
+      type: 'category',
+      data: [],
+      axisLabel: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    legend: {
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif',
+        fontSize: 16
+      }
+    },
+    // ... 其他配置
+  };
+};
+
+// 监听字体样式变化
+watch(
+  () => document.documentElement.getAttribute('data-font-style'),
+  () => {
+    if (chart.value) {
+      const option = initChartOption();
+      // 更新已有数据
+      option.xAxis.data = chart.value.getOption().xAxis[0].data;
+      option.series = chart.value.getOption().series;
+      chart.value.setOption(option);
+    }
+  }
+);
 </script>
 
 <style scoped>
 .sentiment-analysis {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  margin-top: 10px;
+  width: 97%;
+  margin-left: 1.5%;
+  height: 95%;
+  min-height: 300px;
 }
 
-.sentiment-analysis-header {
-  padding: 16px 20px;
+.sentiment-analysis-content {
+  height: 100%;
+}
+
+.chart-container {
+  height: 100%;
+  min-height: 300px;
   background-color: white;
   border-radius: 8px;
-  margin-bottom: 20px;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+}
+
+.chart-header {
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #ebeef5;
 }
 
-.sentiment-analysis-header-title-text {
+.chart-title {
   font-size: 18px;
   font-weight: 600;
   color: #303133;
 }
 
-.chart-switch {
-  margin-left: 20px;
-}
-
-.sentiment-analysis-content {
-  flex: 1;
-  overflow: hidden;
+.chart-area {
+  height: calc(100% - 60px); /* 减去header的高度 */
   padding: 20px;
-}
-
-.chart-container {
-  height: 100%;
-  min-height: 400px;
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
 }
 
 /* Radio按钮组样式 */
@@ -282,11 +350,19 @@ onMounted(async () => {
 }
 
 :deep(.el-radio-button) {
-  flex: 1;
+  margin-left: 10px;
 }
 
 :deep(.el-radio-button__inner) {
-  width: 100%;
+  border-radius: 4px !important;
+}
+
+:deep(.el-radio-button:first-child .el-radio-button__inner) {
+  border-radius: 4px !important;
+}
+
+:deep(.el-radio-button:last-child .el-radio-button__inner) {
+  border-radius: 4px !important;
 }
 
 /* 确保图表容器占满可用空间 */
@@ -308,5 +384,10 @@ onMounted(async () => {
   height: 100%;
   color: #909399;
   font-size: 14px;
+}
+
+.three-line-chart {
+  height: 100%;
+  min-height: 250px;
 }
 </style>

@@ -149,7 +149,7 @@ def delete_all_history(request):
 
         if username:
             # 创建连接
-            conn = pymysql.connect(host='120.233.26.237', port=3306, user='root', passwd='song',
+            conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                                    db='hx_cultural_transmission_sys', charset='utf8')
             # 创建游标
             cursor = conn.cursor()
@@ -179,7 +179,7 @@ def search_history(request):
 
         if username and keyword:
             # 创建连接
-            conn = pymysql.connect(host='120.233.26.237', port=3306, user='root', passwd='song',
+            conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                                    db='hx_cultural_transmission_sys', charset='utf8')
             # 创建游标
             cursor = conn.cursor()

@@ -182,24 +182,23 @@
     }
   };
   
-  // 修改类型守卫函数的位置和实现
+  // 修改 isPieResponse 的类型定义和判断逻辑
   interface PieData {
-    data: {
-      positive_percentage: string | number;
-      neutral_percentage: string | number;
-      negative_percentage: string | number;
-    }
+    data: Array<{
+      year: number;
+      month: number;
+      sentiment: string;
+      comment_count: number;
+      sentiment_score: number;
+      percentage: number;
+    }>;
   }
 
-  // 将类型守卫函数移到 setup 外部
   const isPieResponse = (response: unknown): response is PieData => {
     return response !== null &&
            typeof response === 'object' &&
            'data' in response &&
-           typeof (response as any).data === 'object' &&
-           'positive_percentage' in (response as any).data &&
-           'neutral_percentage' in (response as any).data &&
-           'negative_percentage' in (response as any).data;
+           Array.isArray((response as any).data);
   };
   
   // 加载所有数据
@@ -373,8 +372,94 @@
       }
     }
   
-    // 使用重试机制
+
+    // 加载词云数据
     try {
+      const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageTypeNum.value);
+      console.log("词云地址:", cloudResponse);
+  
+      if (cloudResponse && typeof cloudResponse === 'object' && 'wordcloud_url' in cloudResponse) {
+        isWordCloudLoading.value=false;
+        cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
+      } else {
+        console.warn("词云数据格式不正确:", cloudResponse);
+      }
+    } catch (error) {
+      console.error("加载词云数据时出错:", error);
+      isWordCloudLoading.value = false;
+      // 设置一个默认的词云图片或显示错误提示
+      cloudUrl.value = ''; // 或设置为默认图片
+      ElMessage.error('词云数据加载失败，请稍后重试');
+    }
+  
+    // 加载饼图数据
+    try {
+      const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value, pageTypeNum.value);
+  
+      if (isPieResponse(pieResponse)) {
+        // 计算各情感类别的总数量和百分比
+        const sentimentTotals = {
+          positive: { count: 0, percentage: 0 },
+          neutral: { count: 0, percentage: 0 },
+          negative: { count: 0, percentage: 0 }
+        };
+  
+        // 累加每个情感类别的数量和百分比
+        pieResponse.data.forEach(item => {
+          if (item.sentiment === 'positive') {
+            sentimentTotals.positive.count += Math.round(item.comment_count);
+            sentimentTotals.positive.percentage += item.percentage;
+          } else if (item.sentiment === 'neutral') {
+            sentimentTotals.neutral.count += Math.round(item.comment_count);
+            sentimentTotals.neutral.percentage += item.percentage;
+          } else if (item.sentiment === 'negative') {
+            sentimentTotals.negative.count += Math.round(item.comment_count);
+            sentimentTotals.negative.percentage += item.percentage;
+          }
+        });
+  
+        // 更新饼图数据
+        data1.value = [
+          { 
+            name: '正面', 
+            value: Number(sentimentTotals.positive.percentage.toFixed(2)) || 0,
+            count: Math.round(sentimentTotals.positive.count)
+          },
+          { 
+            name: '中立', 
+            value: Number(sentimentTotals.neutral.percentage.toFixed(2)) || 0,
+            count: Math.round(sentimentTotals.neutral.count)
+          },
+          { 
+            name: '负面', 
+            value: Number(sentimentTotals.negative.percentage.toFixed(2)) || 0,
+            count: Math.round(sentimentTotals.negative.count)
+          }
+        ];
+        isPieChartLoading.value = false;
+        console.log("饼图数据（处理后）:", data1.value);
+      } else {
+        console.warn("饼图数据格式不正确:", pieResponse);
+        // 设置默认数据
+        data1.value = [
+          { name: '正面', value: 33, count: 0 },
+          { name: '中立', value: 33, count: 0 },
+          { name: '负面', value: 34, count: 0 }
+        ];
+        isPieChartLoading.value = false;
+      }
+    } catch (error) {
+      console.error("加载饼图数据时出错:", error);
+      // 设置默认数据
+      data1.value = [
+        { name: '正面', value: 33, count: 0 },
+        { name: '中立', value: 33, count: 0 },
+        { name: '负面', value: 34, count: 0 }
+      ];
+      isPieChartLoading.value = false;
+    }
+        // 使用重试机制
+        try {
       const commentResponse = await fetchWithRetry(() => 
         CommentAPI.getPostiveComment(nowName.value)
       );
@@ -407,57 +492,6 @@
       ElMessage.error('评论数据加载失败，请稍后重试');
     }
   
-    // 加载词云数据
-    try {
-      const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageTypeNum.value);
-      console.log("词云地址:", cloudResponse);
-  
-      if (cloudResponse && typeof cloudResponse === 'object' && 'wordcloud_url' in cloudResponse) {
-        isWordCloudLoading.value=false;
-        cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
-      } else {
-        console.warn("词云数据格式不正确:", cloudResponse);
-      }
-    } catch (error) {
-      console.error("加载词云数据时出错:", error);
-      isWordCloudLoading.value = false;
-      // 设置一个默认的词云图片或显示错误提示
-      cloudUrl.value = ''; // 或设置为默认图片
-      ElMessage.error('词云数据加载失败，请稍后重试');
-    }
-  
-    // 加载饼图数据
-    try {
-      const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value, pageTypeNum.value);
-  
-      if (isPieResponse(pieResponse)) {
-        data1.value = [
-          { name: '正面', value: Number(pieResponse.data.positive_percentage) || 0 },
-          { name: '中立', value: Number(pieResponse.data.neutral_percentage) || 0 },
-          { name: '负面', value: Number(pieResponse.data.negative_percentage) || 0 }
-        ];
-        isPieChartLoading.value = false;
-        console.log("饼图数据（处理后）:", data1.value);
-      } else {
-        console.warn("饼图数据格式不正确:", pieResponse);
-        // 设置默认数据，避免渲染错误
-        data1.value = [
-          { name: '正面', value: 33 },
-          { name: '中立', value: 33 },
-          { name: '负面', value: 34 }
-        ];
-        isPieChartLoading.value = false;
-      }
-    } catch (error) {
-      console.error("加载饼图数据时出错:", error);
-      // 设置默认数据，避免渲染错误
-      data1.value = [
-        { name: '正面', value: 33 },
-        { name: '中立', value: 33 },
-        { name: '负面', value: 34 }
-      ];
-      isPieChartLoading.value = false;
-    }
   
   
   }
@@ -774,7 +808,7 @@
   
   .user-name {
     font-weight: 600;
-    color: #409eff;
+    color: #b71c1c;
   }
   
   .sentiment-score {

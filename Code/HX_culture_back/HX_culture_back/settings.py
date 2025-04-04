@@ -17,14 +17,14 @@ import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 在 INSTALLED_APPS 之前添加
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DIALOG_PATH = os.path.join(os.path.dirname(PROJECT_ROOT), 'HXCulture_DIalog')
-sys.path.insert(0, DIALOG_PATH)
+# # 在 INSTALLED_APPS 之前添加
+# PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# DIALOG_PATH = os.path.join(os.path.dirname(PROJECT_ROOT), 'HXCulture_DIalog')
+# sys.path.insert(0, DIALOG_PATH)
 
-# 添加环境变量
-os.environ.setdefault('PYTHONPATH', DIALOG_PATH)
-os.environ.setdefault('CONFIG_PATH', os.path.join(DIALOG_PATH, 'config'))
+# # 添加环境变量
+# os.environ.setdefault('PYTHONPATH', DIALOG_PATH)
+# os.environ.setdefault('CONFIG_PATH', os.path.join(DIALOG_PATH, 'config'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -88,6 +88,7 @@ WSGI_APPLICATION = 'HX_culture_back.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 
 DATABASES = {
     'default':

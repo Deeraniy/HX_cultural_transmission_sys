@@ -49,7 +49,7 @@
     background-color: transparent !important;
     color: #fff8f0 !important;
     border: none;
-    font-size: 25px;
+    font-size: 20px;
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -84,7 +84,7 @@
   .fixed-title {
     color: #fff8f0;
     font-family: 'HelveticaNeue', serif;
-    font-size: 45px;
+    font-size: 34px;
     margin: 0;
     white-space: nowrap; /* 防止标题换行 */
   }
@@ -101,7 +101,7 @@
   
   .el-menu-item {
     color: #fff8f0 !important;
-    font-size: 20px;
+    font-size: 18px;
     font-family: 'HelveticaNeue', serif !important;
     padding: 0 15px !important;
     min-width: auto !important;

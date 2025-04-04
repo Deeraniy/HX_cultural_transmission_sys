@@ -457,7 +457,7 @@ const analyze = () => {
   bottom: 20px; /* 距离底部 20px */
   left: 50%; /* 水平居中 */
   transform: translateX(-50%); /* 精确居中 */
-  background-color: #007bff;
+  background-color: #b71c1c;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -469,7 +469,7 @@ const analyze = () => {
 }
 
 .jump-button:hover {
-  background-color: #0056b3;
+  background-color: #9c1818;
 }
 
 .jump-button:focus {
@@ -671,7 +671,7 @@ const analyze = () => {
 }
 
 .jump-button {
-  background-color: #4285f4;
+  background-color: #b71c1c;
   color: white;
   border: none;
   padding: 8px 16px; /* 减小内边距 */
@@ -683,7 +683,7 @@ const analyze = () => {
 }
 
 .jump-button:hover {
-  background-color: #3367d6;
+  background-color: #9c1818;
 }
 
 .interaction-icons {
@@ -875,7 +875,7 @@ const analyze = () => {
 }
 
 .jump-button {
-  background-color: #4285f4;
+  background-color: #b71c1c;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -886,7 +886,7 @@ const analyze = () => {
 }
 
 .jump-button:hover {
-  background-color: #3367d6;
+  background-color: #9c1818;
 }
 
 /* 添加空页样式 */

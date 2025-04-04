@@ -83,10 +83,10 @@ onMounted(() => {
   color: #fff8f0 !important;
   margin-bottom: 15px;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 720px; /* 给按钮添加右边距 */
+  margin-right: 700px; /* 给按钮添加右边距 */
 }
 .el-menu--popup .el-menu-item,
 .el-menu .el-menu-item {
@@ -139,7 +139,7 @@ onMounted(() => {
 }
 
 .whole {
-  margin-top: -70px;
+  margin-top: -55px;
   background-image: url('@/assets/img2.png');
   background-color: #fff8f0;
   background-size: cover;
@@ -153,9 +153,10 @@ onMounted(() => {
 .menu-title {
   transform: translateY(25px);
   font-family: 'HelveticaNeue', serif;
-  font-size: 30px;
+  font-size: 24px;
   color: #fff8f0;
   margin-right: 50px;
+  margin-bottom: 10px;
 }
 
 .el-menu-demo {

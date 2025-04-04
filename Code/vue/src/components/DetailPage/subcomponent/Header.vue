@@ -3,191 +3,514 @@
     <!-- 返回按钮和标题 -->
     <el-page-header @back="onBack" class="header" style="color: #fff8f0;font-size: 30px">
       <template #content>
-        <span class="title" style="font-size: 30px">{{title}}</span>
+        <span class="title" style="font-size: 30px">{{ title }}</span>
       </template>
     </el-page-header>
 
-    <!-- 添加搜索框和下拉列表 -->
-    <div class="header-actions">
-      <!-- 下拉列表 -->
-      <el-dropdown trigger="click" @command="handleCommand">
-        <el-button type="primary">
-          {{ selectedType || '文化类型' }} <el-icon class="el-icon--right"><arrow-down /></el-icon>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="1">名胜古迹</el-dropdown-item>
-            <el-dropdown-item command="2">影视文学</el-dropdown-item>
-            <el-dropdown-item command="3">美食文化</el-dropdown-item>
-            <el-dropdown-item command="4">非遗民俗</el-dropdown-item>
-            <el-dropdown-item command="5">红色文化</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-
-      <!-- 搜索框部分 -->
-      <el-input
-          v-model="searchQuery"
-          placeholder="请输入搜索内容"
-          style="width: 200px; margin-left: 20px;"
-          clearable
-          @keyup.enter="handleSearch"
-      />
-
-
+    <!-- 外部主题选择标签（当对话框打开时显示） -->
+    <div v-if="dialogVisible" class="theme-tabs">
+      <div class="theme-tabs-container">
+        <div v-for="theme in themes" 
+             :key="theme.id"
+             :class="['theme-tab', { active: currentTheme === theme.id }]"
+             @click="handleThemeSelect(theme)">
+          <div class="vertical-text-reverse">{{ theme.name }}</div>
+        </div>
+      </div>
     </div>
 
-    <!-- 用户信息和头像 -->
-    <!-- 生成AI报告按钮 -->
-    <div class="report-button">
+    <!-- 修改按钮显示逻辑 -->
       <el-button
-          type="primary"
-          :icon="Document"
-          size="large"
-          @click="showAIReport = true"
-          class="generate-report-btn"
-      >
-        生成AI报告
-      </el-button>
-    </div>
-
-    <!-- AI 报告弹窗 -->
-    <el-dialog
-      v-model="showAIReport"
-      title="AI 分析报告"
-      width="65%"
-      class="ai-report-dialog"
-      :close-on-click-modal="false"
-      :destroy-on-close="true"
+      v-if="hasRequiredParams"
+      @click="dialogVisible = true"
+      class="theme-select-btn"
     >
-      <div class="ai-report-content">
-        <!-- 加载状态 -->
-        <div v-if="loading" class="loading-container">
-          <el-skeleton :rows="10" animated />
-          <div class="loading-text">
-            <el-icon class="is-loading"><Loading /></el-icon>
-            正在生成 AI 分析报告...
+      选择主题
+      </el-button>
+
+    <el-dialog
+      v-model="dialogVisible"
+      title="选择主题"
+      class="theme-dialog"
+      :modal="true"
+      :lock-scroll="true"
+      :close-on-click-modal="hasRequiredParams"
+      :close-on-press-escape="hasRequiredParams"
+      :show-close="hasRequiredParams"
+      style="position: fixed; width: 1000px; height: 600px;margin-left: 200px;margin-top: 100px;
+      overflow-y: auto; /* 允许内容滚动 */
+      overscroll-behavior: contain; /* 防止滚动传播 */"
+    >
+      <!-- 全局加载动画 -->
+      <div v-if="loading" class="global-loading-container">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+          <span class="loading-text">加载中...</span>
+        </div>
+      </div>
+
+      <div class="dialog-content">
+        <!-- 左侧标签 -->
+        <div class="theme-tabs">
+          <div v-for="theme in themes" 
+               :key="theme.id"
+               :class="['theme-tab', { active: currentTheme === theme.id }]"
+               @click="handleThemeSelect(theme)">
+            <div class="vertical-text-reverse">{{ theme.name }}</div>
           </div>
         </div>
 
-        <!-- 报告内容 -->
-        <div v-else class="report-container markdown-body" v-html="markdownContent"></div>
+        <!-- 右侧内容区域 -->
+        <div class="content-area">
+          <div class="search-box">
+            <el-input
+              v-model="searchQuery"
+              placeholder="搜索内容..."
+              :prefix-icon="Search"
+            />
+          </div>
+          <div class="content-wrapper">
+            <!-- 内容区域 -->
+            <div v-if="filterItems.length > 0" class="items-wrapper">
+              <div class="items-grid">
+                <div 
+                  v-for="item in filterItems" 
+                  :key="item.id || item.spot_id || item.food_id || item.folk_id"
+                  class="item-card"
+                  @click="selectItem(item)"
+                >
+                  <img 
+                    :src="getImageUrl(item.image_url)"
+                    :alt="item.spot_name || item.food_name || item.folk_name || item.name || item.title || item.liter_name"
+                    @error="(e) => e.target.src = defaultEmptyImg"
+                    class="card-image"
+                  >
+                  <div class="item-overlay">
+                    <p class="title">
+                      {{ item.spot_name || item.food_name || item.folk_name || item.name || item.title || item.liter_name }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 无数据提示 -->
+            <div v-else class="empty-container">
+              <el-empty description="暂无数据" />
+            </div>
       </div>
-
-      <!-- 弹窗底部按钮 -->
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="showAIReport = false">关闭</el-button>
-          <el-button type="primary" @click="handleCopyReport">
-            复制报告
-          </el-button>
         </div>
-      </template>
+      </div>
     </el-dialog>
+
+    <!-- 添加文学子主题选择器 -->
+    <div v-if="currentTheme === '2'" class="literature-subtypes">
+      <div v-for="type in literatureSubThemes"
+           :key="type.id"
+           :class="['subtype-item', { active: currentLiteratureType === type.id }]"
+           @click="handleLiteratureTypeChange(type.id)">
+        {{ type.name }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ArrowLeft, Setting, Document, Loading } from "@element-plus/icons-vue";
-import { ref, onMounted, watch } from 'vue';
-import router from "@/router.js";
-import { marked } from 'marked';
-import SentimentAPI from "@/api/sentiment.ts";
-import { ArrowDown } from '@element-plus/icons-vue'
-import {useRoute} from "vue-router";  // 添加这行
-import { ElMessage } from 'element-plus';
-const showAIReport = ref(false);
-const searchQuery = ref(''); // 搜索框的绑定变量
-const markdownContent = ref(''); // 存储转换后的 HTML 内容
-const props = defineProps({title: String});
-const route = useRoute()
-const selectedType = ref('');
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { Search, ArrowRight, ArrowDown } from '@element-plus/icons-vue';
+import SpotsAPI from '@/api/spot';
+import FoodAPI from '@/api/food';
+import FolkAPI from '@/api/folk';
+import FilmLiteratureAPI from '@/api/filmLiterature';
+import defaultEmptyImg from '@/assets/img_1.png';
+
+const route = useRoute();
+const router = useRouter();
+const dialogVisible = ref(!route.query.name);
+const searchQuery = ref('');
+const currentTheme = ref('1');
+const currentSubTheme = ref('');
+const literatureCache = ref(null);  // 缓存文学数据
+const spotItems = ref([]);
+const foodItems = ref([]);
+const folkItems = ref([]);
+const currentItems = ref([]);
+const title = ref(decodeURIComponent(route.query.name || '默认标题'));
+const isExpanded = ref(false);
 const loading = ref(false);
 
-const emit = defineEmits(['update:type', 'update:search']);
-// 处理下拉选择
-
-// 处理下拉选择
-const handleCommand = (command) => {
-  const typeMap = {
-    '1': '名胜古迹',
-    '2': '影视文学',
-    '3': '美食文化',
-    '4': '非遗民俗',
-    '5': '红色文化'
-  };
-  selectedType.value = typeMap[command];
-  emit('update:type', command); // 发送类型ID给父组件
-};
-
-// 处理搜索输入
-// 处理搜索输入
-// 处理搜索输入（仅在按下 Enter 时触发）
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    emit('update:search', searchQuery.value.trim());
-    console.log('发送搜索内容:', searchQuery.value.trim());
-    // 清空搜索框
-    searchQuery.value = '';
-    // 重置下拉列表选项
-    selectedType.value = null;
-  }
-};
-
-const onBack = () => {
-  router.go(-1);
-  console.log("返回按钮被点击");
-};
-
-// 添加复制功能
-const handleCopyReport = () => {
-  if (markdownContent.value) {
-    // 创建一个临时元素来获取纯文本
-    const tempElement = document.createElement('div');
-    tempElement.innerHTML = markdownContent.value;
-    const textContent = tempElement.textContent;
-
-    navigator.clipboard.writeText(textContent)
-      .then(() => {
-        ElMessage.success('报告已复制到剪贴板');
-      })
-      .catch(() => {
-        ElMessage.error('复制失败，请手动复制');
-      });
-  }
-};
-
-onMounted(() => {
-  console.log("Header组件被加载",route.query.value);
-  loading.value = true;
-  
-  // SentimentAPI.getSentimentReportAPI(props.title, route.query.value)
-  //   .then((res) => {
-  //     console.log("AI报告：", props.title);
-  //     console.log("AI 报告原始 Markdown:", res);
-
-  //     if (res && res.report) {
-  //       const cleanedMarkdown = res.report.replace(/^\s+/, "");
-  //       markdownContent.value = marked(cleanedMarkdown);
-  //       console.log("AI 报告解析后的 HTML:", markdownContent.value);
-  //     } else {
-  //       console.warn("API 返回的内容不包含 'report' 字段:", res);
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     console.error("加载 AI 报告时出错:", error);
-  //     ElMessage.error('加载报告失败，请重试');
-  //   })
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
+// 检查是否有必要的路由参数
+const hasRequiredParams = computed(() => {
+  return route.query.name && route.query.value && route.query.theme;
 });
-</script>
 
+// 修改文学类型映射和数据加载逻辑
+const literatureTypes = [
+  { id: 1, name: '文学' },
+  { id: 2, name: '表演艺术' },
+  { id: 3, name: '新媒体艺术' },
+  { id: 4, name: '古诗词' }
+];
+
+// 文学类型映射
+const literatureTypeMapping = {
+  '文学': 1,
+  '表演艺术': 2,
+  '新媒体艺术': 3,
+  '古诗词': 4
+};
+
+// 文学子主题映射
+const literatureSubThemes = [
+  { id: 1, name: '文学' },
+  { id: 2, name: '表演艺术' },
+  { id: 3, name: '新媒体艺术' },
+  { id: 4, name: '古诗词' }
+];
+
+// 当前选中的文学子主题
+const currentLiteratureType = ref(1);
+
+// 监听对话框打开
+watch(dialogVisible, async (newVal) => {
+  if (newVal) {
+    currentItems.value = [];
+    loading.value = true;
+    console.log('对话框打开，加载默认主题数据');
+    await loadAllData();
+    loading.value = false;
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
+// 主题列表
+const themes = ref([
+  { id: '1', name: '名胜古迹' },
+  { id: '2', name: '影视文学' },
+  { id: '3', name: '美食文化' },
+  { id: '4', name: '非遗民俗' },
+]);
+
+// 修改过滤逻辑
+const filterItems = computed(() => {
+  if (!searchQuery.value || !currentItems.value) {
+    return currentItems.value || [];
+  }
+  return currentItems.value.filter(item => {
+    const name = item.spot_name || item.food_name || item.folk_name || 
+                item.name || item.title || item.liter_name || '';  // 添加 book_name
+    return name.toLowerCase().includes(searchQuery.value.toLowerCase());
+  });
+});
+
+// 初始加载所有数据
+onMounted(async () => {
+  console.log('组件挂载，开始加载数据');
+  await loadAllData();
+});
+
+// 修改数据处理函数
+const processSpotData = (data) => {
+  console.log('处理前的景点数据:', data);
+  try {
+    if (typeof data === 'string') {
+      // 使用正则表达式匹配每个对象的属性
+      const spots = [];
+      const regex = /'spot_id':\s*(\d+),\s*'spot_name':\s*'([^']+)',\s*'description':\s*'([^']+)',\s*'image_url':\s*'([^']+)',\s*'rating':\s*(?:Decimal\(')?(\d+\.?\d*)(?:'\))?,\s*'city_id':\s*(\d+)/g;
+      
+      let match;
+      while ((match = regex.exec(data)) !== null) {
+        spots.push({
+          spot_id: parseInt(match[1]),
+          spot_name: match[2],
+          description: match[3],
+          image_url: match[4],
+          rating: parseFloat(match[5]),
+          city_id: parseInt(match[6])
+        });
+      }
+
+      console.log('解析后的数据:', spots);
+      return spots;
+    }
+    
+    // 如果已经是数组则直接返回
+    if (Array.isArray(data)) {
+      return data;
+    }
+    
+    // 如果是单个对象，转换为数组
+    if (typeof data === 'object' && data !== null) {
+      return [data];
+    }
+
+    return [];
+  } catch (e) {
+    console.error('数据解析失败:', e);
+    return [];
+  }
+};
+
+// 修改数据加载函数
+const loadAllData = async () => {
+  try {
+    currentItems.value = [];
+    loading.value = true;
+    
+    switch (currentTheme.value) {
+      case '1':
+        const spotsRes = await SpotsAPI.getSpotsAPI();
+        console.log('获取到的景点数据:', spotsRes);
+        if (spotsRes) {
+          const processedSpots = processSpotData(spotsRes);
+          console.log('最终处理后的景点数据:', processedSpots);
+          if (processedSpots && processedSpots.length > 0) {
+            spotItems.value = processedSpots;
+            currentItems.value = processedSpots;
+            console.log('成功加载景点数据，数量:', processedSpots.length);
+          } else {
+            console.error('处理后的数据为空');
+          }
+        }
+        break;
+      case '3':
+        const foodRes = await FoodAPI.getFoodAPI();
+        if (foodRes && foodRes.status === 'ok') {
+          foodItems.value = foodRes.data;
+          currentItems.value = foodRes.data;
+        }
+        break;
+      case '4':
+        const folkRes = await FolkAPI.getFolkCustomAPI();
+        if (folkRes && folkRes.status === 'ok') {
+          folkItems.value = folkRes.data;
+          currentItems.value = folkRes.data;
+        }
+        break;
+    }
+  } catch (error) {
+    console.error('数据加载失败:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 修改主题选择处理函数
+const handleThemeSelect = async (theme) => {
+  try {
+    currentItems.value = [];
+    loading.value = true;
+    currentTheme.value = theme.id;
+    
+    switch (theme.id) {
+      case '1':
+        // 景点数据
+        if (spotItems.value.length > 0) {
+          currentItems.value = spotItems.value;
+          break;
+        }
+        const spotsRes = await SpotsAPI.getSpotsAPI();
+        if (spotsRes) {
+          const processedSpots = processSpotData(spotsRes);
+          if (processedSpots && processedSpots.length > 0) {
+            spotItems.value = processedSpots;
+            currentItems.value = processedSpots;
+          }
+        }
+        break;
+
+      case '2':
+        try {
+          // 如果有缓存，直接使用缓存数据
+          if (literatureCache.value) {
+            currentItems.value = literatureCache.value;
+            break;
+          }
+          
+          // 加载所有文学类型的数据
+          const allLiteratureData = [];
+          
+          // 依次加载每个子主题的数据
+          for (const subTheme of literatureSubThemes) {
+            const response = await FilmLiteratureAPI.getBook(subTheme.name);
+            if (response && response.data) {
+              const processedData = response.data.map(item => ({
+                ...item,
+                title: item.title || item.liter_name || item.name || '',
+                subTheme: subTheme.name,
+                subThemeId: subTheme.id
+              }));
+              allLiteratureData.push(...processedData);
+            }
+          }
+          
+          // 保存到缓存
+          if (allLiteratureData.length > 0) {
+            literatureCache.value = allLiteratureData;
+            currentItems.value = allLiteratureData;
+          }
+        } catch (error) {
+          console.error('加载文学数据失败:', error);
+        }
+        break;
+
+      case '3':
+        const foodRes = await FoodAPI.getFoodAPI();
+        if (foodRes && foodRes.status === 'ok') {
+          foodItems.value = foodRes.data;
+          currentItems.value = foodRes.data;
+        }
+        break;
+
+      case '4':
+        const folkRes = await FolkAPI.getFolkCustomAPI();
+        if (folkRes && folkRes.status === 'ok') {
+          folkItems.value = folkRes.data;
+          currentItems.value = folkRes.data;
+        }
+        break;
+    }
+  } catch (error) {
+    console.error('数据加载失败:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 修改选择项目的处理函数
+const selectItem = async (item) => {
+  // 构建路由参数
+  const routeParams = {
+    name: item.spot_name || item.food_name || item.folk_name || item.liter_name || item.name || '',
+    // value 根据主题设置对应的值
+    value: (() => {
+      switch (currentTheme.value) {
+        case '1': return 1;  // 景点
+        case '2': return 2;  // 文学固定为2
+        case '3': return 3;  // 美食
+        case '4': return 4;  // 非遗民俗
+        default: return 1;
+      }
+    })(),
+    // theme: 文学时使用子主题值(1-4)，其他都是1
+    theme: currentTheme.value === '2' ? currentLiteratureType.value : 1
+  };
+  
+  // 更新路由
+  await router.push({
+    path: '/detail',
+    query: routeParams
+  });
+  
+  // 关闭对话框
+  dialogVisible.value = false;
+};
+
+// 监听路由变化
+watch(
+  () => route.query,
+  async (newQuery) => {
+    if (newQuery.theme) {
+      // 如果当前是文学主题，使用 theme 值作为子主题
+      if (currentTheme.value === '2') {
+        currentLiteratureType.value = parseInt(newQuery.theme) || 1;
+      }
+      // 根据主题ID加载对应数据
+      const theme = themes.find(t => t.id === newQuery.theme);
+      if (theme) {
+        await handleThemeSelect(theme);
+      }
+    }
+  }
+);
+
+// 修改文学子主题切换函数
+const handleLiteratureTypeChange = async (typeId) => {
+  if (currentTheme.value === '2') {  // 只在文学主题下生效
+    currentLiteratureType.value = typeId;
+    
+    // 如果有缓存数据，根据子主题筛选显示
+    if (literatureCache.value) {
+      currentItems.value = literatureCache.value.filter(item => item.subThemeId === typeId);
+    }
+    
+    // 如果当前有选中的项目，更新路由
+    if (route.query.name) {
+      await router.push({
+        path: '/detail',
+        query: {
+          name: route.query.name,
+          value: 2,  // 文学固定为2
+          theme: typeId  // 使用子主题值
+        }
+      });
+    }
+  }
+};
+
+// 修改返回按钮处理函数
+const onBack = () => {
+  // 获取当前历史记录
+  const currentHistory = window.history;
+  const currentPath = route.fullPath;
+  
+  // 如果当前路径是 /detail（没有参数）或前一个路径包含 detail，返回首页
+  if (currentPath === '/detail' || 
+      (currentHistory.state && currentHistory.state.back && 
+       currentHistory.state.back.includes('/detail'))) {
+    // 直接返回首页
+    router.push('/index');
+    return;
+  }
+  
+  // 其他情况使用默认返回
+  window.history.back();
+};
+
+// 获取默认图片
+const getDefaultImage = (themeId) => {
+  const defaultImages = {
+    '1': '/images/default-spot.jpg',
+    '2': '/images/default-literature.jpg',
+    '3': '/images/default-food.jpg',
+    '4': '/images/default-folk.jpg'
+  };
+  return defaultImages[themeId] || defaultImages['1'];
+};
+
+const handleClose = () => {
+  dialogVisible.value = false;
+};
+
+// 添加打开对话框时禁止背景滚动的逻辑
+watch(dialogVisible, (val) => {
+  if (val) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+});
+
+// 组件卸载时确保恢复滚动
+onUnmounted(() => {
+  document.body.style.overflow = '';
+});
+
+// 修改图片显示相关代码
+const getImageUrl = (url) => {
+  if (!url) return defaultEmptyImg;
+  try {
+    return url;
+  } catch (error) {
+    console.error('图片URL处理失败:', error);
+    return defaultEmptyImg;
+  }
+};
+</script>
 <style scoped>
 @import '@/assets/font/font.css';
 
-/* 主容器的样式 */
 .button-container {
   display: flex;
   justify-content: space-between;
@@ -201,27 +524,6 @@ onMounted(() => {
   position: relative;
 }
 
-.no-wrap {
-  font-family: 'HelveticaNeue', serif;
-  white-space: nowrap;
-  display: inline-block;
-}
-
-/* 返回按钮样式 */
-.header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-.el-drawer div {
-  padding: 20px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333;
-}
-
-/* 标题样式 */
 .title {
   color: #fff8f0;
   font-family: 'HelveticaNeue', serif;
@@ -229,169 +531,296 @@ onMounted(() => {
   font-weight: bold;
 }
 
-/* 用户信息区域 */
-.user-info {
+.theme-tabs {
+  position: fixed;
+  left: 168px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2001;
   display: flex;
-  align-items: center;
-  color: #fff8f0;
+  flex-direction: column;
+  gap: -15px;
 }
 
-.sub-title {
-  font-family: 'HelveticaNeue', serif;
-  font-size: 18px;
-  color: #fff8f0;
-  margin-right: 15px;
-}
-
-.block {
-  margin-right: 15px;
-}
-
-/* 搜索框和下拉列表的容器 */
-.header-actions {
-  margin-right: 350px;
+.theme-tabs-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
+  flex-direction: column;
+  gap: -15px;
 }
 
-/* 工具栏图标样式 */
-.toolbar .el-icon {
-  color: #fff8f0;
-}
-.report-button {
-  display: flex;
-  align-items: center;
-}
-
-/* 修改按钮样式 */
-.generate-report-btn {
-  font-size: 16px;
-  border: 2px solid #d4af37;  /* 添加金色边框 */
-  padding: 12px 24px;
-  border-radius: 25px;  /* 增加圆角 */
-  background: #fff8f0;  /* 金色背景 */
-  color: black;
-  font-family: 'HelveticaNeue', serif;  /* 设置字体为更有质感的字体 */
-  transition: all 0.3s;
-}
-
-.generate-report-btn:hover {
-  background: #FFC107;  /* 金色的 hover 状态 */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-  border-radius: 25px;  /* hover 状态也保持圆角 */
-}
-
-.generate-report-btn:focus {
-  outline: none;  /* 去掉焦点时的边框 */
-}
-/* 修改下拉按钮样式 */
-.el-dropdown .el-button {
-  background-color: #fff8f0;  /* 金色背景 */
-  border: 2px solid #d4af37;  /* 添加金色边框 */
-  color: black;
-  font-family: 'HelveticaNeue', serif;  /* 修改字体 */
-  font-size: 16px;
-}
-
-.el-dropdown .el-button .el-icon--right {
-  color: black !important;  /* 强制将下拉符号的颜色设置为黑色 */
-}
-
-
-.el-dropdown .el-button:hover {
-  background-color: #FFC107;  /* 金色的 hover 状态 */
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-}
-
-.el-dropdown .el-button .el-icon--right {
-  color: white;  /* 确保右侧箭头图标颜色也为白色 */
-}
-
-/* 修改下拉菜单样式 */
-.el-dropdown-menu {
-  background-color: rgba(255, 248, 240, 0.8);  /* 设置背景色为透明的米黄色 */
-  color: black;  /* 设置文字颜色为白色 */
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-family: 'Georgia', serif;  /* 修改字体 */
-}
-
-.el-dropdown-item {
-  padding: 10px 20px;
-  color: white;  /* 白色字体 */
-  font-size: 16px;
-  font-family: 'Georgia', serif;  /* 修改字体 */
-}
-
-.el-dropdown-item:hover {
-  background-color: #FFC107;  /* 金色 hover 状态 */
-  color: black;  /* 高亮显示时字体颜色为黑色 */
-}
-
-/* AI 报告弹窗样式 */
-.ai-report-dialog {
-  :deep(.el-dialog__body) {
-    padding: 20px;
-    max-height: 70vh;
-    overflow-y: auto;
+.theme-tab {
+  padding: 15px 8px;
+  background: #fff;
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+  box-shadow: -4px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  
+  &:hover {
+    transform: scale(1.1) translateX(-1px);
+    background: #f5f7fa;
+    z-index: 1;
+  }
+  
+  &.active {
+    background: #b71c1c;
+    color: white;
   }
 }
 
-.ai-report-content {
-  min-height: 400px;
-}
-
-.loading-container {
-  padding: 20px;
-  text-align: center;
-}
-
-.loading-text {
-  margin-top: 20px;
-  color: #909399;
+.vertical-text-reverse {
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  letter-spacing: 4px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  width: 100%;
+  padding: 10px 0;
+  transition: all 0.3s ease;
 }
 
-.report-container {
-  padding: 16px;
-  background: #f8f9fa;
+/* 确保其他标签在hover时保持原位 */
+.theme-tab:not(:hover) {
+  transform: scale(1) translateX(0);
+  z-index: 0;
+}
+
+.sub-themes {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: white;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  padding: 8px 0;
+  display: none;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+}
+
+.theme-tab:hover .sub-themes {
+  display: block;
+}
+
+.sub-theme-item {
+  padding: 8px 16px;
+  
+  &:hover {
+    background: #f5f7fa;
+  }
+  
+  &.active {
+    color: #b71c1c;
+  }
+}
+
+.theme-dialog {
+  :deep(.el-dialog) {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    width: 1000px !important;
+    height: 600px !important;
+  display: flex;
+    flex-direction: column;
+  }
+
+  :deep(.el-dialog__body) {
+    padding: 0;
+    height: calc(100% - 54px);
+    overflow: hidden;
+  }
+}
+
+.dialog-content {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.search-box {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;  /* 加载动画往下移 */
+  position: relative;
+  z-index: 1000;
+}
+
+.items-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  min-height: 200px;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  min-height: min-content;
+}
+
+.item-card {
+  height: 130px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #f5f5f5; /* 添加默认背景色 */
+  }
+}
+
+.item-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  transition: background-color 0.3s ease;
   font-size: 14px;
-  line-height: 1.6;
 }
 
-.dialog-footer {
-  padding-top: 16px;
-  text-align: right;
+/* 自定义滚动条样式 */
+.items-wrapper::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Markdown 内容样式 */
-.markdown-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+.items-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
 }
 
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3 {
-  margin-top: 16px;
-  margin-bottom: 8px;
-  line-height: 1.4;
+.items-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+  
+  &:hover {
+    background: #555;
+  }
 }
 
-.markdown-body p {
-  margin: 8px 0;
-  line-height: 1.6;
+.theme-select-btn {
+  background-color: #fff8f0;
+  border: 2px solid #d4af37;
+  color: black;
+  padding: 8px 24px;
+  font-size: 16px;
+  border-radius: 20px;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: #FFC107;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  }
 }
 
-.markdown-body ul,
-.markdown-body ol {
-  padding-left: 24px;
-  margin: 8px 0;
+.global-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* 确保在最上层 */
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.spinner-ring {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #b71c1c;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: #b71c1c;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 60px);
+  width: 100%;
+  color: #909399;
+}
+
+.literature-subtypes {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  padding: 0 15px;
+}
+
+.subtype-item {
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  
+  &:hover {
+    background: #f5f5f5;
+  }
+  
+  &.active {
+    background: #b71c1c;
+    color: white;
+  }
 }
 </style>

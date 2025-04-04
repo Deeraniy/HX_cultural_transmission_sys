@@ -18,13 +18,20 @@ def register_user(request):
             password = data.get('password')
             age = data.get('age', 0)
             sex = data.get('sex', 'other')
-            region = data.get('location', '')
+            # 处理地区数据
+            location = data.get('location', '')
+            # 如果是中国地区，保持原有的区域代码格式
+            if isinstance(location, list) and len(location) > 0:
+                region = location[-1]  # 使用最后一级区域代码
+            else:
+                region = location  # 国际地区直接使用国家名称
             avatar = data.get('avatar', '')
             email = data.get('email', '')
             mobile = data.get('mobile', '')
             description = data.get('description', '')
 
             print(f"注册用户数据: {data}")  # 调试日志
+            print(f"处理后的地区: {region}")  # 调试日志
 
             conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                                  db='hx_cultural_transmission_sys', charset='utf8')
@@ -432,6 +439,119 @@ def upload_avatar(request):
         'status': 'error',
         'message': '不支持的请求方法'
     })
+
+def get_user_distribution(request):
+    if request.method == 'GET':
+        try:
+            conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
+                               db='hx_cultural_transmission_sys', charset='utf8')
+            cursor = conn.cursor()
+
+            # 主题名称映射
+            theme_name_map = {
+                'spot': '名胜古迹',
+                'food': '美食文化',
+                'literature': '影视文学',
+                'folk': '非遗民俗'
+            }
+
+            # 修改SQL查询，获取每个用户点击最多的主题
+            sql = """
+            SELECT 
+                u.user_id,
+                u.user_region,
+                t.theme_name,
+                tu.click_count
+            FROM user u
+            LEFT JOIN tag_user tu ON u.user_id = tu.user_id
+            LEFT JOIN tag t ON tu.tag_id = t.tag_id
+            WHERE u.user_region IS NOT NULL 
+            AND u.user_region != ''
+            AND tu.click_count = (
+                SELECT MAX(tu2.click_count)
+                FROM tag_user tu2
+                WHERE tu2.user_id = u.user_id
+            )
+            """
+
+            cursor.execute(sql)
+            results = cursor.fetchall()
+
+            # 格式化数据
+            distribution_data = {}
+            for row in results:
+                user_id, region, theme, clicks = row  # 现在正好是 4 个值
+                
+                if not region:
+                    continue
+
+                # 处理地区信息
+                if region.isdigit():
+                    normalized_region = "China"
+                elif region == 'hunan':
+                    normalized_region = "China"
+                elif region == 'heilongjiang':
+                    normalized_region = "China"
+                else:
+                    normalized_region = region
+
+                # 初始化地区数据
+                if normalized_region not in distribution_data:
+                    distribution_data[normalized_region] = {
+                        'total': 0,
+                        'themes': {
+                            '名胜古迹': set(),
+                            '美食文化': set(),
+                            '影视文学': set(),
+                            '非遗民俗': set()
+                        },
+                        'users': set()
+                    }
+
+                distribution_data[normalized_region]['users'].add(user_id)
+
+                # 只添加用户最常浏览的主题
+                if theme:
+                    print(f"主题: {theme}")
+                    chinese_theme = theme_name_map.get(theme)
+                    if chinese_theme:
+                        print(f"添加用户 {user_id} 到地区 {normalized_region} 的主题 {chinese_theme} (点击次数: {clicks})")
+                        distribution_data[normalized_region]['themes'][chinese_theme].add(user_id)
+
+            # 处理最终数据
+            for region in distribution_data:
+                # 计算总用户数
+                distribution_data[region]['total'] = len(distribution_data[region]['users'])
+                # 转换主题的用户集合为用户数量
+                for theme in distribution_data[region]['themes']:
+                    distribution_data[region]['themes'][theme] = len(distribution_data[region]['themes'][theme])
+                # 删除用户集合
+                del distribution_data[region]['users']
+
+            return JsonResponse({
+                'status': 'success',
+                'data': distribution_data
+            })
+
+        except Exception as e:
+            print(f"\n获取用户分布数据错误:\n错误类型: {type(e)}\n错误信息: {str(e)}\n")
+            import traceback
+            print("详细错误信息:")
+            print(traceback.format_exc())
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            })
+        finally:
+            cursor.close()
+            conn.close()
+            print("数据库连接已关闭")
+    else:
+        print(f"收到非GET请求: {request.method}")
+        return JsonResponse({
+            'status': 'error',
+            'message': '请使用GET方法'
+        })
 
 # 在文件末尾调用这个函数
 if __name__ == "__main__":

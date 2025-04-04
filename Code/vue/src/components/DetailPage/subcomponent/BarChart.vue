@@ -96,7 +96,8 @@ const updateChart = (chart, data, type) => {
       top: 30,
       textStyle: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily: 'HelveticaNeue, serif'
       }
     },
     tooltip: {
@@ -110,7 +111,8 @@ const updateChart = (chart, data, type) => {
       top: 70,
       left: '40%',
       textStyle: {
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: 'HelveticaNeue, serif'
       }
     },
     grid: {
@@ -127,17 +129,20 @@ const updateChart = (chart, data, type) => {
         interval: 0,
         rotate: 30,
         fontSize: 12,
-        margin: 15
+        margin: 15,
+        fontFamily: 'HelveticaNeue, serif'
       }
     },
     yAxis: {
       type: 'value',
       name: '频率',
       nameTextStyle: {
-        fontSize: 14
+        fontSize: 14,
+        fontFamily: 'HelveticaNeue, serif'
       },
       axisLabel: {
-        fontSize: 12
+        fontSize: 12,
+        fontFamily: 'HelveticaNeue, serif'
       }
     },
     series: [

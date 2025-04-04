@@ -11,7 +11,7 @@ def add_node_relation(request):
 
         if node1 and node2 and relation and status:
             # 创建连接
-            conn = pymysql.connect(host='120.233.26.237', port=3306, user='root', passwd='song',
+            conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                                    db='hx_cultural_transmission_sys', charset='utf8')
             # 创建游标
             cursor = conn.cursor()
@@ -42,7 +42,7 @@ def delete_node_relation(request):
 
         if node1 and node2 and relation:
             # 创建连接
-            conn = pymysql.connect(host='120.233.26.237', port=3306, user='root', passwd='song',
+            conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                                    db='hx_cultural_transmission_sys', charset='utf8')
             # 创建游标
             cursor = conn.cursor()
@@ -75,7 +75,7 @@ def update_node_status(request):
 
         if node1 and node2 and relation and new_status:
             # 创建连接
-            conn = pymysql.connect(host='120.233.26.237', port=3306, user='root', passwd='song',
+            conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
                                    db='hx_cultural_transmission_sys', charset='utf8')
             # 创建游标
             cursor = conn.cursor()

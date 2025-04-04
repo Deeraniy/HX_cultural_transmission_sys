@@ -95,7 +95,7 @@ let userData = ref([{
   email: '',
   mobile: '',
   description: '这个人很懒，什么都没写~',
-  avatar: '/default-avatar.png',
+  avatar: new URL('@/assets/default-avatar.png', import.meta.url).href,
 }]);
 
 const tags = ref([]);
@@ -134,7 +134,7 @@ const refreshUserInfo = async () => {
         email: res.data.email || '未设置',
         mobile: res.data.mobile || '未设置',
         description: res.data.description || '这个人很懒，什么都没写~',
-        avatar: res.data.avatar || '/default-avatar.png',
+        avatar: res.data.avatar || new URL('@/assets/default-avatar.png', import.meta.url).href,
       }];
     }
   } catch (error) {
@@ -278,7 +278,7 @@ onUnmounted(() => {
   font-weight: bold;
   margin: 0;
   padding-left: 12px;
-  border-left: 4px solid #409EFF;
+  border-left: 4px solid #b71c1c;
   min-width: 100px;
 }
 

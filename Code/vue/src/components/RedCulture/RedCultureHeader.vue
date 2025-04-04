@@ -71,7 +71,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   background-color: #fff8f0;
   background-size: cover;
   background-position: center;
-  min-height: 100vh;
+  min-height: 97vh;
   overflow-y: auto;
 }
 
@@ -82,7 +82,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .fixed-title {
   color: #fff8f0;
   font-family: 'HelveticaNeue', serif;
-  font-size: 45px;
+  font-size: 34px;
   margin: 0;
   white-space: nowrap;
   margin-right: 20px; /* 在标题和返回按钮之间添加间距 */
@@ -93,7 +93,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
   background-color: transparent !important;
   color: #fff8f0 !important;
   border: none;
-  font-size: 25px;
+  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   padding: 0; /* 移除内边距 */
@@ -120,7 +120,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 .el-menu-item, .el-sub-menu__title {
   color: #fff8f0 !important;
-  font-size: 20px;
+  font-size: 18px;
   font-family: 'HelveticaNeue', serif !important;
   padding: 0 15px !important;
 }

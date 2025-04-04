@@ -1,37 +1,39 @@
 import pymysql
 import logging
 import json
-from django.http import JsonResponse
 from transformers import pipeline
-from zhipuai import ZhipuAI
-
-client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")
+import pandas as pd
+from django.http import JsonResponse
 
 # 配置日志
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
 
 # 初始化情感分析模型
-sentiment_classifier = pipeline(
+distilled_student_sentiment_classifier = pipeline(
     model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
     return_all_scores=True
 )
 
 def get_folk_sentiment_label(text):
-    """获取民间评论的情感标签和得分"""
+    """获取民俗评论的情感标签和得分"""
     try:
-        results = sentiment_classifier(text)[0]
+        max_length = 512
+        if len(text) > max_length:
+            text = text[:max_length]
+        results = distilled_student_sentiment_classifier(text)[0]
         max_score_label = max(results, key=lambda x: x['score'])
         return max_score_label['label'], max_score_label['score']
     except Exception as e:
-        logger.error(f"处理民间评论文本时出错: {text}. 错误信息: {str(e)}")
-        return 'error', 0.0
+        logger.error(f"处理民俗评论文本时出错: {text}. 错误信息: {str(e)}")
+        return 'neutral', 0.0
 
-def process_user_comment_folk(comments_list):
-    """处理民间评论列表并返回带标签的DataFrame"""
+def process_folk_comments(comments_list):
+    """处理民俗评论列表并返回带标签的字典列表"""
     results = []
     for comment in comments_list:
         label, score = get_folk_sentiment_label(comment)
@@ -43,7 +45,7 @@ def process_user_comment_folk(comments_list):
     return results
 
 def sentiments_all():
-    """对所有民间评论进行情感分析并更新数据库"""
+    """对所有民俗评论进行情感分析并更新数据库"""
     try:
         conn = pymysql.connect(
             host='8.148.26.99',
@@ -87,7 +89,7 @@ def sentiments_all():
                 logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
                 continue
 
-        logger.info(f"所有民间评论的情感分析已完成，共处理 {processed_count} 条评论")
+        logger.info(f"所有民俗评论的情感分析已完成，共处理 {processed_count} 条评论")
 
     except Exception as e:
         logger.error(f"情感分析过程中出错: {str(e)}")
@@ -98,7 +100,7 @@ def sentiments_all():
             conn.close()
 
 def sentiments_analyze(request):
-    """获取民间评论的情感分析"""
+    """获取民俗作品的评论情感分析"""
     folk_name = request.GET.get('name')
     try:
         conn = pymysql.connect(
@@ -115,10 +117,10 @@ def sentiments_analyze(request):
         folk_result = cursor.fetchone()
 
         if not folk_result:
-            return JsonResponse({
+            return {
                 'status': 'error',
-                'message': f'未找到民间: {folk_name}'
-            }, status=404)
+                'message': f'未找到民俗: {folk_name}'
+            }
 
         sql_query = "SELECT comment_text FROM user_comment_folk WHERE folk_id=%s"
         cursor.execute(sql_query, (folk_result['folk_id'],))
@@ -126,25 +128,22 @@ def sentiments_analyze(request):
 
         comment_list = [comment['comment_text'] for comment in comment_list]
 
-        results = process_user_comment_folk(comment_list)
+        results = process_folk_comments(comment_list)
 
         cursor.close()
         conn.close()
 
-        return JsonResponse(results, safe=False)
+        return results
 
     except Exception as e:
-        logger.error(f"处理民间评论情感分析时出错: {str(e)}")
-        return JsonResponse({
+        logger.error(f"处理民俗评论情感分析时出错: {str(e)}")
+        return {
             'status': 'error',
             'message': str(e)
-        }, status=500)
+        }
 
 def sentiment_month_analyze(sentiments):
-    """
-    计算每月的情感得分和主导情感
-    sentiments: 包含 sentiment 和 confidence 的列表
-    """
+    """计算每月的情感得分和主导情感"""
     score = 0
     total_comments = len(sentiments)
 
@@ -168,114 +167,137 @@ def sentiment_month_analyze(sentiments):
     return avg_score, dominant_sentiment
 
 def sentiments_result_total_count(request):
-    """获取非遗民俗的情感分析占比统计"""
+    """获取指定民俗的情感分析统计结果 (按年月分组)"""
+    conn = None
+    cursor = None
+    name = request.GET.get('name', '').strip()
+    if not name:
+        return JsonResponse({
+            'status': 'error',
+            'message': '民俗名称不能为空'
+        }, status=400)
+
+    logger.info(f"(folk_sentiments_total_count) 正在查询非遗民俗: {name}")
+
     try:
-        name = request.GET.get('name', '').strip()
-        if not name:
-            return JsonResponse({
-                'status': 'error',
-                'message': '非遗民俗名称不能为空'
-            }, status=400)
-
-        logger.info(f"正在查询非遗民俗: {name}")
-
-        # 数据库连接
         conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
                              passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 首先获取非遗民俗ID
-        folk_sql = "SELECT folk_id FROM folk WHERE folk_name = %s"
-        cursor.execute(folk_sql, (name,))
-        folk_result = cursor.fetchone()
-
-        if not folk_result:
+        # 获取 folk_id
+        cursor.execute("SELECT folk_id FROM folk WHERE folk_name = %s", (name,))
+        result = cursor.fetchone()
+        if not result:
+            logger.warning(f"(folk_sentiments_total_count) 未找到民俗: {name}")
             return JsonResponse({
-                'status': 'error',
-                'message': f'未找到非遗民俗: {name}'
+                'status': 'not_found',
+                'message': f"未找到民俗: {name}"
             }, status=404)
+        
+        folk_id = result['folk_id']
+        logger.info(f"(folk_sentiments_total_count) 找到民俗ID: {folk_id}")
 
-        folk_id = folk_result['folk_id']
-
-        # 查询各情感类型的评论数量和占比
-        sentiment_sql = """
-            SELECT 
-                sentiment,
-                COUNT(*) as count,
-                COUNT(*) * 100.0 / SUM(COUNT(*)) OVER() as percentage
-            FROM user_comment_folk 
-            WHERE folk_id = %s AND sentiment IS NOT NULL AND sentiment != ''
-            GROUP BY sentiment
+        # 修改后的 SQL 查询，参考 spot 的写法
+        sql = """
+        SELECT 
+            YEAR(comment_time) AS year,
+            MONTH(comment_time) AS month,
+            sentiment,
+            COUNT(*) AS comment_count,
+            AVG(sentiment_confidence) AS sentiment_score,
+            ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM user_comment_folk WHERE folk_id = %s AND YEAR(comment_time) = YEAR(ucf.comment_time) AND MONTH(comment_time) = MONTH(ucf.comment_time)), 2) as percentage
+        FROM user_comment_folk ucf
+        WHERE folk_id = %s
+            AND sentiment IS NOT NULL
+            AND sentiment != ''
+            AND sentiment != 'error_processing'
+        GROUP BY 
+            YEAR(comment_time), 
+            MONTH(comment_time),
+            sentiment
+        ORDER BY year, month, sentiment;
         """
-        cursor.execute(sentiment_sql, (folk_id,))
+        
+        cursor.execute(sql, (folk_id, folk_id))
         results = cursor.fetchall()
 
-        # 初始化结果字典
-        sentiment_stats = {
-            'positive': 0,
-            'neutral': 0,
-            'negative': 0,
-            'total_count': 0
-        }
+        if not results:
+            logger.info(f"(folk_sentiments_total_count) 民俗 {name} (ID: {folk_id}) 暂无有效评论数据")
+            return JsonResponse({
+                'status': 'success',
+                'data': [],
+                'message': f"{name} 暂无评论数据"
+            })
 
-        # 处理查询结果
+        # 处理结果
+        processed_results = []
         for row in results:
-            if row['sentiment'] in sentiment_stats:
-                sentiment_stats[row['sentiment']] = round(row['percentage'], 2)
-                sentiment_stats['total_count'] += row['count']
+            row['sentiment_score'] = float(row['sentiment_score']) if row['sentiment_score'] is not None else 0.0
+            row['percentage'] = float(row['percentage']) if row['percentage'] is not None else 0.0
+            processed_results.append({
+                'year': row.get('year'),
+                'month': row.get('month'),
+                'sentiment': row.get('sentiment'),
+                'comment_count': row.get('comment_count', 0),
+                'sentiment_score': row['sentiment_score'],
+                'percentage': row['percentage']
+            })
 
         return JsonResponse({
             'status': 'success',
-            'data': {
-                'positive_percentage': sentiment_stats['positive'],
-                'neutral_percentage': sentiment_stats['neutral'],
-                'negative_percentage': sentiment_stats['negative'],
-                'total_comments': sentiment_stats['total_count']
-            }
+            'data': processed_results
         })
 
-    except Exception as e:
-        logger.error(f"获取情感统计时出错: {str(e)}")
+    except pymysql.Error as db_err:
+        logger.error(f"(folk_sentiments_total_count) 数据库错误 for {name}: {str(db_err)}")
         return JsonResponse({
             'status': 'error',
-            'message': str(e)
+            'message': f"数据库错误: {str(db_err)}"
+        }, status=500)
+    except Exception as e:
+        logger.error(f"(folk_sentiments_total_count) 未知错误 for {name}: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': f"未知错误: {str(e)}"
         }, status=500)
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
-        if 'conn' in locals():
+        if conn:
             conn.close()
 
 def sentiments_result(request):
-    """根据民间作品名称获取情感分析时间序列结果"""
+    """根据民俗名称获取情感分析时间序列结果"""
     try:
         folk_name = request.GET.get('name', '').strip()
         if not folk_name:
             return JsonResponse({
                 'status': 'error',
-                'message': '民间名称不能为空'
+                'message': '民俗名称不能为空'
             }, status=400)
 
-        logger.info(f"正在查询民间: {folk_name}")
+        logger.info(f"正在查询民俗: {folk_name}")
 
         conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
                              passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
+        # 获取folk_id
         cursor.execute("SELECT folk_id FROM folk WHERE folk_name = %s LIMIT 1", (folk_name,))
         folk_result = cursor.fetchone()
 
         if not folk_result:
             return JsonResponse({
                 'status': 'error',
-                'message': f'未找到民间: {folk_name}'
+                'message': f'未找到民俗: {folk_name}'
             }, status=404)
 
         folk_id = folk_result['folk_id']
-        logger.info(f"找到民间ID: {folk_id}")
+        logger.info(f"找到民俗ID: {folk_id}")
 
+        # 查询评论数据
         comment_sql = """
             SELECT 
                 sentiment, 
@@ -283,7 +305,7 @@ def sentiments_result(request):
                 SUBSTRING_INDEX(LEFT(comment_time, 7), '-', 1) as year,
                 SUBSTRING_INDEX(LEFT(comment_time, 7), '-', -1) as month
             FROM user_comment_folk 
-            WHERE folk_id = %s AND sentiment IS NOT NULL
+            WHERE folk_id = %s AND sentiment IS NOT NULL AND sentiment != ''
             ORDER BY comment_time
         """
         cursor.execute(comment_sql, (folk_id,))
@@ -297,7 +319,7 @@ def sentiments_result(request):
                     'name': folk_name,
                     'id': folk_id
                 },
-                'message': '该民间暂无评论数据'
+                'message': '该民俗暂无评论数据'
             })
 
         # 按年月分组数据
@@ -326,6 +348,7 @@ def sentiments_result(request):
                 'comment_count': len(sentiments)
             })
 
+        # 按时间排序
         analysis_results.sort(key=lambda x: (x['year'], x['month']))
 
         return JsonResponse({
@@ -338,7 +361,7 @@ def sentiments_result(request):
         })
 
     except Exception as e:
-        logger.error(f"处理民间 {folk_name} 的情感分析时出错: {str(e)}")
+        logger.error(f"处理民俗 {folk_name} 的情感分析时出错: {str(e)}")
         return JsonResponse({
             'status': 'error',
             'message': str(e)
@@ -350,104 +373,111 @@ def sentiments_result(request):
             conn.close()
 
 def generate_report(request):
-    """生成民间评论的情感分析报告"""
+    """获取民俗评论的情感分析报告"""
     try:
         folk_name = request.GET.get('name', '').strip()
         if not folk_name:
             return JsonResponse({
                 'status': 'error',
-                'message': '民间名称不能为空'
+                'message': '民俗名称不能为空'
             }, status=400)
 
-        logger.info(f"正在生成民间 {folk_name} 的情感分析报告")
+        logger.info(f"正在获取民俗 {folk_name} 的情感分析报告")
 
-        # 获取情感分析结果
-        sentiment_response = sentiments_result_total_count(request)
-        sentiment_data = json.loads(sentiment_response.content)
+        conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
+                              passwd='song', db='hx_cultural_transmission_sys',
+                              charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        if sentiment_data['status'] != 'success':
+        try:
+            # 首先获取folk_id
+            cursor.execute("SELECT folk_id FROM folk WHERE folk_name = %s", (folk_name,))
+            folk_result = cursor.fetchone()
+            
+            if not folk_result:
+                logger.error(f"未找到民俗: {folk_name}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'未找到民俗: {folk_name}'
+                }, status=404)
+            
+            folk_id = folk_result['folk_id']
+            logger.info(f"找到民俗ID: {folk_id}")
+
+            # 查询tag_id
+            cursor.execute("SELECT tag_id FROM tag WHERE tag_name = %s", (folk_name,))
+            tag_result = cursor.fetchone()
+
+            if not tag_result:
+                logger.error(f"未找到民俗对应的标签: {folk_name}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'未找到民俗对应的标签: {folk_name}'
+                }, status=404)
+
+            tag_id = tag_result['tag_id']
+            logger.info(f"找到标签ID: {tag_id}")
+
+            # 查询报告内容
+            cursor.execute("SELECT content FROM report WHERE tag_id = %s", (tag_id,))
+            report_result = cursor.fetchone()
+
+            if not report_result:
+                logger.error(f"未找到民俗的报告: {folk_name}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'未找到民俗的报告: {folk_name}'
+                }, status=404)
+
+            # 获取时间线数据
+            timeline_sql = """
+            SELECT 
+                CONCAT(YEAR(comment_time), '-', LPAD(MONTH(comment_time), 2, '0')) as date,
+                sentiment,
+                COUNT(*) as count,
+                AVG(sentiment_confidence) as score
+            FROM user_comment_folk
+            WHERE folk_id = %s
+                AND sentiment IS NOT NULL
+                AND sentiment != ''
+            GROUP BY YEAR(comment_time), MONTH(comment_time), sentiment
+            ORDER BY YEAR(comment_time), MONTH(comment_time), sentiment
+            """
+            
+            cursor.execute(timeline_sql, (folk_id,))
+            timeline_results = cursor.fetchall()
+            
+            # 处理时间线数据
+            timeline_data = []
+            for row in timeline_results:
+                timeline_data.append({
+                    'date': row['date'],
+                    'sentiment': row['sentiment'].lower(),
+                    'count': int(row['count']),
+                    'score': float(row['score']) if row['score'] is not None else 0.0
+                })
+
+            logger.info(f"成功获取时间线数据，共 {len(timeline_data)} 条记录")
+
+            return JsonResponse({
+                'status': 'success',
+                'report': report_result['content'],
+                'timeline': timeline_data,
+                'folk_name': folk_name
+            })
+
+        except pymysql.Error as db_err:
+            logger.error(f"数据库操作出错: {str(db_err)}")
             return JsonResponse({
                 'status': 'error',
-                'message': sentiment_data.get('message', '获取情感分析数据失败')
-            }, status=400)
-
-        data = sentiment_data['data']
-
-        # 处理数据，计算每个月的统计信息
-        monthly_stats = {}
-        for entry in data:
-            year = entry['year']
-            month = entry['month']
-            sentiment = entry['sentiment']
-            sentiment_score = entry['sentiment_score']
-            comment_count = entry['comment_count']
-
-            key = (year, month)
-            if key not in monthly_stats:
-                monthly_stats[key] = {
-                    'total_comments': 0,
-                    'sentiment_counts': {'positive': 0, 'neutral': 0, 'negative': 0},
-                    'sentiment_scores': {'positive': [], 'neutral': [], 'negative': []},
-                }
-            monthly_stats[key]['total_comments'] += comment_count
-            monthly_stats[key]['sentiment_counts'][sentiment] += comment_count
-            monthly_stats[key]['sentiment_scores'][sentiment].append(sentiment_score * comment_count)
-
-        # 计算百分比和平均情感得分
-        for key in monthly_stats:
-            stats = monthly_stats[key]
-            total_comments = stats['total_comments']
-            for sentiment in ['positive', 'neutral', 'negative']:
-                count = stats['sentiment_counts'][sentiment]
-                percentage = (count / total_comments) * 100 if total_comments > 0 else 0
-                total_score = sum(stats['sentiment_scores'][sentiment])
-                avg_score = (total_score / count) if count > 0 else 0
-                stats['sentiment_counts'][sentiment] = {'count': count, 'percentage': percentage}
-                stats['sentiment_scores'][sentiment] = avg_score
-
-        # 构建提示语
-        prompt = "我已经完成了情感分析，分析结果如下：\n\n"
-        for key in sorted(monthly_stats.keys()):
-            year, month = key
-            stats = monthly_stats[key]
-            prompt += f"{year}年{month}月:\n"
-            total_comments = stats['total_comments']
-            prompt += f"- 总评论数：{total_comments}\n"
-            for sentiment in ['positive', 'neutral', 'negative']:
-                count_info = stats['sentiment_counts'][sentiment]
-                avg_score = stats['sentiment_scores'][sentiment]
-                sentiment_chinese = {'positive': '正面', 'neutral': '中性', 'negative': '负面'}[sentiment]
-                if count_info['count'] > 0:
-                    if count_info['percentage'] == 100:
-                        prompt += f"  - {sentiment_chinese}评论占比居多\n"
-                    else:
-                        prompt += f"  - {sentiment_chinese}反馈：{count_info['count']}条，占比{count_info['percentage']:.2f}%\n"
-                    prompt += f"    - 平均情感得分：{avg_score:.2f}\n"
-            prompt += "\n"
-
-        # 修改提示语，要求使用幽默的语调，并不包括改进建议
-        prompt += (
-            "请基于以上数据，帮助我生成一份情感分析报告，包括每个月的情感趋势和总体总结，"
-            "使用幽默的语调,并在报告中多使用emoji和颜文字请不要包括改进建议。"
-            "请在总结部分详细分析整体情感趋势，深入探讨可能的原因和影响，多写一些内容。"
-        )
-
-        # 调用 ZhipuAI 的聊天模型
-        response = client.chat.completions.create(
-            model="chatglm_std",
-            messages=[{"role": "user", "content": prompt}]
-        )
-
-        report = response.choices[0].message.content.strip()
-
-        return JsonResponse({
-            'status': 'success',
-            'report': report,
-            'folk_name': folk_name
-        })
+                'message': f"数据库错误: {str(db_err)}"
+            }, status=500)
+        finally:
+            cursor.close()
+            conn.close()
 
     except Exception as e:
-        logger.error(f"生成报告时出错: {str(e)}")
+        logger.error(f"获取报告时出错: {str(e)}")
         return JsonResponse({
             'status': 'error',
             'message': str(e)
@@ -463,7 +493,7 @@ if __name__ == "__main__":
     ]
 
     # 处理评论
-    results_df = process_user_comment_folk(user_comment_folk)
+    results_df = process_folk_comments(user_comment_folk)
     logger.info(f"民间评论情感分析完成，结果如下：\n{results_df}")
 
     # 运行批量情感分析

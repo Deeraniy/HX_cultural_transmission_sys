@@ -19,7 +19,7 @@
             </el-option>
           </el-select>
           <div>
-            <h3 style="text-align: center;font-family: 'HelveticaNeue', serif;font-size: 25px">地理位置</h3>
+            <h3 class="location-title">地理位置</h3>
             <div v-if="selectedCityInfoLocal" class="city-info">
               <div class="image-container">
                 <img :src="selectedCityInfoLocal.image" alt="城市图片" class="city-image" />
@@ -66,30 +66,37 @@
       width="80%"
       class="detail-dialog"
       :show-close="false"
+      :modal-class="'custom-modal'"
     >
       <!-- 添加右上角关闭按钮 -->
       <div class="dialog-close-button" @click="dialogVisible = false">
-        <el-icon><Close /></el-icon>
+        <el-icon class="close-icon"><Close /></el-icon>
       </div>
 
       <div class="dialog-content">
         <!-- 左侧固定图片区域 -->
         <div class="left-section">
-          <img :src="selectedPlace?.image" class="detail-image">
+          <div class="image-wrapper">
+            <img :src="selectedPlace?.image" class="detail-image">
+          </div>
         </div>
 
         <!-- 右侧可滚动内容区域 -->
         <div class="right-section">
           <!-- 固定顶栏 -->
           <div class="right-header">
-            <h2>{{ selectedPlace?.name }}</h2>
+            <div class="title-wrapper">
+              <h2>{{ selectedPlace?.name }}</h2>
+            </div>
           </div>
 
           <!-- 可滚动的内容区域 -->
           <div class="right-content">
             <div class="info-content">
               <div class="info-item">
-                <h3>地理位置</h3>
+                <div class="info-title">
+                  <h3>地理位置</h3>
+                </div>
                 <p>{{ selectedPlace?.location }}</p>
               </div>
               <div class="info-item">
@@ -139,8 +146,6 @@
       </div>
     </el-dialog>
 
-    <!-- 添加词云图容器 -->
-    <div id="wordCloudChart" style="width: 100%; height: 300px;"></div>
   </el-main>
 </template>
 
@@ -763,6 +768,70 @@ watch(tags, (newTags) => {
   }
 }, { deep: true });
 
+const initMap = () => {
+  if (!chartsDOM.value) return;
+
+  // 创建一个新的主题
+  const mapTheme = {
+    textStyle: {
+      fontFamily: 'ZhuanTi, serif',
+      fontSize: 14
+    }
+  };
+  // 注册一个专门的地图主题
+  echarts.registerTheme('mapTheme', mapTheme);
+  // 使用新主题初始化地图
+  myChart = echarts.init(chartsDOM.value, 'mapTheme');
+
+  // 注册地图数据
+  echarts.registerMap('hunan', hunanMapData);
+
+  // 地图配置项
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b}',
+      textStyle: {
+        fontFamily: 'ZhuanTi, serif',
+        fontSize: 14
+      }
+    },
+    series: [{
+      name: '湖南',
+      type: 'map',
+      map: 'hunan',
+      roam: false,
+      zoom: 1.2,
+      center: [111.5, 27.3],
+      label: {
+        show: true,
+        fontFamily: 'ZhuanTi, serif',
+        fontSize: 14,
+        color: '#333'
+      },
+      itemStyle: {
+        areaColor: '#fff8f0',
+        borderColor: '#B71C1C'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontFamily: 'ZhuanTi, serif',
+          fontSize: 16,
+          color: '#333'
+        },
+        itemStyle: {
+          areaColor: '#B71C1C',
+          borderColor: '#B71C1C'
+        }
+      },
+      data: []
+    }]
+  };
+
+  myChart.setOption(option);
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -908,9 +977,9 @@ watch(tags, (newTags) => {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .fancy-name {
-  font-family: 'ZhuanTi', serif; /* 使用纂体字体 */
-  font-size: 13px; /* 根据需要调整字体大小 */
-  color: #555; /* 设置字体颜色 */
+  font-family: 'ZhuanTi', serif !important;
+  font-size: 13px;
+  color: #555;
 }
 
 .attraction-card:hover {
@@ -991,7 +1060,7 @@ watch(tags, (newTags) => {
 .detail-dialog {
   :deep(.el-dialog__body) {
     padding: 0;
-    height: 600px;
+    height: 700px;  /* 增加弹窗高度 */
     overflow: hidden;
   }
 
@@ -1005,8 +1074,11 @@ watch(tags, (newTags) => {
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     margin: 0 !important;
-    width: 1000px !important;
-    height: 600px;
+    width: 1200px !important;  /* 增加弹窗宽度 */
+    height: 700px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
   :deep(.el-overlay) {
@@ -1035,34 +1107,47 @@ watch(tags, (newTags) => {
 }
 
 .left-section {
-  flex: 0 0 45%;
+  flex: 0 0 40%;
   height: 100%;
   position: relative;
   background-color: black;
   overflow: hidden;
+  margin-right: 18px;
   display: flex;
-  justify-content: center;
   align-items: center;
+}
 
-  .detail-image {
-    height: 600px;
-    width: 100%;
-    object-fit: cover;
-  }
+/* 修改图片包装器 */
+.image-wrapper {
+  width: 100%;
+  height: 100%;  /* 稍微减小高度使图片看起来垂直居中 */
+  overflow: hidden;
+}
+
+.detail-image {
+  width: 500px;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.detail-image:hover {
+  transform: scale(1.1);
 }
 
 .right-section {
-  flex: 1;
+  flex: 0 0 60%;
   display: flex;
   flex-direction: column;
   height: 100%;
   background-color: white;
   min-width: 0;
-  border-left: 1px solid #eee;  /* 添加左边框分隔线 */
+  border-left: 1px solid #eee;
 }
 
 .right-header {
-  padding: 16px 24px;
+  padding: 20px;
   border-bottom: 1px solid #eee;
   display: flex;
   justify-content: flex-start;  /* 标题靠左对齐 */
@@ -1072,14 +1157,16 @@ watch(tags, (newTags) => {
   h2 {
     margin: 0;
     font-size: 24px;
+    color: #333;
+    font-weight: bold;
   }
 }
 
 .right-content {
   flex: 1;
+  height: 400px; /* 固定高度 */
   overflow-y: auto;
   padding: 20px;
-  padding-bottom: 80px;
   scrollbar-width: thin;  /* Firefox */
 
   /* Webkit浏览器的滚动条样式 */
@@ -1102,13 +1189,16 @@ watch(tags, (newTags) => {
 
   .info-content {
     max-width: 100%;  /* 限制内容宽度 */
+    overflow-y: auto; /* 确保内容超出时可以滚动 */
     .info-item {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
 
-      h3 {
-        color: #333;
-        margin-bottom: 10px;
+      .info-title h3 {
         font-size: 18px;
+        color: #333;
+        margin: 0 0 12px 0;
+        padding-left: 10px;
+        border-left: 4px solid #B71C1C;
       }
 
       p {
@@ -1116,66 +1206,73 @@ watch(tags, (newTags) => {
         line-height: 1.6;
         text-align: justify;
         word-wrap: break-word;  /* 确保长文本会换行 */
+        margin: 0;
+        padding: 0 10px;
       }
     }
   }
 }
 
+
 .right-footer {
-  padding: 16px 24px;
+  padding: 16px 20px;
   border-top: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: white;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 45%;
+  width: 100%;
   z-index: 1;
 }
 
 .dialog-interaction-icons {
   display: flex;
   gap: 15px;
+  margin-right: 20px;
 }
 
 .icon-wrapper {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  padding: 6px 12px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
 
   &:hover {
-    transform: scale(1.1);
+    background-color: rgba(183, 28, 28, 0.1);
   }
 
   .icon {
-    width: 24px;
-    height: 24px;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
 
-    &.active {
-      opacity: 1;
-    }
+  .icon.active {
+    transform: scale(1.2);
   }
 
   span {
-    font-size: 14px;
     color: #666;
-    transition: color 0.3s ease;
-  }
-
-  &:hover span {
-    color: #333;
+    font-size: 14px;
   }
 }
 
 .analysis-btn {
-  padding: 12px 30px;
-  font-size: 16px;
+  background-color: #B71C1C;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.analysis-btn:hover {
+  background-color: #D32F2F;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(183, 28, 28, 0.2);
 }
 
 /* 右上角关闭按钮 */
@@ -1183,22 +1280,34 @@ watch(tags, (newTags) => {
   position: absolute;
   top: 16px;
   right: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  z-index: 10;
   cursor: pointer;
-  z-index: 2;
+  background-color: rgba(183, 28, 28, 0.8);  /* 使用红色主题色 */
+  border-radius: 50%;
+  padding: 8px;
+  transition: all 0.3s ease;
 
-  .el-icon {
-    color: #999;
+  .close-icon {
     font-size: 20px;
-    transition: color 0.3s ease;
+    color: #fff;
   }
+}
 
-  &:hover {
-    .el-icon {
-      color: #333;
-    }
-  }
+.dialog-close-button:hover {
+  background-color: #d32f2f;  /* 悬停时加深颜色 */
+  transform: rotate(90deg);
+}
+
+/* 地理位置标题使用特殊字体 */
+.location-title {
+  text-align: center;
+  font-family: 'ZhuanTi', serif !important; /* 使用纂体字体 */
+  font-size: 25px;
+}
+
+/* 自定义模态框背景 */
+:deep(.custom-modal) {
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
 }
 </style>
