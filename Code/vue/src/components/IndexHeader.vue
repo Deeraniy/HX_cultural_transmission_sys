@@ -170,7 +170,7 @@ const goToLogin = () => {
 const handleCommand = (command: string) => {
   switch (command) {
     case 'profile':
-      router.push('/userHome');
+      router.push('/userHome/article');
       break;
     case 'logout':
       userStore.logout();

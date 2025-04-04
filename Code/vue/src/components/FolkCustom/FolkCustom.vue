@@ -82,6 +82,7 @@ import likeIcon from '@/assets/setting/赞.png'
 import likeActiveIcon from '@/assets/setting/赞 (1).png'
 import favoriteIcon from '@/assets/setting/收藏.png'
 import favoriteActiveIcon from '@/assets/setting/收藏(1).png'
+import UserAPI from "@/api/user";
 
 const userStore = useUserStore();
 const tagStatus = ref({
@@ -96,13 +97,13 @@ const getUserId = () => {
   if (userStore.userId) {
     return userStore.userId;
   }
-  
+
   // 如果 userStore 中没有，尝试从 localStorage 获取
   const userId = localStorage.getItem('userId');
   if (userId) {
     return userId;
   }
-  
+
   // 如果都没有，返回 null
   console.warn('User ID is missing');
   return null;
@@ -115,7 +116,7 @@ const initTagStatus = async (folkId) => {
     console.error('Folk ID is missing');
     return;
   }
-  
+
   try {
     const userId = getUserId();
     if (!userId) {
@@ -128,14 +129,14 @@ const initTagStatus = async (folkId) => {
       };
       return;
     }
-    
+
     const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', folkId);
-    
+
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const statusResponse = await TagsAPI.getTagStatusAPI(numericUserId, tagId);
-      
+
       if (statusResponse.code === 200) {
         tagStatus.value = statusResponse.data;
       }
@@ -158,14 +159,14 @@ const toggleLike = async () => {
       ElMessage.warning('请先登录后再点赞');
       return;
     }
-    
+
     const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', selectedFolk.value.id);
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
-      
+
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const likeResponse = await TagsAPI.toggleLikeAPI(numericUserId, tagId);
-      
+
       if (likeResponse.code === 200) {
         tagStatus.value = {
           ...tagStatus.value,
@@ -192,14 +193,14 @@ const toggleFavorite = async () => {
       ElMessage.warning('请先登录后再收藏');
       return;
     }
-    
+
     const response = await TagsAPI.getTagByThemeAndOriginAPI('folk', selectedFolk.value.id);
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
-      
+
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const favoriteResponse = await TagsAPI.toggleFavoriteAPI(numericUserId, tagId);
-      
+
       if (favoriteResponse.code === 200) {
         tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
       }
@@ -287,12 +288,38 @@ const nextPage = () => {
 // 弹窗相关
 const dialogVisible = ref(false);
 const selectedFolk = ref(null);
+const addHistory = async (item) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录以记录浏览历史');
+      return;
+    }
+    const historyData = {
+      uid: userId,
+      type: "folk", // 记录类型
+      name: item.name, // 景点名称
+      img_url: item.image, // 景点图片
+      describe: item.description.substring(0, 50),
+      // describe: item.description,
+      // 截取前100字作为描述
+    };
 
+    const response = await UserAPI.AddUserHistory(historyData);
+    if (response && response.code === 200) {
+      console.log('浏览记录添加成功:', response);
+    } else {
+      console.error('浏览记录添加失败:', response);
+    }
+  } catch (error) {
+    console.error('添加浏览记录失败:', error);
+  }
+};
 // 显示详细信息的函数
 const showDetails = async (folk) => {
   selectedFolk.value = folk;
   dialogVisible.value = true;
-  
+  addHistory(folk)
   // 确保有 folk.id 才初始化标签状态
   if (folk && folk.id) {
     await initTagStatus(folk.id);

@@ -1,58 +1,98 @@
 <script setup>
-import { computed, ref } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import { Star, Filter, Search, VideoPlay } from '@element-plus/icons-vue';
+import UserAPI from "@/api/user";
+import {useUserStore} from "@/stores/user.ts";
 
-// 假设这部分数据从后端获取
+const userStore = useUserStore();
+const starList = ref([]);
 const searchQuery = ref('');
 const activeTab = ref('全部');
-const tabs = ['最近收藏', '最多播放'];
 const showMoreTabs = ref(false);
-const moreTabs = ['全部', '特色美食', '非遗民俗', '风景名胜', '文学创作'];
-const videos = ref([
-  {
-    id: 1,
-    title: '探索世界的美丽风景',
-    description: '带你领略各地的自然风光和人文景观。这是一段较长的描述文字，用来测试多行文本的显示效果。',
-    category: '风景名胜',
-    image: 'https://via.placeholder.com/150',
-    isFavorite: true,
-  },
-  {
-    id: 2,
-    title: '传统美食的魅力',
-    description: '探索全球各地的美食文化。了解不同地区的特色菜品和烹饪技巧。',
-    category: '特色美食',
-    image: 'https://via.placeholder.com/150',
-    isFavorite: true,
-  },
-  {
-    id: 3,
-    title: '非遗文化传承',
-    description: '探索中国传统非物质文化遗产，传承千年文明。',
-    category: '非遗民俗',
-    image: 'https://via.placeholder.com/150',
-    isFavorite: true,
-  },
-]);
 
+// 分类映射关系
+const categoryMapping = {
+  food: '特色美食',
+  spot: '风景名胜',
+  literature: '文学创作',
+  folk: '非遗民俗'
+};
+
+// 标签配置
+const tabs = ref(['最近收藏', '最多播放']);
+const moreTabs = ref(['全部', ...Object.values(categoryMapping)]);
+
+// 获取用户ID
+const getUserId = () => {
+  return userStore.userId || localStorage.getItem('userId') || null;
+};
+
+// 获取收藏数据
+const getStar = () => {
+  const userId = getUserId();
+  if (!userId) return;
+
+  UserAPI.GetUserStar(userId).then(res => {
+    starList.value = res
+        .filter(item => item.is_favorite) // 只显示收藏状态为true的
+        .map(item => ({
+          ...item,
+          // 添加分类中文名称
+          category: categoryMapping[item.theme_name] || '其他',
+          // 生成示例图片URL（根据实际接口替换）
+          image: `https://via.placeholder.com/150?text=${item.origin_id}`
+        }));
+  });
+};
+
+// 分类过滤 + 搜索过滤 + 排序
 const filteredVideos = computed(() => {
-  if (activeTab.value === '全部') {
-    return videos.value;
-  }
-  return videos.value.filter(video => video.category === activeTab.value);
+  const searchTerm = searchQuery.value.toLowerCase();
+
+  return starList.value
+      .filter(item => {
+        // 分类过滤
+        const categoryMatch = activeTab.value === '全部' || item.category === activeTab.value;
+        // 搜索过滤（搜索tag_name）
+        const searchMatch = item.tag_name.toLowerCase().includes(searchTerm);
+
+        return categoryMatch && searchMatch;
+      })
+      .sort((a, b) => {
+        // 排序逻辑
+        if (tabs.value[0] === '最近收藏') {
+          // 按origin_id降序模拟时间排序（需要根据实际时间字段调整）
+          return b.origin_id - a.origin_id;
+        } else {
+          // 按点击量排序
+          return (b.total_clicks || 0) - (a.total_clicks || 0);
+        }
+      });
 });
 
-const toggleMoreTabs = () => {
-  showMoreTabs.value = !showMoreTabs.value;
+// 切换收藏状态
+const toggleFavorite = async (item) => {
+  try {
+    // await UserAPI.UpdateFavorite({
+    //   user_id: item.user_id,
+    //   tag_id: item.tag_id,
+    //   is_favorite: !item.is_favorite
+    // });
+    // 更新本地数据
+    item.is_favorite = !item.is_favorite;
+    starList.value = starList.value.filter(i => i.is_favorite);
+  } catch (error) {
+    console.error('更新收藏状态失败:', error);
+  }
 };
 
-const toggleFavorite = (video) => {
-  video.isFavorite = !video.isFavorite;
-};
-
+// 切换标签
 const selectTab = (tab) => {
   activeTab.value = tab;
 };
+
+// 初始化
+onMounted(getStar);
 </script>
 
 <template>
@@ -74,11 +114,11 @@ const selectTab = (tab) => {
             :key="index"
             :type="activeTab === tab ? 'primary' : 'default'"
             :class="['tab-button', { active: activeTab === tab }]"
-            @click="selectTab(tab)"
+            @click="tabs = [tab, tabs[1 - index]]"
         >
           {{ tab }}
         </el-button>
-        <el-button @click="toggleMoreTabs" class="more-button">
+        <el-button @click="showMoreTabs = !showMoreTabs" class="more-button">
           <el-icon><Filter /></el-icon>
           更多筛选
         </el-button>
@@ -88,7 +128,7 @@ const selectTab = (tab) => {
       <div class="search-section">
         <el-input
             v-model="searchQuery"
-            placeholder="搜索标题/up主昵称"
+            placeholder="搜索标签名称"
             class="search-input"
             clearable
         >
@@ -116,27 +156,35 @@ const selectTab = (tab) => {
     <!-- 视频列表 -->
     <div class="video-list">
       <el-card
-          v-for="video in filteredVideos"
-          :key="video.id"
+          v-for="item in filteredVideos"
+          :key="item.tag_id"
           class="video-card"
           shadow="hover"
       >
         <div class="video-content">
           <div class="video-thumbnail">
-            <img :src="video.image" :alt="video.title" />
-            <div class="video-category">{{ video.category }}</div>
+            <img :src="item.image" :alt="item.tag_name" />
+            <div class="video-category">{{ item.category }}</div>
           </div>
           <div class="video-info">
-            <h3 class="video-title">{{ video.title }}</h3>
-            <p class="video-description">{{ video.description }}</p>
+            <h3 class="video-title">{{ item.tag_name }}</h3>
+            <div class="video-stats">
+              <el-tag size="small">播放: {{ item.total_clicks || 0 }}</el-tag>
+              <el-tag size="small" type="success">点赞: {{ item.total_likes || 0 }}</el-tag>
+            </div>
             <div class="video-actions">
-              <el-button type="danger" plain size="small" @click="toggleFavorite(video)">
+              <el-button
+                  type="danger"
+                  plain
+                  size="small"
+                  @click="toggleFavorite(item)"
+              >
                 <el-icon><Star /></el-icon>
-                取消收藏
+                {{ item.is_favorite ? '取消收藏' : '添加收藏' }}
               </el-button>
               <el-button type="primary" plain size="small">
                 <el-icon><VideoPlay /></el-icon>
-                观看视频
+                查看详情
               </el-button>
             </div>
           </div>

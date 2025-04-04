@@ -50,6 +50,7 @@ const getUserInfo = () => {
     UserAPI.getUserFullInfo(userStore.userId).then((res: any) => {
         if (res && res.data) {
             // 转换后端性别值为前端显示值
+            console.log("用户信息为:", res.data);
             let displayGender = res.data.gender;
             if (displayGender === 'male') {
                 displayGender = '男';
@@ -147,7 +148,7 @@ const uploadFile = (params) => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('userId', userStore.userId);
-  
+
   httpInstance.post('/user/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'

@@ -161,6 +161,9 @@ import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
 import { Close } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
+import UserAPI from "@/api/user";
+import {hColgroup} from "element-plus/es/components/table/src/h-helper";
+import props = hColgroup.props;
 
 const router = useRouter()
 const chartsDOM = ref<HTMLElement | null>(null);
@@ -487,6 +490,32 @@ const onCitySelect = () => {
   loadAttractions(selectedCity.value); // 加载选中城市的景点信息
 };
 //const attractionName=ref('')//保存当前点击的景点的名字，并进行跳转，将景点名传给详情页
+const addHistory = async (attraction: Place) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录以记录浏览历史');
+      return;
+    }
+    const historyData = {
+      uid: userId,
+      type: "placeOfInterest", // 记录类型
+      name: attraction.name, // 景点名称
+      // img_url: attraction.image, // 景点图片
+      describe: "景点描述",
+      // describe: attraction.description?.substring(0, 100) || "景点描述", // 截取前100字作为描述
+    };
+
+    const response = await UserAPI.AddUserHistory(historyData);
+    if (response && response.code === 200) {
+      console.log('浏览记录添加成功:', response);
+    } else {
+      console.error('浏览记录添加失败:', response);
+    }
+  } catch (error) {
+    console.error('添加浏览记录失败:', error);
+  }
+};
 const showDetail = async (attraction) => {
   selectedPlace.value = attraction;
   dialogVisible.value = true;
@@ -500,10 +529,11 @@ const showDetail = async (attraction) => {
 
       // 获取用户ID
       const userId = getUserId();
-
+      addHistory(attraction);
       if (userId) {
         // 记录浏览
         await TagsAPI.viewTagAPI(userId, tagId);
+
         console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
 
         // 获取标签状态

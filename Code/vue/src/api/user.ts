@@ -129,10 +129,23 @@ class UserAPI {
         return request({
             url: `${BASE_URL}/get_all_history/`,
             method: 'get',
-            params: { uid }
+            params: { uid:uid }
         });
     }
+    static GetUserStar(uid: number) {
+        return request({
+            url: `${BASE_URL}/get_user_star/`,
+            method: 'get',
+            params: { uid:uid }
+        });
+    }
+    static GetAllHistory(uid: number) {
+        return request({
+            url: `${BASE_URL}/history/`,
+            method: 'get',
 
+        });
+    }
 
     //用户浏览记录表
 
