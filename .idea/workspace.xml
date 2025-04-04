@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="情感分析界面地图">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="全球传播情况">
+      <change afterPath="$PROJECT_DIR$/Code/vue/public/textures/earth/earthbump1k.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/public/textures/earth/earthcloudmap.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/public/textures/earth/earthlights1k.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/public/textures/earth/earthmap1k.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Code/vue/src/components/Spread/Globe3D.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/芙蓉镇_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/芙蓉镇_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
@@ -181,7 +186,7 @@
       <workItem from="1743489965816" duration="595000" />
       <workItem from="1743551683096" duration="3409000" />
       <workItem from="1743666282692" duration="5407000" />
-      <workItem from="1743742365429" duration="3586000" />
+      <workItem from="1743742365429" duration="3962000" />
     </task>
     <task id="LOCAL-00021" summary="美食旋转木马微调">
       <option name="closed" value="true" />
@@ -599,7 +604,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="用户界面+点赞收藏（未完成" />
     <MESSAGE value="图片" />
     <MESSAGE value="个性化介面" />
     <MESSAGE value="个性化界面完善" />
@@ -624,7 +628,8 @@
     <MESSAGE value="情感分析界面优化" />
     <MESSAGE value="知识图谱（红色）维修" />
     <MESSAGE value="情感分析界面地图" />
-    <option name="LAST_COMMIT_MESSAGE" value="情感分析界面地图" />
+    <MESSAGE value="全球传播情况" />
+    <option name="LAST_COMMIT_MESSAGE" value="全球传播情况" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
