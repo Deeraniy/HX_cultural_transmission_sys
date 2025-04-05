@@ -1,3 +1,9 @@
+import os
+
+# 禁用代理设置
+os.environ['HTTP_PROXY'] = ''
+os.environ['HTTPS_PROXY'] = ''
+
 from transformers import pipeline
 import pandas as pd
 import logging
