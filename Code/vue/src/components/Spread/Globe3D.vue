@@ -63,6 +63,10 @@
         <i class="iconfont icon-fullscreen"></i>
         <span>全屏显示</span>
       </div>
+      <div class="control-item" @click="toggleDanmaku">
+        <i class="iconfont" :class="isDanmakuEnabled ? 'icon-danmaku-on' : 'icon-danmaku-off'"></i>
+        <span>{{ isDanmakuEnabled ? '关闭弹幕' : '开启弹幕' }}</span>
+      </div>
     </div>
 
     <!-- 时间轴 -->
@@ -168,6 +172,16 @@
       <div class="view-data-btn" @click="viewAllData">
         <i class="iconfont icon-data"></i>
         <span>查看所有评论数据</span>
+      </div>
+      <div class="theme-select">
+        <select v-model="selectedTheme" @change="handleThemeChange">
+          <option value="">选择主题</option>
+          <option value="culture">文化传承</option>
+          <option value="tourism">旅游体验</option>
+          <option value="food">美食文化</option>
+          <option value="art">艺术展示</option>
+          <option value="education">教育推广</option>
+        </select>
       </div>
     </div>
   </div>
@@ -392,29 +406,85 @@ const drawCountryBoundaries = (globe) => {
 const initScene = () => {
   scene = new THREE.Scene();
   
-  // 减少星星数量
-  const starsGeometry = new THREE.BufferGeometry();
-  const starsVertices = [];
-  for (let i = 0; i < 2000; i++) {  // 从10000减少到2000
-    const r = 1000;
-    const theta = 2 * Math.PI * Math.random();
-    const phi = Math.acos(2 * Math.random() - 1);
-    const x = r * Math.sin(phi) * Math.cos(theta);
-    const y = r * Math.sin(phi) * Math.sin(theta);
-    const z = r * Math.cos(phi);
-    starsVertices.push(x, y, z);
-  }
-  starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
-  const starsMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 2,
-    transparent: true,
-    opacity: 0.8,
-    sizeAttenuation: true
-  });
-  const starField = new THREE.Points(starsGeometry, starsMaterial);
-  scene.add(starField);
+  // 创建星空背景
+  const createStarField = () => {
+    // 创建多层星空，每层具有不同特性
+    const starLayers = [
+      { count: 3000, size: 1.5, speed: 0.0001, color: 0xffffff, distance: 900 },  // 小而密的白色星星
+      { count: 1500, size: 2, speed: 0.00015, color: 0x4a9eff, distance: 800 },   // 中等大小的蓝色星星
+      { count: 800, size: 2.5, speed: 0.0002, color: 0xff6b6b, distance: 700 }    // 较大的红色星星
+    ];
 
+    starLayers.forEach(layer => {
+      const starsGeometry = new THREE.BufferGeometry();
+      const starsVertices = [];
+      const starsSpeeds = [];
+      
+      for (let i = 0; i < layer.count; i++) {
+        const r = layer.distance;
+        const theta = 2 * Math.PI * Math.random();
+        const phi = Math.acos(2 * Math.random() - 1);
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.sin(phi) * Math.sin(theta);
+        const z = r * Math.cos(phi);
+        starsVertices.push(x, y, z);
+        starsSpeeds.push(Math.random() * layer.speed);
+      }
+      
+      starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+      starsGeometry.setAttribute('speed', new THREE.Float32BufferAttribute(starsSpeeds, 1));
+      
+      const starsMaterial = new THREE.PointsMaterial({
+        size: layer.size,
+        color: layer.color,
+        transparent: true,
+        opacity: 0.8,
+        sizeAttenuation: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      
+      const starField = new THREE.Points(starsGeometry, starsMaterial);
+      scene.add(starField);
+      animatedObjects.push(starField);
+    });
+
+    // 添加一个大的背景渐变球体
+    const bgSphereGeometry = new THREE.SphereGeometry(1000, 32, 32);
+    const bgSphereMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        color1: { value: new THREE.Color(0x000510) },
+        color2: { value: new THREE.Color(0x000000) }
+      },
+      vertexShader: `
+        varying vec3 vPosition;
+        void main() {
+          vPosition = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 color1;
+        uniform vec3 color2;
+        varying vec3 vPosition;
+        void main() {
+          float blend = (vPosition.y + 1000.0) / 2000.0;
+          gl_FragColor = vec4(mix(color2, color1, blend), 1.0);
+        }
+      `,
+      side: THREE.BackSide
+    });
+    
+    const bgSphere = new THREE.Mesh(bgSphereGeometry, bgSphereMaterial);
+    scene.add(bgSphere);
+  };
+
+  // 存储需要动画的对象
+  const animatedObjects = [];
+  
+  // 创建星空
+  createStarField();
+  
   camera = new THREE.PerspectiveCamera(
     75,
     globeCanvas.value.clientWidth / globeCanvas.value.clientHeight,
@@ -501,6 +571,53 @@ const initScene = () => {
 
   // 添加鼠标事件监听
   globeCanvas.value.addEventListener('mousemove', onMouseMove);
+
+  // 添加弹幕系统
+  const updateDanmakus = createDanmakuSystem();
+
+  // 修改动画循环
+  const animate = () => {
+    requestAnimationFrame(animate);
+    
+    // 更新星星位置
+    animatedObjects.forEach(obj => {
+      if (obj instanceof THREE.Points) {
+        const positions = obj.geometry.attributes.position;
+        const speeds = obj.geometry.attributes.speed;
+        
+        for (let i = 0; i < positions.count; i++) {
+          const speed = speeds.array[i];
+          positions.array[i * 3] += speed;
+          
+          // 如果星星移动到太远，重置位置
+          if (positions.array[i * 3] > 1000) {
+            positions.array[i * 3] = -1000;
+          }
+        }
+        positions.needsUpdate = true;
+      }
+    });
+
+    if (isAutoRotating.value) {
+      globe.rotation.y += 0.001;
+    }
+
+    // 更新弹幕
+    updateDanmakus();
+
+    // 更新点云动画
+    globe.children.forEach(child => {
+      if (child instanceof THREE.Points) {
+        const time = Date.now() * 0.001;
+        child.material.opacity = 0.4 + Math.sin(time) * 0.2;
+      }
+    });
+
+    controls.update();
+    renderer.render(scene, camera);
+  };
+
+  animate();
 };
 
 // 修改热点添加函数
@@ -562,26 +679,6 @@ const addHotspots = () => {
       color: `rgb(255, ${Math.floor(128 + intensity * 127)}, 0)`
     };
   });
-};
-
-// 修改动画循环
-const animate = () => {
-  requestAnimationFrame(animate);
-  
-  if (isAutoRotating.value) {
-    globe.rotation.y += 0.001;
-  }
-
-  // 更新点云动画
-  globe.children.forEach(child => {
-    if (child instanceof THREE.Points) {
-      const time = Date.now() * 0.001;
-      child.material.opacity = 0.4 + Math.sin(time) * 0.2;
-    }
-  });
-
-  controls.update();
-  renderer.render(scene, camera);
 };
 
 // 处理窗口大小变化
@@ -841,6 +938,215 @@ const viewAllData = () => {
 // 实现控制功能
 let isAutoRotating = ref(false);
 
+// 添加全局变量来存储弹幕组
+let danmakuGroup = null;
+
+// 修改弹幕系统创建函数
+const createDanmakuSystem = () => {
+  danmakuGroup = new THREE.Group();  // 保存引用
+  scene.add(danmakuGroup);
+
+  // 增加画布尺寸以支持更大的文字
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  canvas.width = 1024;  // 进一步加大画布尺寸
+  canvas.height = 256;
+
+  // 扩充更多弹幕文字
+  const danmakuTexts = [
+    '中国传统文化博大精深！', 
+    '非物质文化遗产传承有序',
+    '让世界了解中国文化底蕴',
+    '文化自信是最基本的自信',
+    '传统文化需要创新发展',
+    '让传统文化走向世界',
+    '中华文化源远流长',
+    '文化传承永续发展',
+    '弘扬中华优秀传统文化',
+    '文化自信自强',
+    '传统文化焕发新活力',
+    '中华文明五千年',
+    '文化是民族的根魂',
+    '传统与现代的完美融合',
+    '让世界聆听中国声音',
+    '文化交流促进世界和平',
+    '中国故事感动世界',
+    '文化自信助力中国梦',
+    '传统文化创新发展',
+    '文化传承代代相传'
+  ];
+
+  // 修改y轴间距和范围
+  const ySpacing = 6;  // 增加间距，防止重叠
+  const yRange = 30;   // 垂直范围
+  const yPositions = [];
+  
+  // 预生成所有可能的y轴位置
+  for (let y = -yRange; y <= yRange; y += ySpacing) {
+    yPositions.push(y);
+  }
+
+  // 跟踪已使用的y轴位置和对应的弹幕
+  const usedYPositions = new Map();  // 使用Map来跟踪每个位置的弹幕
+
+  const getAvailableYPosition = () => {
+    // 过滤出未使用的y轴位置
+    const availablePositions = yPositions.filter(y => !usedYPositions.has(y));
+    
+    if (availablePositions.length === 0) {
+      // 如果没有可用位置，找出最左边的弹幕的位置
+      let leftmostY = null;
+      let leftmostX = Infinity;
+      
+      usedYPositions.forEach((danmaku, y) => {
+        if (danmaku.position.x < leftmostX) {
+          leftmostX = danmaku.position.x;
+          leftmostY = y;
+        }
+      });
+      
+      if (leftmostY !== null) {
+        usedYPositions.delete(leftmostY);
+        return leftmostY;
+      }
+      
+      return yPositions[Math.floor(Math.random() * yPositions.length)];
+    }
+    
+    return availablePositions[Math.floor(Math.random() * availablePositions.length)];
+  };
+
+  const createDanmaku = (text) => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 减弱文字发光效果
+    context.shadowColor = 'rgba(255, 255, 255, 0.4)';
+    context.shadowBlur = 15;
+    
+    // 使用更大的字体，降低不透明度
+    context.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    // 使用 HelveticaNeue2 字体，需要确保字体已加载
+    context.font = '98px HelveticaNeue, serif';  // 添加后备字体
+    
+    // 确保字体已加载
+    document.fonts.ready.then(() => {
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText(text, canvas.width / 2, canvas.height / 2);
+    });
+
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      opacity: 0.6
+    });
+
+    // 增加弹幕平面的大小
+    const geometry = new THREE.PlaneGeometry(12, 3);  // 保持平面大小
+    const mesh = new THREE.Mesh(geometry, material);
+
+    // 修改弹幕的运动范围
+    const radius = 25;  // 轨道半径
+    const y = getAvailableYPosition();
+    
+    // 始终从最右侧开始
+    const startAngle = 0;  // 改为0，表示从正右方开始
+    mesh.position.set(
+      radius,  // 直接设置为radius，确保从最右侧开始
+      y,
+      0       // z设为0，确保从正右方开始
+    );
+
+    mesh.userData.angle = startAngle;
+    mesh.userData.speed = 0.004 + Math.random() * 0.002;  // 加快速度
+    mesh.userData.radius = radius;
+    mesh.userData.y = y;
+
+    mesh.lookAt(camera.position);
+    usedYPositions.set(y, mesh);  // 记录该位置已被使用
+    
+    return mesh;
+  };
+
+  const danmakus = [];
+  const createMultipleDanmakus = () => {
+    const danmaku = createDanmaku(
+      danmakuTexts[Math.floor(Math.random() * danmakuTexts.length)]
+    );
+    danmakuGroup.add(danmaku);
+    danmakus.push(danmaku);
+
+    // 当弹幕被移除时，释放其y轴位置
+    if (danmakus.length > 50) {
+      const oldDanmaku = danmakus.shift();
+      usedYPositions.delete(oldDanmaku.userData.y);
+      danmakuGroup.remove(oldDanmaku);
+      oldDanmaku.geometry.dispose();
+      oldDanmaku.material.dispose();
+    }
+  };
+
+  // 更新弹幕位置
+  const updateDanmakus = () => {
+    danmakus.forEach(danmaku => {
+      danmaku.userData.angle -= danmaku.userData.speed;
+      
+      // 更新位置
+      danmaku.position.x = danmaku.userData.radius * Math.cos(danmaku.userData.angle);
+      danmaku.position.z = danmaku.userData.radius * Math.sin(danmaku.userData.angle);
+      
+      // 当弹幕移动到最左侧时，重置到右侧
+      if (danmaku.position.x < -danmaku.userData.radius) {  // 使用x坐标判断，确保到最左边
+        usedYPositions.delete(danmaku.userData.y);  // 释放旧的y位置
+        const newY = getAvailableYPosition();
+        danmaku.userData.angle = 0;
+        danmaku.userData.y = newY;
+        danmaku.position.set(
+          danmaku.userData.radius,
+          newY,
+          0
+        );
+        usedYPositions.set(newY, danmaku);  // 记录新位置
+      }
+      
+      danmaku.lookAt(camera.position);
+    });
+  };
+
+  // 保存定时器引用
+  danmakuInterval = setInterval(createMultipleDanmakus, 800);
+
+  // 设置初始可见性
+  danmakuGroup.visible = isDanmakuEnabled.value;
+
+  return updateDanmakus;
+};
+
+// 添加弹幕控制状态
+const isDanmakuEnabled = ref(true);
+
+// 修改弹幕开关方法
+const toggleDanmaku = () => {
+  isDanmakuEnabled.value = !isDanmakuEnabled.value;
+  if (danmakuGroup) {
+    danmakuGroup.visible = isDanmakuEnabled.value;
+    
+    // 如果关闭弹幕，停止创建新弹幕
+    if (!isDanmakuEnabled.value) {
+      clearInterval(danmakuInterval);
+    } else {
+      // 重新开始创建弹幕
+      danmakuInterval = setInterval(createMultipleDanmakus, 800);
+    }
+  }
+};
+
+// 修改弹幕创建定时器的处理
+let danmakuInterval = null;
+
 onMounted(async () => {
   initScene();
   addHotspots();
@@ -867,6 +1173,9 @@ onMounted(async () => {
 
   updateTime();
   setInterval(updateTime, 1000);
+
+  // 确保字体加载
+  await document.fonts.load('98px HelveticaNeue2');
 });
 
 onUnmounted(() => {
@@ -875,6 +1184,9 @@ onUnmounted(() => {
   if (renderer) renderer.dispose();
   if (globeCanvas.value) {
     globeCanvas.value.removeEventListener('mousemove', onMouseMove);
+  }
+  if (danmakuInterval) {
+    clearInterval(danmakuInterval);
   }
 });
 
@@ -897,21 +1209,118 @@ const onClick = (event) => {
     }
   }
 };
+
+// 初始化时间轴
+const initTimelineChart = () => {
+  const timelineChart = echarts.init(document.querySelector('.timeline-chart'));
+  timelineChart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      formatter: '{b}: {c}'
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '15%',
+      top: '10%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ['1月1日', '1月5日', '1月10日', '1月15日', '1月20日', '1月25日', '1月30日', '2月5日', '2月10日'],
+      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.3)' } },
+      axisLabel: { color: 'rgba(255,255,255,0.7)' }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.3)' } },
+      axisLabel: { color: 'rgba(255,255,255,0.7)' },
+      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } }
+    },
+    dataZoom: [{
+      type: 'slider',
+      show: true,
+      start: 0,
+      end: 100,
+      height: 20,
+      bottom: 0,
+      borderColor: 'rgba(255,255,255,0.2)',
+      textStyle: {
+        color: 'rgba(255,255,255,0.7)'
+      },
+      handleStyle: {
+        color: '#4a9eff',
+        borderColor: '#4a9eff'
+      },
+      handleSize: '150%',
+      backgroundColor: 'rgba(255,255,255,0.05)',
+      fillerColor: 'rgba(74,158,255,0.2)',
+      moveHandleSize: 6
+    }],
+    series: [{
+      data: [120, 180, 150, 230, 210, 160, 190, 140, 170],
+      type: 'line',
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 8,
+      itemStyle: {
+        color: '#4a9eff'
+      },
+      lineStyle: {
+        width: 3,
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+          offset: 0,
+          color: '#4a9eff'
+        }, {
+          offset: 1,
+          color: '#ff6b6b'
+        }])
+      },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+          offset: 0,
+          color: 'rgba(74,158,255,0.3)'
+        }, {
+          offset: 1,
+          color: 'rgba(74,158,255,0.1)'
+        }])
+      }
+    }]
+  });
+};
+
+// 添加主题选择相关逻辑
+const selectedTheme = ref('');
+
+const handleThemeChange = () => {
+  // 根据选择的主题更新数据
+  console.log('Selected theme:', selectedTheme.value);
+  // 这里可以添加主题切换的具体逻辑
+};
 </script>
 
 <style scoped>
 .globe-container {
-  width: 100%;
-  height: 100vh;
-  position: relative;
+  width: 100vw;  /* 使用视口宽度 */
+  height: 100vh;  /* 使用视口高度 */
+  position: fixed;  /* 改为固定定位 */
+  top: 0;
+  left: 0;
   background: linear-gradient(to bottom, #000510, #000000);
-  overflow: hidden;
+  overflow: hidden;  /* 确保内容不会溢出 */
 }
 
 .globe-canvas {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+/* 确保body和html也不会出现滚动条 */
+:root, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .data-panel {
@@ -1094,13 +1503,13 @@ h3 {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   border-radius: 10px;
-  padding: 10px 15px 10px 10px;  /* 增加水平内边距 */
+  padding: 10px -10px 10px -15px;  /* 增加水平内边距 */
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 .control-item:hover {
@@ -1115,7 +1524,7 @@ h3 {
 .legend-panel {
   position: absolute;
   top: 84%;
-  left: 29%;
+  left: 26.5%;
   display: flex;
   gap: 30px;
   color: white;
@@ -1203,7 +1612,7 @@ h3 {
 
 .control-panel {
   position: absolute;
-  left: 47%;
+  left: 42.5%;
   top: 88%;
   transform: translateY(-80%);
 }
@@ -1380,6 +1789,7 @@ h3 {
   display: flex;
   gap: 10px;
   z-index: 100;
+  align-items: center;
 }
 
 .back-btn, .view-data-btn {
@@ -1398,5 +1808,43 @@ h3 {
 .back-btn:hover, .view-data-btn:hover {
   background: rgba(255, 255, 255, 0.15);
   transform: translateX(5px);
+}
+
+/* 添加弹幕按钮样式 */
+.icon-danmaku-on {
+  color: #4a9eff;
+}
+
+.icon-danmaku-off {
+  opacity: 0.7;
+}
+
+.control-item {
+  /* ... 其他样式保持不变 ... */
+  min-width: 100px;  /* 确保按钮宽度一致 */
+  justify-content: center;  /* 内容居中 */
+}
+
+/* 添加主题选择下拉列表样式 */
+.theme-select {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.theme-select select {
+  background: transparent;
+  border: none;
+  padding: 8px 15px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  width: 120px;
+  option {
+    background: #1a1a1a;
+    color: white;
+  }
 }
 </style> 
