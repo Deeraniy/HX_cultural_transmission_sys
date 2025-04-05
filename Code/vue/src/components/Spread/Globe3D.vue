@@ -92,10 +92,48 @@
       </div>
     </div>
 
-    <!-- 右下角面板 -->
+    <!-- 修改右下角面板,添加切换功能 -->
     <div class="relation-panel">
-      <h3>传播关系网络</h3>
-      <div ref="relationChart" class="relation-container"></div>
+      <div class="panel-header">
+        <div class="tab-buttons">
+          <div 
+            class="tab-btn" 
+            :class="{ active: activeTab === 'relation' }"
+            @click="activeTab = 'relation'"
+          >
+            <i class="iconfont icon-relation"></i>
+            传播关系网络
+          </div>
+          <div 
+            class="tab-btn" 
+            :class="{ active: activeTab === 'alert' }"
+            @click="activeTab = 'alert'"
+          >
+            <i class="iconfont icon-warning"></i>
+            实时预警
+            <span v-if="alerts.length" class="alert-badge">{{ alerts.length }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 关系图内容 -->
+      <div v-show="activeTab === 'relation'" class="panel-content">
+        <div ref="relationChart" class="relation-container"></div>
+      </div>
+
+      <!-- 预警内容 -->
+      <div v-show="activeTab === 'alert'" class="panel-content">
+        <div class="alert-list">
+          <div v-for="alert in alerts" :key="alert.id" class="alert-item" :class="alert.level">
+            <i class="iconfont icon-warning"></i>
+            <div class="alert-content">
+              <div class="alert-title">{{ alert.title }}</div>
+              <div class="alert-desc">{{ alert.description }}</div>
+              <div class="alert-time">{{ alert.time }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 添加图例说明 -->
@@ -157,9 +195,34 @@
 
     <!-- 添加关系图面板 -->
     <div class="data-panel analysis-panel">
-      <h3>传播分析</h3>
-      <div class="trend-chart">
-        <!-- 这里可以添加趋势图表 -->
+      <h3>传播数据分析</h3>
+      <div class="analysis-content">
+        <!-- 将前两项放在同一行 -->
+        <div class="analysis-row">
+          <div class="analysis-item half">
+            <div class="analysis-label">传播速度指数</div>
+            <div class="analysis-value">
+              <span class="number">89.5</span>
+              <div class="trend up">↑12.3%</div>
+            </div>
+          </div>
+          <div class="analysis-item half">
+            <div class="analysis-label">互动参与度</div>
+            <div class="analysis-value">
+              <span class="number">76.2</span>
+              <div class="trend up">↑8.7%</div>
+            </div>
+          </div>
+        </div>
+        <!-- 情感倾向保持原样 -->
+        <div class="analysis-item">
+          <div class="analysis-label">情感倾向</div>
+          <div class="sentiment-bars">
+            <div class="sentiment-bar positive" style="width: 65%">正面 65%</div>
+            <div class="sentiment-bar neutral" style="width: 25%">中性 25%</div>
+            <div class="sentiment-bar negative" style="width: 10%">负面 10%</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -195,10 +258,11 @@ import countriesData from '@/json/world.json';
 import * as echarts from 'echarts';
 import 'echarts-wordcloud';
 import { useRouter } from 'vue-router';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
+// 初始化全局变量
 const globeCanvas = ref(null);
 let scene, camera, renderer, globe, controls;
-
 const router = useRouter();
 
 // 模拟的评论数据
@@ -213,15 +277,6 @@ const mockComments = [
 // 评论统计
 const commentStats = ref({});
 
-// 地区坐标映射
-const regionCoordinates = {
-  '湖南': { lat: 28.112444, lng: 112.982279 },
-  '北京': { lat: 39.904989, lng: 116.405285 },
-  '上海': { lat: 31.230416, lng: 121.473701 },
-  '广东': { lat: 23.125178, lng: 113.280637 },
-  '四川': { lat: 30.572815, lng: 104.066801 }
-};
-
 // 存储国家亮度
 const countryBrightness = new Map();
 
@@ -233,8 +288,8 @@ const countryComments = {
 // 更新中国城市坐标点数据，使用实际的评论数据
 const chinaCityData = mockComments.map(comment => ({
   name: comment.region,
-  lat: regionCoordinates[comment.region].lat,
-  lng: regionCoordinates[comment.region].lng,
+  lat: comment.lat,
+  lng: comment.lng,
   value: comment.count
 }));
 
@@ -338,152 +393,268 @@ const addPointCloud = (globe) => {
   });
 };
 
-// 修改 drawCountryBoundaries 函数
-const drawCountryBoundaries = (globe) => {
-  // 计算中国的总评论数
-  mockComments.forEach(comment => {
-    countryComments['China'] = (countryComments['China'] || 0) + comment.count;
-  });
-
-  const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0xaaaaaa,
+// 修改文本精灵创建函数
+const createTextSprite = (text) => {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  canvas.width = 256;  // 调整画布大小
+  canvas.height = 64;
+  
+  // 设置渐变背景
+  const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+  gradient.addColorStop(0, 'rgba(0, 0, 0, 0.8)');
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0.8)');
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // 设置文字样式
+  context.font = '24px HelveticaNeue2';  // 调整字体大小
+  context.fillStyle = '#ffffff';
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  
+  // 添加文字阴影
+  context.shadowColor = '#000000';
+  context.shadowBlur = 4;
+  context.shadowOffsetX = 2;
+  context.shadowOffsetY = 2;
+  
+  // 绘制文字
+  context.fillText(text, canvas.width / 2, canvas.height / 2);
+  
+  const texture = new THREE.CanvasTexture(canvas);
+  const spriteMaterial = new THREE.SpriteMaterial({ 
+    map: texture,
     transparent: true,
-    opacity: 0.5
+    opacity: 0.95
   });
-
-  countriesData.features.forEach(country => {
-    if (!country.geometry) return;
-
-    const coordinates = country.geometry.type === 'MultiPolygon' 
-      ? country.geometry.coordinates 
-      : [country.geometry.coordinates];
-
-    coordinates.forEach(polygon => {
-      polygon.forEach(ring => {
-        const points = [];
-        const vertices = [];
-        
-        ring.forEach(coord => {
-          const lng = coord[0];
-          const lat = coord[1];
-          const phi = (90 - lat) * (Math.PI / 180);
-          const theta = (lng + 180) * (Math.PI / 180);
-          const radius = 5.01;
-
-          const x = -radius * Math.sin(phi) * Math.cos(theta);
-          const y = radius * Math.cos(phi);
-          const z = radius * Math.sin(phi) * Math.sin(theta);
-
-          points.push(new THREE.Vector3(x, y, z));
-          vertices.push(x, y, z);
-        });
-
-        // 创建边界线
-        if (points.length > 0) {
-          points.push(points[0]);
-          const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-          const line = new THREE.Line(lineGeometry, lineMaterial);
-          globe.add(line);
-        }
-
-        // 创建国家填充面
-        if (vertices.length > 9) {
-          const countryGeometry = new THREE.BufferGeometry();
-          countryGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-          
-          const countryName = country.properties?.name;
-          const style = getCountryColor(countryName);
-          
-          const countryMesh = createCountryMesh(countryGeometry, countryName);
-          globe.add(countryMesh);
-        }
-      });
-    });
-  });
+  
+  const sprite = new THREE.Sprite(spriteMaterial);
+  sprite.scale.set(1.5, 0.4, 1);  // 调整精灵大小
+  return sprite;
 };
 
-// 修改初始化场景函数
+// 修改数据环创建函数
+const createDataRing = (radius, data, color, height) => {
+  const ringGeometry = new THREE.RingGeometry(radius, radius + 0.2, 64);
+  const ringMaterial = new THREE.MeshBasicMaterial({
+    color: color,
+    transparent: true,
+    opacity: 0.3,
+    side: THREE.DoubleSide
+  });
+  const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+  ring.rotation.x = Math.PI / 2;
+  ring.position.y = height;
+  
+  data.forEach((item, index) => {
+    const angle = (index / data.length) * Math.PI * 2;
+    
+    // 增大数据点
+    const dotGeometry = new THREE.SphereGeometry(0.2, 12, 12);
+    const dotMaterial = new THREE.MeshPhongMaterial({
+      color: color,
+      emissive: color,
+      emissiveIntensity: item.value / 100
+    });
+    const dot = new THREE.Mesh(dotGeometry, dotMaterial);
+    
+    // 调整点的位置
+    dot.position.x = Math.cos(angle) * radius;
+    dot.position.z = Math.sin(angle) * radius;
+    
+    // 增加标签距离并调整位置
+    const labelRadius = radius * 1.4;  // 增加标签距离
+    const textSprite = createTextSprite(`${item.name}: ${item.value}%`);
+    textSprite.position.set(
+      Math.cos(angle) * labelRadius,
+      0,
+      Math.sin(angle) * labelRadius
+    );
+    
+    // 添加更明显的连接线
+    const lineMaterial = new THREE.LineBasicMaterial({ 
+      color: color,
+      transparent: true,
+      opacity: 0.5,  // 增加线的不透明度
+      linewidth: 2   // 注意：在WebGL中linewidth可能不起作用
+    });
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(dot.position.x, 0, dot.position.z),
+      new THREE.Vector3(textSprite.position.x, 0, textSprite.position.z)
+    ]);
+    const line = new THREE.Line(lineGeometry, lineMaterial);
+    
+    ring.add(line);
+    ring.add(textSprite);
+    ring.add(dot);
+  });
+  
+  return ring;
+};
+
+// 1. 首先在组件顶部声明全局变量
+let animationFrameId = null; // 用于存储requestAnimationFrame的ID
+
+// 2. 定义全局动画函数
+const animate = () => {
+  animationFrameId = requestAnimationFrame(animate);
+  
+  if (globe) {
+    globe.rotation.y += 0.001;
+    
+    // 更新粒子位置
+    const particles = globe.children.find(child => child instanceof THREE.Points);
+    if (particles) {
+      const positions = particles.geometry.attributes.position.array;
+      const time = Date.now() * 0.0005;
+
+      for(let i = 0; i < positions.length; i += 3) {
+        const x = positions[i];
+        const y = positions[i + 1];
+        const z = positions[i + 2];
+        const distance = Math.sqrt(x * x + y * y + z * z);
+
+        const breathe = Math.sin(time + distance * 0.3) * 0.15;
+        const targetRadius = 8 + breathe;
+        const scale = targetRadius / distance;
+
+        positions[i] = x * scale;
+        positions[i + 1] = y * scale;
+        positions[i + 2] = z * scale;
+      }
+
+      particles.geometry.attributes.position.needsUpdate = true;
+    }
+  }
+
+  if (isDanmakuEnabled.value && danmakuGroup) {
+    updateDanmakus();
+  }
+  
+  if (controls) controls.update();
+  if (renderer) renderer.render(scene, camera);
+};
+
+// 3. 修改initScene函数
 const initScene = () => {
   scene = new THREE.Scene();
   
-  // 创建星空背景
-  const createStarField = () => {
-    // 创建多层星空，每层具有不同特性
-    const starLayers = [
-      { count: 3000, size: 1.5, speed: 0.0001, color: 0xffffff, distance: 900 },  // 小而密的白色星星
-      { count: 1500, size: 2, speed: 0.00015, color: 0x4a9eff, distance: 800 },   // 中等大小的蓝色星星
-      { count: 800, size: 2.5, speed: 0.0002, color: 0xff6b6b, distance: 700 }    // 较大的红色星星
-    ];
-
-    starLayers.forEach(layer => {
-      const starsGeometry = new THREE.BufferGeometry();
-      const starsVertices = [];
-      const starsSpeeds = [];
-      
-      for (let i = 0; i < layer.count; i++) {
-        const r = layer.distance;
-        const theta = 2 * Math.PI * Math.random();
-        const phi = Math.acos(2 * Math.random() - 1);
-        const x = r * Math.sin(phi) * Math.cos(theta);
-        const y = r * Math.sin(phi) * Math.sin(theta);
-        const z = r * Math.cos(phi);
-        starsVertices.push(x, y, z);
-        starsSpeeds.push(Math.random() * layer.speed);
-      }
-      
-      starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
-      starsGeometry.setAttribute('speed', new THREE.Float32BufferAttribute(starsSpeeds, 1));
-      
-      const starsMaterial = new THREE.PointsMaterial({
-        size: layer.size,
-        color: layer.color,
-        transparent: true,
-        opacity: 0.8,
-        sizeAttenuation: true,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-      });
-      
-      const starField = new THREE.Points(starsGeometry, starsMaterial);
-      scene.add(starField);
-      animatedObjects.push(starField);
-    });
-
-    // 添加一个大的背景渐变球体
-    const bgSphereGeometry = new THREE.SphereGeometry(1000, 32, 32);
-    const bgSphereMaterial = new THREE.ShaderMaterial({
+  // 创建渐变背景
+  const createGradientBackground = () => {
+    // 1. 创建渐变背景
+    const bgGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
+    const bgMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        color1: { value: new THREE.Color(0x000510) },
-        color2: { value: new THREE.Color(0x000000) }
+        color1: { value: new THREE.Color(0x0a192f) },  // 深蓝色
+        color2: { value: new THREE.Color(0x000000) }   // 黑色
       },
       vertexShader: `
-        varying vec3 vPosition;
+        varying vec2 vUv;
         void main() {
-          vPosition = position;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          vUv = uv;
+          gl_Position = vec4(position, 1.0);
         }
       `,
       fragmentShader: `
         uniform vec3 color1;
         uniform vec3 color2;
-        varying vec3 vPosition;
+        varying vec2 vUv;
         void main() {
-          float blend = (vPosition.y + 1000.0) / 2000.0;
-          gl_FragColor = vec4(mix(color2, color1, blend), 1.0);
+          gl_FragColor = vec4(mix(color2, color1, vUv.y), 1.0);
         }
       `,
-      side: THREE.BackSide
+      depthWrite: false
     });
     
-    const bgSphere = new THREE.Mesh(bgSphereGeometry, bgSphereMaterial);
-    scene.add(bgSphere);
+    const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
+    bgMesh.position.z = -1;
+    scene.add(bgMesh);
+
+    // 2. 增加星星数量和调整参数
+    const starsGeometry = new THREE.BufferGeometry();
+    const starsPositions = [];
+    const starsSizes = [];
+    const starsColors = [];
+
+    // 增加星星数量到8000
+    for(let i = 0; i < 8000; i++) {
+      // 调整分布范围，让星星更密集
+      const x = Math.random() * 1500 - 750;
+      const y = Math.random() * 1500 - 750;
+      const z = Math.random() * -500;  // 减小z轴范围，让星星更集中
+      
+      starsPositions.push(x, y, z);
+      
+      // 增加星星大小变化范围
+      starsSizes.push(Math.random() * 4 + 1);  // 最小1，最大5
+      
+      // 调整颜色分布
+      const colorChoice = Math.random();
+      if (colorChoice > 0.85) {
+        // 金色调
+        starsColors.push(1, 0.9, 0.5);
+      } else if (colorChoice > 0.6) {
+        // 蓝色调
+        starsColors.push(0.6, 0.8, 1);
+      } else if (colorChoice > 0.3) {
+        // 白色调
+        starsColors.push(1, 1, 1);
+      } else {
+        // 淡蓝色调
+        starsColors.push(0.8, 0.9, 1);
+      }
+    }
+
+    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsPositions, 3));
+    starsGeometry.setAttribute('size', new THREE.Float32BufferAttribute(starsSizes, 1));
+    starsGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starsColors, 3));
+
+    const starsMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 }
+      },
+      vertexShader: `
+        attribute float size;
+        attribute vec3 color;
+        varying vec3 vColor;
+        uniform float time;
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          // 增强闪烁效果
+          float twinkle = sin(time + position.x * 0.05) * 0.5 + 0.5;
+          gl_PointSize = size * (200.0 / -mvPosition.z) * (0.7 + 0.3 * twinkle);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        void main() {
+          float r = length(gl_PointCoord - vec2(0.5));
+          float alpha = smoothstep(0.5, 0.0, r);
+          gl_FragColor = vec4(vColor, alpha * 1.2);  // 增加亮度
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+
+    const stars = new THREE.Points(starsGeometry, starsMaterial);
+    scene.add(stars);
+
+    // 3. 调整动画速度
+    const animateStars = () => {
+      requestAnimationFrame(animateStars);
+      if (stars.material.uniforms) {
+        stars.material.uniforms.time.value += 0.002;  // 降低闪烁速度使效果更柔和
+      }
+    };
+    animateStars();
   };
 
-  // 存储需要动画的对象
-  const animatedObjects = [];
-  
-  // 创建星空
-  createStarField();
+  createGradientBackground();
   
   camera = new THREE.PerspectiveCamera(
     75,
@@ -493,131 +664,320 @@ const initScene = () => {
   );
   
   renderer = new THREE.WebGLRenderer({ 
-    antialias: true, 
+    antialias: true,
     alpha: true,
-    logarithmicDepthBuffer: true
+    shadowMap: {
+      enabled: true,
+      type: THREE.PCFSoftShadowMap
+    }
   });
   renderer.setSize(globeCanvas.value.clientWidth, globeCanvas.value.clientHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   globeCanvas.value.appendChild(renderer.domElement);
 
-  const textureLoader = new THREE.TextureLoader();
-  
-  // 加载纹理
-  const earthTexture = textureLoader.load('/textures/earth/earthmap1k.jpg');
-  const bumpMap = textureLoader.load('/textures/earth/earthbump1k.jpg');
-  const cloudsTexture = textureLoader.load('/textures/earth/earthcloudmap.jpg');
-  const nightTexture = textureLoader.load('/textures/earth/earthlights1k.jpg');
-
-  // 创建基础地球
-  const earthGeometry = new THREE.SphereGeometry(5, 128, 128);
-  const earthMaterial = new THREE.MeshPhongMaterial({
-    color: 0x1a4d7c,
-    shininess: 25,
-    emissive: new THREE.Color(0x112244),
-    emissiveIntensity: 0.2,
-    transparent: true,
-    opacity: 0.9
-  });
-  globe = new THREE.Mesh(earthGeometry, earthMaterial);
-  scene.add(globe);
-
-  // 添加国家边界
-  drawCountryBoundaries(globe);
-  
-  // 添加点云效果
-  addPointCloud(globe);
-
-  // 添加大气层效果
-  const atmosphereGeometry = new THREE.SphereGeometry(5.2, 128, 128);
-  const atmosphereMaterial = new THREE.MeshPhongMaterial({
-    color: 0x3399ff,
-    transparent: true,
-    opacity: 0.15,
-    side: THREE.BackSide
-  });
-  const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-  scene.add(atmosphere);
-
-  // 调整光照
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+  // 添加光照
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
   scene.add(ambientLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(5, 3, 5);
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.width = 1024;
+  directionalLight.shadow.mapSize.height = 1024;
+  directionalLight.shadow.camera.near = 0.5;
+  directionalLight.shadow.camera.far = 50;
+  directionalLight.shadow.bias = -0.0001;
   scene.add(directionalLight);
 
-  // 添加多个点光源
-  const pointLight1 = new THREE.PointLight(0xffa500, 1, 50);
-  pointLight1.position.set(10, 10, 10);
-  scene.add(pointLight1);
-
-  const pointLight2 = new THREE.PointLight(0xff7700, 1, 50);
-  pointLight2.position.set(-10, -10, -10);
-  scene.add(pointLight2);
+  // 创建粒子团
+  globe = createDataSphere();
 
   // 调整相机位置
-  camera.position.z = 15;
-  camera.position.y = 2;
-  camera.position.x = 0;
+  camera.position.z = 20;
 
-  // 调整控制器
+  // 添加控制器
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.rotateSpeed = 0.5;
-  controls.minDistance = 10;
-  controls.maxDistance = 30;
+  controls.minDistance = 15;
+  controls.maxDistance = 40;
 
-  // 添加鼠标事件监听
-  globeCanvas.value.addEventListener('mousemove', onMouseMove);
+  // 初始化弹幕组
+  danmakuGroup = new THREE.Group();
+  scene.add(danmakuGroup);
 
-  // 添加弹幕系统
-  const updateDanmakus = createDanmakuSystem();
+  // 创建弹幕系统
+  const createDanmaku = (text) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = 512;
+    canvas.height = 128;
 
-  // 修改动画循环
-  const animate = () => {
-    requestAnimationFrame(animate);
+    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    context.font = '36px HelveticaNeue';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      opacity: 0.8
+    });
+
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(8, 2, 1);
+
+    const angle = Math.random() * Math.PI * 2;
+    const radiusX = 15;
+    const radiusZ = 10;
     
-    // 更新星星位置
-    animatedObjects.forEach(obj => {
-      if (obj instanceof THREE.Points) {
-        const positions = obj.geometry.attributes.position;
-        const speeds = obj.geometry.attributes.speed;
-        
-        for (let i = 0; i < positions.count; i++) {
-          const speed = speeds.array[i];
-          positions.array[i * 3] += speed;
-          
-          // 如果星星移动到太远，重置位置
-          if (positions.array[i * 3] > 1000) {
-            positions.array[i * 3] = -1000;
-          }
-        }
-        positions.needsUpdate = true;
-      }
-    });
+    sprite.position.set(
+      Math.cos(angle) * radiusX,
+      (Math.random() - 0.5) * 10,
+      Math.sin(angle) * radiusZ
+    );
 
-    if (isAutoRotating.value) {
-      globe.rotation.y += 0.001;
-    }
+    sprite.userData = {
+      angle: angle,
+      speed: 0.005 + Math.random() * 0.003,  // 降低速度范围
+      radiusX: radiusX,
+      radiusZ: radiusZ,
+      y: sprite.position.y
+    };
 
-    // 更新弹幕
-    updateDanmakus();
-
-    // 更新点云动画
-    globe.children.forEach(child => {
-      if (child instanceof THREE.Points) {
-        const time = Date.now() * 0.001;
-        child.material.opacity = 0.4 + Math.sin(time) * 0.2;
-      }
-    });
-
-    controls.update();
-    renderer.render(scene, camera);
+    return sprite;
   };
 
+  // 管理弹幕
+  const maxDanmakus = 12;
+  const danmakus = [];
+
+  const createNewDanmaku = () => {
+    if (danmakus.length >= maxDanmakus) {
+      const oldDanmaku = danmakus.shift();
+      danmakuGroup.remove(oldDanmaku);
+    }
+
+    const text = danmakuTexts[Math.floor(Math.random() * danmakuTexts.length)];
+    const danmaku = createDanmaku(text);
+    danmakuGroup.add(danmaku);
+    danmakus.push(danmaku);
+  };
+
+  // 启动弹幕系统
+  danmakuInterval = setInterval(createNewDanmaku, 3000);  // 增加间隔时间到3秒
+
+  // 创建场景内容
+  globe = createDataSphere();
+  
+  // 启动动画
   animate();
+};
+
+// 修改模型加载部分
+const createDataSphere = () => {
+  const group = new THREE.Group();
+
+  // 创建粒子系统
+  const comments = [
+    ...Array(2273).fill().map(() => ({
+      sentiment: Math.random() > 0.6 ? 'positive' : 
+                Math.random() > 0.5 ? 'negative' : 'neutral'
+    }))
+  ];
+
+  const particlesCount = comments.length;
+  const positions = new Float32Array(particlesCount * 3);
+  const colors = new Float32Array(particlesCount * 3);
+  const sizes = new Float32Array(particlesCount);
+
+  // 定义情感颜色
+  const sentimentColors = {
+    positive: new THREE.Color(0x4CAF50),
+    negative: new THREE.Color(0xff6b6b),
+    neutral: new THREE.Color(0x4a9eff)
+  };
+
+  // 创建粒子，避开中心区域
+  for(let i = 0; i < particlesCount; i++) {
+    let radius = 8 * (0.8 + Math.random() * 0.2);
+    if (radius < 4) radius += 4;
+    
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+
+    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+    positions[i * 3 + 2] = radius * Math.cos(phi);
+
+    const color = sentimentColors[comments[i].sentiment];
+    colors[i * 3] = color.r;
+    colors[i * 3 + 1] = color.g;
+    colors[i * 3 + 2] = color.b;
+
+    sizes[i] = 0.2;
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+  const material = new THREE.PointsMaterial({
+    size: 0.2,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.8,
+    blending: THREE.AdditiveBlending,
+    sizeAttenuation: true,
+    depthWrite: false,
+    map: createCircleTexture(),  // 添加圆形纹理
+  });
+
+  const particles = new THREE.Points(geometry, material);
+  group.add(particles);
+
+  // 尝试加载模型
+  try {
+    const loader = new FBXLoader();
+    const modelPath = new URL('./Pagoda_Essence_0405070753_texture.fbx', import.meta.url).href;
+    
+    loader.load(
+      modelPath,
+      (object) => {
+        console.log('模型加载成功:', object);
+        object.position.set(0, 0, 0);
+        object.scale.set(0.02, 0.02, 0.02);
+        
+        // 加载贴图
+        const textureLoader = new THREE.TextureLoader();
+        const texturePath = new URL('./Pagoda_Essence_0405070753_texture.png', import.meta.url).href;
+        const texture = textureLoader.load(texturePath);
+
+        object.traverse((child) => {
+          if (child.isMesh) {
+            // 应用贴图到材质
+            child.material = new THREE.MeshPhongMaterial({
+              map: texture,  // 使用贴图
+              color: 0xffffff,  // 基础白色
+              emissive: 0x666666,  // 降低自发光强度
+              emissiveIntensity: 0.1,  // 进一步降低自发光
+              specular: 0xffffff,  // 高光颜色
+              shininess: 80,  // 调整光泽度
+              transparent: true,
+              opacity: 0.95,
+              side: THREE.DoubleSide,
+              flatShading: false  // 使用平滑着色
+            });
+            
+            // 启用阴影
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        
+        // 添加多个点光源来创造更好的光影效果
+        const lights = [
+          { position: [2, 2, 2], intensity: 0.6, distance: 15, color: 0xffffff },
+          { position: [-2, 1, -2], intensity: 0.4, distance: 15, color: 0xccccff },
+          { position: [0, -2, 0], intensity: 0.3, distance: 15, color: 0xffffcc }
+        ];
+        
+        lights.forEach(light => {
+          const pointLight = new THREE.PointLight(
+            light.color,
+            light.intensity,
+            light.distance
+          );
+          pointLight.position.set(...light.position);
+          object.add(pointLight);
+        });
+        
+        // 添加环形光晕
+        const glowGeometry = new THREE.TorusGeometry(1.5, 0.2, 32, 100);
+        const glowMaterial = new THREE.MeshPhongMaterial({
+          color: 0xffffff,
+          emissive: 0xaaaaaa,
+          emissiveIntensity: 0.3,
+          transparent: true,
+          opacity: 0.4,
+          side: THREE.DoubleSide,
+          shininess: 50
+        });
+        
+        const glowRing = new THREE.Mesh(glowGeometry, glowMaterial);
+        glowRing.rotation.x = Math.PI / 2;
+        glowRing.castShadow = true;
+        glowRing.receiveShadow = true;
+        object.add(glowRing);
+        
+        // 添加环境光遮罩(AO)效果
+        const aoLight = new THREE.HemisphereLight(
+          0xffffff, // 天空色
+          0x444444, // 地面色
+          0.5 // 强度
+        );
+        object.add(aoLight);
+        
+        group.add(object);
+      },
+      (xhr) => {
+        console.log((xhr.loaded / xhr.total * 100) + '% 加载中');
+      },
+      (error) => {
+        console.error('模型加载失败:', error);
+        // 创建替代物体
+        const geometry = new THREE.SphereGeometry(1, 32, 32);
+        const material = new THREE.MeshPhongMaterial({
+          color: 0xffffff,
+          emissive: 0xffffff,
+          emissiveIntensity: 0.2,
+          specular: 0xffffff,
+          shininess: 100
+        });
+        const sphere = new THREE.Mesh(geometry, material);
+        group.add(sphere);
+      }
+    );
+  } catch (error) {
+    console.error('创建模型时出错:', error);
+  }
+
+  scene.add(group);
+  return group;
+};
+
+// 添加创建圆形纹理的函数
+const createCircleTexture = () => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  
+  const context = canvas.getContext('2d');
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = canvas.width / 3;
+  
+  // 创建径向渐变
+  const gradient = context.createRadialGradient(
+    centerX, centerY, 0,
+    centerX, centerY, radius
+  );
+  gradient.addColorStop(0, 'rgba(255,255,255,1)');
+  gradient.addColorStop(1, 'rgba(255,255,255,0)');
+  
+  // 绘制圆形
+  context.beginPath();
+  context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  context.fillStyle = gradient;
+  context.fill();
+  
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.needsUpdate = true;
+  return texture;
 };
 
 // 修改热点添加函数
@@ -636,7 +996,7 @@ const addHotspots = () => {
   });
 
   mockComments.forEach(comment => {
-    const coords = regionCoordinates[comment.region];
+    const coords = comment;
     if (!coords) return;
 
     const phi = (90 - coords.lat) * (Math.PI / 180);
@@ -941,252 +1301,78 @@ let isAutoRotating = ref(false);
 // 添加全局变量来存储弹幕组
 let danmakuGroup = null;
 
-// 修改弹幕系统创建函数
-const createDanmakuSystem = () => {
-  danmakuGroup = new THREE.Group();  // 保存引用
-  scene.add(danmakuGroup);
-
-  // 增加画布尺寸以支持更大的文字
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-  canvas.width = 1024;  // 进一步加大画布尺寸
-  canvas.height = 256;
-
-  // 扩充更多弹幕文字
-  const danmakuTexts = [
-    '中国传统文化博大精深！', 
-    '非物质文化遗产传承有序',
-    '让世界了解中国文化底蕴',
-    '文化自信是最基本的自信',
-    '传统文化需要创新发展',
-    '让传统文化走向世界',
-    '中华文化源远流长',
-    '文化传承永续发展',
-    '弘扬中华优秀传统文化',
-    '文化自信自强',
-    '传统文化焕发新活力',
-    '中华文明五千年',
-    '文化是民族的根魂',
-    '传统与现代的完美融合',
-    '让世界聆听中国声音',
-    '文化交流促进世界和平',
-    '中国故事感动世界',
-    '文化自信助力中国梦',
-    '传统文化创新发展',
-    '文化传承代代相传'
-  ];
-
-  // 修改y轴间距和范围
-  const ySpacing = 6;  // 增加间距，防止重叠
-  const yRange = 30;   // 垂直范围
-  const yPositions = [];
-  
-  // 预生成所有可能的y轴位置
-  for (let y = -yRange; y <= yRange; y += ySpacing) {
-    yPositions.push(y);
-  }
-
-  // 跟踪已使用的y轴位置和对应的弹幕
-  const usedYPositions = new Map();  // 使用Map来跟踪每个位置的弹幕
-
-  const getAvailableYPosition = () => {
-    // 过滤出未使用的y轴位置
-    const availablePositions = yPositions.filter(y => !usedYPositions.has(y));
-    
-    if (availablePositions.length === 0) {
-      // 如果没有可用位置，找出最左边的弹幕的位置
-      let leftmostY = null;
-      let leftmostX = Infinity;
-      
-      usedYPositions.forEach((danmaku, y) => {
-        if (danmaku.position.x < leftmostX) {
-          leftmostX = danmaku.position.x;
-          leftmostY = y;
-        }
-      });
-      
-      if (leftmostY !== null) {
-        usedYPositions.delete(leftmostY);
-        return leftmostY;
-      }
-      
-      return yPositions[Math.floor(Math.random() * yPositions.length)];
-    }
-    
-    return availablePositions[Math.floor(Math.random() * availablePositions.length)];
-  };
-
-  const createDanmaku = (text) => {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // 减弱文字发光效果
-    context.shadowColor = 'rgba(255, 255, 255, 0.4)';
-    context.shadowBlur = 15;
-    
-    // 使用更大的字体，降低不透明度
-    context.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    // 使用 HelveticaNeue2 字体，需要确保字体已加载
-    context.font = '98px HelveticaNeue, serif';  // 添加后备字体
-    
-    // 确保字体已加载
-    document.fonts.ready.then(() => {
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
-      context.fillText(text, canvas.width / 2, canvas.height / 2);
-    });
-
-    const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.MeshBasicMaterial({
-      map: texture,
-      transparent: true,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-      opacity: 0.6
-    });
-
-    // 增加弹幕平面的大小
-    const geometry = new THREE.PlaneGeometry(12, 3);  // 保持平面大小
-    const mesh = new THREE.Mesh(geometry, material);
-
-    // 修改弹幕的运动范围
-    const radius = 25;  // 轨道半径
-    const y = getAvailableYPosition();
-    
-    // 始终从最右侧开始
-    const startAngle = 0;  // 改为0，表示从正右方开始
-    mesh.position.set(
-      radius,  // 直接设置为radius，确保从最右侧开始
-      y,
-      0       // z设为0，确保从正右方开始
-    );
-
-    mesh.userData.angle = startAngle;
-    mesh.userData.speed = 0.004 + Math.random() * 0.002;  // 加快速度
-    mesh.userData.radius = radius;
-    mesh.userData.y = y;
-
-    mesh.lookAt(camera.position);
-    usedYPositions.set(y, mesh);  // 记录该位置已被使用
-    
-    return mesh;
-  };
-
-  const danmakus = [];
-  const createMultipleDanmakus = () => {
-    const danmaku = createDanmaku(
-      danmakuTexts[Math.floor(Math.random() * danmakuTexts.length)]
-    );
-    danmakuGroup.add(danmaku);
-    danmakus.push(danmaku);
-
-    // 当弹幕被移除时，释放其y轴位置
-    if (danmakus.length > 50) {
-      const oldDanmaku = danmakus.shift();
-      usedYPositions.delete(oldDanmaku.userData.y);
-      danmakuGroup.remove(oldDanmaku);
-      oldDanmaku.geometry.dispose();
-      oldDanmaku.material.dispose();
-    }
-  };
-
-  // 更新弹幕位置
-  const updateDanmakus = () => {
-    danmakus.forEach(danmaku => {
-      danmaku.userData.angle -= danmaku.userData.speed;
-      
-      // 更新位置
-      danmaku.position.x = danmaku.userData.radius * Math.cos(danmaku.userData.angle);
-      danmaku.position.z = danmaku.userData.radius * Math.sin(danmaku.userData.angle);
-      
-      // 当弹幕移动到最左侧时，重置到右侧
-      if (danmaku.position.x < -danmaku.userData.radius) {  // 使用x坐标判断，确保到最左边
-        usedYPositions.delete(danmaku.userData.y);  // 释放旧的y位置
-        const newY = getAvailableYPosition();
-        danmaku.userData.angle = 0;
-        danmaku.userData.y = newY;
-        danmaku.position.set(
-          danmaku.userData.radius,
-          newY,
-          0
-        );
-        usedYPositions.set(newY, danmaku);  // 记录新位置
-      }
-      
-      danmaku.lookAt(camera.position);
-    });
-  };
-
-  // 保存定时器引用
-  danmakuInterval = setInterval(createMultipleDanmakus, 800);
-
-  // 设置初始可见性
-  danmakuGroup.visible = isDanmakuEnabled.value;
-
-  return updateDanmakus;
-};
+// 添加弹幕文字数组
+const danmakuTexts = [
+  '中国传统文化博大精深！', 
+  '非物质文化遗产传承有序',
+  '让世界了解中国文化底蕴',
+  '文化自信是最基本的自信',
+  '传统文化需要创新发展',
+  '让传统文化走向世界',
+  '中华文化源远流长',
+  '文化传承永续发展',
+  '弘扬中华优秀传统文化',
+  '文化自信自强',
+  '传统文化焕发新活力',
+  '中华文明五千年'
+];
 
 // 添加弹幕控制状态
+let danmakuInterval = null;
 const isDanmakuEnabled = ref(true);
 
-// 修改弹幕开关方法
-const toggleDanmaku = () => {
-  isDanmakuEnabled.value = !isDanmakuEnabled.value;
-  if (danmakuGroup) {
-    danmakuGroup.visible = isDanmakuEnabled.value;
+// 2. 定义updateDanmakus函数
+const updateDanmakus = () => {
+  if (!danmakuGroup) return;
+  
+  danmakuGroup.children.forEach(danmaku => {
+    danmaku.userData.angle -= danmaku.userData.speed;
     
-    // 如果关闭弹幕，停止创建新弹幕
-    if (!isDanmakuEnabled.value) {
-      clearInterval(danmakuInterval);
-    } else {
-      // 重新开始创建弹幕
-      danmakuInterval = setInterval(createMultipleDanmakus, 800);
-    }
-  }
+    danmaku.position.x = Math.cos(danmaku.userData.angle) * danmaku.userData.radiusX;
+    danmaku.position.z = Math.sin(danmaku.userData.angle) * danmaku.userData.radiusZ;
+    danmaku.position.y = danmaku.userData.y;
+
+    const opacity = 0.3 + Math.max(0, danmaku.position.x / danmaku.userData.radiusX) * 0.7;
+    danmaku.material.opacity = opacity;
+
+    danmaku.lookAt(camera.position);
+  });
 };
 
-// 修改弹幕创建定时器的处理
-let danmakuInterval = null;
-
 onMounted(async () => {
+  await nextTick();
   initScene();
   addHotspots();
-  animate();
-  window.addEventListener('resize', handleResize);
   
-  // 在这里添加事件监听
+  // 添加事件监听
+  window.addEventListener('resize', handleResize);
   if (globeCanvas.value) {
     globeCanvas.value.addEventListener('mousemove', onMouseMove);
     globeCanvas.value.addEventListener('click', onClick);
   }
   
-  await nextTick();
+  // 初始化图表
   initTrendChart();
   initWordCloud();
   initRelationChart();
+  initTimelineChart();
   
-  // 监听窗口大小变化
-  window.addEventListener('resize', () => {
-    trendChart?.resize();
-    wordCloudChart?.resize();
-    charts.relationChart?.resize();
-  });
-
+  // 更新时间
   updateTime();
   setInterval(updateTime, 1000);
-
-  // 确保字体加载
-  await document.fonts.load('98px HelveticaNeue2');
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+  if (danmakuInterval) {
+    clearInterval(danmakuInterval);
+  }
   if (controls) controls.dispose();
   if (renderer) renderer.dispose();
   if (globeCanvas.value) {
     globeCanvas.value.removeEventListener('mousemove', onMouseMove);
-  }
-  if (danmakuInterval) {
-    clearInterval(danmakuInterval);
   }
 });
 
@@ -1297,6 +1483,34 @@ const handleThemeChange = () => {
   console.log('Selected theme:', selectedTheme.value);
   // 这里可以添加主题切换的具体逻辑
 };
+
+// 在script setup中添加
+const alerts = ref([
+  {
+    id: 1,
+    level: 'high',
+    title: '传播速度异常增长',
+    description: '近1小时传播速度增长超过200%',
+    time: '10分钟前'
+  },
+  {
+    id: 2,
+    level: 'medium',
+    title: '负面情感聚集',
+    description: '检测到负面评论密集出现',
+    time: '15分钟前'
+  },
+  {
+    id: 3,
+    level: 'low',
+    title: '话题热度上升',
+    description: '相关话题讨论热度持续上升',
+    time: '20分钟前'
+  }
+]);
+
+// 添加activeTab状态
+const activeTab = ref('relation');
 </script>
 
 <style scoped>
@@ -1596,7 +1810,7 @@ h3 {
 
 .word-cloud-card{
   top: 262px;
-  height: 180px;
+  height: 170px;
   width: 300px;
   padding: 15px;
 }
@@ -1748,37 +1962,129 @@ h3 {
   }
 }
 
-/* 添加关系图面板 */
+/* 修改relation-panel样式 */
 .relation-panel {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 300px;
-  height: 370px;
+  width: 330px;
+  height: 400px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(8px);
   border-radius: 15px;
-  padding: 15px;
+  padding: 0;  /* 移除内边距 */
   color: white;
+  overflow: hidden;  /* 确保内容不会溢出 */
 }
 
+.panel-header {
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  opacity: 0.7;
+  position: relative;
+}
+
+.tab-btn.active {
+  background: rgba(74, 158, 255, 0.2);
+  opacity: 1;
+}
+
+.tab-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.alert-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #F44336;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.panel-content {
+  height: calc(100% - 60px);  /* 减去header高度 */
+  overflow-y: auto;
+  padding: 15px;
+}
+
+/* 修改关系图容器样式 */
 .relation-container {
   width: 100%;
-  height: calc(100% - 30px);
+  height: 100%;
 }
 
-/* 修改传播分析面板样式 */
-.data-panel.analysis-panel {  /* 添加新的类名 */
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  width: 300px;
-  height: 210px;
+/* 修改预警列表样式 */
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.alert-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border-radius: 15px;
-  padding: 15px;
-  color: white;
+  transform: translateX(5px);
+}
+
+.alert-item.high {
+  border-left: 3px solid #F44336;
+}
+
+.alert-item.medium {
+  border-left: 3px solid #FF9800;
+}
+
+.alert-item.low {
+  border-left: 3px solid #4CAF50;
+}
+
+/* 添加滚动条样式 */
+.panel-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* 修改导航按钮样式 */
@@ -1846,5 +2152,119 @@ h3 {
     background: #1a1a1a;
     color: white;
   }
+}
+
+/* 在style中添加 */
+.analysis-panel {
+  position: absolute;
+  top: 500px;
+  left: 20px;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+}
+
+.analysis-item {
+  margin-bottom: 20px;
+}
+
+.analysis-label {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.analysis-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.analysis-value .number {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.trend {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.trend.up {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.trend.down {
+  background: rgba(244, 67, 54, 0.2);
+  color: #F44336;
+}
+
+.sentiment-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sentiment-bar {
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 12px;
+  color: white;
+}
+
+.sentiment-bar.positive {
+  background: linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(76, 175, 80, 0.4));
+}
+
+.sentiment-bar.neutral {
+  background: linear-gradient(90deg, rgba(33, 150, 243, 0.8), rgba(33, 150, 243, 0.4));
+}
+
+.sentiment-bar.negative {
+  background: linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(244, 67, 54, 0.4));
+}
+
+/* 添加新的样式 */
+.analysis-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.analysis-item.half {
+  flex: 1;
+  margin-bottom: 0;  /* 移除底部边距 */
+}
+
+.analysis-item.half .number {
+  font-size: 28px;  /* 稍微增大数字大小 */
+}
+
+.analysis-item.half .analysis-label {
+  font-size: 13px;  /* 稍微减小标签文字大小 */
+  margin-bottom: 6px;
+}
+
+.analysis-item.half .trend {
+  padding: 3px 6px;  /* 调整趋势标签的内边距 */
+  font-size: 11px;  /* 调整趋势标签的字体大小 */
+}
+
+/* 调整分析面板的整体高度 */
+.analysis-panel {
+  height: auto;  /* 让高度自适应内容 */
+  padding: 15px 20px;  /* 调整内边距 */
+}
+
+.analysis-content {
+  margin-top: 10px;  /* 添加顶部间距 */
 }
 </style> 

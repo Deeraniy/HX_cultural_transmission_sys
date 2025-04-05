@@ -163,11 +163,11 @@
         </div>
       </div>
 
-      <div v-if="currentIndex === 4" class="map-container">
+      <!-- <div v-if="currentIndex === 4" class="map-container">
         <div class="map-wrapper">
           <world-map-chart />
         </div>
-      </div>
+      </div> -->
     </template>
 
     <!-- 更多偏好弹窗 -->
@@ -217,7 +217,7 @@ const tabs = ref([
   '美食文化',
   '影视文学',
   '非遗民俗',
-  '发现更多'
+  // '发现更多'
 ])
 
 // 添加缓存时间记录
@@ -249,12 +249,12 @@ const slides = ref([
     favoriteCards: [],
     subCards: []
   },
-  {
-    title: '发现更多',
-    description: '探索更多湖南文化',
-    favoriteCards: [],
-    subCards: []
-  }
+  // {
+  //   title: '发现更多',
+  //   description: '探索更多湖南文化',
+  //   favoriteCards: [],
+  //   subCards: []
+  // }
 ])
 
 // 添加地图相关的状态
