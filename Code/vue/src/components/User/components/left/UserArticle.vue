@@ -51,23 +51,30 @@
     <div class="timeline-container">
       <el-timeline>
         <el-timeline-item
-            v-for="(article, index) in virtualArticles"
+            v-for="(article, index) in filteredList"
             :key="index"
-            :timestamp="article.timestamp"
-            :type="getTimelineItemType(article.timestamp)"
+            :timestamp="formatDate(article.history_time)"
+            :type="getTimelineItemType(article.history_time)"
+            placement="top"
         >
           <el-card class="timeline-card" shadow="hover">
             <div class="article-content">
-              <h4 class="article-title">{{ article.title }}</h4>
-              <p class="article-description">{{ article.description }}</p>
+              <!-- 添加图片展示 -->
+              <div v-if="article.img_url" class="cover-image">
+                <img :src="article.img_url" :alt="article.name" />
+              </div>
+              <h4 class="article-title">{{ article.name }}</h4>
+              <p v-if="article.history_describe" class="article-description">
+                {{ truncateDescription(article.history_describe) }}
+              </p>
               <div class="article-footer">
-                <span class="duration">
-                  <el-icon><Timer /></el-icon>
-                  观看时长: {{ article.viewDuration }}
-                </span>
+                <el-tag effect="light" :type="getTagType(article.type)">
+                  {{ typeMapping[article.type] || '其他' }}
+                </el-tag>
                 <div class="action-buttons">
-                  <el-button text type="primary">继续观看</el-button>
-                  <el-button text type="danger">删除记录</el-button>
+                  <el-button text type="primary" @click="viewDetail(article)">
+                    查看详情
+                  </el-button>
                 </div>
               </div>
             </div>
@@ -80,19 +87,74 @@
 
 <script setup>
 import { getUserArticleList } from '@/apis/user';
-import { onMounted, ref } from "vue";
+import {computed, onMounted, ref} from "vue";
 import { Clock, Search, Delete, Files, Timer } from '@element-plus/icons-vue';
-
+import UserAPI from "@/api/user";
+import { useRouter, useRoute } from 'vue-router';
+import {useUserStore} from "@/stores/user.ts";
 const articleList = ref([]);
 const activeTab = ref('全部');
 const tabs = ['全部', '美食', '文学', '风景', '民俗'];
 const searchQuery = ref('');
-
+const typeMapping = {
+  literature: '文学',
+  folk: '民俗',
+  placeOfInterest: '风景',
+  food: '美食'
+};
 // Methods
 const selectTab = (tab) => {
   activeTab.value = tab;
 };
+const filteredList = computed(() => {
+  const searchTerm = searchQuery.value.toLowerCase()
 
+  return articleList.value
+      .filter(article => {
+        // 标签页过滤
+        const tabMatch = activeTab.value === '全部' ||
+            article.type === Object.keys(typeMapping).find(key => typeMapping[key] === activeTab.value)
+
+        // 搜索过滤（标题和作者）
+        const searchMatch = searchTerm === '' ||
+            article.name.toLowerCase().includes(searchTerm) ||
+            (article.author && article.author.toLowerCase().includes(searchTerm))
+
+        return tabMatch && searchMatch
+      })
+      .sort((a, b) => new Date(b.history_time) - new Date(a.history_time))
+})
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+};
+const getTimelineItemType = (dateString) => {
+  const now = new Date();
+  const articleDate = new Date(dateString);
+  const diffDays = Math.floor((now - articleDate) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return 'primary';
+  if (diffDays <= 7) return 'success';
+  return 'info';
+};
+const truncateDescription = (desc) => {
+  return desc.length > 100 ? desc.substring(0, 100) + '...' : desc;
+};
+
+// 新增标签类型映射
+const getTagType = (type) => {
+  const typeColors = {
+    literature: 'warning',
+    folk: 'success',
+    placeOfInterest: '',
+    food: 'danger'
+  };
+  return typeColors[type] || 'info';
+};
 const clearSearch = () => {
   searchQuery.value = '';
 };
@@ -102,52 +164,39 @@ const batchManage = () => {
 };
 
 // 根据时间戳返回不同的类型
-const getTimelineItemType = (timestamp) => {
-  if (timestamp === '今天') return 'primary'
-  if (timestamp === '近一周') return 'success'
-  return 'info'
-}
+const userStore = useUserStore();
 
-onMounted(() => {
+const getUserId = () => {
+  // 首先从 userStore 中获取
+  if (userStore.userId) {
+    return userStore.userId;
+  }
+
+  // 如果 userStore 中没有，尝试从 localStorage 获取
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    return userId;
+  }
+
+  // 如果都没有，返回 null
+  console.warn('User ID is missing');
+  return null;
+};
+const getHistory = () => {
   // 获取后端文章数据
-  getUserArticleList().then(res => {
-    articleList.value = res.data.pageInfo.list;
+  const userId = getUserId();
+  UserAPI.GetUserHistory(userId).then(res => {
+    articleList.value = res;
+    console.log('获取历史记录成功')
     console.log(articleList.value)
   });
+}
+onMounted(() => {
+  // 获取后端文章数据
+  getHistory()
+
 });
 
-const virtualArticles = [
-  {
-    timestamp: '今天',
-    title: '探索美食：亚洲街头小吃',
-    description: '一起探索亚洲最具代表性的街头小吃，享受独特的美味和风味。',
-    viewDuration: '5:30',
-  },
-  {
-    timestamp: '近一周',
-    title: '文学的力量：如何写出打动人心的故事',
-    description: '通过一些经典的故事，分析如何构建感人的情节。',
-    viewDuration: '6:45',
-  },
-  {
-    timestamp: '近一周',
-    title: '风景画的魅力：一探自然与艺术的结合',
-    description: '了解风景画艺术背后的历史和技巧，感受大自然的美丽。',
-    viewDuration: '4:15',
-  },
-  {
-    timestamp: '一周前',
-    title: '民俗探秘：揭秘中国传统节日的背后故事',
-    description: '了解中国各大传统节日的历史与文化背景。',
-    viewDuration: '7:00',
-  },
-  {
-    timestamp: '一周前',
-    title: '科技未来：人工智能的应用与挑战',
-    description: '深入探讨人工智能技术如何改变我们的工作和生活。',
-    viewDuration: '8:20',
-  }
-];
 </script>
 
 <style scoped>
@@ -288,6 +337,34 @@ const virtualArticles = [
 
   .timeline-container {
     padding: 10px;
+  }
+}
+.cover-image {
+  margin-bottom: 15px;
+
+  img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+}
+
+/* 调整底部布局 */
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 12px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .article-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 }
 </style>
