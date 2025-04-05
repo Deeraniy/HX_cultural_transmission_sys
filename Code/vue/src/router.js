@@ -79,6 +79,11 @@ const routes = [
         component:() => import('./components/ReportGeneration/ReportMain.vue'),
     },
     {
+        path: '/globe',
+        name: 'Globe3D',
+        component: () => import('@/components/Spread/Globe3D.vue')
+    },
+    {
         path: '/index',
         component:() => import('./components/IndexHeader.vue'),
     },

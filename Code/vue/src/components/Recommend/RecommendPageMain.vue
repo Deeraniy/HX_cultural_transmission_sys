@@ -59,7 +59,7 @@
                          @click="selectCard(card)"
                          :class="{ 'empty-card': card.rating === '-' }">
                       <img
-                        :src="card.image"
+                        :src="getImageUrl(card.image)"
                         :alt="card.title"
                         class="card-image"
                         @error="(e) => {
@@ -106,7 +106,7 @@
                            :key="'pref-' + cardIndex"
                            class="sub-card"
                            @click="navigateToSentiment(card)">
-                        <img :src="getImageUrl(card.image)"
+                        <img :src="getImageUrl(card.image_url)"
                              :alt="card.folk_name || card.tag_name"
                              @error="(e) => e.target.src = defaultEmptyImg">
                         <div class="card-overlay">
@@ -139,7 +139,7 @@
                            :key="'similar-' + cardIndex"
                            class="sub-card"
                            @click="navigateToSentiment(card)">
-                        <img :src="getImageUrl(card.image)"
+                        <img :src="getImageUrl(card.image_url)"
                              :alt="card.folk_name || card.tag_name"
                              @error="(e) => e.target.src = defaultEmptyImg">
                         <div class="card-overlay">
@@ -165,17 +165,7 @@
 
       <div v-if="currentIndex === 4" class="map-container">
         <div class="map-wrapper">
-          <div class="china-map">
-            <!-- 中国地图部分 -->
-            <div v-for="(count, province) in mapData.china"
-                 :key="province"
-                 class="province-region"
-                 :class="province">
-              <div class="region-tooltip">
-                {{ province }}: {{ count }}位相似用户
-              </div>
-            </div>
-          </div>
+          <world-map-chart />
         </div>
       </div>
     </template>
@@ -209,6 +199,7 @@ import RecommendAPI from "@/api/recommend"
 import TagsAPI from "@/api/tags"
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import WorldMapChart from './WorldMapChart.vue'
 
 // 导入默认图片以备用
 import defaultEmptyImg from '@/assets/BookB.jpg'
@@ -228,6 +219,9 @@ const tabs = ref([
   '非遗民俗',
   '发现更多'
 ])
+
+// 添加缓存时间记录
+const CACHE_DURATION = 600000; // 10分钟的缓存时间（毫秒）
 
 // 初始化slides数据结构
 const slides = ref([
@@ -280,9 +274,23 @@ const userPreferenceCards = computed(() =>
 );
 
 // 计算属性：相似用户卡片
-const similarUserCards = computed(() =>
-  slides.value[currentIndex.value]?.subCards.filter(card => !card.userPreference) || []
-);
+const similarUserCards = computed(() => {
+  const currentSlide = slides.value[currentIndex.value];
+  if (!currentSlide) return [];
+  
+  // 获取当前用户的偏好
+  const userPreferences = new Set(
+    currentSlide.subCards
+      .filter(card => card.userPreference)
+      .map(card => card.folk_name || card.tag_name)
+  );
+  
+  // 过滤掉与用户偏好重复的推荐
+  return currentSlide.subCards.filter(card => {
+    const cardName = card.folk_name || card.tag_name;
+    return !card.userPreference && !userPreferences.has(cardName);
+  });
+});
 
 // 弹窗控制
 const showAllPreferencesDialog = ref(false);
@@ -312,25 +320,31 @@ watch(showAllPreferencesDialog, (newVal) => {
   }
 });
 
-// 简化图片处理函数
+// 修改 getImageUrl 函数
 const getImageUrl = (url) => {
   if (!url) return defaultEmptyImg;
   // 直接返回完整的 URL
   return url;
 };
 
-// 修改数据获取逻辑
+// 修改 fetchData 函数
 const fetchData = async () => {
+  // 使用 store 中已有的方法检查是否需要刷新
+  if (!userStore.needsRecommendRefresh() && userStore.recommendSlides.length > 0) {
+    console.log('使用缓存数据');
+    slides.value = userStore.recommendSlides;
+    loading.value = false;
+    return;
+  }
+
   loading.value = true;
   try {
-    console.log("fetchData 开始执行");
-    // 从 userStore 获取当前登录用户的 ID
+    console.log("重新获取数据");
     const userId = userStore.userId;
     console.log("当前用户ID:", userId);
 
     if (!userId) {
       console.log("用户未登录，使用默认数据");
-      // 可以选择重定向到登录页面或使用默认数据
       return;
     }
 
@@ -339,27 +353,16 @@ const fetchData = async () => {
       TagsAPI.getAllTagsAPI()
     ]);
 
-    console.log('所有标签数据:', tagsResponse.data);
     console.log('用户偏好数据:', preferenceResponse.data);
-
-    // 检查数据结构并创建默认结构
-    if (!preferenceResponse?.data?.detailed_preferences) {
-      console.warn('用户偏好数据结构不完整，创建默认结构');
-      preferenceResponse.data = {
-        detailed_preferences: {},
-        similar_users: [],
-        theme_preferences: {}
-      };
-    }
+    console.log('所有标签数据:', tagsResponse.data);
 
     if (preferenceResponse?.data && tagsResponse?.data) {
       const userPreferences = preferenceResponse.data;
       const tagData = tagsResponse.data;
 
-      // 如果 tagData 不是预期的格式，进行转换
+      // 确保数据结构正确
       let processedTagData = tagData;
       if (!Array.isArray(tagData.folk) && !Array.isArray(tagData.food)) {
-        console.log('标签数据不是预期格式，进行转换');
         processedTagData = {
           'folk': [],
           'food': [],
@@ -368,7 +371,6 @@ const fetchData = async () => {
           'history': []
         };
 
-        // 将所有标签按主题分类
         if (Array.isArray(tagData)) {
           tagData.forEach(tag => {
             const theme = (tag.theme_name || 'other').toLowerCase();
@@ -379,204 +381,109 @@ const fetchData = async () => {
         }
       }
 
-      // 打印每个主题的标签数量
-      for (const [theme, tags] of Object.entries(processedTagData)) {
-        console.log(`主题 ${theme} 的标签数量:`, Array.isArray(tags) ? tags.length : '不是数组');
-      }
+      // 主题映射
+      const themeIndexMap = {
+        'spot': 0,    // 名胜古迹
+        'food': 1,    // 美食文化
+        'literature': 2, // 影视文学
+        'folk': 3,    // 非遗民俗
+        'history': 4  // 发现更多
+      };
 
+      // 处理每个主题
       for (const [theme, tags] of Object.entries(processedTagData)) {
-        let slideIndex = -1;
-        switch(theme.toLowerCase()) {
-          case 'spot': slideIndex = 0; break;
-          case 'food': slideIndex = 1; break;
-          case 'literature': slideIndex = 2; break;
-          case 'folk': slideIndex = 3; break;
-          case 'history': slideIndex = 4; break;
+        const slideIndex = themeIndexMap[theme.toLowerCase()];
+        if (slideIndex === undefined || !Array.isArray(tags)) continue;
+
+        // 获取该主题的用户偏好
+        const themePreferences = userPreferences.detailed_preferences[theme.toLowerCase()] || [];
+        console.log(`主题 ${theme} 的用户偏好:`, themePreferences);
+
+        // 获取用户偏好的标签ID
+        const userPreferredTagIds = new Set(
+          themePreferences
+            .filter(pref => pref.score > 0)  // 只包含正面偏好
+            .map(pref => pref.tag_id)
+        );
+
+        // 如果用户没有该主题的偏好，跳过处理
+        if (userPreferredTagIds.size === 0) {
+          slides.value[slideIndex].favoriteCards = [];
+          slides.value[slideIndex].subCards = [];
+          continue;
         }
 
-        if (slideIndex !== -1 && Array.isArray(tags)) {  // 确保 tags 是数组
-          console.log(`处理主题 ${theme} 的标签数据，共 ${tags.length} 个标签`);
+        // 获取所有需要查询的标签ID
+        const tagIds = tags.map(tag => tag.tag_id || tag.id).filter(id => id);
+        
+        // 获取标签详细信息
+        const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
+        console.log(`获取标签详细信息:`, tagDetailsResponse);
 
-          // 如果没有该主题的偏好数据，创建空数组
-          if (!userPreferences.detailed_preferences[theme.toLowerCase()]) {
-            userPreferences.detailed_preferences[theme.toLowerCase()] = [];
-          }
+        // 创建标签详情映射
+        const tagDetailsMap = new Map(
+          tagDetailsResponse.tag_details.map(detail => [detail.tag_id, detail])
+        );
 
-          const themePreferences = userPreferences.detailed_preferences[theme.toLowerCase()] || [];
-          console.log(`用户对主题 ${theme} 的偏好数量:`, themePreferences.length);
+        // 处理标签数据
+        const processedTags = tags.map(tag => {
+          const tagId = tag.tag_id || tag.id;
+          const isUserPreference = userPreferredTagIds.has(tagId);
+          const preference = themePreferences.find(p => p.tag_id === tagId);
+          const tagDetail = tagDetailsMap.get(tagId) || {};
+          
+          return {
+            ...tag,
+            userPreference: isUserPreference,
+            userScore: isUserPreference ? preference?.score || 0.7 : 0,
+            title: tagDetail.folk_name || tag.tag_name || tag.name || '未知标签',
+            image_url: tagDetail.image_url || defaultEmptyImg,
+            folk_name: tagDetail.folk_name || tag.folk_name || tag.tag_name,
+            tag_name: tag.tag_name,
+            description: tagDetail.description || tag.description || '暂无描述'
+          };
+        });
 
-          const similarUsers = userPreferences.similar_users || [];
-          console.log(`相似用户数量:`, similarUsers.length);
+        // 分离用户偏好和推荐标签
+        const preferredTags = processedTags.filter(tag => tag.userPreference);
+        const recommendedTags = processedTags.filter(tag => !tag.userPreference);
 
-          // **提取用户偏好的 tag_id**
-          const userPreferredTagIds = themePreferences.map(p => p.tag_id).filter(id => typeof id === "number");
-          console.log(`用户偏好的标签ID:`, userPreferredTagIds);
+        // 更新 slides
+        slides.value[slideIndex].favoriteCards = preferredTags.slice(0, 5).map(tag => ({
+          title: tag.title,
+          image: tag.image_url,
+          rating: (tag.userScore * 10).toFixed(1),
+          userPreference: true,
+          description: tag.description,
+          folk_name: tag.folk_name,
+          tag_name: tag.tag_name
+        }));
 
-          // **提取相似用户推荐的 tag_id**
-          const recommendedTagIds = similarUsers.flatMap(simUser =>
-              Object.entries(simUser.preferences || {})
-                  .filter(([_, prefData]) => prefData.theme_name.toLowerCase() === theme.toLowerCase())
-                  .map(([tagId]) => parseInt(tagId))
-          ).filter(id => typeof id === "number");
-          console.log(`相似用户推荐的标签ID:`, recommendedTagIds);
-
-          // **合并所有 tag_id**
-          const tagIds = [...new Set([...userPreferredTagIds, ...recommendedTagIds])];
-
-          console.log(`主题 ${theme} 需要查询的 tagIds:`, tagIds);
-
-          // 如果没有用户偏好和推荐，创建一些示例数据
-          if (userPreferredTagIds.length === 0 && tags.length > 0) {
-            console.log(`为主题 ${theme} 创建示例用户偏好数据`);
-            // 随机选择最多5个标签作为用户偏好
-            const sampleTags = tags.slice(0, Math.min(5, tags.length));
-            sampleTags.forEach(tag => {
-              userPreferredTagIds.push(tag.tag_id || tag.id);
-            });
-          }
-
-          if (tagIds.length > 0) {
-            console.log(`即将调用 getTagDetailAPI 获取 ${theme} 的详细信息...`);
-            const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
-            console.log(`getTagDetailAPI 返回数据:`, tagDetailsResponse);
-
-            const tagDetailsArray = Array.isArray(tagDetailsResponse?.tag_details)
-                ? tagDetailsResponse.tag_details
-                : [];
-            console.log(`标签详情数组长度:`, tagDetailsArray.length);
-
-            const tagDetailsMap = new Map(
-                tagDetailsArray
-                    .filter(tag => typeof tag.tag_id === "number")
-                    .map(tag => [tag.tag_id, tag])
-            );
-
-            console.log("tagDetailsMap 赋值后:", tagDetailsMap);
-            console.log(`getTagDetailAPI 返回 ${theme} 数据:`, tagDetailsResponse.tag_details);
-
-            // 处理用户偏好
-            const preferredTags = tags.filter(tag => userPreferredTagIds.includes(tag.tag_id || tag.id))
-                .map(tag => {
-                  const preference = themePreferences.find(p => p.tag_id === (tag.tag_id || tag.id));
-                  const tagDetail = tagDetailsMap.get(tag.tag_id || tag.id) || {};
-
-                  console.log(`处理用户偏好标签 ${tag.tag_id || tag.id}:`, {
-                    preference,
-                    tagDetail,
-                    image: tagDetail.image_url || tag.image_url || defaultEmptyImg
-                  });
-
-                  return {
-                    ...tag,
-                    userScore: preference?.score || 0.7,  // 默认分数0.7
-                    name: tagDetail.folk_name || tag.folk_name || tag.tag_name || '未知标签',
-                    image: tagDetail.image_url || tag.image_url || defaultEmptyImg,
-                    userPreference: true,
-                    description: tagDetail.details?.description || '您的偏好'
-                  };
-                }).sort((a, b) => b.userScore - a.userScore);
-            console.log(`处理后的用户偏好标签数量:`, preferredTags.length);
-
-            // 处理相似用户的偏好
-            const similarUserTags = tags.filter(tag => recommendedTagIds.includes(tag.tag_id || tag.id))
-                .map(tag => {
-                  const tagDetail = tagDetailsMap.get(tag.tag_id || tag.id) || {};
-
-                  console.log(`处理相似用户偏好标签 ${tag.tag_id || tag.id}:`, {
-                    tagDetail,
-                    image: tagDetail.image_url || defaultEmptyImg
-                  });
-
-                  return {
-                    ...tag,
-                    name: tagDetail.folk_name || tag.tag_name || '未知标签',
-                    image: tagDetail.image_url || defaultEmptyImg,
-                    userPreference: false,
-                    similarityScore: 0, // 你可以在 `similarUsers` 里找到对应的 `similarity_score`
-                    description: `来自相似用户的推荐`
-                  };
-                });
-            console.log(`处理后的相似用户偏好标签数量:`, similarUserTags.length);
-
-            // 如果没有用户偏好标签，使用一些标签作为示例
-            if (preferredTags.length === 0) {
-              console.log(`为主题 ${theme} 创建示例用户偏好标签`);
-              const sampleTags = tags.slice(0, Math.min(5, tags.length)).map(tag => ({
-                ...tag,
-                userScore: 0.7,  // 默认分数
-                name: tag.tag_name || tag.name || '未知标签',
-                image: tag.image_url || defaultEmptyImg,
-                userPreference: true,
-                description: '示例偏好'
-              }));
-              preferredTags.push(...sampleTags);
-            }
-
-            // 更新 slides，确保从 tagDetailsMap 获取详细信息
-            slides.value[slideIndex].favoriteCards = preferredTags.slice(0, 5).map(tag => {
-              const tagDetail = tagDetailsMap.get(tag.tag_id || tag.id) || {}; // 获取 tag 详情
-              return {
-                title: tagDetail.title || tagDetail.folk_name || tag.name || '未知标签',
-                image: tagDetail.details?.image_url || tagDetail.image_url || tag.image || defaultEmptyImg,
-                rating: tag.userScore ? (tag.userScore * 10).toFixed(1) : '7.0', // 评分
-                userPreference: true
-              };
-            });
-            console.log(`更新 slides[${slideIndex}].favoriteCards:`, slides.value[slideIndex].favoriteCards);
-
-            slides.value[slideIndex].subCards = [...preferredTags, ...similarUserTags].map(tag => {
-              const tagDetail = tagDetailsMap.get(tag.tag_id || tag.id) || {}; // 获取 tag 详情
-              return {
-                ...tag,
-                title: tagDetail.title || tagDetail.folk_name || tag.name || '未知标签',
-                image: tagDetail.details?.image_url || tagDetail.image_url || tag.image || defaultEmptyImg,
-                description: tagDetail.details?.description || tag.description || "暂无描述",
-                userPreference: tag.userPreference || false
-              };
-            });
-            console.log(`更新 slides[${slideIndex}].subCards:`, slides.value[slideIndex].subCards);
-          }
-        }
+        // 只有当有用户偏好时才添加推荐标签
+        slides.value[slideIndex].subCards = preferredTags.length > 0 ? 
+          [...preferredTags, ...recommendedTags].map(tag => ({
+            ...tag,
+            image_url: tag.image_url,  // 确保 image_url 被正确传递
+            folk_name: tag.folk_name,
+            tag_name: tag.tag_name,
+            userPreference: tag.userPreference
+          })) : [];
       }
     }
 
     // 成功获取数据后更新store
     if (slides.value.length > 0) {
-      console.log('更新缓存数据:', slides.value);
-      userStore.setRecommendData(slides.value);
+      userStore.setRecommendData(slides.value);  // 这会同时更新数据和时间戳
     }
 
   } catch (error) {
     console.error("获取数据失败:", error);
-    // 如果获取失败且有缓存数据，尝试使用缓存
     if (userStore.recommendSlides.length > 0) {
       console.log('获取失败，使用缓存数据');
       slides.value = userStore.recommendSlides;
-    } else {
-      // 确保在错误情况下也设置一些默认数据
-      for (let i = 0; i < slides.value.length; i++) {
-        if (!slides.value[i].favoriteCards.length) {
-          slides.value[i].favoriteCards = Array(5).fill(0).map((_, idx) => ({
-            title: `示例标签 ${idx + 1}`,
-            image: defaultEmptyImg,
-            rating: '7.0',
-            userPreference: true
-          }));
-        }
-
-        if (!slides.value[i].subCards.length) {
-          slides.value[i].subCards = Array(8).fill(0).map((_, idx) => ({
-            title: `示例标签 ${idx + 1}`,
-            image: defaultEmptyImg,
-            description: '示例描述',
-            userPreference: idx < 5
-          }));
-        }
-      }
     }
   } finally {
     loading.value = false;
-    // 确保在数据加载完成后初始化 Swiper
     nextTick(() => {
       initSwiper();
       if (slides.value[currentIndex.value]?.favoriteCards?.length > 0) {
@@ -593,14 +500,12 @@ const slideStyle = computed(() => ({
 
 // 处理标签点击
 const handleTabClick = (index) => {
-  currentIndex.value = index
-}
+  currentIndex.value = index;
+};
 
 // 处理滚轮事件
 const handleWheel = (e) => {
-  // 如果弹窗打开，不处理滚轮事件
   if (showAllPreferencesDialog.value) return;
-
   if (isAnimating.value) return;
 
   isAnimating.value = true;
@@ -717,7 +622,8 @@ const formatDescription = (description) => {
 
 // 检查主题是否有偏好
 const hasPreferences = (slide) => {
-  return slide.favoriteCards.length > 0 || slide.subCards.length > 0;
+  // 只有当有用户偏好时才返回 true
+  return slide.favoriteCards.length > 0;
 };
 
 // 修改跳转到情感分析页面的方法
@@ -866,7 +772,7 @@ onMounted(async () => {
 .empty-slide.slide-2 { background-color: rgba(241, 196, 15, 0.2); }  /* 半透明黄色 */
 .empty-slide.slide-3 { background-color: rgba(231, 76, 60, 0.2); }   /* 半透明红色 */
 .empty-slide.slide-4 { background-color: rgba(241, 196, 15, 0.2); }  /* 半透明黄色 */
-.empty-slide.slide-5 { background-color: rgba(231, 76, 60, 0.2); }   /* 半透明红色 */
+.empty-slide.slide-5 { background-color: transparent; }   /* 发现更多模块不需要蒙版 */
 .empty-slide.slide-6 { background-color: rgba(52, 152, 219, 0.2); }  /* 半透明蓝色 */
 
 .slide-content {
@@ -925,7 +831,7 @@ onMounted(async () => {
   gap: 30px;
   align-items: center;
   padding: 0 5%;
-  margin-left: 20px; /* 添加左边距使其与"您的偏好"标签对齐 */
+  margin-left: -10px; /* 添加左边距使其与"您的偏好"标签对齐 */
   margin-bottom: 30px;
 }
 
@@ -982,9 +888,10 @@ onMounted(async () => {
   height: 300px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 15px;
-  padding: 20px;
+  padding: 20px 20px 5px 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  margin-left: 80px;
   margin-top: -10px;
   padding-bottom: -10px;
 }
@@ -992,7 +899,7 @@ onMounted(async () => {
 .cards-row {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
   margin-left: 30px; /* 增加左边距 */
 }
 
@@ -1142,8 +1049,7 @@ onMounted(async () => {
   position: relative;
   width: 100%;
   height: 100%;
-  background: #f5f5f5;
-  padding: 20px;
+  padding: 40px;
 }
 
 .map-wrapper {

@@ -98,27 +98,39 @@ const markdownContent = computed(() => {
   return marked(cleanedMarkdown)
 })
 
-const generateReport = async () => {
-  loading.value = true
-  try {
-    console.log('Generating report for:', props.name, 'type:', props.pageType)
-    const response = await SentimentAPI.getSentimentReportAPI(props.name, props.pageType)
-    console.log('API Response:', response)
+// 添加响应类型定义
+interface ReportResponse {
+  status: string;
+  report: string;
+  timeline: Array<{
+    date: string;
+    sentiment: string;
+    count: number;
+    score: number;
+  }>;
+}
 
-    if (response.status === 'success') {
-      report.value = response.report
-      timelineItems.value = response.timeline
-      ElMessage.success('报告生成成功')
+const generateReport = async () => {
+  loading.value = true;
+  try {
+    console.log('Generating report for:', props.name, 'type:', Number(props.pageType));
+    const response = await SentimentAPI.getSentimentReportAPI(props.name, Number(props.pageType));
+    console.log('API Response:', response);
+
+    if ((response as ReportResponse).status === 'success') {
+      report.value = (response as ReportResponse).report;
+      timelineItems.value = (response as ReportResponse).timeline;
+      ElMessage.success('报告生成成功');
     } else {
-      throw new Error(response.message || '报告生成失败')
+      throw new Error((response as any).message || '报告生成失败');
     }
   } catch (error) {
-    console.error('生成报告失败:', error.response || error)
-    ElMessage.error('生成报告失败，请重试')
+    console.error('生成报告失败:', error.response || error);
+    ElMessage.error('生成报告失败，请重试');
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 // 添加复制功能
 const handleCopyReport = () => {

@@ -16,13 +16,13 @@
           <h3>兴趣偏好分布</h3>
           <p class="chart-desc">展示用户在不同领域的活跃度和参与度</p>
         </div>
-        <div class="chart-actions">
-          <el-radio-group v-model="timeRange" size="small">
-            <el-radio-button label="week">周</el-radio-button>
-            <el-radio-button label="month">月</el-radio-button>
-            <el-radio-button label="year">年</el-radio-button>
-          </el-radio-group>
-        </div>
+<!--        <div class="chart-actions">-->
+<!--          <el-radio-group v-model="timeRange" size="small">-->
+<!--            <el-radio-button label="week">周</el-radio-button>-->
+<!--            <el-radio-button label="month">月</el-radio-button>-->
+<!--            <el-radio-button label="year">年</el-radio-button>-->
+<!--          </el-radio-group>-->
+<!--        </div>-->
       </div>
       <div id="main" class="chart-container"></div>
     </el-card>
@@ -30,75 +30,107 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import {onMounted, ref, watchEffect} from 'vue';
 import { DataAnalysis } from "@element-plus/icons-vue";
 import * as echarts from 'echarts';
-
+import UserAPI from "@/api/user";
+import {useUserStore} from "@/stores/user.ts";
+const SingleHistoryList = ref([]);
+const AllHistoryList = ref([]);
+const userStore = useUserStore();
 const timeRange = ref('month');
+const TYPE_MAPPING = {
+  placeOfInterest: '风景名胜',
+  food: '美食文化',
+  literature: '影视文学',
+  folk: '非遗民俗'
+};
+const processData = () => {
+  // 确保有有效数据
+  if (SingleHistoryList.value.length === 0 || AllHistoryList.value.length === 0)
+    return null;
 
-onMounted(() => {
-  const chartDom = document.getElementById('main');
-  const myChart = echarts.init(chartDom);
+  // 处理当前用户数据（优化计算逻辑）
+  const currentCounts = Object.fromEntries(
+      Object.keys(TYPE_MAPPING).map(type => [
+        type,
+        SingleHistoryList.value.filter(item => item.type === type).length
+      ])
+  );
+
+  // 处理所有用户数据（优化性能）
+  const userStats = AllHistoryList.value.reduce((acc, item) => {
+    const uid = item.uid;
+    if (!acc.has(uid)) acc.set(uid, { placeOfInterest:0, food:0, literature:0, folk:0 });
+    acc.get(uid)[item.type] += 1;
+    return acc;
+  }, new Map());
+
+  // 计算平均值（添加容错处理）
+  const userCount = userStats.size || 1;
+  const averageCounts = Object.fromEntries(
+      Object.keys(TYPE_MAPPING).map(type => [
+        type,
+        Array.from(userStats.values()).reduce((sum, user) => sum + (user[type] || 0), 0) / userCount
+      ])
+  );
+
+  // 构建动态指标
+  const indicator = [];
+  const currentData = [];
+  const averageData = [];
+
+  Object.entries(TYPE_MAPPING).forEach(([type, name]) => {
+    const currentVal = currentCounts[type] || 0;
+    const averageVal = averageCounts[type] || 0;
+    const maxVal = Math.max(currentVal, averageVal) * 1.5; // 动态调整最大值
+
+    indicator.push({
+      name: `${name}\n（当前:${currentVal} 平均:${averageVal.toFixed(1)}）`,
+      max: Math.ceil(maxVal) || 1 // 确保最小值
+    });
+
+    currentData.push(currentVal);
+    averageData.push(averageVal);
+  });
+
+  return { indicator, currentData, averageData };
+};
+// 新增响应式图表更新
+let myChart = null;
+const updateChart = () => {
+  const chartData = processData();
+  if (!chartData || !myChart) return;
 
   const option = {
     title: {
-      show: false
+      text: '用户画像'
     },
     legend: {
-      data: ['当前分布', '平均水平'],
-      bottom: 0
+      data: ['当前发布', '平均水平'] // 修改此处
     },
     radar: {
-      shape: 'circle',
-      splitNumber: 5,
-      axisName: {
-        color: '#666',
-        fontSize: 14
-      },
-      splitLine: {
-        lineStyle: {
-          color: ['#ddd']
-        }
-      },
-      splitArea: {
-        show: true,
-        areaStyle: {
-          color: ['#f8f9fa', '#fff']
-        }
-      },
+      // shape: 'circle',
       indicator: [
-        { name: '文学创作', max: 100 },
-        { name: '美食探索', max: 100 },
-        { name: '艺术鉴赏', max: 100 },
-        { name: '文化传承', max: 100 },
-        { name: '社区互动', max: 100 },
-        { name: '知识分享', max: 100 }
+        { name: '风景名胜', max: 5 },
+        { name: '美食文化', max: 5 },
+        { name: '影视文学', max: 5 },
+        { name: '非遗民俗', max: 5 },
+
       ]
     },
     series: [
       {
-        name: '用户画像分析',
+        name: 'Budget vs spending',
         type: 'radar',
         data: [
           {
-            value: [85, 70, 90, 65, 88, 75],
-            name: '当前分布',
-            lineStyle: {
-              color: '#b71c1c'
-            },
-            areaStyle: {
-              color: 'rgba(64, 158, 255, 0.2)'
-            }
+            value: chartData.currentData,
+            name: '当前发布' // 修改此处
           },
           {
-            value: [70, 75, 65, 60, 70, 65],
-            name: '平均水平',
-            lineStyle: {
-              color: '#67C23A'
-            },
-            areaStyle: {
-              color: 'rgba(103, 194, 58, 0.2)'
-            }
+            value: chartData.averageData,
+            name: '平均水平' // 修改此处
           }
         ]
       }
@@ -106,10 +138,54 @@ onMounted(() => {
   };
 
   myChart.setOption(option);
+};
+const getHistory = () => {
+  // 获取后端文章数据
+  const userId = getUserId();
+  UserAPI.GetUserHistory(userId).then(res => {
+    SingleHistoryList.value = res;
+    console.log('获取历史记录成功')
+    console.log(SingleHistoryList.value)
+  });
+  UserAPI.GetAllHistory().then(res => {
+    AllHistoryList.value = res;
+    console.log('获取所有历史记录成功')
+    console.log(AllHistoryList.value)
+  })
+}
+const getUserId = () => {
+  // 首先从 userStore 中获取
+  if (userStore.userId) {
+    return userStore.userId;
+  }
 
-  // 响应窗口大小变化
+  // 如果 userStore 中没有，尝试从 localStorage 获取
+  const userId = localStorage.getItem('userId');
+  if (userId) {
+    return userId;
+  }
+
+  // 如果都没有，返回 null
+  console.warn('User ID is missing');
+  return null;
+};
+onMounted(async () => {
+  const chartDom = document.getElementById('main');
+  myChart = echarts.init(chartDom);
+
+  // 初始化加载数据
+  await getHistory();
+
+  // 设置响应式更新
+  watchEffect(updateChart);
+
+  // 优化resize处理
+  let resizeTimer;
   window.addEventListener('resize', () => {
-    myChart.resize();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      myChart?.resize();
+    }, 200);
   });
 });
 </script>

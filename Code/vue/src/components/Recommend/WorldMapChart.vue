@@ -1,6 +1,13 @@
 <template>
   <div class="world-map-container">
     <div ref="chartContainer" class="chart-container"></div>
+    <div class="zoom-controls">
+      <button @click="handleZoom('in')" class="zoom-btn">+</button>
+      <button @click="handleZoom('out')" class="zoom-btn">-</button>
+      <button @click="resetZoom" class="zoom-btn">
+        <i class="el-icon-refresh"></i>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -14,6 +21,98 @@ const chartContainer = ref(null);
 let chart = null;
 
 const hoveredRegion = ref(null);
+
+const currentZoom = ref(1.2);
+const ZOOM_STEP = 0.2;
+const MIN_ZOOM = 0.8;
+const MAX_ZOOM = 2.5;
+
+const showLabels = ref(true);
+
+// 修改 shouldShowLabel 函数，增加更严格的面积判断
+const shouldShowLabel = (params, zoom) => {
+  // 定义国家大小等级
+  const countryLevels = {
+    large: ['Russia', 'China', 'United States', 'Canada', 'Brazil', 'Australia', 'India'],
+    medium: ['Kazakhstan', 'Argentina', 'Mexico', 'Indonesia', 'Saudi Arabia', 'Iran', 
+             'Mongolia', 'Libya', 'Egypt', 'Sudan', 'Algeria', 'France', 'Spain', 'Turkey']
+  };
+
+  // 获取国家的地理特征以计算面积
+  const feature = worldJson.features.find(f => f.properties.name === params.name);
+  if (!feature) return false;
+
+  // 计算近似面积（使用坐标点数量作为面积参考）
+  let area = 0;
+  if (feature.geometry.type === 'Polygon') {
+    area = feature.geometry.coordinates[0].length;
+  } else if (feature.geometry.type === 'MultiPolygon') {
+    area = feature.geometry.coordinates.reduce((sum, poly) => sum + poly[0].length, 0);
+  }
+
+  // 根据缩放级别和面积决定是否显示
+  if (zoom <= 1.2) {
+    // 最小缩放时只显示大国
+    return countryLevels.large.includes(params.name);
+  } else if (zoom <= 1.8) {
+    // 中等缩放时显示大国和中等国家
+    return countryLevels.large.includes(params.name) || 
+           countryLevels.medium.includes(params.name);
+  } else if (zoom <= 2.5) {
+    // 较大缩放时显示大中小国家，但要求小国面积达到一定值
+    return countryLevels.large.includes(params.name) || 
+           countryLevels.medium.includes(params.name) ||
+           area > 20; // 面积阈值，可以调整
+  }
+  // 最大缩放时显示所有国家
+  return true;
+};
+
+const handleZoom = (type) => {
+  if (!chart) return;
+
+  const option = chart.getOption();
+  if (type === 'in' && currentZoom.value < MAX_ZOOM) {
+    currentZoom.value += ZOOM_STEP;
+  } else if (type === 'out' && currentZoom.value > MIN_ZOOM) {
+    currentZoom.value -= ZOOM_STEP;
+  }
+
+  // 更新缩放
+  option.geo[0].zoom = currentZoom.value;
+  
+  // 更新标签显示
+  option.geo[0].label.show = (params) => 
+    showLabels.value && shouldShowLabel(params, currentZoom.value);
+  
+  chart.setOption(option);
+};
+
+const resetZoom = () => {
+  if (!chart) return;
+
+  // 恢复到初始状态
+  currentZoom.value = 1.2;
+  const option = chart.getOption();
+  option.geo[0].zoom = currentZoom.value;
+  option.geo[0].center = [5, 15];  // 恢复到初始视角
+  
+  // 更新标签显示
+  option.geo[0].label.show = (params) => shouldShowLabel(params, currentZoom.value);
+    
+  chart.setOption(option);
+};
+
+// 修改 toggleLabels 函数，确保切换时也考虑缩放级别
+const toggleLabels = () => {
+  showLabels.value = !showLabels.value;
+  if (chart) {
+    const option = chart.getOption();
+    option.geo[0].label.show = (params) => 
+      showLabels.value && shouldShowLabel(params, currentZoom.value);
+    chart.setOption(option);
+  }
+};
 
 // 创建饼图数据
 const createPieData = (themeData) => {
@@ -61,6 +160,16 @@ const createPieSeries = (center, radius, regionName, themeData) => {
   };
 };
 
+// 添加一个函数来计算标签大小
+const getLabelSize = (params) => {
+  // 一些大国使用稍大的字号
+  const largeCountries = ['Russia', 'China', 'USA', 'Canada', 'Brazil', 'Australia'];
+  if (largeCountries.includes(params.name)) {
+    return 10;  // 大国使用较大字号
+  }
+  return 8;  // 其他国家使用标准字号
+};
+
 const initChart = async () => {
   if (!chartContainer.value) return;
 
@@ -75,9 +184,9 @@ const initChart = async () => {
   const normalizeRegionName = (name) => {
     if (!name) return '';
     return name.trim()
-      .replace(/\s+/g, ' ')
-      .replace(/\([^)]*\)/g, '')
-      .trim();
+        .replace(/\s+/g, ' ')
+        .replace(/\([^)]*\)/g, '')
+        .trim();
   };
 
   // 地区名称映射表
@@ -118,12 +227,40 @@ const initChart = async () => {
     // 基础配置
     const baseGeoConfig = {
       map: 'world',
-      roam: true,
+      roam: 'move',
       zoom: 1.2,
-      center: [10, 30],
+      center: [5, 15],  // 使用初始视角
       itemStyle: {
         areaColor: '#e7e8ea',
         borderColor: '#ccc'
+      },
+      label: {
+        show: (params) => showLabels.value && shouldShowLabel(params, currentZoom.value),
+        fontSize: (params) => {
+          // 根据缩放级别和国家大小动态调整字体大小
+          const baseSize = getLabelSize(params);
+          const zoomFactor = Math.max(1, currentZoom.value / 1.2);
+          return Math.min(baseSize * zoomFactor, 14); // 限制最大字号
+        },
+        color: '#333',
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        padding: [2, 4],
+        borderRadius: 2,
+        position: 'center',
+        formatter: (params) => {
+          const nameMap = {
+            'United States of America': 'USA',
+            'United Kingdom': 'UK',
+            'Russian Federation': 'Russia',
+            'Democratic Republic of the Congo': 'DR Congo',
+            'Republic of Korea': 'S.Korea',
+            "Democratic People's Republic of Korea": 'N.Korea',
+            'United Arab Emirates': 'UAE',
+            'Saudi Arabia': 'S.Arabia',
+            'New Zealand': 'N.Zealand'
+          };
+          return nameMap[params.name] || params.name;
+        }
       },
       emphasis: {
         itemStyle: {
@@ -135,13 +272,18 @@ const initChart = async () => {
         },
         label: {
           show: true,
-          color: '#fff'
+          color: '#fff',
+          fontSize: 10,
+          fontWeight: 'bold',
+          backgroundColor: 'rgba(183, 28, 28, 0.7)',
+          padding: [3, 5],
+          borderRadius: 2
         }
       }
     };
 
     const option = {
-      backgroundColor: '#f5f5f5',
+      backgroundColor: '#fff',
       geo: baseGeoConfig,
       tooltip: {
         show: true,
@@ -151,9 +293,9 @@ const initChart = async () => {
         triggerOn: 'mousemove',
         position: 'right',
         backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        borderColor: '#ccc',
+        borderColor: '#fff',
         borderWidth: 1,
-        padding: [10, 15],
+        padding: [0,0],
         textStyle: {
           color: '#333',
           fontSize: 14
@@ -161,28 +303,28 @@ const initChart = async () => {
       },
       series: [
         ...Object.entries(normalizedData)
-          .map(([region, data]) => {
-            const coordinates = getRegionCoordinates(region, missingCoordinates);
-            return {
-              name: region,
-              type: 'pie',
-              coordinateSystem: 'geo',
-              center: coordinates,
-              radius: 15,
-              data: Object.entries(data.themes).map(([name, value]) => ({
-                name,
-                value: value || 0
-              })).filter(item => item.value > 0),
-              label: { show: false },
-              labelLine: { show: false },
-              tooltip: {
-                formatter: (params) => {
-                  const regionData = normalizedData[region];
-                  if (!regionData) return '';
+            .map(([region, data]) => {
+              const coordinates = getRegionCoordinates(region, missingCoordinates);
+              return {
+                name: region,
+                type: 'pie',
+                coordinateSystem: 'geo',
+                center: coordinates,
+                radius: 15,
+                data: Object.entries(data.themes).map(([name, value]) => ({
+                  name,
+                  value: value || 0
+                })).filter(item => item.value > 0),
+                label: { show: false },
+                labelLine: { show: false },
+                tooltip: {
+                  formatter: (params) => {
+                    const regionData = normalizedData[region];
+                    if (!regionData) return '';
 
-                  let html = `
-                    <div style="min-width: 200px">
-                      <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px; 
+                    let html = `
+                    <div style="min-width: 200px;padding: 10px">
+                      <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;
                                  padding-bottom: 8px; border-bottom: 1px solid #eee">
                         ${region}
                       </div>
@@ -195,11 +337,11 @@ const initChart = async () => {
                         <div style="font-weight: bold; margin-bottom: 5px">主题偏好：</div>
                     `;
 
-                  Object.entries(regionData.themes).forEach(([theme, count]) => {
-                    if (count > 0) {
-                      const percentage = ((count / regionData.total) * 100).toFixed(1);
-                      html += `
-                        <div style="display: flex; justify-content: space-between; 
+                    Object.entries(regionData.themes).forEach(([theme, count]) => {
+                      if (count > 0) {
+                        const percentage = ((count / regionData.total) * 100).toFixed(1);
+                        html += `
+                        <div style="display: flex; justify-content: space-between;
                                     margin: 4px 0; align-items: center">
                           <span style="color: #666">${theme}</span>
                           <span style="color: #b71c1c">
@@ -207,20 +349,20 @@ const initChart = async () => {
                           </span>
                         </div>
                       `;
-                    }
-                  });
+                      }
+                    });
 
-                  html += `
+                    html += `
                       </div>
                     </div>
                   `;
 
-                  return html;
+                    return html;
+                  }
                 }
-              }
-            };
-          })
-          .filter(Boolean)
+              };
+            })
+            .filter(Boolean)
       ]
     };
 
@@ -256,11 +398,11 @@ const getRegionCoordinates = (region, missingCoordinates) => {
     // 尝试获取标准名称
     const standardName = countryNameMap[countryName] || countryName;
 
-    const feature = worldJson.features.find(f => 
-      f.properties.name === standardName || 
-      f.properties.name.toLowerCase() === standardName.toLowerCase()
+    const feature = worldJson.features.find(f =>
+        f.properties.name === standardName ||
+        f.properties.name.toLowerCase() === standardName.toLowerCase()
     );
-    
+
     // 如果找到了对应的国家
     if (feature) {
       // 从 geometry 中计算中心点
@@ -338,7 +480,7 @@ const getRegionCoordinates = (region, missingCoordinates) => {
 
   // 先尝试从预定义映射获取
   let result = coordinates[region];
-  
+
   // 如果没有预定义坐标，尝试从 world.json 获取
   if (!result) {
     const centroid = getCountryCentroid(region);
@@ -359,7 +501,7 @@ const getRegionCoordinates = (region, missingCoordinates) => {
 
 onMounted(() => {
   initChart();
-  
+
   // 添加窗口大小变化的监听
   window.addEventListener('resize', () => {
     chart?.resize();
@@ -377,18 +519,58 @@ onUnmounted(() => {
 
 <style scoped>
 .world-map-container {
-  width: 100%;
-  height: 100%;
-  background: #f5f5f5;
+  width: 90%;
+  height: 90%;
+  background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding: 10px;
+  margin-top: -15px;
+  margin-left: 30px;
 }
 
 .chart-container {
+
   width: 100%;
   height: 100%;
   min-height: 500px;
-  padding: 20px;
+
   box-sizing: border-box;
 }
-</style> 
+
+.zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.zoom-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.zoom-btn:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.05);
+}
+
+.zoom-btn:active {
+  background-color: #e8e8e8;
+  transform: scale(0.95);
+}
+</style>

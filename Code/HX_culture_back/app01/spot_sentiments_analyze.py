@@ -181,83 +181,106 @@ def sentiment_month_analyze(sentiments):
     return avg_score, dominant_sentiment
 
 def sentiments_result_total_count(request):
-    """获取景点的情感分析占比统计"""
-    try:
-        spot_name = request.GET.get('name', '')
-        if not spot_name:
-            return {
-                'status': 'error',
-                'message': '景点名称不能为空'
-            }
+    """获取指定景点的情感分析统计结果 (按年月分组)"""
+    conn = None
+    cursor = None
+    name = request.GET.get('name', '').strip()
+    if not name:
+        return JsonResponse({
+            'status': 'error',
+            'message': '景点名称不能为空'
+        }, status=400)
 
-        # 数据库连接
+    logger.info(f"(spot_sentiments_total_count) 正在查询景点: {name}")
+
+    try:
         conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
                              passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 获取景点ID
-        cursor.execute("SELECT spot_id FROM spot WHERE spot_name = %s", (spot_name,))
-        spot_result = cursor.fetchone()
+        # 获取 spot_id
+        cursor.execute("SELECT spot_id FROM spot WHERE spot_name = %s", (name,))
+        result = cursor.fetchone()
+        if not result:
+            logger.warning(f"(spot_sentiments_total_count) 未找到景点: {name}")
+            return JsonResponse({
+                'status': 'not_found',
+                'message': f"未找到景点: {name}"
+            }, status=404)
+        
+        spot_id = result['spot_id']
+        logger.info(f"(spot_sentiments_total_count) 找到景点ID: {spot_id}")
 
-        if not spot_result:
-            return {
-                'status': 'error',
-                'message': f'未找到景点: {spot_name}'
-            }
-
-        spot_id = spot_result['spot_id']
-
-        # 按月份统计情感分析结果
-        sentiment_sql = """
-            SELECT 
-                YEAR(comment_time) as year,
-                MONTH(comment_time) as month,
-                sentiment,
-                COUNT(*) as comment_count,
-                AVG(sentiment_confidence) as sentiment_score
-            FROM user_comment_spot 
-            WHERE spot_id = %s AND sentiment IS NOT NULL
-            GROUP BY YEAR(comment_time), MONTH(comment_time), sentiment
-            ORDER BY year, month
+        # SQL查询保持不变...
+        sql = """
+        SELECT 
+            YEAR(comment_time) AS year,
+            MONTH(comment_time) AS month,
+            sentiment,
+            COUNT(*) AS comment_count,
+            AVG(sentiment_confidence) AS sentiment_score,
+            ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM user_comment_spot WHERE spot_id = %s AND YEAR(comment_time) = YEAR(ucs.comment_time) AND MONTH(comment_time) = MONTH(ucs.comment_time)), 2) as percentage
+        FROM user_comment_spot ucs
+        WHERE spot_id = %s
+            AND sentiment IS NOT NULL
+            AND sentiment != ''
+            AND sentiment != 'error_processing'
+        GROUP BY 
+            YEAR(comment_time), 
+            MONTH(comment_time),
+            sentiment
+        ORDER BY year, month, sentiment;
         """
-        cursor.execute(sentiment_sql, (spot_id, spot_id))
+        
+        cursor.execute(sql, (spot_id, spot_id))
         results = cursor.fetchall()
 
         if not results:
-            return {
-                'status': 'error',
-                'message': f'未找到评论数据: {spot_name}'
-            }
-
-        # 转换为列表格式
-        data = []
-        for row in results:
-            data.append({
-                'year': row['year'],
-                'month': row['month'],
-                'sentiment': row['sentiment'],
-                'comment_count': row['comment_count'],
-                'sentiment_score': float(row['sentiment_score'])
+            logger.info(f"(spot_sentiments_total_count) 景点 {name} (ID: {spot_id}) 暂无有效评论数据")
+            return JsonResponse({
+                'status': 'success',
+                'data': [],
+                'message': f"{name} 暂无评论数据"
             })
 
-        return {
-            'status': 'success',
-            'data': data
-        }
+        # 处理结果
+        processed_results = []
+        for row in results:
+            row['sentiment_score'] = float(row['sentiment_score']) if row['sentiment_score'] is not None else 0.0
+            row['percentage'] = float(row['percentage']) if row['percentage'] is not None else 0.0
+            processed_results.append({
+                'year': row.get('year'),
+                'month': row.get('month'),
+                'sentiment': row.get('sentiment'),
+                'comment_count': row.get('comment_count', 0),
+                'sentiment_score': row['sentiment_score'],
+                'percentage': row['percentage']
+            })
 
-    except Exception as e:
-        return {
+        return JsonResponse({
+            'status': 'success',
+            'data': processed_results
+        })
+
+    except pymysql.Error as db_err:
+        logger.error(f"(spot_sentiments_total_count) 数据库错误 for {name}: {str(db_err)}")
+        return JsonResponse({
             'status': 'error',
-            'message': str(e)
-        }
+            'message': f"数据库错误: {str(db_err)}"
+        }, status=500)
+    except Exception as e:
+        logger.error(f"(spot_sentiments_total_count) 未知错误 for {name}: {str(e)}")
+        return JsonResponse({
+            'status': 'error',
+            'message': f"未知错误: {str(e)}"
+        }, status=500)
     finally:
-        if 'cursor' in locals():
+        if cursor:
             cursor.close()
-        if 'conn' in locals():
+        if conn:
             conn.close()
 
-@require_GET
 def sentiments_result(request):
     """根据景点名称获取情感分析时间序列结果"""
     try:
@@ -270,15 +293,12 @@ def sentiments_result(request):
 
         logger.info(f"正在查询景点: {name}")
 
-        # 数据库连接
         conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
                              passwd='song', db='hx_cultural_transmission_sys',
                              charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 修正：使用正确的字段名 spot_name 而不是 name
-        spot_sql = "SELECT spot_id FROM spot WHERE spot_name = %s LIMIT 1"
-        cursor.execute(spot_sql, (name,))
+        cursor.execute("SELECT spot_id FROM spot WHERE spot_name = %s LIMIT 1", (name,))
         spot_result = cursor.fetchone()
 
         if not spot_result:
@@ -287,8 +307,7 @@ def sentiments_result(request):
                 'message': f'未找到景点: {name}'
             }, status=404)
 
-        # 修正：使用正确的字段名 spot_id 而不是 id
-        spot_id = spot_result['spot_id']  # 改用 'spot_id' 而不是 'id'
+        spot_id = spot_result['spot_id']
         logger.info(f"找到景点ID: {spot_id}")
 
         # 查询评论数据
@@ -304,7 +323,6 @@ def sentiments_result(request):
         """
         cursor.execute(comment_sql, (spot_id,))
         results = cursor.fetchall()
-        # print(results)
 
         if not results:
             return JsonResponse({
@@ -318,7 +336,6 @@ def sentiments_result(request):
             })
 
         # 按年月分组数据
-        print(results)
         monthly_data = {}
         for row in results:
             date_key = f"{row['year']}-{row['month']}"
@@ -334,7 +351,6 @@ def sentiments_result(request):
         analysis_results = []
         for year_month, sentiments in monthly_data.items():
             year, month = map(int, year_month.split('-'))
-            # 直接使用元组列表
             sentiment_score, dominant_sentiment = sentiment_month_analyze(sentiments)
 
             analysis_results.append({
@@ -384,44 +400,97 @@ def generate_report(request):
 
         logger.info(f"正在获取景点 {spot_name} 的情感分析报告")
 
-        # 数据库连接
         conn = pymysql.connect(host='8.148.26.99', port=3306, user='root',
                               passwd='song', db='hx_cultural_transmission_sys',
                               charset='utf8')
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 查询tag_id - 修改这里的SQL，移除 tag_type 条件
-        cursor.execute("SELECT tag_id FROM tag WHERE tag_name = %s", (spot_name,))
-        tag_result = cursor.fetchone()
+        try:
+            # 首先获取spot_id
+            cursor.execute("SELECT spot_id FROM spot WHERE spot_name = %s", (spot_name,))
+            spot_result = cursor.fetchone()
+            
+            if not spot_result:
+                logger.error(f"未找到景点: {spot_name}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'未找到景点: {spot_name}'
+                }, status=404)
+            
+            spot_id = spot_result['spot_id']
+            logger.info(f"找到景点ID: {spot_id}")
 
-        if not tag_result:
+            # 查询tag_id
+            cursor.execute("SELECT tag_id FROM tag WHERE tag_name = %s", (spot_name,))
+            tag_result = cursor.fetchone()
+
+            if not tag_result:
+                logger.error(f"未找到景点对应的标签: {spot_name}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'未找到景点对应的标签: {spot_name}'
+                }, status=404)
+
+            tag_id = tag_result['tag_id']
+            logger.info(f"找到标签ID: {tag_id}")
+
+            # 查询报告内容
+            cursor.execute("SELECT content FROM report WHERE tag_id = %s", (tag_id,))
+            report_result = cursor.fetchone()
+
+            if not report_result:
+                logger.error(f"未找到景点的报告: {spot_name}")
+                return JsonResponse({
+                    'status': 'error',
+                    'message': f'未找到景点的报告: {spot_name}'
+                }, status=404)
+
+            # 获取时间线数据 - 修改SQL查询
+            timeline_sql = """
+            SELECT 
+                CONCAT(YEAR(comment_time), '-', LPAD(MONTH(comment_time), 2, '0')) as date,
+                sentiment,
+                COUNT(*) as count,
+                AVG(sentiment_confidence) as score
+            FROM user_comment_spot
+            WHERE spot_id = %s
+                AND sentiment IS NOT NULL
+                AND sentiment != ''
+            GROUP BY YEAR(comment_time), MONTH(comment_time), sentiment
+            ORDER BY YEAR(comment_time), MONTH(comment_time), sentiment
+            """
+            
+            cursor.execute(timeline_sql, (spot_id,))
+            timeline_results = cursor.fetchall()
+            
+            # 处理时间线数据
+            timeline_data = []
+            for row in timeline_results:
+                timeline_data.append({
+                    'date': row['date'],
+                    'sentiment': row['sentiment'].lower(),
+                    'count': int(row['count']),
+                    'score': float(row['score']) if row['score'] is not None else 0.0
+                })
+
+            logger.info(f"成功获取时间线数据，共 {len(timeline_data)} 条记录")
+
+            return JsonResponse({
+                'status': 'success',
+                'report': report_result['content'],
+                'timeline': timeline_data,
+                'spot_name': spot_name
+            })
+
+        except pymysql.Error as db_err:
+            logger.error(f"数据库操作出错: {str(db_err)}")
             return JsonResponse({
                 'status': 'error',
-                'message': f'未找到景点对应的标签: {spot_name}'
-            }, status=404)
-
-        tag_id = tag_result['tag_id']
-
-        # 查询报告内容
-        cursor.execute("SELECT content FROM report WHERE tag_id = %s", (tag_id,))
-        report_result = cursor.fetchone()
-
-        if not report_result:
-            return JsonResponse({
-                'status': 'error',
-                'message': f'未找到景点的报告: {spot_name}'
-            }, status=404)
-
-        report = report_result['content']
-
-        cursor.close()
-        conn.close()
-
-        return JsonResponse({
-            'status': 'success',
-            'report': report,
-            'spot_name': spot_name
-        })
+                'message': f"数据库错误: {str(db_err)}"
+            }, status=500)
+        finally:
+            cursor.close()
+            conn.close()
 
     except Exception as e:
         logger.error(f"获取报告时出错: {str(e)}")

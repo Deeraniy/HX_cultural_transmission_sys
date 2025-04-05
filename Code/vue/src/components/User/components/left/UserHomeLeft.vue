@@ -119,8 +119,8 @@ const handleMenuClick = (index) => {
 <template>
   <div>
     <!-- 菜单组件 -->
-    <el-menu 
-      class="card" 
+    <el-menu
+      class="card"
       background-color="#ffffff"
       :default-active="activeIndex"
       :router="true"
@@ -152,12 +152,12 @@ const handleMenuClick = (index) => {
       </el-menu-item>
 
       <!-- 菜单项4: 关系上传 -->
-      <el-menu-item index="6">
-        <el-icon>
-          <Upload />
-        </el-icon>
-        <span class="menu-text">关系上传</span>
-      </el-menu-item>
+<!--      <el-menu-item index="6">-->
+<!--        <el-icon>-->
+<!--          <Upload />-->
+<!--        </el-icon>-->
+<!--        <span class="menu-text">关系上传</span>-->
+<!--      </el-menu-item>-->
 
       <!-- 菜单项5: 设置 -->
       <el-menu-item index="7">
@@ -186,7 +186,7 @@ const handleMenuClick = (index) => {
   padding: 10px 20px;
   font-size: 16px;
   transition: all 0.3s ease;
-  
+
   /* 确保所有子元素都继承颜色 */
   * {
     color: #000000 !important;
@@ -210,7 +210,7 @@ const handleMenuClick = (index) => {
 /* 悬停效果 */
 :deep(.el-menu-item:hover) {
   background-color: #f4f4f4 !important;
-  
+
   * {
     color: #b71c1c !important;
   }
@@ -219,7 +219,7 @@ const handleMenuClick = (index) => {
 /* 选中状态 */
 :deep(.el-menu-item.is-active) {
   background-color: #ecf5ff !important;
-  
+
   * {
     color: #b71c1c !important;
   }

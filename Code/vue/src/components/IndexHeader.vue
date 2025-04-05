@@ -166,7 +166,7 @@ const handleSelect = (key: string, keyPath: string[]) => {
       router.push('/report');
       break;
     case '11':
-      router.push('/global');
+      router.push('/globe');
       break;
     case '12':
       router.push('/background');
@@ -190,7 +190,7 @@ const goToLogin = () => {
 const handleCommand = (command: string) => {
   switch (command) {
     case 'profile':
-      router.push('/userHome');
+      router.push('/userHome/article');
       break;
     case 'logout':
       userStore.logout();
