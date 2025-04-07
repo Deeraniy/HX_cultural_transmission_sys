@@ -5,7 +5,7 @@ from app01 import spot,collaborative_filter,casual_impact
 from . import testdb,search,search2
 from django.conf import settings
 from django.conf.urls.static import static
-from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details,user_star
+from app01 import tags,views,food,search,city,cloud,comment,spot,view,lda_topic_extractor,preview,comment_tokenizer,liter_comment_tokenizer,literature,liter_sentiments_analyze,food_sentiments_analyze,food_comment_tokenizer,folk_comment_tokenizer,folk_sentiments_analyze,user,tag_details,user_star,communication_effect
 from app01 import text_to_image,user_history
 from django.contrib import admin
 from django.urls import include
@@ -100,6 +100,7 @@ urlpatterns = [
     url(r'^generate_publicity/', publicity.generate_publicity_report),
     path('api/report/generate_image/', text_to_image.generate_publicity_image),
     url(r'^get_filtered_comments_by_tag/', get_filtered_comments_by_tag),
+    url(r'^get_theme_comments_sentiment/', communication_effect.get_theme_comments_sentiment),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
