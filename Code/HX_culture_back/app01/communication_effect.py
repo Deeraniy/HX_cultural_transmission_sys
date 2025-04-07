@@ -174,3 +174,93 @@ def get_theme_ip_distribution(request):
             cursor.close()
         if 'conn' in locals():
             conn.close()
+
+def get_theme_short_comments(request):
+    """
+    从filtered_user_comment表中获取各主题的简短评论
+    每个主题随机选择50条字数少于15字的评论
+    """
+    if request.method != 'GET':
+        return JsonResponse({'code': 405, 'message': '仅支持GET请求'})
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)  # 使用字典游标
+        
+        # 首先从tag表获取theme_name和tag_id的对应关系
+        theme_sql = """
+            SELECT DISTINCT theme_name, tag_id
+            FROM tag
+            WHERE theme_name IN ('spot', 'literature', 'food', 'folk')
+        """
+        cursor.execute(theme_sql)
+        theme_tags = cursor.fetchall()
+        
+        # 构建theme_name到tag_ids的映射
+        theme_tag_map = {}
+        for row in theme_tags:
+            theme_name = row['theme_name']
+            tag_id = row['tag_id']
+            if theme_name not in theme_tag_map:
+                theme_tag_map[theme_name] = []
+            theme_tag_map[theme_name].append(tag_id)
+        
+        result = {}
+        
+        # 对每个主题进行查询
+        for theme_name, tag_ids in theme_tag_map.items():
+            # 将tag_ids列表转换为字符串，用于IN子句
+            tag_ids_str = ','.join(str(tag_id) for tag_id in tag_ids)
+            
+            # SQL查询，获取指定主题的简短评论
+            sql = f"""
+                SELECT 
+                    comment_id,
+                    comment_text,
+                    comment_time,
+                    sentiment,
+                    sentiment_confidence
+                FROM filtered_user_comment 
+                WHERE 
+                    tag_id IN ({tag_ids_str})
+                    AND LENGTH(comment_text) < 45  -- 假设一个汉字占3个字符，15字约等于45个字符
+                ORDER BY RAND()
+                LIMIT 50
+            """
+            
+            cursor.execute(sql)
+            comments = cursor.fetchall()
+            
+            # 处理查询结果
+            result[theme_name] = {
+                'theme_name': theme_name,
+                'comment_count': len(comments),
+                'comments': [
+                    {
+                        'id': comment['comment_id'],
+                        'text': comment['comment_text'],
+                        'time': comment['comment_time'],
+                        'sentiment': comment['sentiment'],
+                        'confidence': float(comment['sentiment_confidence']) if comment['sentiment_confidence'] else None
+                    }
+                    for comment in comments
+                ]
+            }
+        
+        return JsonResponse({
+            'code': 200,
+            'message': 'success',
+            'data': result
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'code': 500,
+            'message': f'获取数据失败：{str(e)}'
+        })
+        
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
