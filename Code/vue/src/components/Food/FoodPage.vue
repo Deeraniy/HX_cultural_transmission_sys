@@ -290,28 +290,35 @@ const addHistory = async (item) => {
       // describe: item.description,
        // 截取前100字作为描述
     };
+  
+    // 记录点击事件
+    const recordClick = async (foodId) => {
+      try {
+        const userId = getUserId();
+        if (!userId) {
+          console.log('未登录用户的点击不记录');
+          return;
+        }
 
-// 记录点击事件
-const recordClick = async (foodId) => {
-  try {
-    const userId = getUserId();
-    if (!userId) {
-      console.log('未登录用户的点击不记录');
-      return;
-    }
+        // 获取美食对应的标签
+        const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
+        if (response.code === 200 && response.data) {
+          const tagId = response.data.id;
+          // 确保 userId 是数字类型
+          const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+          // 使用 viewTagAPI 记录点击
+          await TagsAPI.viewTagAPI(numericUserId, tagId);
+          console.log(`记录用户 ${userId} 对美食 ${foodId} 的点击`);
+        }
+      } catch (error) {
+        console.error('记录点击失败:', error);
+      }
+    };
 
-    // 获取美食对应的标签
-    const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
-    if (response.code === 200 && response.data) {
-      const tagId = response.data.id;
-      // 确保 userId 是数字类型
-      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
-      // 使用 viewTagAPI 记录点击
-      await TagsAPI.viewTagAPI(numericUserId, tagId);
-      console.log(`记录用户 ${userId} 对美食 ${foodId} 的点击`);
-    }
+    // 记录点击
+    await recordClick(item.food_id || item.id);
   } catch (error) {
-    console.error('记录点击失败:', error);
+    console.error('记录历史失败:', error);
   }
 };
 
@@ -460,6 +467,7 @@ const getItemStyle = (index) => {
 const goToFoodHome = () => {
   router.push('/food/home');
 };
+
 </script>
 
 <style scoped>

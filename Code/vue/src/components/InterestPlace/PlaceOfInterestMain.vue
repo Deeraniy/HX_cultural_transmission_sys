@@ -12,11 +12,11 @@
           :ellipsis="false"
           @select="handleSelect"
       >
-        <el-menu-item index="2">情感分析与预测</el-menu-item>
+        <!-- <el-menu-item index="2">情感分析与预测</el-menu-item>
         <el-menu-item index="3">传播策略生成</el-menu-item>
         <el-menu-item index="4">风景名胜3D展示</el-menu-item>
         <el-menu-item index="5">社交分享信息展示</el-menu-item>
-        <el-menu-item index="6">沉浸式故事叙述</el-menu-item>
+        <el-menu-item index="6">沉浸式故事叙述</el-menu-item> -->
       
       </el-menu>
     </div>

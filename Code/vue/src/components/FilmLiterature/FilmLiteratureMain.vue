@@ -24,7 +24,7 @@
           <el-menu-item index="2-3">新媒体艺术</el-menu-item>
           <el-menu-item index="2-4">表演艺术</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="3">知识图谱</el-menu-item>
+        <!-- <el-menu-item index="3">知识图谱</el-menu-item>
         <el-menu-item index="4">沉浸式故事体验</el-menu-item>
         <el-menu-item index="5">全球传播情况</el-menu-item>
         <el-sub-menu index="1">
@@ -40,7 +40,7 @@
             <el-menu-item index="1-4-2">item two</el-menu-item>
             <el-menu-item index="1-4-3">item three</el-menu-item>
           </el-sub-menu>
-        </el-sub-menu>
+        </el-sub-menu> -->
       </el-menu>
     </div>
 
@@ -55,19 +55,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import router from '@/router'
 import FilmLiterature from "@/components/FilmLiterature/Literature/FilmLiterature.vue";
 import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
 import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
 import ShowDisplay from "@/components/FilmLiterature/Literature/ShowDisplay.vue";
-// 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
-const activeIndex = ref<'2-1' | '2-2' | 'null' | string>(null);
+
+const route = useRoute();
+const activeIndex = ref(route.query.activeIndex || '2-1');
 
 // 处理菜单选择
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-  activeIndex.value = key;  // 更新选中的菜单项
+const handleSelect = (key: string) => {
+  activeIndex.value = key;
 };
 const goBack = () => {
   router.go(-1);  // 返回上一页
@@ -147,7 +148,7 @@ const goBack = () => {
   font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 320px; /* 给按钮添加右边距 */
+  margin-right: 900px; /* 给按钮添加右边距 */
 }
 
 .total {

@@ -35,7 +35,7 @@
     </div>
 
     <!-- 弹窗 -->
-    <el-dialog v-model="dialogVisible" title="民俗文化详情" width="600px">
+    <el-dialog v-model="dialogVisible" title="民俗文化详情" width="700px" class="folk-dialog">
       <!-- 添加右侧交互图标 -->
       <div class="side-interaction-icons">
         <div class="icon-wrapper" @click="toggleLike">
@@ -56,15 +56,23 @@
         </div>
       </div>
 
-      <div v-if="selectedFolk">
-        <h2>{{ selectedFolk.name }}</h2>
-        <h3>级别：{{selectedFolk.rank}}</h3>
-        <img :src="selectedFolk.image" alt="详细图片" class="dialog-image" />
-        <p>{{ selectedFolk.description }}</p>
+      <div v-if="selectedFolk" class="folk-dialog-content">
+        <div class="folk-header">
+          <img :src="selectedFolk.image" alt="详细图片" class="dialog-image" />
+          <div class="folk-title-container">
+            <h2>{{ selectedFolk.name }}</h2>
+            <h3>级别：{{selectedFolk.rank}}</h3>
+          </div>
+        </div>
+        <div class="folk-description">
+          <p>{{ selectedFolk.description }}</p>
+        </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">关闭</el-button>
-      </span>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible = false" class="close-btn">关闭</el-button>
+        </div>
+      </template>
     </el-dialog>
   </el-main>
 </template>
@@ -488,31 +496,102 @@ const showDetails = async (folk) => {
 }
 
 /* 弹窗样式 */
+.folk-dialog {
+  :deep(.el-dialog__header) {
+    background-color: #b71c1c;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  :deep(.el-dialog__title) {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    font-family: 'HelveticaNeue', serif;
+  }
+
+  :deep(.el-dialog__body) {
+    padding: 0;
+  }
+
+  :deep(.el-dialog__headerbtn .el-dialog__close) {
+    color: white;
+  }
+
+  :deep(.el-dialog__footer) {
+    border-top: 1px solid #eee;
+    padding: 15px 20px;
+  }
+}
+
+.folk-dialog-content {
+  padding: 0;
+}
+
+.folk-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  background-color: rgba(255, 248, 240, 0.9);
+  padding-bottom: 0px;
+}
+
 .dialog-image {
   width: 100%;
-  height: auto;
+  height: 280px;
   object-fit: cover;
-  margin-bottom: 20px;
+  border-radius: 0;
 }
 
-.search-container {
-  width: 100%;
-  display: flex;
-  justify-content: center; /* 居中对齐 */
-  margin-bottom: 20px;
+.folk-title-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(183, 28, 28, 0.568);
+  padding: 15px 20px;
+  color: white;
+  text-align: center;
 }
 
-.search-box {
-  width: 300px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.folk-title-container h2 {
+  margin: 0 0 5px 0;
+  font-size: 26px;
+  font-family: 'HelveticaNeue', serif;
+}
+
+.folk-title-container h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: normal;
+  font-family: 'HelveticaNeue', serif;
+}
+
+.folk-description {
+  padding: 25px;
+  background-color: #fff8f0;
+  font-family: 'HelveticaNeue', serif;
+}
+
+.folk-description p {
+  margin: 0;
+  line-height: 1.8;
   font-size: 16px;
-  outline: none;
+  text-indent: 2em;
+  color: #333;
 }
 
-.search-box:focus {
-  border-color: #b71c1c;
+.close-btn {
+  background-color: #b71c1c;
+  color: white;
+  border: none;
+  font-family: 'HelveticaNeue', serif;
+}
+
+.close-btn:hover {
+  background-color: #9b1e1e;
 }
 
 .side-interaction-icons {
@@ -535,11 +614,13 @@ const showDetails = async (folk) => {
   background-color: rgba(255, 255, 255, 0.9);
   padding: 8px;
   border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
 }
 
 .icon-wrapper:hover {
   transform: scale(1.1);
+  background-color: rgba(255, 248, 240, 1);
 }
 
 .icon {
@@ -563,5 +644,27 @@ const showDetails = async (folk) => {
 .el-dialog {
   position: relative;
   margin-right: 60px !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.search-container {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* 居中对齐 */
+  margin-bottom: 20px;
+}
+
+.search-box {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-box:focus {
+  border-color: #b71c1c;
 }
 </style>

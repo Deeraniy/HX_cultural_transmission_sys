@@ -355,14 +355,47 @@ watch(
 
 :deep(.el-radio-button__inner) {
   border-radius: 4px !important;
+  color: #b71c1c;
+  border-color: #b71c1c;
 }
 
 :deep(.el-radio-button:first-child .el-radio-button__inner) {
   border-radius: 4px !important;
+  border-left-color: #b71c1c;
 }
 
 :deep(.el-radio-button:last-child .el-radio-button__inner) {
   border-radius: 4px !important;
+}
+
+/* 自定义radio按钮颜色 */
+:deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  background-color: #b71c1c !important;
+  border-color: #b71c1c !important;
+  box-shadow: -1px 0 0 0 #b71c1c !important;
+  color: white !important;
+}
+
+/* 悬停状态 */
+:deep(.el-radio-button__inner:hover) {
+  color: #b71c1c;
+}
+
+/* 选中状态下相邻按钮的边框 */
+:deep(.el-radio-button__original-radio:checked + .el-radio-button__inner + .el-radio-button__inner) {
+  border-left-color: #b71c1c;
+}
+
+/* 焦点状态 */
+:deep(.el-radio-button:focus:not(.is-focus):not(:active):not(.is-disabled)) {
+  box-shadow: 0 0 2px 2px rgba(183, 28, 28, 0.25);
+}
+
+/* 禁用状态下但选中的按钮 */
+:deep(.el-radio-button.is-disabled.is-checked .el-radio-button__inner) {
+  background-color: rgba(183, 28, 28, 0.6) !important;
+  border-color: rgba(183, 28, 28, 0.6) !important;
+  box-shadow: -1px 0 0 0 rgba(183, 28, 28, 0.6) !important;
 }
 
 /* 确保图表容器占满可用空间 */

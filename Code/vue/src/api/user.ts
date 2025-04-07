@@ -132,6 +132,13 @@ class UserAPI {
                 img_url: data.img_url,
                 describe: data.describe,
             }
+        }).then(response => {
+            console.log("response",response);
+            if (response  === "添加成功") {
+                console.log('浏览记录添加成功:', response);
+            } else {
+                console.error('浏览记录添加失败:', response);
+            }
         }).catch(error => {
             console.error('Add history error:', error.response?.data || error);
             throw error;

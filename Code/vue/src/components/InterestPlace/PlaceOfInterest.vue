@@ -126,7 +126,7 @@
             <div class="dialog-interaction-icons">
               <div class="icon-wrapper" @click="toggleLike(selectedPlace)">
                 <img
-                  :src="getImageUrl(tagStatus.is_liked ? 'setting/赞 (1).png' : 'setting/赞.png')"
+                  :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
                   :class="['icon', { 'active': tagStatus.is_liked }]"
                   alt="赞"
                 />
@@ -134,7 +134,7 @@
               </div>
               <div class="icon-wrapper" @click="toggleFavorite(selectedPlace)">
                 <img
-                  :src="getImageUrl(tagStatus.is_favorite ? 'setting/收藏(1).png' : 'setting/收藏.png')"
+                  :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
                   :class="['icon', { 'active': tagStatus.is_favorite }]"
                   alt="收藏"
                 />
@@ -169,6 +169,12 @@ import { ElMessage } from 'element-plus';
 import UserAPI from "@/api/user";
 import {hColgroup} from "element-plus/es/components/table/src/h-helper";
 import props = hColgroup.props;
+
+// 使用import导入图标
+import likeIcon from '@/assets/setting/赞.png';
+import likeActiveIcon from '@/assets/setting/赞 (1).png';
+import favoriteIcon from '@/assets/setting/收藏.png';
+import favoriteActiveIcon from '@/assets/setting/收藏(1).png';
 
 const router = useRouter()
 const chartsDOM = ref<HTMLElement | null>(null);
@@ -512,7 +518,8 @@ const addHistory = async (attraction: Place) => {
     };
 
     const response = await UserAPI.AddUserHistory(historyData);
-    if (response && response.code === 200) {
+    console.log("response ",response);
+    if (response  === "添加成功") {
       console.log('浏览记录添加成功:', response);
     } else {
       console.error('浏览记录添加失败:', response);
@@ -964,8 +971,10 @@ const initMap = () => {
 }
 
 .attraction-card {
-  /* background-color: #fff8f0; */
-  background-image: url('@/assets/img_3.jpg');
+  background-image: url('@/assets/back/底纹.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 
   margin-right: 22px;
   margin-left: 22px;
@@ -1058,17 +1067,11 @@ const initMap = () => {
 }
 
 .detail-dialog {
-  :deep(.el-dialog__body) {
-    padding: 0;
-    height: 700px;  /* 增加弹窗高度 */
-    overflow: hidden;
-  }
-
-  :deep(.el-dialog__header) {
-    display: none;
-  }
-
   :deep(.el-dialog) {
+    background-image: url('@/assets/back/底纹.png'); // 添加背景图像
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
@@ -1079,6 +1082,16 @@ const initMap = () => {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  :deep(.el-dialog__body) {
+    padding: 0;
+    height: 700px;  /* 增加弹窗高度 */
+    overflow: hidden;
+  }
+
+  :deep(.el-dialog__header) {
+    display: none;
   }
 
   :deep(.el-overlay) {
@@ -1228,7 +1241,7 @@ const initMap = () => {
 .dialog-interaction-icons {
   display: flex;
   gap: 15px;
-  margin-right: 20px;
+  margin-right: 40px;
 }
 
 .icon-wrapper {

@@ -12,7 +12,7 @@
       <div v-for="(image, index) in currentImages" :key="index" :style="getImageStyle(index)" @click="openWalkModal(image)">
         <img :src="image.src" :alt="image.title" />
       </div>
-      <p class="quote">可以强天下而保中国者，莫湘人若也</p>
+      <p class="quote">可以强天下<br>而保中国者，莫湘人若也</p>
     </div>
     <!-- WalkModal 弹窗 -->
     <Walk v-if="showWalkModal" :human="selectedHuman" @close="closeWalkModal" />
@@ -339,7 +339,7 @@ export default {
 .quote {
   position: absolute; /* 设置绝对定位 */
   top: 130px; /* 距离顶部 20px */
-  left: 70%; /* 水平居中 */
+  left: 60%; /* 水平居中 */
   z-index: 1000; /* 确保它显示在其他元素上面 */
   font-family: 'Arial', sans-serif;
   font-size: 50px;

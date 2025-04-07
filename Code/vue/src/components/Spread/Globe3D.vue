@@ -863,10 +863,10 @@ const createDataSphere = () => {
             child.material = new THREE.MeshPhongMaterial({
               map: texture,  // 使用贴图
               color: 0xffffff,  // 基础白色
-              emissive: 0x666666,  // 降低自发光强度
-              emissiveIntensity: 0.1,  // 进一步降低自发光
-              specular: 0xffffff,  // 高光颜色
-              shininess: 80,  // 调整光泽度
+              emissive: 0x333333,  // 进一步降低自发光强度
+              emissiveIntensity: 0.05,  // 进一步降低自发光
+              specular: 0x888888,  // 调整高光颜色
+              shininess: 50,  // 降低光泽度
               transparent: true,
               opacity: 0.95,
               side: THREE.DoubleSide,
@@ -879,11 +879,11 @@ const createDataSphere = () => {
           }
         });
         
-        // 添加多个点光源来创造更好的光影效果
+        // 调整光源设置
         const lights = [
-          { position: [2, 2, 2], intensity: 0.6, distance: 15, color: 0xffffff },
-          { position: [-2, 1, -2], intensity: 0.4, distance: 15, color: 0xccccff },
-          { position: [0, -2, 0], intensity: 0.3, distance: 15, color: 0xffffcc }
+          { position: [2, 2, 2], intensity: 0.4, distance: 15, color: 0xffffff },
+          { position: [-2, 1, -2], intensity: 0.3, distance: 15, color: 0xccccff },
+          { position: [0, -2, 0], intensity: 0.2, distance: 15, color: 0xffffcc }
         ];
         
         lights.forEach(light => {
@@ -896,32 +896,6 @@ const createDataSphere = () => {
           object.add(pointLight);
         });
         
-        // 添加环形光晕
-        const glowGeometry = new THREE.TorusGeometry(1.5, 0.2, 32, 100);
-        const glowMaterial = new THREE.MeshPhongMaterial({
-          color: 0xffffff,
-          emissive: 0xaaaaaa,
-          emissiveIntensity: 0.3,
-          transparent: true,
-          opacity: 0.4,
-          side: THREE.DoubleSide,
-          shininess: 50
-        });
-        
-        const glowRing = new THREE.Mesh(glowGeometry, glowMaterial);
-        glowRing.rotation.x = Math.PI / 2;
-        glowRing.castShadow = true;
-        glowRing.receiveShadow = true;
-        object.add(glowRing);
-        
-        // 添加环境光遮罩(AO)效果
-        const aoLight = new THREE.HemisphereLight(
-          0xffffff, // 天空色
-          0x444444, // 地面色
-          0.5 // 强度
-        );
-        object.add(aoLight);
-        
         group.add(object);
       },
       (xhr) => {
@@ -933,10 +907,10 @@ const createDataSphere = () => {
         const geometry = new THREE.SphereGeometry(1, 32, 32);
         const material = new THREE.MeshPhongMaterial({
           color: 0xffffff,
-          emissive: 0xffffff,
-          emissiveIntensity: 0.2,
-          specular: 0xffffff,
-          shininess: 100
+          emissive: 0x333333,
+          emissiveIntensity: 0.05,
+          specular: 0x888888,
+          shininess: 50
         });
         const sphere = new THREE.Mesh(geometry, material);
         group.add(sphere);
