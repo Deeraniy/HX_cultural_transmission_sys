@@ -91,3 +91,86 @@ def get_theme_comments_sentiment(request):
             cursor.close()
         if 'conn' in locals():
             conn.close()
+
+def get_theme_ip_distribution(request):
+    """
+    获取四个主题的IP地区分布统计
+    返回每个主题下各个地区的评论数量
+    """
+    if request.method != 'GET':
+        return JsonResponse({'code': 405, 'message': '仅支持GET请求'})
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # 定义要查询的表和对应的主题名
+        tables = {
+            'spot': 'user_comment_spot',
+            'literature': 'user_comment_literature',
+            'food': 'user_comment_food',
+            'folk': 'user_comment_folk'
+        }
+        
+        result = {}
+        
+        for theme_name, table_name in tables.items():
+            # SQL查询，统计各IP地区的评论数量
+            sql = f"""
+                SELECT 
+                    CASE 
+                        WHEN ip_location IS NULL OR ip_location = '' THEN '其他'
+                        ELSE SUBSTRING_INDEX(ip_location, '省', 1)
+                    END as province,
+                    COUNT(*) as count
+                FROM {table_name}
+                GROUP BY province
+                ORDER BY count DESC
+            """
+            
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            
+            # 处理查询结果
+            ip_distribution = {}
+            for row in rows:
+                province, count = row
+                # 处理特殊情况（直辖市等）
+                if '市' in province and '省' not in province:
+                    province = province.replace('市', '')
+                elif '自治区' in province:
+                    province = province.replace('自治区', '')
+                elif '特别行政区' in province:
+                    province = province.replace('特别行政区', '')
+                
+                ip_distribution[province] = count
+            
+            result[theme_name] = {
+                'theme_name': theme_name,
+                'total_count': sum(ip_distribution.values()),
+                'ip_distribution': [
+                    {
+                        'province': province,
+                        'count': count
+                    }
+                    for province, count in ip_distribution.items()
+                ]
+            }
+        
+        return JsonResponse({
+            'code': 200,
+            'message': 'success',
+            'data': result
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'code': 500,
+            'message': f'获取数据失败：{str(e)}'
+        })
+        
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()

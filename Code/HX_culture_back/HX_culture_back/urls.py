@@ -101,6 +101,7 @@ urlpatterns = [
     path('api/report/generate_image/', text_to_image.generate_publicity_image),
     url(r'^get_filtered_comments_by_tag/', get_filtered_comments_by_tag),
     url(r'^get_theme_comments_sentiment/', communication_effect.get_theme_comments_sentiment),
+    url(r'^get_theme_ip_distribution/', communication_effect.get_theme_ip_distribution),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
