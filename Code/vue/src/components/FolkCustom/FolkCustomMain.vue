@@ -20,7 +20,7 @@
         <!-- 美食专区菜单项 -->
         <el-menu-item index="3">传播效果</el-menu-item>
         <!-- 传播效果分析菜单项 -->
-        <el-menu-item index="4">情感分析</el-menu-item>
+        <!-- <el-menu-item index="4">情感分析</el-menu-item> -->
       </el-menu>
     </div>
 
@@ -86,7 +86,7 @@ onMounted(() => {
   font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 700px; /* 给按钮添加右边距 */
+  margin-right: 850px; /* 给按钮添加右边距 */
 }
 .el-menu--popup .el-menu-item,
 .el-menu .el-menu-item {
@@ -155,7 +155,7 @@ onMounted(() => {
   font-family: 'HelveticaNeue', serif;
   font-size: 24px;
   color: #fff8f0;
-  margin-right: 50px;
+  margin-right: 30px;
   margin-bottom: 10px;
 }
 

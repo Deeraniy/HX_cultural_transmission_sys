@@ -913,6 +913,124 @@
 .markdown-body :deep(h3) + p {
   margin-top: 4px;
 }
+
+/* 修改标签样式 */
+:deep(.el-tag) {
+  &.el-tag--dark {
+    background-color: #b71c1c !important;
+    border-color: #b71c1c !important;
+  }
+  
+  &.el-tag--plain {
+    color: #b71c1c !important;
+    border-color: #b71c1c !important;
+    
+    &:hover {
+      background-color: #b71c1c !important;
+      color: white !important;
+    }
+  }
+}
+
+/* 修改按钮样式 */
+:deep(.el-button--primary) {
+  background-color: #b71c1c !important;
+  border-color: #b71c1c !important;
+  
+  &:hover, &:focus {
+    background-color: #d32f2f !important;
+    border-color: #d32f2f !important;
+  }
+  
+  &:active {
+    background-color: #7f0c07 !important;
+    border-color: #7f0c07 !important;
+  }
+}
+
+/* 修改文字按钮样式 */
+:deep(.el-button--text) {
+  color: #b71c1c !important;
+  
+  &:hover, &:focus {
+    color: #d32f2f !important;
+  }
+  
+  &:active {
+    color: #7f0c07 !important;
+  }
+}
+
+/* 修改选中标签的背景色 */
+.tag-item.selected {
+  background-color: #b71c1c !important;
+  border-color: #b71c1c !important;
+  color: white !important;
+}
+
+/* 修改导航按钮样式 */
+.navigate-button {
+  background-color: #b71c1c !important;
+  
+  &:hover {
+    background-color: #d32f2f !important;
+  }
+  
+  &:active {
+    background-color: #7f0c07 !important;
+  }
+}
+
+/* 修改更多按钮样式 */
+.more-button {
+  color: #b71c1c !important;
+  
+  &:hover {
+    color: #d32f2f !important;
+  }
+}
+
+/* 修改输入框选中时的边框颜色 */
+:deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px #b71c1c !important;
+}
+
+/* 修改文本域选中时的边框颜色 */
+:deep(.el-textarea__inner:focus) {
+  box-shadow: 0 0 0 1px #b71c1c !important;
+}
+
+/* 修改普通按钮（包括重置表单按钮）的样式 */
+:deep(.el-button) {
+  &:not(.el-button--primary):not(.el-button--text) {
+    &:hover, &:focus {
+      color: #b71c1c !important;
+      border-color: #b71c1c !important;
+      background-color: #fff !important;
+    }
+    
+    &:active {
+      color: #7f0c07 !important;
+      border-color: #7f0c07 !important;
+      background-color: #fff !important;
+    }
+  }
+}
+
+/* 修改下拉选择框选中时的边框颜色 */
+:deep(.el-select .el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 1px #b71c1c !important;
+}
+
+/* 修改下拉选项选中和悬停的颜色 */
+:deep(.el-select-dropdown__item.selected) {
+  color: #b71c1c !important;
+  background-color: #fde9e9 !important;
+}
+
+:deep(.el-select-dropdown__item.hover) {
+  background-color: #fde9e9 !important;
+}
 </style>
 
 <script setup>

@@ -4,25 +4,23 @@
 
     <el-table :data="pagedData" border style="width: 97%;font-size: 20px;  font-family: 'HelveticaNeue', serif;margin: 20px" :fit="true" >
       <!-- 菜品图片列 -->
-      <el-table-column label="菜品图片">
+      <el-table-column label="菜品图片" align="center">
         <template #default="{ row }">
           <img :src="row.image_url" alt="Dish Image" class="dish-image" />
         </template>
       </el-table-column>
 
       <!-- 菜品名称列 -->
-      <el-table-column label="菜品名称" prop="food_name"></el-table-column>
+      <el-table-column label="菜品名称" prop="food_name" align="center"></el-table-column>
 
       <!-- 参与度列 -->
-      <el-table-column label="参与度" prop="participation" sortable></el-table-column>
+      <el-table-column label="参与度" prop="participation" sortable align="center"></el-table-column>
 
       <!-- 讨论度列 -->
-      <el-table-column label="讨论度" prop="discussion" sortable></el-table-column>
+      <el-table-column label="讨论度" prop="discussion" sortable align="center"></el-table-column>
 
       <!-- 知名度列 -->
-      <el-table-column label="知名度" prop="fame" sortable></el-table-column>
-
-
+      <el-table-column label="知名度" prop="fame" sortable align="center"></el-table-column>
 
     </el-table>
 
@@ -166,15 +164,26 @@ const sortOrders = {
   --el-table-header-text-color: #fffffff;
   --el-table-row-hover-bg-color: transparent;
   --el-table-current-row-bg-color: transparent;
-  --el-table-bg-color: rgba(255, 255, 255, 0.4); /* 表格背景半透明黑色 */
+  --el-table-bg-color: rgba(255, 255, 255, 0.7);
   --el-table-header-bg-color: transparent;
   --el-table-tr-bg-color: transparent;
   --el-table-expanded-cell-bg-color: transparent;
+  text-align: center;
+  border-radius: 15px;  
+}
+
+.el-table .cell {
+  text-align: center;
 }
 
 .analysis-table {
   font-family: 'HelveticaNeue', serif;
-font-size: 20px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 h2 {
@@ -189,5 +198,7 @@ h2 {
   max-width: 180px;
   object-fit: cover;
   border-radius: 8px;
+  display: block;
+  margin: 0 auto;
 }
 </style>

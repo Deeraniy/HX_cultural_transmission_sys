@@ -121,6 +121,7 @@ import food4 from '@/assets/foodImg/food4.jpg'
 import food5 from '@/assets/foodImg/food5.jpg'
 import FoodAPI from '@/api/food';
 import TagsAPI from '@/api/tags';
+import UserAPI from '@/api/user'
 import { useUserStore } from '@/stores/user';
 import { ElMessage } from 'element-plus';
 // 导入图标
@@ -135,6 +136,7 @@ const tiltAngle = ref(0); // 俯视仰视角度
 const currentPage = ref(1); // 当前页码
 const selectedIndex = ref(0);
 import { reactive } from 'vue';
+
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -152,13 +154,13 @@ const getUserId = () => {
   if (userStore.userId) {
     return userStore.userId;
   }
-  
+
   // 如果 userStore 中没有，尝试从 localStorage 获取
   const userId = localStorage.getItem('userId');
   if (userId) {
     return userId;
   }
-  
+
   // 如果都没有，返回 null
   console.warn('User ID is missing');
   return null;
@@ -178,16 +180,16 @@ const initializeTagStatus = async (foodId) => {
       };
       return;
     }
-    
+
     console.log(`Initializing tag status with ID: ${foodId}`);
     const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
-    
+
     if (response.code === 200 && response.data) {
       const tagId = response.data.id;
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const statusResponse = await TagsAPI.getTagStatusAPI(numericUserId, tagId);
-      
+
       if (statusResponse.code === 200) {
         tagStatus.value = statusResponse.data;
       }
@@ -208,7 +210,7 @@ const toggleLike = async () => {
 
     // 尝试从多个可能的来源获取 food_id
     const foodId = foodDetail.item?.food_id || foodDetail.item?.id || foodDetail.id;
-    
+
     if (!foodId) {
       console.error('Food ID is missing, detail:', foodDetail);
       ElMessage.warning('无法获取食品ID，请重试');
@@ -223,7 +225,7 @@ const toggleLike = async () => {
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const likeResponse = await TagsAPI.toggleLikeAPI(numericUserId, tagId);
-      
+
       if (likeResponse.code === 200) {
         tagStatus.value = {
           ...tagStatus.value,
@@ -248,7 +250,7 @@ const toggleFavorite = async () => {
 
     // 尝试从多个可能的来源获取 food_id
     const foodId = foodDetail.item?.food_id || foodDetail.item?.id || foodDetail.id;
-    
+
     if (!foodId) {
       console.error('Food ID is missing, detail:', foodDetail);
       ElMessage.warning('无法获取食品ID，请重试');
@@ -263,7 +265,7 @@ const toggleFavorite = async () => {
       // 确保 userId 是数字类型
       const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
       const favoriteResponse = await TagsAPI.toggleFavoriteAPI(numericUserId, tagId);
-      
+
       if (favoriteResponse.code === 200) {
         tagStatus.value.is_favorite = favoriteResponse.data.is_favorite;
       }
@@ -272,8 +274,55 @@ const toggleFavorite = async () => {
     console.error('收藏操作失败:', error);
   }
 };
+const addHistory = async (item) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录以记录浏览历史');
+      return;
+    }
+    const historyData = {
+      uid: userId,
+      type: "food", // 记录类型
+      name: item.name, // 景点名称
+      img_url: item.img, // 景点图片
+      describe: '美食描述',
+      // describe: item.description,
+       // 截取前100字作为描述
+    };
+  
+    // 记录点击事件
+    const recordClick = async (foodId) => {
+      try {
+        const userId = getUserId();
+        if (!userId) {
+          console.log('未登录用户的点击不记录');
+          return;
+        }
 
-// 显示食品详情
+        // 获取美食对应的标签
+        const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
+        if (response.code === 200 && response.data) {
+          const tagId = response.data.id;
+          // 确保 userId 是数字类型
+          const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+          // 使用 viewTagAPI 记录点击
+          await TagsAPI.viewTagAPI(numericUserId, tagId);
+          console.log(`记录用户 ${userId} 对美食 ${foodId} 的点击`);
+        }
+      } catch (error) {
+        console.error('记录点击失败:', error);
+      }
+    };
+
+    // 记录点击
+    await recordClick(item.food_id || item.id);
+  } catch (error) {
+    console.error('记录历史失败:', error);
+  }
+};
+
+// 修改显示食品详情的函数
 const showFoodDetail = async (item) => {
   foodDetail.visible = true;
   foodDetail.name = item.name;
@@ -281,23 +330,42 @@ const showFoodDetail = async (item) => {
   foodDetail.img = item.img;
   foodDetail.item = item;
   foodDetail.id = item.food_id || item.id;
-
+  addHistory(item)
   // 初始化标签状态
   await initializeTagStatus(foodDetail.id);
+  // 记录点击
+  await recordClick(foodDetail.id);
 };
 
-// 情感分析按钮点击事件
-const sentimentAnalysis = (item) => {
-  console.log('点击了情感分析按钮',item.name);
-  // 使用 router.push 进行页面跳转，并传递美食名字
+// 修改情感分析函数
+const sentimentAnalysis = async (item) => {
+  console.log('点击了情感分析按钮', item.name);
+  // 记录点击
+  await recordClick(item.food_id || item.id);
+
+  // 使用 router.push 进行页面跳转
   router.push({
     path: '/detail',
     query: {
       name: item.name, // 传递菜品名字
       value: 3,  // 这里的 3 表示美食类型
       theme: 1,  // 可以在这里添加额外的参数
+      from: 'food' // 添加来源标记，便于返回
     }
   });
+};
+
+// 点击左侧菜品，更新右侧展示的菜品
+const selectFoodItem = async (index) => {
+  selectedIndex.value = index;
+  const angle = (360 / paginatedFoodItems.value.length) * index;
+  rotationAngle.value = angle; // 通过旋转角度更新 Carousel
+
+  // 记录点击
+  const item = paginatedFoodItems.value[index];
+  if (item) {
+    await recordClick(item.food_id || item.id);
+  }
 };
 
 const foodDetail = reactive({
@@ -307,13 +375,6 @@ const foodDetail = reactive({
   description: '',
   id: null, // 确保有 id 字段
 });
-
-// 点击左侧菜品，更新右侧展示的菜品
-const selectFoodItem = (index) => {
-  selectedIndex.value = index;
-  const angle = (360 / paginatedFoodItems.value.length) * index;
-  rotationAngle.value = angle; // 通过旋转角度更新 Carousel
-};
 
 // 关闭详情弹窗
 const closeFoodDetail = () => {
@@ -406,6 +467,7 @@ const getItemStyle = (index) => {
 const goToFoodHome = () => {
   router.push('/food/home');
 };
+
 </script>
 
 <style scoped>

@@ -71,12 +71,12 @@ const handleSelect = (key: string, keyPath: string[]) => {
   background-color: #fff8f0;
   background-size: cover;
   background-position: center;
-  min-height: 100vh;
+  min-height: 97vh;
   overflow-y: auto;
 }
 
 .el-main {
-  padding: 20px;
+  padding: 20px 0px 0px 0px;
 }
 
 .fixed-title {
@@ -96,17 +96,18 @@ const handleSelect = (key: string, keyPath: string[]) => {
   font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  padding: 0; /* 移除内边距 */
+  padding-top: 20px; /* 移除内边距 */
   height: auto; /* 允许按钮高度自适应 */
 }
 
 .el-menu-demo {
+
   display: flex;
   justify-content: flex-end;
   background-color: transparent !important;
   box-shadow: none;
   border: none;
-  margin-left: auto;
+  margin-left: -200px;
 }
 
 .el-menu-item, .el-sub-menu {

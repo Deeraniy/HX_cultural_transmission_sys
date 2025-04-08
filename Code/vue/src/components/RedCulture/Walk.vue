@@ -9,7 +9,12 @@
       <div
           ref="sprite"
           class="sprite"
-          :class="{ 'walk-right': walkingRight, 'walk-left': walkingLeft }"
+          :class="{ 
+            'walk-right': walkingRight, 
+            'walk-left': walkingLeft,
+            'stand-right': !walkingRight && !walkingLeft && !lastWalkingLeft,
+            'stand-left': !walkingRight && !walkingLeft && lastWalkingLeft
+          }"
           :style="{ left: `${spritePosition}px` }"
       >
         <!-- 气泡 -->
@@ -59,6 +64,7 @@ export default {
       currentMessage: "", // 当前显示的事件信息
       walkingRight: false, // 是否向右走
       walkingLeft: false, // 是否向左走
+      lastWalkingLeft: false, // 上一次行走方向是否向左
       showBubble: false, // 是否显示气泡
       bubbleMessage: "", // 气泡内容
       randomTargetIndex: null, // 随机目标时间点的索引
@@ -97,12 +103,14 @@ export default {
       if (key === "ArrowRight") {
         this.key.right = true;
         this.walkingRight = true;
+        this.lastWalkingLeft = false;
         this.walkRight();
       }
 
       if (key === "ArrowLeft") {
         this.key.left = true;
         this.walkingLeft = true;
+        this.lastWalkingLeft = true;
         this.walkLeft();
       }
     },
@@ -177,7 +185,7 @@ export default {
       });
     },
     triggerBubble(node) {
-      this.bubbleMessage = `原来，这就是“${this.human.name}”的一生`;
+      this.bubbleMessage = `原来，这就是"${this.human.name}"的一生`;
       this.showBubble = true;
 
       setTimeout(() => {
@@ -270,6 +278,14 @@ export default {
   height: 148px;
   background-image: url(https://atomicrobotdesign.com/blog_media/css-sprite/standing-right.png);
   background-size: cover;
+}
+
+.stand-right {
+  background-image: url(https://atomicrobotdesign.com/blog_media/css-sprite/standing-right.png);
+}
+
+.stand-left {
+  background-image: url(https://atomicrobotdesign.com/blog_media/css-sprite/standing-left.png);
 }
 
 .walk-right {

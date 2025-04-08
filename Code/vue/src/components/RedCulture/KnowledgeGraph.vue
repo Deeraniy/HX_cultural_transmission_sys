@@ -1,5 +1,26 @@
 <template>
   <div class="knowledge-graph-container">
+    <div class="left-section">
+      <div class="filter-section">
+        <el-select
+          v-model="selectedTags" 
+          multiple 
+          collapse-tags-tooltip
+          placeholder="选择要显示的人物"
+          class="tag-select"
+          @change="handleTagsChange"
+        >
+          <el-option
+            v-for="person in availablePersons" 
+            :key="person" 
+            :label="person"
+            :value="person"
+          />
+        </el-select>
+        <el-button type="primary" @click="resetFilter" class="reset-btn">
+          重置筛选
+        </el-button>
+      </div>
     <div class="graph-wrapper">
     <svg ref="svg" :width="width" :height="height"></svg>
       <div class="zoom-controls">
@@ -8,6 +29,7 @@
         <button @click="resetZoom" class="zoom-btn">
           <i class="el-icon-refresh"></i>
         </button>
+        </div>
       </div>
     </div>
     <div class="info-panel">
@@ -55,6 +77,35 @@ import 中国共产党图片 from '@/assets/Red/中国共产党.jpg'
 import 八路军图片 from '@/assets/Red/八路军.jpg'
 import 中华人民共和国图片 from '@/assets/Red/中华人民共和国.jpg'
 import 红军长征图片 from '@/assets/Red/红军长征.jpg'
+import 彭德怀图片 from '@/assets/Red/彭德怀.jpg'
+import 向警予图片 from '@/assets/Red/向警予.jpg'
+import 何叔衡图片 from '@/assets/Red/何叔衡.jpg'
+import 任弼时图片 from '@/assets/Red/任弼时.jpg'
+import 雷锋图片 from '@/assets/Red/雷锋.jpg'
+import 罗荣桓图片 from '@/assets/Red/罗荣桓.jpg'
+import 林伯渠图片 from '@/assets/Red/林伯渠.jpg'
+import 百团大战图片 from '@/assets/Red/百团大战.jpg'
+import 抗美援朝战争图片 from '@/assets/Red/抗美援朝战争.jpg'
+import 辽沈战役图片 from '@/assets/Red/辽沈战役.jpg'
+import 淮海战役图片 from '@/assets/Red/淮海战役.jpg'
+import 西北战役图片 from '@/assets/Red/西北战役.jpg'
+import 平江起义图片 from '@/assets/Red/平江起义.jpg'
+import 遵义会议图片 from '@/assets/Red/遵义会议.jpg'
+import 中华苏维埃共和国图片 from '@/assets/Red/中华苏维埃共和国.jpg'
+import 中华人民共和国元帅图片 from '@/assets/Red/中华人民共和国元帅.jpg'
+import 中共中央政治局委员图片 from '@/assets/Red/中共中央政治局委员.jpg'
+import 国防部部长图片 from '@/assets/Red/国防部部长.jpg'
+import 中共中央书记处书记图片 from '@/assets/Red/中共中央书记处书记.jpg'
+import 中共中央军委委员图片 from '@/assets/Red/中共中央军委委员.jpg'
+import 志愿军司令员图片 from '@/assets/Red/志愿军司令员.jpg'
+import 庐山会议图片 from '@/assets/Red/庐山会议.jpg'
+import 大跃进图片 from '@/assets/Red/大跃进.jpg'
+import 军事系统高干会议图片 from '@/assets/Red/军事系统高干会议.jpg'
+import 辛亥革命图片 from '@/assets/Red/辛亥革命.jpg'
+import 中共一大图片 from '@/assets/Red/中共一大.jpg'
+import 苏维埃革命图片 from '@/assets/Red/苏维埃革命.jpg'
+import 反围剿图片 from '@/assets/Red/反围剿.jpg'
+import 游击战图片 from '@/assets/Red/游击战.jpg'
 
 export default {
   data() {
@@ -63,6 +114,7 @@ export default {
       height: 600,
       selectedNode: null,
       zoomTransform: null,
+      selectedTags: [],
       datajson: {
   "nodes": [
     {
@@ -539,7 +591,47 @@ export default {
       "id": "我党早期革命活动参与者",
       "group": 2,
       "size": 4
-    }
+    },
+    {
+    "id": "毛岸英",
+    "group": 1,
+    "size": 5
+  },
+  {
+    "id": "毛岸青",
+    "group": 1,
+    "size": 5
+  },
+  {
+    "id": "李敏",
+    "group": 1,
+    "size": 5
+  },
+  {
+    "id": "秋收起义",
+    "group": 3,
+    "size": 3
+  },
+  {
+    "id": "井冈山革命根据地",
+    "group": 3,
+    "size": 3
+  },
+  {
+    "id": "长征",
+    "group": 3,
+    "size": 3
+  },
+  {
+    "id": "遵义会议",
+    "group": 3,
+    "size": 3
+  },
+  {
+    "id": "新中国成立",
+    "group": 3,
+    "size": 3
+  }
   ],
   "links": [
     {
@@ -996,31 +1088,238 @@ export default {
       "source": "任弼时",
       "target": "组织家",
       "label": "人物身份"
-    }
+    },
+    
+  {
+    "source": "毛泽东",
+    "target": "毛岸英",
+    "label": "儿子"
+  },
+  {
+    "source": "毛泽东",
+    "target": "毛岸青",
+    "label": "儿子"
+  },
+  {
+    "source": "毛泽东",
+    "target": "李敏",
+    "label": "女儿"
+  },
+  {
+    "source": "毛泽东",
+    "target": "秋收起义",
+    "label": "重要经历"
+  },
+  {
+    "source": "毛泽东",
+    "target": "井冈山革命根据地",
+    "label": "重要经历"
+  },
+  {
+    "source": "毛泽东",
+    "target": "长征",
+    "label": "重要经历"
+  },
+  {
+    "source": "毛泽东",
+    "target": "遵义会议",
+    "label": "重要经历"
+  },
+  {
+    "source": "毛泽东",
+    "target": "新中国成立",
+    "label": "领导事件"
+  },
+  {
+    "source": "毛泽东",
+    "target": "彭德怀",
+    "label": "战友情谊"
+  },
+  {
+    "source": "毛泽东",
+    "target": "任弼时",
+    "label": "早期同志"
+  },
+  {
+    "source": "毛泽东",
+    "target": "贺龙",
+    "label": "红军领导"
+  },
+  {
+    "source": "毛泽东",
+    "target": "何叔衡",
+    "label": "早期革命合作"
+  },
+  {
+    "source": "毛泽东",
+    "target": "彭德怀",
+    "label": "战友情谊"
+  },
+  {
+    "source": "毛泽东",
+    "target": "贺龙",
+    "label": "红军战友"
+  },
+  {
+    "source": "毛泽东",
+    "target": "罗荣桓",
+    "label": "军事搭档"
+  },
+  {
+    "source": "毛泽东",
+    "target": "任弼时",
+    "label": "早期同志"
+  },
+  {
+    "source": "毛泽东",
+    "target": "刘少奇",
+    "label": "早期领导集体成员"
+  },
+  {
+    "source": "毛泽东",
+    "target": "何叔衡",
+    "label": "早期建党合作"
+  },
+  {
+    "source": "毛泽东",
+    "target": "林伯渠",
+    "label": "早期党组织同事"
+  },
+  {
+    "source": "毛泽东",
+    "target": "雷锋",
+    "label": "精神榜样"
+  },
+  {
+    "source": "毛泽东",
+    "target": "向警予",
+    "label": "鼓励妇女解放"
+  }
+
+
   ]
 },
+      availablePersons: [
+        "毛泽东",
+        "刘少奇",
+        "贺龙",
+        "彭德怀",
+        "向警予",
+        "何叔衡",
+        "任弼时",
+        "雷锋",
+        "罗荣桓",
+        "林伯渠"
+      ],
+      filteredData: null,
+      nodeDescriptions: {
+        '毛泽东': '中国共产党和中华人民共和国的主要缔造者、领导人。',
+        '刘少奇': '中国共产党和中华人民共和国主要领导人之一，杰出的革命家、政治家、理论家。',
+        '贺龙': '中国人民解放军高级将领，中国共产党高级领导人。',
+        '彭德怀': '中华人民共和国元帅，杰出的军事家、政治家。',
+        '向警予': '中国共产党唯一的女创始人，中国妇女运动的先驱。',
+        '何叔衡': '中国共产党创始人之一，杰出的无产阶级革命家。',
+        '任弼时': '中国共产党第一代领导集体重要成员，杰出的革命家、组织家。',
+        '雷锋': '全心全意为人民服务的光辉典范，时代楷模。',
+        '罗荣桓': '中华人民共和国开国元勋，中国十大元帅之一。',
+        '林伯渠': '杰出的政治家，延安五老之一。'
+      }
     };
   },
   mounted() {
-    this.width = this.$el.clientWidth * 0.7;
-    this.height = Math.max(600, window.innerHeight - 180);
-    this.createGraph();
+    this.initGraph();
   },
   methods: {
-    createGraph() {
+    handleTagsChange() {
+      console.log('Tags changed:', this.selectedTags);
+      this.updateGraph();
+    },
+    resetFilter() {
+      this.selectedTags = [];
+      this.updateGraph();
+    },
+    updateGraph() {
+      if (this.selectedTags.length === 0) {
+        this.filteredData = this.datajson;
+      } else {
+        // 首先找出所有选中人物的直接关联节点
+        const directNodes = new Set();
+        const directLinks = new Set();
+        
+        // 添加选中的人物节点
+        this.selectedTags.forEach(personId => {
+          directNodes.add(personId);
+        });
+        
+        // 找出所有与选中人物直接相关的节点和连接
+        this.datajson.links.forEach(link => {
+          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+          const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+          
+          if (this.selectedTags.includes(sourceId)) {
+            directNodes.add(targetId);
+            directLinks.add(link);
+          }
+          if (this.selectedTags.includes(targetId)) {
+            directNodes.add(sourceId);
+            directLinks.add(link);
+          }
+        });
+        
+        // 如果选择了多个人物，添加人物之间的关联
+        if (this.selectedTags.length > 1) {
+          this.datajson.links.forEach(link => {
+            const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+            const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+            
+            // 如果连接的两端都在已选节点中，添加这个连接
+            if (directNodes.has(sourceId) && directNodes.has(targetId)) {
+              directLinks.add(link);
+            }
+          });
+        }
+
+        const filteredNodes = this.datajson.nodes.filter(node => 
+          directNodes.has(node.id)
+        );
+
+        const filteredLinks = Array.from(directLinks);
+
+        this.filteredData = {
+          nodes: filteredNodes,
+          links: filteredLinks
+        };
+      }
+      
+      this.$nextTick(() => {
+        this.renderGraph(this.filteredData);
+      });
+    },
+    initGraph() {
+      this.filteredData = this.datajson;
+      this.renderGraph(this.filteredData);
+    },
+    renderGraph(data) {
+      d3.select(this.$refs.svg).selectAll("*").remove();
       const svg = d3.select(this.$refs.svg);
+      
+      // 设置初始缩放比例（相当于点击缩小按钮3次：0.8^3 ≈ 0.512）
+      const initialScale = 0.43;
+      
+      // 设置初始偏移，使图谱居中并稍微向左上偏移
+      const initialTransform = d3.zoomIdentity
+        .translate(this.width / 2 - 50, this.height / 2 - 40)  // 向左上各偏移100像素
+        .scale(initialScale)
+        .translate(-this.width / 2, -this.height / 2);
+      
       const color = d3.scaleOrdinal(d3.schemeCategory10);
       const nodeRadius = d => d.size * 6;
       
-      // 获取实际的 SVG 尺寸
       const svgWidth = this.$refs.svg.clientWidth;
       const svgHeight = this.$refs.svg.clientHeight;
       
-      // 更新宽度和高度
       this.width = svgWidth;
       this.height = svgHeight;
-      
-      svg.selectAll("*").remove();
       
       svg.append("defs").selectAll("marker")
           .data(["end"])
@@ -1038,7 +1337,7 @@ export default {
       
       const defs = svg.append("defs");
       
-      this.datajson.nodes.forEach(node => {
+      data.nodes.forEach(node => {
         if (node.image) {
           const imgPattern = defs.append("pattern")
               .attr("id", `img-${node.id}`)
@@ -1054,12 +1353,17 @@ export default {
         }
       });
 
-      const simulation = d3.forceSimulation(this.datajson.nodes)
-          .force("link", d3.forceLink(this.datajson.links).id(d => d.id).distance(180))
-          .force("charge", d3.forceManyBody().strength(-400))
-          // 使用实际的 SVG 尺寸来设置中心点
-          .force("center", d3.forceCenter(svgWidth / 2, svgHeight / 2))
-          .force("collide", d3.forceCollide().radius(d => nodeRadius(d) + 15).iterations(4));
+      const simulation = d3.forceSimulation(data.nodes)
+          .force("link", d3.forceLink(data.links).id(d => d.id).distance(150))
+          .force("charge", d3.forceManyBody().strength(-800))
+          .force("collide", d3.forceCollide().radius(d => nodeRadius(d) * 2))
+          .force("center", d3.forceCenter(this.width / 2, this.height / 2))
+          // 增加一个向心力，使节点更集中
+          .force("radial", d3.forceRadial(
+            Math.min(this.width, this.height) / 4,
+            this.width / 2,
+            this.height / 2
+          ).strength(0.3));
 
       const g = svg.append("g")
           .attr("transform", `translate(0, 0)`);
@@ -1075,12 +1379,15 @@ export default {
       svg.call(zoom)
          .on("wheel.zoom", null);
 
+      // 设置初始缩放和位置
+      svg.call(zoom.transform, initialTransform);
+
       this.zoom = zoom;
 
       const link = g.append("g")
           .attr("class", "links")
           .selectAll("path")
-          .data(this.datajson.links)
+          .data(data.links)
           .enter().append("path")
           .attr("stroke", "#999")
           .attr("stroke-width", 1.5)
@@ -1090,7 +1397,7 @@ export default {
       const linkText = g.append("g")
           .attr("class", "link-labels")
           .selectAll("text")
-          .data(this.datajson.links)
+          .data(data.links)
           .enter().append("text")
           .attr("dy", -5)
           .attr("text-anchor", "middle")
@@ -1102,10 +1409,31 @@ export default {
       const node = g.append("g")
           .attr("class", "nodes")
           .selectAll("circle")
-          .data(this.datajson.nodes)
+          .data(data.nodes)
           .enter().append("circle")
           .attr("r", nodeRadius)
-          .style("fill", d => d.image ? `url(#img-${d.id})` : color(d.group))
+          .style("fill", d => {
+            // 检查是否有对应的图片
+            const img = this.getNodeImage(d.id);
+            if (img) {
+              // 创建图片填充模式
+              const pattern = defs.append("pattern")
+                .attr("id", `pattern-${d.id}`)
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("patternContentUnits", "objectBoundingBox");
+              
+              pattern.append("image")
+                .attr("href", img)
+                .attr("width", 1)
+                .attr("height", 1)
+                .attr("preserveAspectRatio", "xMidYMid slice");
+              
+              return `url(#pattern-${d.id})`;
+            }
+            // 没有图片时使用颜色
+            return color(d.group);
+          })
           .style("stroke", "#fff")
           .style("stroke-width", 2)
           .call(d3.drag()
@@ -1114,20 +1442,35 @@ export default {
               .on("end", this.dragended))
           .on("click", (event, d) => {
             this.selectedNode = d;
-            d3.selectAll("circle").style("stroke", "#fff").style("stroke-width", 2);
-            d3.select(event.currentTarget).style("stroke", "#ff0").style("stroke-width", 4);
+            // 高亮选中的节点
+            d3.selectAll("circle")
+              .style("stroke", "#fff")
+              .style("stroke-width", 2);
+            d3.select(event.currentTarget)
+              .style("stroke", "#ff0")
+              .style("stroke-width", 4);
+            // 添加点击效果
+            d3.select(event.currentTarget)
+              .transition()
+              .duration(200)
+              .attr("r", nodeRadius(d) * 1.2)
+              .transition()
+              .duration(200)
+              .attr("r", nodeRadius(d));
           });
 
+      // 优化标签显示
       const labels = g.append("g")
           .attr("class", "node-labels")
           .selectAll("text")
-          .data(this.datajson.nodes)
+          .data(data.nodes)
           .enter().append("text")
           .attr("dy", d => nodeRadius(d) + 15)
           .attr("text-anchor", "middle")
-          .attr("font-size", "14px")
-          .attr("font-weight", "bold")
+          .attr("font-size", d => d.group === 1 ? "16px" : "14px")
+          .attr("font-weight", d => d.group === 1 ? "bold" : "normal")
           .attr("pointer-events", "none")
+          .style("fill", d => d.group === 1 ? "#333" : "#666")
           .text(d => d.id);
 
       simulation.on("tick", () => {
@@ -1159,38 +1502,6 @@ export default {
 
       this.simulation = simulation;
     },
-    zoomIn() {
-      if (this.zoom) {
-        const svg = d3.select(this.$refs.svg);
-        const currentScale = this.zoomTransform ? this.zoomTransform.k : 1;
-        svg.transition().call(this.zoom.scaleTo, currentScale * 1.3);
-      }
-    },
-    zoomOut() {
-      if (this.zoom) {
-        const svg = d3.select(this.$refs.svg);
-        const currentScale = this.zoomTransform ? this.zoomTransform.k : 1;
-        svg.transition().call(this.zoom.scaleTo, currentScale / 1.3);
-      }
-    },
-    resetZoom() {
-      if (this.zoom) {
-        const svg = d3.select(this.$refs.svg);
-        svg.transition().call(this.zoom.transform, d3.zoomIdentity);
-      }
-    },
-    getNodeImage(nodeId) {
-      const node = this.datajson.nodes.find(n => n.id === nodeId);
-      if (node && node.image) {
-        try {
-          return node.image;
-        } catch (e) {
-          console.error(`无法加载图片: ${node.image}`, e);
-          return null;
-        }
-      }
-      return null;
-    },
     dragstarted(event, d) {
       if (!event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
@@ -1205,23 +1516,77 @@ export default {
       d.fx = null;
       d.fy = null;
     },
+    zoomIn() {
+      this.zoom.scaleBy(d3.select(this.$refs.svg), 1.2);
+    },
+    zoomOut() {
+      this.zoom.scaleBy(d3.select(this.$refs.svg), 0.8);
+    },
+    resetZoom() {
+      d3.select(this.$refs.svg)
+        .transition()
+        .duration(750)
+        .call(this.zoom.transform, d3.zoomIdentity);
+    },
+    getNodeImage(nodeId) {
+      const images = {
+        '毛泽东': 毛泽东图片,
+        '刘少奇': 刘少奇图片,
+        '贺龙': 贺龙图片,
+        '彭德怀': 彭德怀图片,
+        '向警予': 向警予图片,
+        '何叔衡': 何叔衡图片,
+        '任弼时': 任弼时图片,
+        '雷锋': 雷锋图片,
+        '罗荣桓': 罗荣桓图片,
+        '林伯渠': 林伯渠图片,
+        '中国共产党': 中国共产党图片,
+        '八路军': 八路军图片,
+        '中华人民共和国': 中华人民共和国图片,
+        '红军长征': 红军长征图片,
+        '百团大战': 百团大战图片,
+        '抗美援朝战争': 抗美援朝战争图片,
+        '辽沈战役': 辽沈战役图片,
+        '淮海战役': 淮海战役图片,
+        '西北战役': 西北战役图片,
+        '平江起义': 平江起义图片,
+        '遵义会议': 遵义会议图片,
+        '中华苏维埃共和国': 中华苏维埃共和国图片,
+        '中华人民共和国元帅': 中华人民共和国元帅图片,
+        '中共中央政治局委员': 中共中央政治局委员图片,
+        '国防部部长': 国防部部长图片,
+        '中共中央书记处书记': 中共中央书记处书记图片,
+        '中共中央军委委员': 中共中央军委委员图片,
+        '志愿军司令员': 志愿军司令员图片,
+        '庐山会议': 庐山会议图片,
+        '大跃进': 大跃进图片,
+        '军事系统高干会议': 军事系统高干会议图片,
+        '辛亥革命': 辛亥革命图片,
+        '中共一大': 中共一大图片,
+        '苏维埃革命': 苏维埃革命图片,
+        '反围剿': 反围剿图片,
+        '游击战': 游击战图片
+      };
+      return images[nodeId];
+    },
     getNodeType(group) {
       const types = {
-        1: "党和国家领导人",
-        2: "党和国家领导人",
-        3: "军事领导人",
-        4: "政党组织",
-        5: "军事组织",
-        6: "国家",
-        7: "历史事件"
+        1: '重要人物',
+        2: '职务身份',
+        3: '重要事件',
+        4: '个人事迹',
+        5: '文化印记'
       };
-      return types[group] || "未知类型";
+      return types[group] || '其他';
     },
     getImportanceLevel(size) {
-      if (size >= 6) return "极高";
-      if (size >= 4) return "高";
-      if (size >= 2) return "中";
-      return "一般";
+      const levels = {
+        6: '核心',
+        4: '重要',
+        3: '相关',
+        2: '一般'
+      };
+      return levels[size] || '普通';
     },
     getNodeRelations(nodeId) {
       return this.datajson.links.filter(link => 
@@ -1253,34 +1618,51 @@ export default {
 </script>
 
 <style scoped>
-.knowledge-graph-container {
-  display: flex;
-  width: 85%;
-  max-width: 1400px;
-  margin: 0 auto;
-  height: calc(100vh - 140px);
-  border-radius: 8px;
+/* 隐藏整个页面的滚动条 */
+:deep(body) {
   overflow: hidden;
-  gap: 40px;
-  padding: 15px;
 }
 
-.graph-wrapper {
-  flex: 7;
-  position: relative;
-  overflow: hidden;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+.knowledge-graph-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 99%;
+  max-width: 1350px;
+  margin: 0 auto;
+  height: calc(100vh - 120px);
+  border-radius: 8px;
+  overflow: hidden !important;
+  gap: 20px;
+
+}
+
+.left-section {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden;
 }
 
 .info-panel {
   flex: 3;
   padding: 20px;
+ 
   overflow-y: auto;
+  /* 自定义滚动条样式 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -1418,5 +1800,35 @@ svg {
 
 .empty-state p {
   font-size: 16px;
+}
+
+.filter-section {
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 60px;
+}
+
+.tag-select {
+  width: 100%;
+  max-width: 500px;
+}
+
+.reset-btn {
+  height: 32px;
+  white-space: nowrap;
+}
+
+.graph-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden !important;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 </style>

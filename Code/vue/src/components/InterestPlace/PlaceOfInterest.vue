@@ -126,7 +126,7 @@
             <div class="dialog-interaction-icons">
               <div class="icon-wrapper" @click="toggleLike(selectedPlace)">
                 <img
-                  :src="getImageUrl(tagStatus.is_liked ? 'setting/赞 (1).png' : 'setting/赞.png')"
+                  :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
                   :class="['icon', { 'active': tagStatus.is_liked }]"
                   alt="赞"
                 />
@@ -134,7 +134,7 @@
               </div>
               <div class="icon-wrapper" @click="toggleFavorite(selectedPlace)">
                 <img
-                  :src="getImageUrl(tagStatus.is_favorite ? 'setting/收藏(1).png' : 'setting/收藏.png')"
+                  :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
                   :class="['icon', { 'active': tagStatus.is_favorite }]"
                   alt="收藏"
                 />
@@ -166,6 +166,15 @@ import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
 import { Close } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
+import UserAPI from "@/api/user";
+import {hColgroup} from "element-plus/es/components/table/src/h-helper";
+import props = hColgroup.props;
+
+// 使用import导入图标
+import likeIcon from '@/assets/setting/赞.png';
+import likeActiveIcon from '@/assets/setting/赞 (1).png';
+import favoriteIcon from '@/assets/setting/收藏.png';
+import favoriteActiveIcon from '@/assets/setting/收藏(1).png';
 
 const router = useRouter()
 const chartsDOM = ref<HTMLElement | null>(null);
@@ -492,6 +501,33 @@ const onCitySelect = () => {
   loadAttractions(selectedCity.value); // 加载选中城市的景点信息
 };
 //const attractionName=ref('')//保存当前点击的景点的名字，并进行跳转，将景点名传给详情页
+const addHistory = async (attraction: Place) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      ElMessage.warning('请先登录以记录浏览历史');
+      return;
+    }
+    const historyData = {
+      uid: userId,
+      type: "placeOfInterest", // 记录类型
+      name: attraction.name, // 景点名称
+      // img_url: attraction.image, // 景点图片
+      describe: "景点描述",
+      // describe: attraction.description?.substring(0, 100) || "景点描述", // 截取前100字作为描述
+    };
+
+    const response = await UserAPI.AddUserHistory(historyData);
+    console.log("response ",response);
+    if (response  === "添加成功") {
+      console.log('浏览记录添加成功:', response);
+    } else {
+      console.error('浏览记录添加失败:', response);
+    }
+  } catch (error) {
+    console.error('添加浏览记录失败:', error);
+  }
+};
 const showDetail = async (attraction) => {
   selectedPlace.value = attraction;
   dialogVisible.value = true;
@@ -505,10 +541,11 @@ const showDetail = async (attraction) => {
 
       // 获取用户ID
       const userId = getUserId();
-
+      addHistory(attraction);
       if (userId) {
         // 记录浏览
         await TagsAPI.viewTagAPI(userId, tagId);
+
         console.log(`记录浏览: 用户ID=${userId}, 标签ID=${tagId}`);
 
         // 获取标签状态
@@ -934,8 +971,10 @@ const initMap = () => {
 }
 
 .attraction-card {
-  /* background-color: #fff8f0; */
-  background-image: url('@/assets/img_3.jpg');
+  background-image: url('@/assets/back/底纹.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 
   margin-right: 22px;
   margin-left: 22px;
@@ -1028,17 +1067,11 @@ const initMap = () => {
 }
 
 .detail-dialog {
-  :deep(.el-dialog__body) {
-    padding: 0;
-    height: 700px;  /* 增加弹窗高度 */
-    overflow: hidden;
-  }
-
-  :deep(.el-dialog__header) {
-    display: none;
-  }
-
   :deep(.el-dialog) {
+    background-image: url('@/assets/back/底纹.png'); // 添加背景图像
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     position: fixed !important;
     top: 50% !important;
     left: 50% !important;
@@ -1049,6 +1082,16 @@ const initMap = () => {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  :deep(.el-dialog__body) {
+    padding: 0;
+    height: 700px;  /* 增加弹窗高度 */
+    overflow: hidden;
+  }
+
+  :deep(.el-dialog__header) {
+    display: none;
   }
 
   :deep(.el-overlay) {
@@ -1198,7 +1241,7 @@ const initMap = () => {
 .dialog-interaction-icons {
   display: flex;
   gap: 15px;
-  margin-right: 20px;
+  margin-right: 40px;
 }
 
 .icon-wrapper {

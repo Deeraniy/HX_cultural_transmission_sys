@@ -38,7 +38,7 @@ const router = useRouter()
 
 // 返回上一页的方法
 const goBack = () => {
-  router.go(-1)  // 返回上一页
+  router.push('/index')  // 返回到index页面
 }
 </script>
 

@@ -389,13 +389,27 @@ onUnmounted(() => {
     }
   });
 });
+
+// 添加格式化报告的函数
+const formatReport = (report) => {
+  if (!report) return '';
+  
+  // 替换数字编号为加粗样式
+  let formatted = report.replace(/(\d+\.\s*[\u4e00-\u9fa5]+.*?[:：])/g, '<strong>$1</strong>');
+  
+  // 替换破折号为HTML实体
+  formatted = formatted.replace(/[-－]/g, '&mdash;');
+  
+  // 为所有段落添加缩进
+  return formatted;
+};
 </script>
 
 <template>
   <div class="three-line-container">
     <div class="chart-wrapper">
       <div class="report-button">
-        <el-button type="primary" @click="showReport = true" size="small">
+        <el-button type="danger" @click="showReport = true" size="small" class="custom-btn">
           查看分析报告
         </el-button>
       </div>
@@ -405,15 +419,24 @@ onUnmounted(() => {
     <el-dialog
       v-model="showReport"
       title="因果推理分析报告"
-      width="50%"
+      width="60%"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :show-close="true"
       class="report-dialog"
+      :modal-append-to-body="true"
+      :append-to-body="true"
+      :lock-scroll="true"
+      destroy-on-close
+      center
+      :top="'10vh'"
     >
       <div class="analysis-report">
         <div class="report-text">
-          {{ props.timeData?.casual_impact_analysis?.impact_report || '暂无报告' }}
+          <div class="report-section" v-if="props.timeData?.casual_impact_analysis?.impact_report">
+            <div v-html="formatReport(props.timeData.casual_impact_analysis.impact_report)"></div>
+          </div>
+          <div v-else>暂无报告</div>
         </div>
       </div>
       <template #footer>
@@ -453,47 +476,83 @@ onUnmounted(() => {
 }
 
 .analysis-report {
-  max-height: 60vh;
+  max-height: calc(80vh - 140px); /* 设置最大高度 */
   overflow-y: auto;
-  padding: 20px 30px;
+  overflow-x: hidden;
+  padding: 30px;
 }
 
 .report-text {
-  color: #606266;
-  font-size: 14px;
+  color: #333;
+  font-size: 16px;
   white-space: pre-wrap;
   word-break: break-word;
   line-height: 1.8;
-  font-family: 'Microsoft YaHei', sans-serif;
+  font-family: 'HelveticaNeue', serif;
+}
+
+.report-section {
+  margin-bottom: 20px;
+}
+
+.report-section strong {
+  color: #b71c1c;
+  font-weight: 600;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.report-section p {
+  text-indent: 2em;
+  margin: 10px 0;
 }
 
 /* Dialog 样式 */
 :deep(.el-dialog) {
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 80vh;
+  position: fixed !important;
+  top: 10vh !important;
+  margin: 0 auto !important;
+  left: 0;
+  right: 0;
 }
 
 :deep(.el-dialog__header) {
   padding: 20px 30px;
   margin-right: 0;
-  border-bottom: 1px solid #fff;
-  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  background-color: #b71c1c;
 }
 
 :deep(.el-dialog__title) {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: #303133;
+  color: white;
+  font-family: 'HelveticaNeue', serif;
+}
+
+:deep(.el-dialog__headerbtn .el-dialog__close) {
+  color: white;
+}
+
+:deep(.el-dialog__headerbtn:hover .el-dialog__close) {
+  color: #f0f0f0;
 }
 
 :deep(.el-dialog__body) {
   padding: 0;
   background-color: #ffffff;
+  max-height: calc(80vh - 120px); /* 减去header和footer的高度 */
+  overflow: hidden;
 }
 
 :deep(.el-dialog__footer) {
   padding: 15px 30px;
-  border-top: 1px solid #fff;
+  border-top: 1px solid #eee;
   background-color: #fff;
 }
 
@@ -521,5 +580,28 @@ onUnmounted(() => {
   &:hover::-webkit-scrollbar-thumb {
     background-color: #909399;
   }
+}
+
+/* 自定义按钮样式 */
+.custom-btn {
+  background-color: #b71c1c !important;
+  border-color: #b71c1c !important;
+  color: white;
+}
+
+.custom-btn:hover, .custom-btn:focus {
+  background-color: #d32f2f !important;
+  border-color: #d32f2f !important;
+}
+
+/* Dialog样式 - 修改确定按钮 */
+:deep(.el-button--primary) {
+  background-color: #b71c1c !important;
+  border-color: #b71c1c !important;
+}
+
+:deep(.el-button--primary:hover), :deep(.el-button--primary:focus) {
+  background-color: #d32f2f !important;
+  border-color: #d32f2f !important;
 }
 </style>

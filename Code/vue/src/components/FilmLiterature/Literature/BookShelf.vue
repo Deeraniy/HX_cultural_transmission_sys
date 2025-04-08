@@ -8,12 +8,6 @@
           placeholder="搜索书籍..."
           class="search-input"
       />
-      <select v-model="selectedCategory" class="category-select">
-        <option value="">所有分类</option>
-        <option v-for="category in categories" :key="category" :value="category">
-          {{ category }}
-        </option>
-      </select>
       <button @click="applyFilters" class="search-button">搜索</button>
     </div>
 
@@ -53,8 +47,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import BookFlipModal from './BookFlipModel.vue'; // 引入翻书效果组件
-import { defineProps } from 'vue';
 import FilmLiteratureAPI from "@/api/filmLiterature"; // 引入 API
+import { useRouter } from 'vue-router';
 
 // 接收来自父组件的 currentIndex 和 type_id
 const props = defineProps({
@@ -68,13 +62,13 @@ const props = defineProps({
   }
 });
 
+const router = useRouter();
+
 // 书籍数据
 const books = ref([]);
 
-// 分类和搜索功能
+// 搜索功能
 const searchTerm = ref('');
-const selectedCategory = ref('');
-const categories = ['文学', '表演艺术', '新媒体艺术', '古诗词'];
 
 const filteredBooks = computed(() => {
   let result = books.value;
@@ -85,20 +79,6 @@ const filteredBooks = computed(() => {
         book.liter_name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
         book.type_id.toString().toLowerCase().includes(searchTerm.value.toLowerCase())
     );
-  }
-
-  // 根据选择的类别过滤
-  if (selectedCategory.value) {
-    const categoryMapping = {
-      '文学': 1,
-      '表演艺术': 2,
-      '新媒体艺术': 3,
-      '古诗词': 4
-    };
-    const typeId = categoryMapping[selectedCategory.value];
-    if (typeId) {
-      result = result.filter(book => book.type_id === typeId);
-    }
   }
 
   return result;
@@ -159,6 +139,7 @@ const showBubble = (book) => {
 const hideBubble = (book) => {
   book.showBubble = false;
 };
+
 // 获取书籍数据并根据 type_id 传递相应的 type_name
 onMounted(async () => {
   const typeMapping = {
@@ -272,7 +253,7 @@ onMounted(async () => {
 
 .search-category-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
   width: 100%;
@@ -291,22 +272,6 @@ onMounted(async () => {
 
 .search-input:focus {
   border-color:#b71c1c;
-  outline: none;
-}
-
-.category-select {
-  font-family: 'HelveticaNeue', serif;
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  width: 180px;
-  background-color: #fff;
-  transition: border 0.3s ease;
-}
-
-.category-select:focus {
-  border-color: #b71c1c;
   outline: none;
 }
 
