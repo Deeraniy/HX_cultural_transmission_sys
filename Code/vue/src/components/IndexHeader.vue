@@ -70,6 +70,7 @@
     <el-main>
       <!-- 根据 activeIndex 显示不同的组件 -->
       <index v-if="activeIndex===null" />
+      <router-view/>
     </el-main>
   </div>
 </template>
@@ -83,6 +84,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user'
 import UserAPI from '@/api/user'; // 导入UserAPI
 import { useFontStore } from '@/stores/font'
+import BackgroundIntro from "@/components/Background/BackgroundIntro.vue";
+import AboutUs from "@/components/About/AboutUs.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -101,6 +104,8 @@ watch(
       if (newPath === '/placeOfInterest') activeIndex.value = '3';
       else if (newPath === '/filmLiterature') activeIndex.value = '4';
       else if (newPath === '/food') activeIndex.value = '5';
+      else if (newPath==='/index/background') activeIndex.value = '12'
+      else if (newPath==='/index/about') activeIndex.value = '13'
       else activeIndex.value = null;
     }
 );
@@ -108,7 +113,10 @@ watch(
 // Set the initial activeIndex based on the current route
 if (route.path === '/placeOfInterest') activeIndex.value = '3';
 else if (route.path === '/filmLiterature') activeIndex.value = '4';
-else if (route.path === '/food') activeIndex.value = '5';
+else if (route.path === '/food') activeIndex.value = '5'
+else if (route.path==='/index/background') activeIndex.value = '12'
+else if (route.path==='/index/about') activeIndex.value = '13'
+else activeIndex.value = null;
 
 const language = ref('中文');
 
@@ -169,10 +177,10 @@ const handleSelect = (key: string, keyPath: string[]) => {
       router.push('/global');
       break;
     case '12':
-      router.push('/background');
+      router.push('/index/background');
       break;
     case '13':
-      router.push('/about');
+      router.push('/index/about');
       break;
 
       // Add more cases for other menu items if needed
