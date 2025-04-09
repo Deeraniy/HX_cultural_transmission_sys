@@ -102,39 +102,87 @@ const updateChart = () => {
   const chartData = processData();
   if (!chartData || !myChart) return;
 
+  // 计算每个指标的最大值，确保数据点不会超出雷达图
+  const indicatorMaxValues = [];
+  for (let i = 0; i < chartData.currentData.length; i++) {
+    // 找出当前值和平均值中的最大值
+    const maxVal = Math.max(chartData.currentData[i], chartData.averageData[i]);
+    // 为最大值增加20%的余量，并向上取整
+    const safeMax = Math.ceil(maxVal * 1.2);
+    indicatorMaxValues.push(safeMax === 0 ? 1 : safeMax); // 确保最小值为1
+  }
+
   const option = {
     title: {
-      text: '用户画像'
+      text: '用户画像',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        fontSize: 16
+      }
     },
     legend: {
-      data: ['当前发布', '平均水平'] // 修改此处
+      data: ['当前发布', '平均水平'],
+      textStyle: {
+        fontFamily: 'HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif'
+      },
+      bottom: 0  // 将图例放到底部
     },
     radar: {
       // shape: 'circle',
+      radius: '65%',  // 稍微缩小雷达图尺寸
+      center: ['50%', '50%'],  // 居中放置
+      splitNumber: 4,  // 分割段数
+      axisName: {
+        show: true,
+        fontFamily: 'HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif'
+      },
+      splitArea: {
+        areaStyle: {
+          color: ['rgba(250,250,250,0.1)', 'rgba(240,240,240,0.2)']
+        }
+      },
       indicator: [
-        { name: '风景名胜', max: 5 },
-        { name: '美食文化', max: 5 },
-        { name: '影视文学', max: 5 },
-        { name: '非遗民俗', max: 5 },
-
+        { name: '风景名胜', max: indicatorMaxValues[0] },
+        { name: '美食文化', max: indicatorMaxValues[1] },
+        { name: '影视文学', max: indicatorMaxValues[2] },
+        { name: '非遗民俗', max: indicatorMaxValues[3] },
       ]
     },
     series: [
       {
-        name: 'Budget vs spending',
+        name: '兴趣偏好对比',
         type: 'radar',
+        symbolSize: 6,  // 数据点大小
+        lineStyle: {
+          width: 2  // 线条宽度
+        },
         data: [
           {
             value: chartData.currentData,
-            name: '当前发布' // 修改此处
+            name: '当前发布',
+            itemStyle: {
+              color: '#5470c6'
+            },
+            areaStyle: {
+              color: 'rgba(84,112,198,0.3)'
+            }
           },
           {
             value: chartData.averageData,
-            name: '平均水平' // 修改此处
+            name: '平均水平',
+            itemStyle: {
+              color: '#91cc75'
+            },
+            areaStyle: {
+              color: 'rgba(145,204,117,0.3)'
+            }
           }
         ]
       }
-    ]
+    ],
+    textStyle: {
+      fontFamily: 'HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif'
+    }
   };
 
   myChart.setOption(option);
@@ -195,6 +243,7 @@ onMounted(async () => {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  font-family: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .header-section {
@@ -224,6 +273,8 @@ onMounted(async () => {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  overflow: hidden;
 }
 
 .chart-header {
@@ -246,8 +297,10 @@ onMounted(async () => {
 }
 
 .chart-container {
-  height: 500px;
-  padding: 20px;
+  height: 550px;
+  padding: 30px;
+  font-family: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  position: relative;
 }
 
 .chart-actions {
@@ -257,10 +310,12 @@ onMounted(async () => {
 /* 深度选择器修改 element-plus 组件样式 */
 :deep(.el-card__body) {
   padding: 0;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 :deep(.el-radio-button__inner) {
   padding: 8px 15px;
+  font-family: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 /* 响应式布局 */
