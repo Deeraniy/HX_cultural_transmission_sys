@@ -51,89 +51,58 @@
           </div>
         </el-carousel-item>
       </el-carousel>
-      <div class="iframe-section" style="max-height: 940px">
-        <iframe
-            src="../../static/index.html"
-            width="100%"
-            frameborder="0"
-            scrolling="no"
-            sandbox="allow-scripts allow-popups allow-forms allow-same-origin allow-top-navigation"
-
-        ></iframe>
-      </div>
+      
+      <!-- 添加我们的功能区块 -->
+      <FeaturesSection />
+      
+      
       <div class="knowledge-graph">
         <div ref="chart" style="height: 800px; width: 100%;"></div>
       </div>
 
-      <div class="block4" style="display: flex;">
-        <div class="scrolllist">
-          <ul style="display: flex; list-style-type: none; padding: 0; margin: 0;">
-            <li class="sHoverItem" style="margin-right: 10px;">
-              <a id="myLink" target="_self" href="/#/folkcustom">
-                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
-                  <img src="@/assets/img/i1.jpg" />
-                  <div class="mask m2"></div>
-                  <div class="cont" style="position: absolute; text-align: center;">
-                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/图书馆.png">
-                    <p>非遗博物馆</p>
-                  </div>
-                </div>
-              </a>
-            </li>
-            <li class="sHoverItem" style="margin-right: 10px;">
-              <a target="_blank" href="/#/placeOfInterest">
-                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
-                  <img src="@/assets/img/i2.jpg" />
-                  <div class="mask m2"></div>
-                  <div class="cont" style="position: absolute; text-align: center;">
-                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/视听馆.png">
-                    <p>风景区</p>
-                  </div>
-                </div>
-              </a>
-            </li>
-            <li class="sHoverItem" style="margin-right: 10px;">
-              <a target="_blank" href="/#/red">
-                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
-                  <img src="@/assets/img/i3.jpg" />
-                  <div class="mask m2"></div>
-                  <div class="cont" style="position: absolute; text-align: center;">
-                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/数字文库.png">
-                    <p>红色文化走廊</p>
-                  </div>
-                </div>
-              </a>
-            </li>
-            <li class="sHoverItem" style="margin-right: 10px;">
-              <a id="bdclick_btn3" target="_blank" href="/#/filmLiterature">
-                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
-                  <img src="@/assets/img/i4.jpg" />
-                  <div class="mask m2"></div>
-                  <div class="cont" style="position: absolute; text-align: center;">
-                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/全景故宫.png">
-                    <p>影视文学库</p>
-                  </div>
-                </div>
-              </a>
-            </li>
-            <li class="sHoverItem" style="margin-right: 10px;">
-              <a id="bdclick_btn4" target="_blank" href="/#/food">
-                <div class="img" style="display: flex; justify-content: center; align-items: center; position: relative;">
-                  <img src="@/assets/img/i5.jpg" />
-                  <div class="mask m2"></div>
-                  <div class="cont" style="position: absolute; text-align: center;">
-                    <img alt="" title="" class="skin_common lazyload" src="@/assets/img/V故宫.png">
-                    <p>美食街</p>
-                  </div>
-                </div>
-              </a>
-            </li>
-          </ul>
+      <!-- 替换原有block4跳转 -->
+      <footer class="site-footer">
+        <div class="footer-container">
+          <div class="footer-section about">
+            <h3>关于我们</h3>
+            <p>湖湘文化数智传播网致力于湖湘文化的数字化传播与研究，为促进湖湘文化的传承与创新提供数字平台支持。</p>
+          </div>
+          
+          <div class="footer-section links">
+            <h3>快速链接</h3>
+            <ul>
+              <li><a href="#/folkCustom">非遗民俗</a></li>
+              <li><a href="#/placeOfInterest">风景名胜</a></li>
+              <li><a href="#/red">红色文化</a></li>
+              <li><a href="#/filmLiterature">影视文学</a></li>
+              <li><a href="#/food">湘菜美食</a></li>
+              <li><a href="#/globe">全球传播效果分析</a></li>
+              <li><a href="#/detail">情感分析</a></li>
+              <li><a href="#/report">宣传策略</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-section data-support">
+            <h3>数据支持</h3>
+            <p>湖南省文化与旅游厅</p>
+            <p>湖南省文物局</p>
+            <p>湖南省非物质文化遗产保护中心</p>
+            <p>湖南省博物馆</p>
+          </div>
+          
+          <div class="footer-section contact">
+            <h3>联系我们</h3>
+            <p><i class="el-icon-location"></i> 湖南省长沙市</p>
+            <p><i class="el-icon-phone"></i> 0731-XXXXXXXX</p>
+            <p><i class="el-icon-message"></i> huxiangwenhua@example.com</p>
+          </div>
         </div>
-      </div>
-
-
-
+        
+        <div class="footer-bottom">
+          <p>© 2023-2024 湖湘文化数智传播网 | 湘ICP备XXXXXXXX号</p>
+          <p>技术支持：湖南师范大学</p>
+        </div>
+      </footer>
 
     </div>
   </el-main>
@@ -143,6 +112,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import IndexMain from "@/components/IndexMain.vue";
+import FeaturesSection from "@/components/Home/FeaturesSection.vue";
+import HuXiangCuisine from "@/components/Home/HuXiangCuisine.vue";
 // 使用 import 语法加载视频文件
 import videoFile from '@/assets/湖南形象宣传片国际版《This is Hunan》.mp4';
 import data from '../../static/data.json'
@@ -497,4 +468,201 @@ html, body {
   color: purple;
 }
 
+/* 网站页脚样式 */
+.site-footer {
+  background: linear-gradient(to top, 
+    rgba(101, 30, 20, 1) 0%, 
+    rgba(101, 30, 20, 0.9) 30%, 
+    rgba(101, 30, 20, 0.7) 60%, 
+    rgba(101, 30, 20, 0.3) 90%, 
+    rgba(101, 30, 20, 0.0) 100%);
+  color: #fff;
+  padding: 20px 0 0 0;
+  margin-top: 20px;
+  position: relative;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 50px 10px 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+.footer-section h3 {
+  font-family: 'HelveticaNeue', '汇文明朝体', serif;
+  font-size: 18px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  position: relative;
+}
+
+.footer-section h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 2px;
+  background-color: #f0e8d5;
+}
+
+.footer-section p {
+  line-height: 1.5;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footer-section.links {
+  flex: 1.5;
+  min-width: 280px;
+}
+
+.footer-section.links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px 25px;
+}
+
+.footer-section.about {
+  flex: 1.2;
+}
+
+.footer-section.data-support,
+.footer-section.contact {
+  flex: 1;
+}
+
+.footer-section.links a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-block;
+  padding: 2px 0;
+  font-size: 13px;
+}
+
+.footer-section.contact p {
+  margin-bottom: 5px;
+}
+
+.footer-section.contact i {
+  margin-right: 10px;
+  color: #f0e8d5;
+}
+
+.footer-section.links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer-section.data-support p {
+  margin-bottom: 5px;
+}
+
+.footer-bottom {
+  background-color: rgba(101, 30, 20, 1);
+  text-align: center;
+  padding: 10px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-bottom p {
+  margin: 3px 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
+/* 增加响应式设计 */
+@media (max-width: 992px) {
+  .footer-container {
+    flex-wrap: wrap;
+    padding: 30px 40px 10px 30px;
+  }
+  
+  .footer-section {
+    flex: 0 0 calc(50% - 20px);
+    min-width: initial;
+    margin-bottom: 20px;
+  }
+  
+  .site-footer {
+    background: linear-gradient(to top, 
+      rgba(101, 30, 20, 1) 0%, 
+      rgba(101, 30, 20, 0.9) 40%, 
+      rgba(101, 30, 20, 0.7) 70%, 
+      rgba(101, 30, 20, 0.3) 90%, 
+      rgba(101, 30, 20, 0.0) 100%);
+    margin-top: 15px;
+  }
+
+  .footer-section.links {
+    flex: 0 0 calc(60% - 20px);
+  }
+  
+  .footer-section.about {
+    flex: 0 0 calc(40% - 20px);
+  }
+  
+  .footer-section.data-support,
+  .footer-section.contact {
+    flex: 0 0 calc(50% - 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    padding: 25px 30px 10px 25px;
+  }
+  
+  .footer-section h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-section {
+    flex: 0 0 100%;
+  }
+  
+  .footer-container {
+    padding: 20px 20px 10px 20px;
+  }
+  
+  .footer-section p,
+  .footer-section.links a {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  
+  .footer-section.links li {
+    margin-bottom: 4px;
+  }
+
+  .footer-section.links {
+    flex: 0 0 100%;
+  }
+  
+  .footer-section.links ul {
+    gap: 4px 10px;
+  }
+}
 </style>
+

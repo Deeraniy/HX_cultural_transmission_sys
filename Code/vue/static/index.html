@@ -7,8 +7,10 @@
         <link href="//unpkg.com/layui@2.9.21/dist/css/layui.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="css/index.css" />
         <link rel="stylesheet" type="text/css" href="css/hx.css" />
-        <script src="//unpkg.com/layui@2.9.21/dist/layui.js"><script type="text/javascript"
-                    src="https://cdn.jsdelivr.net/npm/echarts@4.5.0/dist/echarts.min.js"></script>
+        <!-- 引入汇文明朝体字体 -->
+        <link rel="stylesheet" type="text/css" href="../src/assets/font/font.css" />
+        <script src="//unpkg.com/layui@2.9.21/dist/layui.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4.5.0/dist/echarts.min.js"></script>
         <script src="js/axios.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -39,10 +41,334 @@
 
 		</script>
         <style>
+            /* 全局字体设置 */
+            body, html, h1, h2, h3, h4, h5, h6, p, span, div, li, a, button, input, select, textarea {
+                font-family: 'HelveticaNeue', '汇文明朝体', sans-serif !important;
+            }
+            
             /* 为页面添加顶部空间，避免头部和下方内容重叠 */
-
             .sidebar {
                 position: relative;  /* 取消固定定位，确保正常流式布局 */
+            }
+            
+            /* 增加echarts图表中文字的字体设置 */
+            .echarts-container, .echarts-tooltip, .echarts-legend, .echarts-title {
+                font-family: 'HelveticaNeue', '汇文明朝体', sans-serif !important;
+            }
+            
+            /* 增加图表标题字体设置 */
+            .title h1, .title h2, .title h3, .main-title, .chart-title {
+                font-family: 'HelveticaNeue', '汇文明朝体', sans-serif !important;
+            }
+            
+            /* 专门设置中文为汇文明朝体 */
+            .chinese-text {
+                font-family: '汇文明朝体', 'HelveticaNeue', sans-serif !important;
+            }
+            
+            /* 主题选择弹窗样式 */
+            #themeSelector {
+                margin: 20px;
+                position: fixed;
+                top: 20;
+                left: 0;
+                background-color: rgba(0, 0, 0, 0);
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            #themeSelector > div {
+                animation: fadeIn 0.3s ease-out forwards;
+                background-color: #f8f4e6;
+                background-image: linear-gradient(to bottom, #fdfbf7, #f0e8d5);
+                width: 80%;
+                max-width: 600px;
+                border-radius: 12px;
+                padding: 35px;
+                position: relative;
+                border: 1px solid #e9d9b8;
+            }
+            
+            #themeSelector .title {
+                text-align: center;
+                margin-bottom: 35px;
+                border-bottom: 2px solid rgba(138, 93, 59, 0.2);
+                padding-bottom: 20px;
+            }
+            
+            #themeSelector .title h1 {
+                color: #8a5d3b;
+                font-size: 32px;
+                margin-bottom: 12px;
+                font-family: 'HelveticaNeue', '汇文明朝体', serif !important;
+                letter-spacing: 2px;
+            }
+            
+            #themeSelector .title h1 b {
+                display: inline-block;
+                margin: 0 3px;
+                font-family: 'HelveticaNeue', '汇文明朝体', serif !important;
+            }
+            
+            #themeSelector .title h2 {
+                color: #a67c52;
+                font-size: 18px;
+                font-family: 'HelveticaNeue', '汇文明朝体', serif !important;
+                font-weight: normal;
+            }
+            
+            #themeSelector .table ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 25px;
+                list-style: none;
+                padding: 0;
+            }
+            
+            #themeSelector .table li {
+                flex: 0 0 calc(33.33% - 25px);
+                min-width: 160px;
+            }
+            
+            #themeSelector .table a {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 20px 10px;
+                border: 1px solid #d9c7a7;
+                border-radius: 10px;
+                background-color: #fdfaf3;
+                color: #8a5d3b;
+                text-align: center;
+                font-size: 20px;
+                font-family: 'HelveticaNeue', '汇文明朝体', serif !important;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                height: 100px;
+            }
+            
+            #themeSelector .table a .icon {
+                font-size: 32px;
+                margin-bottom: 10px;
+                display: block;
+            }
+            
+            #themeSelector .table a .text {
+                font-family: 'HelveticaNeue', '汇文明朝体', serif !important;
+                font-size: 18px;
+            }
+            
+            #themeSelector .table a:hover {
+                background-color: #8a5d3b;
+                color: #fff;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 15px rgba(138, 93, 59, 0.4);
+            }
+            
+            /* 添加动画效果 */
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            #themeSelector .close {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                width: 32px;
+                height: 32px;
+                cursor: pointer;
+                font-size: 28px;
+                color: #8a5d3b;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background-color: #f8f4e6;
+                border: 1px solid #d9c7a7;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                font-family: Arial, sans-serif;
+                line-height: 1;
+            }
+            
+            #themeSelector .close:hover {
+                background-color: #8a5d3b;
+                color: #fff;
+                transform: rotate(90deg);
+            }
+            
+            /* 响应式调整 */
+            @media (max-width: 768px) {
+                #themeSelector .table li {
+                    flex: 0 0 calc(50% - 20px);
+                }
+                
+                #themeSelector > div {
+                    width: 90%;
+                    padding: 10px;
+                }
+            }
+
+            /* 气泡菜单样式 */
+            #themeSelector.bubble-menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #themeSelector.bubble-menu > div {
+                background-color: #fff;
+                width: 90%;
+                max-width: 500px;
+                border-radius: 20px;
+                padding: 25px;
+                position: relative;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                text-align: center;
+                animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            }
+
+            @keyframes pop-in {
+                0% { transform: scale(0.8); opacity: 0; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+
+            #themeSelector.bubble-menu h3 {
+                color: #333;
+                font-size: 22px;
+                margin: 0 0 20px 0;
+                font-family: 'HelveticaNeue', '汇文明朝体', sans-serif;
+                font-weight: 500;
+            }
+
+            #themeSelector.bubble-menu .bubbles {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            #themeSelector.bubble-menu .bubble {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 80px;
+                height: 80px;
+                border-radius: 20%;
+                color: #fff;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+                position: relative;
+                overflow: hidden;
+            }
+
+            #themeSelector.bubble-menu .bubble:nth-child(1) {
+                background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            }
+
+            #themeSelector.bubble-menu .bubble:nth-child(2) {
+                background: linear-gradient(135deg, #56ab2f, #a8e063);
+            }
+
+            #themeSelector.bubble-menu .bubble:nth-child(3) {
+                background: linear-gradient(135deg, #4568dc, #b06ab3);
+            }
+
+            #themeSelector.bubble-menu .bubble:nth-child(4) {
+                background: linear-gradient(135deg, #f8b500, #fceabb);
+            }
+
+            #themeSelector.bubble-menu .bubble:nth-child(5) {
+                background: linear-gradient(135deg, #ee0979, #ff6a00);
+            }
+
+            #themeSelector.bubble-menu .bubble .icon {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+
+            #themeSelector.bubble-menu .bubble .text {
+                font-size: 12px;
+                font-family: 'HelveticaNeue', '汇文明朝体', sans-serif;
+                text-align: center;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #themeSelector.bubble-menu .bubble:hover {
+                transform: translateY(-5px) scale(1.05);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+
+            #themeSelector.bubble-menu .close {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                width: 25px;
+                height: 25px;
+                font-size: 20px;
+                color: #999;
+                background: none;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 20%;
+                text-decoration: none;
+                transition: all 0.2s;
+            }
+
+            #themeSelector.bubble-menu .close:hover {
+                color: #333;
+                background-color: #f0f0f0;
+            }
+
+            /* 移动设备上的气泡菜单布局 */
+            @media (max-width: 500px) {
+                #themeSelector.bubble-menu .bubbles {
+                    gap: 10px;
+                }
+                
+                #themeSelector.bubble-menu .bubble {
+                    width: 70px;
+                    height: 70px;
+                }
+                
+                #themeSelector.bubble-menu .bubble .icon {
+                    font-size: 20px;
+                }
+                
+                #themeSelector.bubble-menu .bubble .text {
+                    font-size: 10px;
+                }
+                
+                #themeSelector.bubble-menu h3 {
+                    font-size: 18px;
+                    margin-bottom: 15px;
+                }
+                
+                #themeSelector.bubble-menu > div {
+                    padding: 20px 15px;
+                }
             }
         </style>
 	</head>
@@ -96,22 +422,22 @@
 						</a>
 					</li>
 					<li>
-						<a href="" target="_blank"><span>书</span><span>非遗博物馆</span></a>
+						<a href="/#/folkCustom" target="_blank"><span>书</span><span>非遗博物馆</span></a>
 					</li>
 					<li>
-						<a href="" target="_blank"><span>听</span><span>美食街</span></a>
+						<a href="/#/food" target="_blank"><span>听</span><span>美食街</span></a>
 					</li>
 					<li>
-						<a href="" target="_blank"><span>创</span><span>红色文化走廊</span></a>
+						<a href="/#/red" target="_blank"><span>创</span><span>红色文化走廊</span></a>
 					</li>
 					<li>
-						<a id="bdclick_btn5" href="" target="_blank"><span>景</span><span>影视文学库</span></a>
+						<a id="bdclick_btn5" href="/#/filmLiterature" target="_blank"><span>景</span><span>影视文学库</span></a>
 					</li>
 					<li>
-						<a id="bdclick_btn6" href="" target="_blank"><span>VR</span><span>风景区</span></a>
+						<a id="bdclick_btn6" href="/#/placeOfInterest" target="_blank"><span>VR</span><span>风景区</span></a>
 					</li>
 					<li>
-						<a href="login.html" target="_blank"><span>登</span><span>会员登录</span></a>
+						<a href="/#/login" target="_blank"><span>登</span><span>会员登录</span></a>
 					</li>
 				</ul>
 				<a class="close" href="javascript:;"></a>
@@ -165,158 +491,6 @@
 
 
 		<!--故宫藏品的开始-->
-				<div class="block2">
-					<div class="box">
-						<div class="">
-							<div class="title">
-								<h1>
-           						 	 <span class="tit-span"><img src="img/public-icon1.png"></span>
-           							 <span class="s1">湖湘</span>
-           							 <span>美食</span>
-          							 <span class="tit-span"><img src="img/public-icon2.png"></span>
-       							 </h1>
-							</div>
-
-							<div class="num">
-								<b>28个</b>
-							</div>
-
-							<div class="tip" style="cursor:pointer;" onClick="openAlert('.pop-type')"><span>湖湘<b></b>美食查询</span></div>
-
-
-						</div>
-					</div>
-					<ul class="list">
-						<li class="sHoverItem"><img alt="" title="" class="lazyload" src="img/img_hx/湘菜3.jpg">
-							<div class="mask">
-								<a href="/collection/paint/229937.html">
-									<p>永州血鸭</p>
-
-									<p>色泽红亮，味道鲜香，肉质滑嫩</p>
-									<p></p>
-									<p class="jj">永州血鸭是一道经典的湘菜，以鸭肉为主料，搭配独特的香料和调料，制作出浓郁的风味，深受当地居民和游客的喜爱。</p>
-									<p class="pos"></p>
-									<h1></h1>
-								</a>
-							</div>
-						</li>
-						<li class="sHoverItem"><img alt="" title="" class="lazyload" src="img/img_hx/湘菜1.jpg">
-							<div class="mask">
-								<a href="/collection/paint/230459.html">
-									<p>湘西外婆菜</p>
-
-									<p>酸辣可口，丰富的营养，家常风味。</p>
-									<p></p>
-									<p class="jj">外婆菜是湖南传统名菜之一，通常用腌制的蔬菜、豆蔻和辣椒等制作，味道鲜明，唤起人们对家乡的记忆和温暖的感觉。</p>
-									<p class="pos"></p>
-									<h1></h1>
-								</a>
-							</div>
-						</li>
-						<li class="sHoverItem"><img alt="" title="" class="lazyload" src="img/img_hx/湘菜2.jpg">
-							<div class="mask">
-								<a href="">
-									<p>剁椒鱼头</p>
-									<p>选用新鲜鱼头，剁椒调味，肉质鲜嫩，麻辣可口。</p>
-									<p></p>
-									<p class="jj">剁椒鱼头是一道经典的湘菜，以鲜嫩的鱼头为主料，搭配剁椒蒸制而成，味道鲜美，辣味十足，非常受欢迎。</p>
-									<p class="pos"></p>
-									<h1></h1>
-								</a>
-							</div>
-						</li>
-					</ul>
-					<!--藏品分类查询表的开始-->
-					<div class="popWindow pop-type">
-						<a href="javascript:;" class="close"></a>
-						<div>
-							<div class="title">
-								<h1 style="margin-top:16px;"><b>二</b><b>十</b><b>三</b>个品类藏品</h1>
-								<h2></h2>
-							</div>
-
-							<div class="table">
-								<ul>
-									<li>
-										<a href="">陶瓷</a>
-									</li>
-									<li>
-										<a href="">绘画</a>
-									</li>
-									<li>
-										<a href="">法书</a>
-									</li>
-									<li>
-										<a href="">铭刻</a>
-									</li>
-									<li>
-										<a href="">青铜器</a>
-									</li>
-									<li>
-										<a href="">玺印</a>
-									</li>
-									<li>
-										<a href="">织绣</a>
-									</li>
-									<li>
-										<a href="">文房用品</a>
-									</li>
-									<li>
-										<a href="">家具</a>
-									</li>
-									<li>
-										<a href="">钟表仪器</a>
-									</li>
-									<li>
-										<a href="">珐琅</a>
-									</li>
-									<li>
-										<a href="">漆器</a>
-									</li>
-									<li>
-										<a href="">雕塑</a>
-									</li>
-									<li>
-										<a href="">金银锡器</a>
-									</li>
-									<li>
-										<a href="">玉石器</a>
-									</li>
-									<li>
-										<a href="">玻璃器</a>
-									</li>
-									<li>
-										<a href="">竹木牙角匏</a>
-									</li>
-									<li>
-										<a href="">宫廷宗教</a>
-									</li>
-									<li>
-										<a href="">首饰</a>
-									</li>
-									<li>
-										<a href="">武备仪仗</a>
-									</li>
-									<li>
-										<a href="">音乐戏曲</a>
-									</li>
-									<li>
-										<a href="">生活器具</a>
-									</li>
-									<li>
-										<a href="">外国文物</a>
-									</li>
-									<li>
-										<a href="">藏品搜索</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<!--藏品分类查询表的结束-->
-				</div>
-
-		<!--故宫藏品的开始-->
 	<!--博物馆活动（红色块）的开始-->
 				<div class="block3">
 					<!--右边故宫名画记图片的开始-->
@@ -331,34 +505,32 @@
 					<div class="box">
 						<div class="title">
 							<h1 style="background:none !important;">
-                        <span class="tit-span"><img src="img/public-icon1.png"></span>
                         <span class="s1">我们的功能</span>
-                        <span class="tit-span"><img src="img/public-icon2.png"></span>
                     </h1>
 						</div>
 						<div>
 							<ul>
 								<li>
-									<h3><a href="" target="_blank">湖湘文化分类查询</a></h3>
+									<h3><a href="javascript:;" onclick="showThemeSelector()">湖湘文化分类查询</a></h3>
 									<p>　　为研究者和爱好者提供湖湘文化的分类查询工具，旨在帮助读者了解和探索湖湘文化的各个方面和特点...</p>
-									<a href="" class="link" target="_blank">更多</a>
+									<a href="javascript:;" onclick="showThemeSelector()" class="link">更多</a>
 								</li>
 								<li>
-									<h3><a href="" target="_blank">湖湘文化传播舆论情感分析</a></h3>
+									<h3><a href="/#/globe" target="_blank">湖湘文化传播舆论情感分析</a></h3>
 									<p>　　分析当前舆论对于湖湘文化的情感倾向，展现群众对湖湘文化的价值认知与情感共鸣，识别潜在的舆论危机...</p>
-									<a href="" class="link" target="_blank">更多</a>
+									<a href="/#/globe" class="link" target="_blank">更多</a>
 								</li>
 								<li>
-									<h3><a href="" target="_blank">湖湘文化影响力分析预测</a></h3>
+									<h3><a href="/#/platform" target="_blank">湖湘文化影响力分析预测</a></h3>
 									<p>评估湖湘文化在各个领域的影响力，并基于现有数据和趋势进行未来影响力预测...
 									</p>
-									<a href="" class="link" target="_blank">更多</a>
+									<a href="/#/platform" class="link" target="_blank">更多</a>
 								</li>
 								<li>
-									<h3><a href="" target="_blank">湖湘文化自动生成传播效果分析报告</a></h3>
+									<h3><a href="/#/report" target="_blank">湖湘文化自动生成传播效果分析报告</a></h3>
 									<p>自动生成对湖湘文化传播现状的分析报告，为研究者、文化工作者和政策制定者提供全面的信息支持...
 									</p>
-									<a href="" class="link" target="_blank">更多</a>
+									<a href="/#/report" class="link" target="_blank">更多</a>
 								</li>
 							</ul>
 						</div>
@@ -370,370 +542,54 @@
 		</div>
 		<!--轮播结束-->
 
-		<script>
-            // 添加一个函数用于查询节点
-            function searchNode() {
-                // 获取输入的节点名称
-                const nodeName = document.getElementById('nodeInput').value.trim();
+<!-- 添加主题选择弹窗 -->
+<div id="themeSelector" class="popWindow bubble-menu" style="display:none;">
+    <div>
+        <a href="javascript:;" class="close" onclick="closeThemeSelector()">×</a>
+        <h3>选择主题</h3>
+        <div class="bubbles">
+            <a href="/#/food" class="bubble">
+                <span class="icon">🍜</span>
+                <span class="text">美食文化</span>
+            </a>
+            <a href="/#/placeOfInterest" class="bubble">
+                <span class="icon">🏞️</span>
+                <span class="text">风景名胜</span>
+            </a>
+            <a href="/#/filmLiterature" class="bubble">
+                <span class="icon">📚</span>
+                <span class="text">影视文学</span>
+            </a>
+            <a href="/#/folkCustom" class="bubble">
+                <span class="icon">🏮</span>
+                <span class="text">非遗民俗</span>
+            </a>
+            <a href="/#/red" class="bubble">
+                <span class="icon">🔴</span>
+                <span class="text">红色文化</span>
+            </a>
+        </div>
+    </div>
+</div>
 
-                // 找到包含输入字符串的节点（模糊查询）
-                const node = data.find(item => item.name && item.name.toLowerCase().includes(nodeName.toLowerCase()));
-
-
-                // 显示节点信息
-                if (node) {
-                    // 更新节点名称
-                    document.getElementById('nodeName').textContent = `节点名称：${node.name}`;
-
-                    // 更新节点描述
-                    document.getElementById('nodeDescription').textContent = `节点描述：${node.properties.text}`;
-
-                    // 存储节点 ID 以便查看详情时使用
-                    document.getElementById('detailsButton').setAttribute('data-node-id', node.id);
-                    // 使用 echarts API 使得该节点居中
-
-                } else {
-                    // 如果没有找到节点
-                    alert('没有找到相关节点！');
-                }
-            }
-
-            // 为查询按钮添加点击事件监听器
-            function viewDetails() {
-                console.log("调用查看详情功能")
-                const nodeId = document.getElementById('detailsButton').getAttribute('data-node-id');
-                const node = data.find(item => item.id === nodeId);
-
-                if (node) {
-                    console.log(node.id)
-                    // 判断节点是否有描述链接（describe_url），如果没有则打开图像链接（img_url）
-                    const urlToOpen = node.properties.description_url || node.properties.img_url;
-
-                    if (urlToOpen) {
-                        // 打开链接
-                        window.open(urlToOpen, '_blank');
-                    } else {
-                        alert('该节点没有可用的详细信息链接！');
-                    }
-                } else {
-                    alert('节点信息不存在！');
-                }
-            }
-            let data = [];
-            let links = [];
-
-            async function loadData() {
-                try {
-                    // 使用 await 等待 fetch 完成
-                    const response = await fetch('data.json');
-                    const json = await response.json();
-
-                    // 将数据赋值
-                    data = json.data;
-                    links = json.links;
-                    initChart();
-                    // 输出加载的数据
-                    // console.log(data);
-                    // console.log(links);
-                } catch (error) {
-                    console.error('Error loading the JSON file:', error);
-                }
-            }
-            // 初始化图表
-            function initChart() {
-                var myChart = echarts.init(document.getElementById('graph'));
-
-                var option = {
-                    title: {
-                        text: ''
-                    },
-                    tooltip: {},
-                    animationDurationUpdate: 1500,
-                    animationEasingUpdate: 'quinticInOut',
-                    label: {
-                        normal: {
-                            show: true, // 确保标签显示
-                            textStyle: {
-                                fontSize: 12,
-                            },
-                        }
-                    },
-                    legend: {
-                        x: "center",
-                        show: false
-                    },
-                    series: [
-                        {
-                            type: 'graph',
-                            layout: 'force',
-                            symbolSize: 45,
-                            focusNodeAdjacency: true,
-                            roam: true,
-                            edgeSymbol: ['none', 'none'],
-                            categories: [{
-                                name: 'Spot',
-                                itemStyle: {
-                                    normal: {
-                                        color: "#009800",
-                                    }
-                                }
-                            }, {
-                                name: 'Literature',
-                                itemStyle: {
-                                    normal: {
-                                        color: "#4592FF",
-                                    }
-                                }
-                            }, {
-                                name: 'Food',
-                                itemStyle: {
-                                    normal: {
-                                        color: "#C71585",
-                                    }
-                                }
-                            }, {
-                                name: 'Folk',
-                                itemStyle: {
-                                    normal: {
-                                        color: "#ffb6c1",
-                                    }
-                                }
-                            }], label: {
-                                normal: {
-                                    show: true,
-                                    textStyle: {
-                                        fontSize: 12,
-                                    },
-                                }
-                            },
-                            force: {
-                                repulsion: 1000
-                            },
-                            edgeSymbolSize: [4, 50],
-                            edgeLabel: {
-                                normal: {
-                                    show: true,
-                                    textStyle: {
-                                        fontSize: 10
-                                    },
-                                    formatter: function (params) {
-                                        // 使用链接数据中的 name 字段
-                                        return params.data.name || '从属';  // 如果没有 name，显示“连接”
-                                    }
-                                }
-                            },
-                            data: data.map(function (node) {
-                                // 确保在节点数据中为每个节点设置正确的 `category` 索引
-                                if (node.categories === 'Spot') {
-                                    node.category = 0;  // Spot -> category 0
-                                } else if (node.categories === 'Literature') {
-                                    node.category = 1;  // Literature -> category 1
-                                } else if (node.categories === 'Food') {
-                                    node.category = 2;  // Food -> category 2
-                                } else if (node.categories === 'Folk') {
-                                    node.category = 3;  // Folk -> category 3
-                                }
-                                return node;
-                            }),
-                            links: links,
-                            lineStyle: {
-                                normal: {
-                                    opacity: 0.9,
-                                    width: 1.3,
-                                    curveness: 0,
-                                    color: "#262626",
-                                }
-                            },
-
-                        }
-                    ]
-                };
-
-                // 使用刚指定的配置项和数据显示图表。
-                myChart.setOption(option);
-                myChart.on('click', function (params) {
-                    if (params.data && params.data.id) {
-                        // 获取被点击节点的信息
-                        const node = data.find(item => item.id === params.data.id);
-                        if (node) {
-                            // 更新右侧显示的信息
-                            document.getElementById('nodeName').textContent = `节点名称：${node.name}`;
-                            document.getElementById('nodeDescription').textContent = `节点描述：${node.properties.text}`;
-                            document.getElementById('detailsButton').setAttribute('data-node-id', node.id);
-                        }
-                    }
-                });
-
-            }
-
-
-            // 调用异步函数来加载数据
-            loadData();
-
-            var myChart = echarts.init(document.getElementById('graph'));
-
-
-
-
-
-
-            //四季皮肤变化效果的开始
-            $('.season i').bind('click', function(e) {
-                var _that = $(this),
-                    text = _that.text(),
-                    $span = $('.season').find('span').eq(0);
-                $span.text(text);
-                $('#container').removeClass();
-                var seasonal = '';
-                $('.block1 .right .box3 .i1').show();
-                if(text == "博") {
-                    $('.skin_common').hide();
-                    $('.skin_518').show();
-                } else {
-                    $('.skin_common').show();
-                    $('.skin_518').hide();
-                }
-                switch(text) {
-                    case "年":
-                        $('#container').addClass('home newyear2019');
-                        seasonal = '年';
-                        $('.block1 .right .box3 .i1').hide();
-                        $('.newyear2019.home .block1 .box4 .list .last h1').css('background-image', 'none');
-                        break;
-                    case "庆":
-                        $('#container').addClass('home years93');
-                        seasonal = '庆';
-                        break;
-                    case "博":
-
-                        $('#container').addClass('home ');
-                        seasonal = '博';
-                        break;
-                    case "春":
-                        $('#container').addClass('home spring');
-                        seasonal = '春';
-                        break;
-                    case "夏":
-                        $('#container').addClass('home summer');
-                        seasonal = '夏';
-                        break;
-                    case "秋":
-                        $('#container').addClass('home fall');
-                        seasonal = '秋';
-                        break;
-                    case "冬":
-                        $('#container').addClass('home winter');
-                        seasonal = '冬';
-                        break;
-                    case "常":
-                        $('#container').addClass('home normal');
-                        seasonal = 'normal';
-                        break;
-                }
-                setTimeout(function() {
-                    $(".scrolllist .img img").each(function() {
-                        if(!$(this).is(":hidden")) {
-                            $('.block4 .caroufredsel_wrapper,.block4 .caroufredsel_wrapper ul').css('height', $(this).height());
-                        }
-                    });
-                }, 500);
-
-                CONFIG.setSeasonal(seasonal);
-                return false;
-            });
-            //四季皮肤变化效果的结束
-
-            $('.focus').height($(window).height())
-
-            $('.home .focus li').mChange({
-                auto: 1, //是否自动播放,1为自动,0为手动
-                arrow: 1, //是否反转箭头,1为点击左侧向右滚动,0则相反
-                speed: 1000, //效果速度,大于0.3
-                time: 5000, //周期时间，大于1
-                nav: $('.home .focus .nav i'), //导航
-                nave: "click", //导航事件
-                navs: 0, //导航滚动
-                prev: ".home .focus .prev a", //上一个
-                next: ".home .focus .next a", //下一个
-                cycle: 1, //是否循环
-                mousestop: 0, //是否鼠标划入停止
-                mousewheel: 0, //是否开启滚轮事件
-                animates: function(idx) {} //自定义函数
-            });
-            //底部图书馆-视听馆这一块的效果
-            $(window).on('load', function() {
-                var smask = new sHover("sHoverItem", "mask");
-                $('.block4 ul').carouFredSel({
-                    auto: false,
-                    responsive: true,
-                    circular: false,
-                    infinite: false,
-                    items: 6,
-                    onCreate: function(items, sizes) {
-                        setTimeout(function() {
-                            $(".scrolllist .img").eq(0).find("img").each(function(i) {
-                                if(!$(this).is(":hidden")) {
-                                    $('.block4 .caroufredsel_wrapper,.block4 .caroufredsel_wrapper ul').css('height', $(this).height());
-                                }
-                            });
-
-                        }, 800);
-                    }
-                });
-
-
-                $('a.link').each(function(index, element) {
-                    var lineWrap = '<div id="line' + index + '"></div>';
-                    $(this).append(lineWrap);
-                    $(this).children('div').css({
-                        'position': 'absolute',
-                        'left': 0,
-                        'top': 0,
-                        'right': 0,
-                        'bottom': 0
-                    });
-                    cline('line' + index);
-                });
-
-                function cline(obj) {
-                    var elm = document.getElementById(obj);
-                    var paper = Raphael(elm);
-                    var lw = $(elm).width() - 10;
-                    var lh = $(elm).height() - 10;
-                    var line = paper.path("M0, 5L5, 5L5, 0L" + (lw + 5) + ",0L" + (lw + 5) + ",5L" + (lw + 10) + ",5L" + (lw + 10) + "," + (lh + 5) + "L" + (lw + 5) + "," + (lh + 5) + "L" + (lw + 5) + "," + (lh + 10) + "L5," + (lh + 10) + "L5," + (
-                        lh + 5) + "L0," + (lh + 5) + "L0, 5").attr({
-                        stroke: '#fff',
-                        'stroke-width': 2
-                    });
-
-                    $('.block3 path').attr('stroke', '#ab8181');
-
-                    $(elm).find('svg').css('left', 0);
-                    $('path').attr('stroke-dasharray', '1000,1000');
-                    $(elm).hover(function() {
-                        $(this).find('path').stop(true, true).transition({
-                            'stroke-dashoffset': -1000,
-                            'stroke-dasharray': '500,500'
-                        }, 500);
-                    }, function() {
-                        $(this).find('path').transition({
-                            'stroke-dashoffset': 0
-                        }, 500);
-                    });
-                };
-
-            });
-            //右侧导航条回到顶部的效果
-            $('.sidebar .close').click(function() {
-                if(!$(this).hasClass('up')) {
-                    $(this).addClass('up');
-                    $('.sidebar ul').slideUp(300);
-                } else {
-                    $(this).removeClass('up');
-                    $('.sidebar ul').slideDown(300);
-                }
-            });
-
+<!-- 添加弹窗控制脚本 -->
+<script type="text/javascript">
+    function showThemeSelector() {
+        document.getElementById('themeSelector').style.display = 'block';
+    }
+    
+    function closeThemeSelector() {
+        document.getElementById('themeSelector').style.display = 'none';
+    }
+    
+    // 点击弹窗外部区域关闭弹窗
+    window.onclick = function(event) {
+        var modal = document.getElementById('themeSelector');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
         </script>
+
 	</body>
 </html>

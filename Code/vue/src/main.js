@@ -1,4 +1,5 @@
 import './assets/main.css'
+import './assets/font/font.css'  // 引入汇文明朝体字体
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'

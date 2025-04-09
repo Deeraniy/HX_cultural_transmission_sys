@@ -87,8 +87,8 @@ header {
 <style>
 /* 默认字体样式 */
 :root {
-  --font-family-base: 'HelveticaNeue2', serif;
-  --font-family-styled: 'HelveticaNeue', serif;
+  --font-family-base: '汇文明朝体', 'HelveticaNeue2', serif;
+  --font-family-styled: '汇文明朝体', 'HelveticaNeue', serif;
 }
 
 /* 普通字体模式 */
@@ -106,5 +106,10 @@ header {
 [data-font-style="normal"] [data-preserve-font] {
   font-family: inherit !important;
   font-size: inherit !important;
+}
+
+/* 确保中文字符优先使用汇文明朝体 */
+.chinese, [lang="zh"], [lang="zh-CN"] {
+  font-family: '汇文明朝体', var(--font-family-styled) !important;
 }
 </style>
