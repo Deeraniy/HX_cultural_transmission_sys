@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="全球传播效果前后端连接">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/ReportGeneration/ReportMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Spread/Globe3D.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Spread/Globe3D.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/UserHome.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/UserHome.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserArticle.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserArticle.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/main/UserHomeMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/main/UserHomeMain.vue" afterDir="false" />
-    </list>
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="用户中心完善" />
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,23 +178,7 @@
       <workItem from="1744002625093" duration="881000" />
       <workItem from="1744073282383" duration="1542000" />
       <workItem from="1744114360087" duration="794000" />
-      <workItem from="1744158394063" duration="1448000" />
-    </task>
-    <task id="LOCAL-00030" summary="非遗民俗情感分析前后端连接">
-      <option name="closed" value="true" />
-      <created>1736684931015</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1736684931015</updated>
-    </task>
-    <task id="LOCAL-00031" summary="非遗民俗界面优化+图片刷新">
-      <option name="closed" value="true" />
-      <created>1736688842141</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1736688842141</updated>
+      <workItem from="1744158394063" duration="1563000" />
     </task>
     <task id="LOCAL-00032" summary="情感分析界面+民俗展示界面bug修复">
       <option name="closed" value="true" />
@@ -579,7 +556,23 @@
       <option name="project" value="LOCAL" />
       <updated>1744161387694</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="用户中心完善">
+      <option name="closed" value="true" />
+      <created>1744168200783</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1744168200784</updated>
+    </task>
+    <task id="LOCAL-00080" summary="用户中心完善">
+      <option name="closed" value="true" />
+      <created>1744168224331</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1744168224331</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -603,7 +596,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="除红色人物外点赞收藏功能全部实现" />
     <MESSAGE value="点赞收藏维修+情感分析界面维修" />
     <MESSAGE value="因果推理前端" />
     <MESSAGE value="情感分析界面。。。" />
@@ -628,7 +620,8 @@
     <MESSAGE value="地图去除" />
     <MESSAGE value="修复了一些已知问题" />
     <MESSAGE value="全球传播效果前后端连接" />
-    <option name="LAST_COMMIT_MESSAGE" value="全球传播效果前后端连接" />
+    <MESSAGE value="用户中心完善" />
+    <option name="LAST_COMMIT_MESSAGE" value="用户中心完善" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
