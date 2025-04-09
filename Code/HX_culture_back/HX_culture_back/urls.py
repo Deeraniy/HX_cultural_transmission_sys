@@ -103,6 +103,7 @@ urlpatterns = [
     url(r'^get_theme_comments_sentiment/', communication_effect.get_theme_comments_sentiment),
     url(r'^get_theme_ip_distribution/', communication_effect.get_theme_ip_distribution),
     url(r'^get_theme_short_comments/', communication_effect.get_theme_short_comments),
+    url(r'^get_theme_platform_distribution/', communication_effect.get_theme_platform_distribution),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

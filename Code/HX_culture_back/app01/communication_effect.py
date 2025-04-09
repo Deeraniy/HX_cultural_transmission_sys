@@ -17,7 +17,7 @@ def get_db_connection():
 def get_theme_comments_sentiment(request):
     """
     获取四个主题的评论情感分析数据
-    返回每个主题每月的不同情感评论数量
+    返回每个主题每月的不同情感评论数量，包含平台信息
     """
     if request.method != 'GET':
         return JsonResponse({'code': 405, 'message': '仅支持GET请求'})
@@ -37,14 +37,15 @@ def get_theme_comments_sentiment(request):
         result = {}
         
         for theme_name, table_name in tables.items():
-            # SQL查询，按月份和情感类型统计评论数量
+            # SQL查询，按月份、平台和情感类型统计评论数量
             sql = f"""
                 SELECT 
                     DATE_FORMAT(STR_TO_DATE(comment_time, '%Y-%m-%d %H:%i:%s'), '%Y-%m') as month,
+                    platform,
                     sentiment,
                     COUNT(*) as count
                 FROM {table_name}
-                GROUP BY month, sentiment
+                GROUP BY month, platform, sentiment
                 ORDER BY month
             """
             
@@ -54,24 +55,69 @@ def get_theme_comments_sentiment(request):
             # 处理查询结果
             theme_data = {}
             for row in rows:
-                month, sentiment, count = row
-                if month not in theme_data:
-                    theme_data[month] = {
-                        'positive': 0,
-                        'neutral': 0,
-                        'negative': 0
-                    }
-                theme_data[month][sentiment.lower()] = count
+                try:
+                    # 安全处理元组解包，避免索引错误
+                    if len(row) >= 4:
+                        month, platform, sentiment, count = row
+                    else:
+                        # 记录日志或处理不完整数据
+                        print(f"警告: 数据行格式不正确，跳过: {row}")
+                        continue
+                    
+                    # 检查month和sentiment是否为None或空
+                    if not month or not sentiment:
+                        continue
+                    
+                    if month not in theme_data:
+                        theme_data[month] = {
+                            'total': {
+                                'positive': 0,
+                                'neutral': 0,
+                                'negative': 0
+                            },
+                            'platforms': {}
+                        }
+                    
+                    # 添加平台信息，如果平台为空则设为"其他"
+                    platform = platform if platform else "其他"
+                    if platform not in theme_data[month]['platforms']:
+                        theme_data[month]['platforms'][platform] = {
+                            'positive': 0,
+                            'neutral': 0,
+                            'negative': 0
+                        }
+                    
+                    # 记录数据，确保sentiment是有效的字符串并转换为小写
+                    sentiment_lower = str(sentiment).lower()
+                    # 确保sentiment_lower是positive, neutral或negative中的一个
+                    if sentiment_lower not in ['positive', 'neutral', 'negative']:
+                        sentiment_lower = 'neutral'  # 默认为中性
+                    
+                    theme_data[month]['platforms'][platform][sentiment_lower] = count
+                    theme_data[month]['total'][sentiment_lower] += count
+                except Exception as row_error:
+                    print(f"处理行时出错: {row}, 错误: {str(row_error)}")
+                    continue
+            
+            # 转换数据结构为列表格式
+            monthly_data = []
+            for month, data in theme_data.items():
+                platforms_list = []
+                for platform_name, sentiments in data['platforms'].items():
+                    platforms_list.append({
+                        'platform': platform_name,
+                        'sentiments': sentiments
+                    })
+                    
+                monthly_data.append({
+                    'month': month,
+                    'total_sentiments': data['total'],
+                    'platforms': platforms_list
+                })
             
             result[theme_name] = {
                 'theme_name': theme_name,
-                'monthly_data': [
-                    {
-                        'month': month,
-                        'sentiments': sentiments
-                    }
-                    for month, sentiments in theme_data.items()
-                ]
+                'monthly_data': monthly_data
             }
         
         return JsonResponse({
@@ -81,6 +127,9 @@ def get_theme_comments_sentiment(request):
         })
         
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"获取数据失败: {str(e)}\n{error_details}")
         return JsonResponse({
             'code': 500,
             'message': f'获取数据失败：{str(e)}'
@@ -254,6 +303,88 @@ def get_theme_short_comments(request):
         })
         
     except Exception as e:
+        return JsonResponse({
+            'code': 500,
+            'message': f'获取数据失败：{str(e)}'
+        })
+        
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()
+
+def get_theme_platform_distribution(request):
+    """
+    获取四个主题的平台评论分布统计
+    返回每个主题下各个平台的评论数量和占比
+    """
+    if request.method != 'GET':
+        return JsonResponse({'code': 405, 'message': '仅支持GET请求'})
+    
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # 定义要查询的表和对应的主题名
+        tables = {
+            'spot': 'user_comment_spot',
+            'literature': 'user_comment_literature',
+            'food': 'user_comment_food',
+            'folk': 'user_comment_folk'
+        }
+        
+        result = {}
+        
+        for theme_name, table_name in tables.items():
+            # SQL查询，统计各平台的评论数量
+            sql = f"""
+                SELECT 
+                    CASE 
+                        WHEN platform IS NULL OR platform = '' THEN '其他'
+                        ELSE platform
+                    END as platform_name,
+                    COUNT(*) as count
+                FROM {table_name}
+                GROUP BY platform_name
+                ORDER BY count DESC
+            """
+            
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            
+            # 处理查询结果
+            platform_distribution = []
+            total_count = 0
+            
+            for row in rows:
+                platform_name, count = row
+                platform_distribution.append({
+                    'platform': platform_name,
+                    'count': count
+                })
+                total_count += count
+            
+            # 计算各平台占比
+            for platform in platform_distribution:
+                platform['percentage'] = round((platform['count'] / total_count) * 100, 2) if total_count > 0 else 0
+            
+            result[theme_name] = {
+                'theme_name': theme_name,
+                'total_count': total_count,
+                'platform_distribution': platform_distribution
+            }
+        
+        return JsonResponse({
+            'code': 200,
+            'message': 'success',
+            'data': result
+        })
+        
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"获取平台分布数据失败: {str(e)}\n{error_details}")
         return JsonResponse({
             'code': 500,
             'message': f'获取数据失败：{str(e)}'
