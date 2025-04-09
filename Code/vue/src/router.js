@@ -20,6 +20,14 @@ const routes = [
     {
         path: '/index',
         component:() => import('./components/IndexHeader.vue'),
+        children: [{
+            path: 'background',
+            component:()=> import('./components/Background/BackgroundIntro.vue'),
+        },
+            {
+                path: 'about',
+                component:() => import('./components/About/AboutUs.vue'),
+            }]
     },
     {
         path: '/login',
