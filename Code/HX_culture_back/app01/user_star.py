@@ -17,11 +17,24 @@ def get_all_star(request):
             try:
             # 执行SQL查询语句
                 if uid:
-                    sql = "SELECT * FROM tag_user left join tag on tag_user.tag_id = tag.tag_id WHERE user_id = %s"
+                    sql = """
+                    SELECT DISTINCT tu.user_id, tu.tag_id, tu.is_favorite, tu.click_count, t.*, uh.img_url 
+                    FROM tag_user tu 
+                    LEFT JOIN tag t ON tu.tag_id = t.tag_id 
+                    LEFT JOIN user_history uh ON t.tag_name = uh.name
+                    WHERE tu.user_id = %s AND tu.is_favorite = 1
+                    GROUP BY tu.tag_id
+                    """
                     cursor.execute(sql, (uid,))
                 elif username:
-                    # 执行SQL查询语句根据username
-                    sql = "SELECT * FROM user_history WHERE username = %s"
+                    # 执行SQL查询语句根据username，增加关联查询user_history获取img_url
+                    sql = """
+                    SELECT DISTINCT us.*, uh.img_url 
+                    FROM user_star us
+                    LEFT JOIN user_history uh ON us.name = uh.name AND us.type = uh.type
+                    WHERE us.username = %s
+                    GROUP BY us.id
+                    """
                     cursor.execute(sql, (username,))
 
                 results = cursor.fetchall()
@@ -41,6 +54,41 @@ def get_all_star(request):
             return JsonResponse({"error": "未提供用户ID"})
     else:
         return JsonResponse({"error": "不是GET请求!"})
+
+# 添加新函数：更新收藏状态
+def update_favorite(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_id = data.get('user_id')
+            tag_id = data.get('tag_id')
+            is_favorite = data.get('is_favorite', 0)
+            
+            if not user_id or not tag_id:
+                return JsonResponse({"error": "缺少必要参数：user_id或tag_id"})
+                
+            # 创建连接
+            conn = pymysql.connect(host='8.148.26.99', port=3306, user='root', passwd='song',
+                                  db='hx_cultural_transmission_sys', charset='utf8')
+            # 创建游标
+            cursor = conn.cursor()
+            try:
+                # 更新收藏状态
+                sql = "UPDATE tag_user SET is_favorite = %s WHERE user_id = %s AND tag_id = %s"
+                cursor.execute(sql, (is_favorite, user_id, tag_id))
+                conn.commit()
+                
+                return JsonResponse({"success": True, "message": "收藏状态更新成功"})
+            except Exception as e:
+                conn.rollback()
+                return JsonResponse({"error": f"更新收藏状态失败: {e}"})
+            finally:
+                cursor.close()
+                conn.close()
+        except Exception as e:
+            return JsonResponse({"error": f"请求处理失败: {e}"})
+    else:
+        return JsonResponse({"error": "仅支持POST请求"})
 
 # 添加浏览记录
 def add_star(request):

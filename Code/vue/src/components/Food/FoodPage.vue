@@ -274,6 +274,31 @@ const toggleFavorite = async () => {
     console.error('收藏操作失败:', error);
   }
 };
+
+// 记录点击事件
+const recordClick = async (foodId) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      console.log('未登录用户的点击不记录');
+      return;
+    }
+
+    // 获取美食对应的标签
+    const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
+    if (response.code === 200 && response.data) {
+      const tagId = response.data.id;
+      // 确保 userId 是数字类型
+      const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
+      // 使用 viewTagAPI 记录点击
+      await TagsAPI.viewTagAPI(numericUserId, tagId);
+      console.log(`记录用户 ${userId} 对美食 ${foodId} 的点击`);
+    }
+  } catch (error) {
+    console.error('记录点击失败:', error);
+  }
+};
+
 const addHistory = async (item) => {
   try {
     const userId = getUserId();
@@ -282,40 +307,18 @@ const addHistory = async (item) => {
       return;
     }
     const historyData = {
-      uid: userId,
+      uid: Number(userId), // 确保是数字类型
       type: "food", // 记录类型
-      name: item.name, // 景点名称
-      img_url: item.img, // 景点图片
-      describe: '美食描述',
-      // describe: item.description,
-       // 截取前100字作为描述
+      name: item.name, // 美食名称
+      img_url: item.img, // 美食图片
+      describe: item.description.substring(0, 50) || '美食描述', // 美食描述
     };
+    
+    // 调用API添加历史记录
+    await UserAPI.AddUserHistory(historyData);
+    console.log('浏览历史记录已添加:', item.name);
   
     // 记录点击事件
-    const recordClick = async (foodId) => {
-      try {
-        const userId = getUserId();
-        if (!userId) {
-          console.log('未登录用户的点击不记录');
-          return;
-        }
-
-        // 获取美食对应的标签
-        const response = await TagsAPI.getTagByThemeAndOriginAPI('food', foodId);
-        if (response.code === 200 && response.data) {
-          const tagId = response.data.id;
-          // 确保 userId 是数字类型
-          const numericUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
-          // 使用 viewTagAPI 记录点击
-          await TagsAPI.viewTagAPI(numericUserId, tagId);
-          console.log(`记录用户 ${userId} 对美食 ${foodId} 的点击`);
-        }
-      } catch (error) {
-        console.error('记录点击失败:', error);
-      }
-    };
-
-    // 记录点击
     await recordClick(item.food_id || item.id);
   } catch (error) {
     console.error('记录历史失败:', error);

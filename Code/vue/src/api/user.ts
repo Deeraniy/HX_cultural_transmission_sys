@@ -168,12 +168,120 @@ class UserAPI {
     }
 
     // 获取用户地区分布数据
-    static getUserDistribution(): Promise<UserDistributionData> {
+    static getUserDistribution(): Promise<any> {
         return request({
             url: `${DICT_BASE_URL}/user/distribution`,
             method: 'get'
         }).catch(error => {
             console.error('Get user distribution error:', error.response?.data || error);
+            throw error;
+        });
+    }
+
+    // 删除指定的用户历史记录
+    static DeleteUserHistory(uid: number, historyIds: number[]): Promise<any> {
+        console.log('准备删除历史记录', { uid, historyIds });
+        // 确保参数类型正确
+        const numericUid = Number(uid);
+        const numericHistoryIds = historyIds.map(id => Number(id));
+        
+        return request({
+            url: `${BASE_URL}/delete_user_history/`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                uid: numericUid,
+                history_ids: numericHistoryIds
+            }
+        }).then(response => {
+            console.log('删除历史记录成功', response);
+            return response;
+        }).catch(error => {
+            console.error('Delete history error:', error.response?.data || error);
+            throw error;
+        });
+    }
+
+    // 通过复合键删除历史记录（用于没有ID字段的记录）
+    static DeleteUserHistoryByCompositeKey(uid: number, criteria: {
+        history_times?: string[], // 时间戳列表
+        types?: string[],         // 类型列表
+        names?: string[]          // 名称列表
+    }): Promise<any> {
+        console.log('准备通过复合键删除历史记录', { uid, criteria });
+        
+        return request({
+            url: `${BASE_URL}/delete_user_history_by_composite/`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                uid: Number(uid),
+                history_times: criteria.history_times || [],
+                types: criteria.types || [],
+                names: criteria.names || []
+            }
+        }).then(response => {
+            console.log('通过复合键删除历史记录成功', response);
+            return response;
+        }).catch(error => {
+            // 如果后端API不存在，使用本地删除
+            console.error('通过复合键删除历史记录失败，可能后端API不存在:', error);
+            return { success: false, message: "后端API可能不支持此操作，仅执行了前端删除" };
+        });
+    }
+
+    // 清空用户所有历史记录
+    static ClearUserHistory(uid: number): Promise<any> {
+        console.log('准备清空历史记录', { uid });
+        // 确保参数类型正确
+        const numericUid = Number(uid);
+        
+        return request({
+            url: `${BASE_URL}/clear_user_history/`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                uid: numericUid
+            }
+        }).then(response => {
+            console.log('清空历史记录成功', response);
+            return response;
+        }).catch(error => {
+            console.error('Clear history error:', error.response?.data || error);
+            throw error;
+        });
+    }
+
+    // 更新收藏状态
+    static UpdateFavorite(data: {
+        user_id: number | string,
+        tag_id: number | string,
+        is_favorite: number
+    }): Promise<any> {
+        console.log('准备更新收藏状态', data);
+        
+        return request({
+            url: `${BASE_URL}/update_favorite/`,
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: {
+                user_id: Number(data.user_id),
+                tag_id: Number(data.tag_id),
+                is_favorite: Number(data.is_favorite)
+            }
+        }).then(response => {
+            console.log('更新收藏状态成功', response);
+            return response;
+        }).catch(error => {
+            console.error('Update favorite error:', error.response?.data || error);
             throw error;
         });
     }

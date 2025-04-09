@@ -152,22 +152,49 @@ onMounted(() => {
     refreshUserInfo();
     RecommendAPI.getPerferenceAPI(userStore.userId).then(async res => {
       console.log('用户主页获取标签', res);
-      // 处理详细偏好数据
-      if (res.data?.detailed_preferences?.folk) {
-        // 获取前5个标签的ID
-        const tagList = res.data.detailed_preferences.folk.slice(0, 7);
-        const tagIds = tagList.map(tag => tag.tag_id);
-
+      
+      // 合并所有主题的标签
+      const allTags = [];
+      const themes = ['food', 'literature', 'spot', 'folk'];
+      
+      // 遍历所有主题，收集标签
+      themes.forEach(theme => {
+        const themePreferences = res.data?.detailed_preferences?.[theme];
+        if (themePreferences && Array.isArray(themePreferences)) {
+          themePreferences.forEach(tag => {
+            // 标签对象必须包含tag_id和score
+            if (tag && tag.tag_id) {
+              allTags.push({
+                tag_id: tag.tag_id,
+                score: tag.score || 0,
+                theme: theme // 记录标签来源的主题
+              });
+            }
+          });
+        }
+      });
+      
+      // 按评分排序
+      allTags.sort((a, b) => b.score - a.score);
+      
+      // 获取前7个标签
+      const topTags = allTags.slice(0, 7);
+      
+      if (topTags.length > 0) {
+        // 获取标签IDs
+        const tagIds = topTags.map(tag => tag.tag_id);
+        
         try {
           // 获取标签详细信息
           const tagDetails = await RecommendAPI.getTagDetailAPI(tagIds);
           console.log('标签详细信息:', tagDetails);
-
+          
           if (tagDetails?.status === 'success') {
-            // 直接使用返回的标签详细信息
+            // 将标签详情与评分合并
             tags.value = tagDetails.tag_details.map((tag, index) => ({
-              name: tag.tag_name,  // 保留完整的标签名称，包括括号
-              count: Math.round(tagList[index].score * 100)
+              name: tag.tag_name, // 标签名称
+              count: Math.round(topTags[index].score * 100), // 标签权重
+              theme: topTags[index].theme // 标签来源主题
             }));
             console.log('处理后的标签数据:', tags.value);
           }
@@ -175,7 +202,7 @@ onMounted(() => {
           console.error('获取标签详细信息失败:', err);
         }
       } else {
-        console.log('没有找到folk标签数据:', res.data);
+        console.log('没有找到任何主题的标签数据');
       }
     }).catch(err => {
       console.error('获取标签失败:', err);

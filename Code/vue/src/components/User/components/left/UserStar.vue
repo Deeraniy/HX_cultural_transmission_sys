@@ -3,6 +3,7 @@ import {computed, onMounted, ref} from 'vue';
 import { Star, Filter, Search, VideoPlay } from '@element-plus/icons-vue';
 import UserAPI from "@/api/user";
 import {useUserStore} from "@/stores/user.ts";
+import { ElMessage } from 'element-plus';
 
 const userStore = useUserStore();
 const starList = ref([]);
@@ -19,7 +20,7 @@ const categoryMapping = {
 };
 
 // 标签配置
-const tabs = ref(['最近收藏', '最多播放']);
+const tabs = ref(['最近收藏', '最多浏览']);
 const moreTabs = ref(['全部', ...Object.values(categoryMapping)]);
 
 // 获取用户ID
@@ -33,15 +34,56 @@ const getStar = () => {
   if (!userId) return;
 
   UserAPI.GetUserStar(userId).then(res => {
-    starList.value = res
-        .filter(item => item.is_favorite) // 只显示收藏状态为true的
-        .map(item => ({
-          ...item,
-          // 添加分类中文名称
-          category: categoryMapping[item.theme_name] || '其他',
-          // 生成示例图片URL（根据实际接口替换）
-          image: `https://via.placeholder.com/150?text=${item.origin_id}`
-        }));
+    console.log("收藏数据原始响应:", res); // 添加日志，查看原始响应
+    
+    // 使用Set和map来去重，基于tag_id或其他唯一标识
+    const uniqueItemMap = new Map();
+    
+    res.filter(item => item.is_favorite).forEach(item => {
+      // 使用tag_id作为唯一键
+      const key = item.tag_id || (item.name + item.theme_name);
+      if (!uniqueItemMap.has(key)) {
+        uniqueItemMap.set(key, item);
+      }
+    });
+    
+    starList.value = Array.from(uniqueItemMap.values())
+        .map(item => {
+          console.log("处理单个收藏项:", item); // 添加日志，查看每个收藏项
+          
+          // 检查图片URL
+          let imageUrl = item.img_url;
+          if (!imageUrl && item.theme_name === 'spot') {
+            // 对于景点类型，尝试从不同字段获取
+            imageUrl = item.image_url || item.cover_img || '/placeholder.jpg';
+          } else if (!imageUrl && item.theme_name === 'literature') {
+            // 对于文学类型，使用默认图片
+            imageUrl = '/litcover.jpg';
+          } else if (!imageUrl && item.theme_name === 'food') {
+            // 对于美食类型，使用默认图片
+            imageUrl = '/foodcover.jpg';
+          } else if (!imageUrl && item.theme_name === 'folk') {
+            // 对于民俗类型，使用默认图片
+            imageUrl = '/folkcover.jpg';
+          }
+          
+          // 如果仍然没有图片，使用通用默认图片
+          if (!imageUrl) {
+            imageUrl = '/defaultcover.jpg';
+          }
+          
+          return {
+            ...item,
+            // 添加分类中文名称
+            category: categoryMapping[item.theme_name] || '其他',
+            // 使用处理后的图片URL
+            image: imageUrl
+          };
+        });
+    
+    console.log("处理后的收藏列表:", starList.value); // 添加日志，查看处理后的数据
+  }).catch(err => {
+    console.error("获取收藏数据失败:", err);
   });
 };
 
@@ -73,16 +115,21 @@ const filteredVideos = computed(() => {
 // 切换收藏状态
 const toggleFavorite = async (item) => {
   try {
-    // await UserAPI.UpdateFavorite({
-    //   user_id: item.user_id,
-    //   tag_id: item.tag_id,
-    //   is_favorite: !item.is_favorite
-    // });
-    // 更新本地数据
-    item.is_favorite = !item.is_favorite;
-    starList.value = starList.value.filter(i => i.is_favorite);
+    // 调用更新收藏状态API
+    await UserAPI.UpdateFavorite({
+      user_id: getUserId(),
+      tag_id: item.tag_id,
+      is_favorite: 0  // 0表示取消收藏
+    });
+    
+    // 更新本地数据，从列表中移除该项
+    starList.value = starList.value.filter(i => i.tag_id !== item.tag_id);
+    
+    // 显示成功消息
+    ElMessage.success('取消收藏成功');
   } catch (error) {
     console.error('更新收藏状态失败:', error);
+    ElMessage.error('取消收藏失败，请重试');
   }
 };
 
@@ -101,7 +148,7 @@ onMounted(getStar);
     <div class="header-section">
       <div class="title-wrapper">
         <el-icon><Star /></el-icon>
-        <span class="main-title">视频收藏</span>
+        <span class="main-title">文化元素收藏</span>
       </div>
     </div>
 
@@ -169,7 +216,7 @@ onMounted(getStar);
           <div class="video-info">
             <h3 class="video-title">{{ item.tag_name }}</h3>
             <div class="video-stats">
-              <el-tag size="small">播放: {{ item.total_clicks || 0 }}</el-tag>
+              <el-tag size="small">浏览量: {{ item.total_clicks || 0 }}</el-tag>
               <el-tag size="small" type="success">点赞: {{ item.total_likes || 0 }}</el-tag>
             </div>
             <div class="video-actions">
@@ -182,10 +229,7 @@ onMounted(getStar);
                 <el-icon><Star /></el-icon>
                 {{ item.is_favorite ? '取消收藏' : '添加收藏' }}
               </el-button>
-              <el-button type="primary" plain size="small">
-                <el-icon><VideoPlay /></el-icon>
-                查看详情
-              </el-button>
+
             </div>
           </div>
         </div>

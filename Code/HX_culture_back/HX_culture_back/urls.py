@@ -25,6 +25,8 @@ urlpatterns = [
 
     url(r'^classes/',view.classes),
     url(r'^add_user_history/',user_history.add_history),
+    url(r'^delete_user_history/',user_history.delete_user_history),
+    url(r'^clear_user_history/',user_history.clear_user_history),
     url(r'^history/',user_history.get_history),
     url(r'^get_all_history/',user_history.get_all_history),
     url(r'^register/',user.register_user),
@@ -39,6 +41,7 @@ urlpatterns = [
     url(r'^preview/',preview.preview),
 
     url(r'^get_user_star/',user_star.get_all_star),
+    url(r'^update_favorite/',user_star.update_favorite),
 
     url(r'^get_spot_by_name/',spot.get_spot_by_name),
     url(r'^get_comment/',comment.get_comment_list_spot),

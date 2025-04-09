@@ -509,12 +509,11 @@ const addHistory = async (attraction: Place) => {
       return;
     }
     const historyData = {
-      uid: userId,
+      uid: Number(userId), // 确保是数字类型
       type: "placeOfInterest", // 记录类型
       name: attraction.name, // 景点名称
-      // img_url: attraction.image, // 景点图片
-      describe: "景点描述",
-      // describe: attraction.description?.substring(0, 100) || "景点描述", // 截取前100字作为描述
+      img_url: attraction.image, // 景点图片
+      describe: attraction.description.substring(0, 50) || "景点描述", // 景点描述
     };
 
     const response = await UserAPI.AddUserHistory(historyData);

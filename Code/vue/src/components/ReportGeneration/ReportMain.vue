@@ -37,8 +37,8 @@
   
   // 返回上一页
   const goBack = () => {
-    // 直接导航到推荐页面，而不是使用浏览器历史
-    router.back();
+    // 直接导航到首页
+    router.push('/index');
   }
   </script>
   

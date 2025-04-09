@@ -26,7 +26,7 @@
         <div class="action-section">
           <el-input
               v-model="searchQuery"
-              placeholder="搜索标题/up主昵称"
+              placeholder="搜索标题"
               class="search-input"
               clearable
           >
@@ -34,20 +34,25 @@
               <el-icon><Search /></el-icon>
             </template>
           </el-input>
+          <!-- 暂时注释清空历史按钮
           <el-button type="danger" plain @click="showClearConfirm" style="background-color: #fff; color: #b71c1c; border-color: #b71c1c; font-size: 12px;">
             <el-icon><Delete /></el-icon>
             清空历史
           </el-button>
+          -->
+          <!-- 暂时注释批量管理按钮
           <el-button type="primary" plain @click="toggleBatchMode" style="background-color: #fff; color: #b71c1c; border-color: #b71c1c; font-size: 12px;">
             <el-icon><Files /></el-icon>
             {{ isBatchMode ? '完成' : '批量管理' }}
           </el-button>
+          -->
         </div>
       </div>
     </div>
 
     <!-- 时间线内容 -->
     <div class="timeline-container">
+      <!-- 暂时注释批量操作区域
       <div v-if="isBatchMode" class="batch-actions">
         <el-button type="danger" @click="deleteSelected" :disabled="selectedItems.length === 0" 
           style="background-color: #b71c1c; border-color: #b71c1c;">
@@ -57,6 +62,7 @@
           {{ isAllSelected ? '取消全选' : '全选' }}
         </el-button>
       </div>
+      -->
       
       <el-timeline>
         <el-timeline-item
@@ -68,13 +74,14 @@
         >
           <el-card class="timeline-card" shadow="hover">
             <div class="article-content">
-              <!-- 批量选择复选框 -->
+              <!-- 暂时注释批量选择复选框 
               <el-checkbox 
                 v-if="isBatchMode"
                 v-model="article.isSelected"
                 @change="updateSelectedItems"
                 class="batch-checkbox"
               ></el-checkbox>
+              -->
               
               <!-- 添加图片展示 -->
               <div v-if="article.img_url" class="cover-image">
@@ -117,7 +124,7 @@
     <el-dialog
       v-model="detailDialogVisible"
       :title="selectedArticle?.name || '详情'"
-      width="50%"
+      width="60%"
       :close-on-click-modal="true"
       :show-close="true"
       class="detail-dialog"
@@ -133,7 +140,9 @@
         <p class="detail-time">浏览时间: {{ formatDate(selectedArticle.history_time) }}</p>
         <div class="detail-description">
           <h4>概述</h4>
-          <p>{{ selectedArticle.history_describe || '暂无描述' }}</p>
+          <div class="scrollable-content">
+            <p>{{ formatDetailDescription(selectedArticle.history_describe) }}</p>
+          </div>
         </div>
       </div>
     </el-dialog>
@@ -263,7 +272,26 @@ const getTimelineItemType = (dateString) => {
 };
 
 const truncateDescription = (desc) => {
-  return desc.length > 100 ? desc.substring(0, 100) + '...' : desc;
+  if (!desc) return '';
+  
+  // 如果描述长度超过限制，进行截断
+  if (desc.length > 100) {
+    // 截取前100个字符
+    const truncated = desc.substring(0, 100);
+    return truncated + '...';
+  }
+  
+  // 即使不需要截断，也检查整段话的最后一个字符是否是标点符号
+  const lastChar = desc[desc.length - 1];
+  if (lastChar === '。' || lastChar === '？' || lastChar === '！' || 
+      lastChar === '.' || lastChar === '?' || lastChar === '!' ||
+      lastChar === '…' || lastChar === ';' || lastChar === '；') {
+    // 如果已经以标点符号结尾，直接返回
+    return desc;
+  } else {
+    // 如果不是以标点符号结尾，添加省略号
+    return desc + '...';
+  }
 };
 
 // 新增标签类型映射
@@ -291,7 +319,17 @@ const toggleBatchMode = () => {
 
 // 更新选中项
 const updateSelectedItems = () => {
-  selectedItems.value = paginatedArticles.value.filter(item => item.isSelected);
+  selectedItems.value = paginatedArticles.value
+    .filter(item => item.isSelected)
+    .filter(item => item.id !== undefined && item.id !== null && !isNaN(Number(item.id)));
+  
+  // 如果有无效ID的记录被选中，给出警告
+  const invalidItems = paginatedArticles.value
+    .filter(item => item.isSelected && (item.id === undefined || item.id === null || isNaN(Number(item.id))));
+  
+  if (invalidItems.length > 0) {
+    console.warn('有选中项缺少有效ID，这些项将被忽略:', invalidItems);
+  }
 };
 
 // 全选/取消全选
@@ -314,21 +352,36 @@ const deleteSelected = async () => {
       return;
     }
     
-    // 收集所有要删除的历史记录ID
-    const idsToDelete = selectedItems.value.map(item => item.id);
+    // 收集所有要删除的项，按照是否有临时ID分为两组
+    const selectedItemsData = selectedItems.value;
     
-    // 调用删除API
-    await UserAPI.DeleteUserHistory(userId, idsToDelete);
-    
+    // 处理前端本地删除
     // 从本地数据中移除被删除的项
     articleList.value = articleList.value.filter(item => 
-      !selectedItems.value.some(selected => selected.id === item.id)
+      !selectedItemsData.some(selected => selected.id === item.id)
     );
     
     // 重置选中状态
     selectedItems.value = [];
     
-    ElMessage.success('删除成功');
+    // 从服务器删除历史记录
+    try {
+      // 确保ID是数字类型
+      const numericUserId = Number(userId);
+      
+      // 获取可能的历史时间，用于复合匹配
+      const historyTimes = selectedItemsData.map(item => item.history_time);
+      
+      // 如果历史记录没有ID，则使用其他字段组合进行删除
+      await UserAPI.DeleteUserHistoryByCompositeKey(numericUserId, {
+        history_times: historyTimes
+      });
+      
+      ElMessage.success('删除成功');
+    } catch (error) {
+      console.error('服务器删除失败，但本地删除已完成:', error);
+      ElMessage.warning('部分删除可能未在服务器端完成，请刷新页面确认');
+    }
     
     // 如果当前页没有数据了，且不是第一页，则回到上一页
     if (paginatedArticles.value.length === 0 && currentPage.value > 1) {
@@ -370,13 +423,22 @@ const clearAllHistory = async () => {
       return;
     }
     
-    // 调用清空历史API
-    await UserAPI.ClearUserHistory(userId);
+    console.log('准备清空历史记录', { userId });
     
-    // 清空本地数据
+    // 确保ID是数字类型
+    const numericUserId = Number(userId);
+    
+    // 先清空本地数据，确保UI立即响应
     articleList.value = [];
     
-    ElMessage.success('已清空全部历史记录');
+    // 调用清空历史API
+    try {
+      await UserAPI.ClearUserHistory(numericUserId);
+      ElMessage.success('已清空全部历史记录');
+    } catch (error) {
+      console.error('服务器清空历史失败，但本地已清空:', error);
+      ElMessage.warning('历史记录已在本地清空，但可能未在服务器端完成，请刷新页面确认');
+    }
   } catch (error) {
     console.error('清空历史失败:', error);
     ElMessage.error('清空历史失败，请重试');
@@ -405,17 +467,63 @@ const getUserId = () => {
 const getHistory = () => {
   // 获取后端文章数据
   const userId = getUserId();
-  UserAPI.GetUserHistory(userId).then(res => {
-    articleList.value = res;
-    console.log('获取历史记录成功')
-    console.log(articleList.value)
+  if (!userId) {
+    ElMessage.warning('请先登录以查看浏览历史');
+    return;
+  }
+  
+  const numericUserId = Number(userId);
+  
+  UserAPI.GetUserHistory(numericUserId).then(res => {
+    // 检查和处理响应数据，确保每个项目都有有效的ID
+    if (Array.isArray(res)) {
+      // 为每条记录添加自动生成的ID
+      articleList.value = res.map((item, index) => {
+        // 如果后端返回的数据中没有id字段，则使用index作为临时id
+        const tempId = index + 1; // 使用索引+1作为临时ID
+        
+        if (item.id === undefined || item.id === null) {
+          console.warn(`历史记录缺少ID字段，已添加临时ID ${tempId}:`, item);
+        }
+        
+        return {
+          ...item,
+          id: item.id !== undefined && item.id !== null ? Number(item.id) : tempId
+        };
+      });
+      
+      console.log('获取历史记录成功，处理后数据:', articleList.value);
+    } else {
+      console.error('历史记录数据格式错误:', res);
+      articleList.value = [];
+    }
+  }).catch(error => {
+    console.error('获取历史记录失败:', error);
+    ElMessage.error('获取历史记录失败，请重试');
+    articleList.value = [];
   });
-}
+};
 onMounted(() => {
   // 获取后端文章数据
   getHistory()
 
 });
+
+const formatDetailDescription = (desc) => {
+  if (!desc) return '暂无描述';
+  
+  // 在详情弹窗中不需要截断文本，只检查结尾是否需要添加省略号
+  const lastChar = desc[desc.length - 1];
+  if (lastChar === '。' || lastChar === '？' || lastChar === '！' || 
+      lastChar === '.' || lastChar === '?' || lastChar === '!' ||
+      lastChar === '…' || lastChar === ';' || lastChar === '；') {
+    // 如果已经以标点符号结尾，直接返回
+    return desc;
+  } else {
+    // 如果不是以标点符号结尾，添加省略号
+    return desc + '...';
+  }
+};
 
 </script>
 
@@ -670,10 +778,38 @@ onMounted(() => {
     color: #303133;
   }
   
-  p {
-    line-height: 1.6;
-    color: #606266;
-    margin: 0;
+  .scrollable-content {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    
+    /* 自定义滚动条样式 */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #b71c1c;
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background: #951616;
+    }
+    
+    p {
+      line-height: 1.6;
+      color: #606266;
+      margin: 0;
+    }
   }
 }
 

@@ -86,9 +86,9 @@
              :key="region" 
              class="stat-item">
           <template v-if="!region.includes('占位')">
-            <span class="region">{{ region }}</span>
-            <span class="count">{{ stat.count }}</span>
-            <div class="heat-bar" :style="{ width: `${stat.percentage}%`, backgroundColor: stat.color }"></div>
+          <span class="region">{{ region }}</span>
+          <span class="count">{{ stat.count }}</span>
+          <div class="heat-bar" :style="{ width: `${stat.percentage}%`, backgroundColor: stat.color }"></div>
           </template>
           <template v-else>
             <!-- 占位空间，保持高度一致 -->
@@ -181,16 +181,16 @@
         </div>
       </div>
 
-      <!-- 添加顶部状态栏 -->
+    <!-- 添加顶部状态栏 -->
       <div class="status-bar">
-        <div class="status-item">
-          <i class="iconfont icon-signal"></i>
-          <div class="pulse-dot"></div>
-        </div>
-        <div class="status-item">
-          <i class="iconfont icon-clock"></i>
-          <span>{{ currentTime }}</span>
-        </div>
+          <div class="status-item">
+            <i class="iconfont icon-signal"></i>
+            <div class="pulse-dot"></div>
+          </div>
+          <div class="status-item">
+            <i class="iconfont icon-clock"></i>
+            <span>{{ currentTime }}</span>
+          </div>
       </div>
     </div>
 
