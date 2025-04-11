@@ -76,36 +76,46 @@
   <!-- Food Detail Dialog -->
   <el-dialog
       v-model="foodDetail.visible"
-      title="菜品详情"
-      width="50%"
-      :before-close="closeFoodDetail"
+      :show-close="true"
+      class="food-detail-dialog"
+      width="600px"
   >
-    <!-- 添加右侧交互图标 -->
-    <div class="side-interaction-icons">
-      <div class="icon-wrapper" @click="toggleLike">
-        <img
-          :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
-          :class="['icon', { 'active': tagStatus.is_liked }]"
-          alt="赞"
-        />
-        <span>{{ tagStatus.total_likes || 0 }}</span>
+    <div class="food-detail-content">
+      <div class="food-image-container">
+        <img :src="foodDetail.item?.img" :alt="foodDetail.item?.name" class="food-detail-image">
       </div>
-      <div class="icon-wrapper" @click="toggleFavorite">
-        <img
-          :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
-          :class="['icon', { 'active': tagStatus.is_favorite }]"
-          alt="收藏"
-        />
-        <span>收藏</span>
-      </div>
-    </div>
-
-    <div class="food-detail-dialog">
-      <div v-if="foodDetail.description.startsWith('http')">
-        <a :href="foodDetail.description" target="_blank" rel="noopener noreferrer">
-          <img :src="foodDetail.img" :alt="foodDetail.name" class="detail-image" />
-          <h2>{{ foodDetail.name }}</h2>
-        </a>
+      <div class="food-info">
+        <h2>{{ foodDetail.item?.name }}</h2>
+        <div class="food-description">
+          <p>{{ foodDetail.item?.description }}</p>
+        </div>
+        <div class="food-actions">
+          <div class="interaction-icons">
+            <div class="icon-wrapper" @click="toggleLike">
+              <img
+                  :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
+                  :class="['icon', { 'active': tagStatus.is_liked }]"
+                  alt="赞"
+              />
+              <span>{{ tagStatus.total_likes || 0 }}</span>
+            </div>
+            <div class="icon-wrapper" @click="toggleFavorite">
+              <img
+                  :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
+                  :class="['icon', { 'active': tagStatus.is_favorite }]"
+                  alt="收藏"
+              />
+              <span>收藏</span>
+            </div>
+          </div>
+          <el-button
+              type="primary"
+              class="analysis-btn"
+              @click="goToSentimentAnalysis(foodDetail.item?.name)"
+          >
+            情感分析
+          </el-button>
+        </div>
       </div>
     </div>
   </el-dialog>
@@ -346,14 +356,12 @@ const sentimentAnalysis = async (item) => {
   // 记录点击
   await recordClick(item.food_id || item.id);
 
-  // 使用 router.push 进行页面跳转
   router.push({
     path: '/detail',
     query: {
-      name: item.name, // 传递菜品名字
-      value: 3,  // 这里的 3 表示美食类型
-      theme: 1,  // 可以在这里添加额外的参数
-      from: 'food' // 添加来源标记，便于返回
+      name: item.name,
+      value: 3,
+      theme: 1
     }
   });
 };
@@ -434,7 +442,14 @@ const paginatedFoodItems = computed(() => {
 
 // Click event handler for navigating to food detail
 const goToSentimentAnalysis = (foodName) => {
-  router.push(`/food/detail/${foodName}`);
+  router.push({
+    path: '/detail',
+    query: {
+      name: foodName,
+      value: 3,
+      theme: 1
+    }
+  });
 };
 
 // Function to rotate carousel
@@ -473,7 +488,7 @@ const goToFoodHome = () => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 /* 统一标题字体样式 */
 
 .el-dialog__header {
@@ -864,5 +879,108 @@ margin-left: 390px;
 .el-dialog {
   position: relative;
   margin-right: 60px !important;
+}
+
+/* 美食详情弹窗样式 */
+.food-detail-dialog {
+  :deep(.el-dialog) {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  :deep(.el-dialog__body) {
+    padding: 0;
+  }
+}
+
+.food-detail-content {
+  .food-image-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    
+    .food-detail-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .food-info {
+    padding: 24px;
+    
+    h2 {
+      font-size: 24px;
+      color: #333;
+      margin: 0 0 16px 0;
+      text-align: center;
+    }
+
+    .food-description {
+      margin-bottom: 24px;
+      
+      p {
+        color: #666;
+        line-height: 1.6;
+        text-align: justify;
+        margin: 0;
+      }
+    }
+
+    .food-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .interaction-icons {
+        display: flex;
+        gap: 16px;
+      }
+
+      .icon-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: rgba(218, 37, 28, 0.1);
+        }
+
+        .icon {
+          width: 20px;
+          height: 20px;
+          
+          &.active {
+            transform: scale(1.2);
+          }
+        }
+
+        span {
+          color: #666;
+          font-size: 14px;
+        }
+      }
+
+      .analysis-btn {
+        background-color: #da251c;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        
+        &:hover {
+          background-color: #b81f17;
+        }
+      }
+    }
+  }
 }
 </style>

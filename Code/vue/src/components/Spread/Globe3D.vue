@@ -233,10 +233,10 @@
         <i class="iconfont icon-back"></i>
         <span>返回首页</span>
       </div>
-      <div class="view-data-btn" @click="viewAllData">
+      <!-- <div class="view-data-btn" @click="viewAllData">
         <i class="iconfont icon-data"></i>
         <span>查看所有评论数据</span>
-      </div>
+      </div> -->
       <div class="theme-select">
         <select v-model="selectedTheme" @change="handleThemeChange">
           <option value="spot">名胜古迹</option>
@@ -476,9 +476,9 @@ const initScene = () => {
     });
     
     // 定义情感颜色
-    const positiveColor = new THREE.Color(0x4a9eff); // 蓝色
-    const neutralColor = new THREE.Color(0x67e0e3); // 青色
-    const negativeColor = new THREE.Color(0xff6b6b); // 红色
+    const positiveColor = new THREE.Color(0x57A773); // 绿色
+    const neutralColor = new THREE.Color(0xFFD166); // 黄色
+    const negativeColor = new THREE.Color(0xFF6B6B); // 红色
     
     // 使用球面坐标生成粒子位置和颜色
     for(let i = 0; i < particlesCnt; i++) {
@@ -1223,6 +1223,7 @@ const initPlatformChart = () => {
       textStyle: {
         fontFamily: 'HelveticaNeue, Helvetica Neue, Helvetica, Arial, sans-serif'
       },
+      color: ['#57A773', '#FFD166', '#FF6B6B'],
       legend: {
         data: ['正面情感', '中性情感', '负面情感'],
         textStyle: { 
@@ -1365,7 +1366,7 @@ const initPlatformChart = () => {
       textStyle: {
         fontFamily: 'HelveticaNeue, Helvetica Neue, Helvetica, Arial, sans-serif'
       },
-      color: ['#4a9eff', '#67e0e3', '#ff6b6b'],
+      color: ['#57A773', '#FFD166', '#FF6B6B'],
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -2009,7 +2010,7 @@ const initTimelineChart = () => {
       },
       handleSize: '150%', // 增大手柄尺寸
       backgroundColor: 'rgba(50,50,50,0.2)',
-      fillerColor: 'rgba(74,158,255,0.3)',
+      fillerColor: 'rgba(87,167,115,0.3)',
       moveHandleSize: 7, // 增大移动手柄
       showDetail: true, // 显示详细信息
       brushSelect: false
@@ -2040,10 +2041,10 @@ const initTimelineChart = () => {
         opacity: 0.5,
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
           offset: 0,
-          color: 'rgba(74,158,255,0.5)'
+          color: 'rgba(87,167,115,0.5)'
         }, {
           offset: 1,
-          color: 'rgba(74,158,255,0.1)'
+          color: 'rgba(87,167,115,0.1)'
         }])
       }
     }]

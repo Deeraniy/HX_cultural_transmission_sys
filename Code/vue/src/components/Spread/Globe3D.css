@@ -26,11 +26,11 @@
 .trend-stat-value {
   font-size: 18px;
   font-weight: bold;
-  color: #4a9eff;
+  color: #57A773;
 }
 
 .trend-stat-value.up {
-  color: #4ade80;
+  color: #FFD166;
 }
 
 .trend-stat-label {
@@ -212,7 +212,7 @@ h3 {
 .data-value {
   font-size: 24px;
   font-weight: bold;
-  color: #4a9eff;
+  color: #57A773;
   margin-bottom: 5px;
 }
 
@@ -247,13 +247,13 @@ h3 {
   width: 50px;
   text-align: right;
   margin: 0 10px;
-  color: #4a9eff;
+  color: #57A773;
 }
 
 .heat-bar {
   flex-grow: 1;
   height: 4px;
-  background: linear-gradient(to right, #4a9eff, #ff6b6b);
+  background: linear-gradient(to right, #57A773, #ff6b6b);
   border-radius: 2px;
   transition: width 0.3s ease;
 }
@@ -492,7 +492,7 @@ h3 {
 .pulse-dot {
   width: 8px;
   height: 8px;
-  background: #4CAF50;
+  background: #57A773;
   border-radius: 50%;
   animation: pulse 1.5s infinite;
 }
@@ -538,7 +538,7 @@ h3 {
 
 .stat-icon i {
   font-size: 24px;
-  color: #4a9eff;
+  color: #57A773;
 }
 
 .stat-info {
@@ -568,7 +568,7 @@ h3 {
 }
 
 .stat-value .up {
-  color: #4CAF50;
+  color: #57A773;
 }
 
 .stat-value .down {
@@ -694,7 +694,7 @@ h3 {
 }
 
 .alert-item.low {
-  border-left: 3px solid #4CAF50;
+  border-left: 3px solid #57A773;
 }
 
 /* 添加滚动条样式 */
@@ -748,7 +748,7 @@ h3 {
 
 /* 添加弹幕按钮样式 */
 .icon-danmaku-on {
-  color: #4a9eff;
+  color: #57A773;
 }
 
 .icon-danmaku-off {
@@ -827,7 +827,7 @@ h3 {
 
 .trend.up {
   background: rgba(76, 175, 80, 0.2);
-  color: #4CAF50;
+  color: #57A773;
 }
 
 .trend.down {
@@ -852,15 +852,15 @@ h3 {
 }
 
 .sentiment-bar.positive {
-  background: linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(76, 175, 80, 0.4));
+  background: linear-gradient(90deg, #57A773, rgba(76, 175, 80, 0.4));
 }
 
 .sentiment-bar.neutral {
-  background: linear-gradient(90deg, rgba(33, 150, 243, 0.8), rgba(33, 150, 243, 0.4));
+  background: linear-gradient(90deg, #fcbd29, #fbd47b);
 }
 
 .sentiment-bar.negative {
-  background: linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(244, 67, 54, 0.4));
+  background: linear-gradient(90deg, #ff3a3a, #fb9595);
 }
 
 /* 添加新的样式 */
