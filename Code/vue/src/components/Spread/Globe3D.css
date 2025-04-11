@@ -116,38 +116,40 @@
 }
 
 .globe-container {
-  width: 100vw;  /* 使用视口宽度 */
-  height: 100vh;  /* 使用视口高度 */
-  position: fixed;  /* 改为固定定位 */
-  top: 0;
-  left: 0;
+  width: 100%;
+  height: 100vh;
+  position: relative;
   background: linear-gradient(to bottom, #000510, #000000);
-  overflow: hidden;  /* 确保内容不会溢出 */
+  overflow: hidden;
   font-family: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .globe-canvas {
   width: 100%;
   height: 100%;
-  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* 确保body和html也不会出现滚动条 */
+/* 确保body和html样式正确 */
 :root, body {
   margin: 0;
   padding: 0;
+  height: 100%;
   overflow: hidden;
 }
 
 .data-panel {
   position: absolute;
-  background: rgba(255, 255, 255, 0.05);  /* 降低背景透明度 */
+  background: rgba(20, 20, 20, 0.8);
   backdrop-filter: blur(8px);
   border-radius: 15px;
   padding: 20px;
   color: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
 }
 
 /* 添加发光边框效果 */
@@ -734,6 +736,7 @@ h3 {
   cursor: pointer;
   display: flex;
   align-items: center;
+  margin-top: 0px;
   gap: 8px;
   transition: all 0.3s ease;
 }

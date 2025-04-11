@@ -83,10 +83,6 @@ const routes = [
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
     {
-        path: '/HxHome',
-        component:() => import('./components/HuXiangCultureHome.vue'),
-    },
-    {
         path: '/report',
         component:() => import('./components/ReportGeneration/ReportMain.vue'),
     },

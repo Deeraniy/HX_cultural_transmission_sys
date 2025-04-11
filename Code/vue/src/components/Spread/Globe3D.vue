@@ -355,139 +355,51 @@ const animate = () => {
 
 // 3. 修改initScene函数
 const initScene = () => {
+  if (!globeCanvas.value) {
+    console.error('找不到画布元素');
+    return;
+  }
+
   scene = new THREE.Scene();
   
-  // 创建渐变背景
-  const createGradientBackground = () => {
-    // 1. 创建渐变背景
-    const bgGeometry = new THREE.PlaneGeometry(2, 2, 1, 1);
-    const bgMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        color1: { value: new THREE.Color(0x0a192f) },  // 深蓝色
-        color2: { value: new THREE.Color(0x000000) }   // 黑色
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform vec3 color1;
-        uniform vec3 color2;
-        varying vec2 vUv;
-        void main() {
-          gl_FragColor = vec4(mix(color2, color1, vUv.y), 1.0);
-        }
-      `,
-      depthWrite: false
-    });
-    
-    const bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
-    bgMesh.position.z = -1;
-    scene.add(bgMesh);
-
-    // 2. 增加星星数量和调整参数
+  // 创建星空背景
+  const createStarBackground = () => {
     const starsGeometry = new THREE.BufferGeometry();
-    const starsPositions = [];
-    const starsSizes = [];
-    const starsColors = [];
+    const starsMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.1,
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true
+    });
 
-    // 增加星星数量到8000
-    for(let i = 0; i < 8000; i++) {
-      // 调整分布范围，让星星更密集
-      const x = Math.random() * 1500 - 750;
-      const y = Math.random() * 1500 - 750;
-      const z = Math.random() * -500;  // 减小z轴范围，让星星更集中
-      
-      starsPositions.push(x, y, z);
-      
-      // 增加星星大小变化范围
-      starsSizes.push(Math.random() * 4 + 1);  // 最小1，最大5
-      
-      // 调整颜色分布
-      const colorChoice = Math.random();
-      if (colorChoice > 0.85) {
-        // 金色调
-        starsColors.push(1, 0.9, 0.5);
-      } else if (colorChoice > 0.6) {
-        // 蓝色调
-        starsColors.push(0.6, 0.8, 1);
-      } else if (colorChoice > 0.3) {
-        // 白色调
-        starsColors.push(1, 1, 1);
-      } else {
-        // 淡蓝色调
-        starsColors.push(0.8, 0.9, 1);
-      }
+    const starsVertices = [];
+    for (let i = 0; i < 10000; i++) {
+      const x = (Math.random() - 0.5) * 2000;
+      const y = (Math.random() - 0.5) * 2000;
+      const z = (Math.random() - 0.5) * 2000;
+      starsVertices.push(x, y, z);
     }
 
-    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsPositions, 3));
-    starsGeometry.setAttribute('size', new THREE.Float32BufferAttribute(starsSizes, 1));
-    starsGeometry.setAttribute('color', new THREE.Float32BufferAttribute(starsColors, 3));
-
-    const starsMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        time: { value: 0 }
-      },
-      vertexShader: `
-        attribute float size;
-        attribute vec3 color;
-        varying vec3 vColor;
-        uniform float time;
-        void main() {
-          vColor = color;
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          // 增强闪烁效果
-          float twinkle = sin(time + position.x * 0.05) * 0.5 + 0.5;
-          gl_PointSize = size * (200.0 / -mvPosition.z) * (0.7 + 0.3 * twinkle);
-          gl_Position = projectionMatrix * mvPosition;
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vColor;
-        void main() {
-          float r = length(gl_PointCoord - vec2(0.5));
-          float alpha = smoothstep(0.5, 0.0, r);
-          gl_FragColor = vec4(vColor, alpha * 1.2);  // 增加亮度
-        }
-      `,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending
-    });
-
-    const stars = new THREE.Points(starsGeometry, starsMaterial);
-    scene.add(stars);
-
-    // 3. 调整动画速度
-    const animateStars = () => {
-      requestAnimationFrame(animateStars);
-      if (stars.material.uniforms) {
-        stars.material.uniforms.time.value += 0.002;  // 降低闪烁速度使效果更柔和
-      }
-    };
-    animateStars();
+    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+    const starField = new THREE.Points(starsGeometry, starsMaterial);
+    scene.add(starField);
   };
 
-  createGradientBackground();
+  createStarBackground();
   
   camera = new THREE.PerspectiveCamera(
     75,
     globeCanvas.value.clientWidth / globeCanvas.value.clientHeight,
     0.1,
-    1000
+    2000
   );
   
   renderer = new THREE.WebGLRenderer({ 
     antialias: true,
-    alpha: true,
-    shadowMap: {
-      enabled: true,
-      type: THREE.PCFSoftShadowMap
-    }
+    alpha: true
   });
+  
   renderer.setSize(globeCanvas.value.clientWidth, globeCanvas.value.clientHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   globeCanvas.value.appendChild(renderer.domElement);
@@ -498,16 +410,11 @@ const initScene = () => {
 
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(5, 3, 5);
-  directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.width = 1024;
-  directionalLight.shadow.mapSize.height = 1024;
-  directionalLight.shadow.camera.near = 0.5;
-  directionalLight.shadow.camera.far = 50;
-  directionalLight.shadow.bias = -0.0001;
   scene.add(directionalLight);
 
-  // 创建粒子团
+  // 创建3D文字球体
   globe = createDataSphere();
+  scene.add(globe);
 
   // 调整相机位置
   camera.position.z = 20;
@@ -524,152 +431,224 @@ const initScene = () => {
   danmakuGroup = new THREE.Group();
   scene.add(danmakuGroup);
 
-  // 创建弹幕系统
-  const createDanmaku = (text) => {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    canvas.width = 512;
-    canvas.height = 128;
+  // 创建粒子团
+  const createParticleGroup = () => {
+    const group = new THREE.Group();
+    group.name = 'particles';
 
-    context.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    context.font = '36px HelveticaNeue';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.SpriteMaterial({
-      map: texture,
-      transparent: true,
-      opacity: 0.8
-    });
-
-    const sprite = new THREE.Sprite(material);
-    sprite.scale.set(8, 2, 1);
-
-    const angle = Math.random() * Math.PI * 2;
-    const radiusX = 15;
-    const radiusZ = 10;
+    // 创建粒子系统
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCnt = 5000;
+    const posArray = new Float32Array(particlesCnt * 3);
+    const colorArray = new Float32Array(particlesCnt * 3);
     
-    sprite.position.set(
-      Math.cos(angle) * radiusX,
-      (Math.random() - 0.5) * 10,
-      Math.sin(angle) * radiusZ
-    );
-
-    sprite.userData = {
-      angle: angle,
-      speed: 0.005 + Math.random() * 0.003,  // 降低速度范围
-      radiusX: radiusX,
-      radiusZ: radiusZ,
-      y: sprite.position.y
-    };
-
-    return sprite;
-  };
-
-  // 管理弹幕
-  const maxDanmakus = 12;
-  const danmakus = [];
-
-  const createNewDanmaku = () => {
-    if (danmakus.length >= maxDanmakus) {
-      const oldDanmaku = danmakus.shift();
-      danmakuGroup.remove(oldDanmaku);
+    // 获取当前主题的情感数据
+    const theme = currentTheme.value;
+    const themeInfo = themeData.value[theme];
+    let totalPositive = 0, totalNeutral = 0, totalNegative = 0;
+    
+    if (themeInfo && themeInfo.monthly_data) {
+      themeInfo.monthly_data.forEach(monthData => {
+        monthData.platforms.forEach(platform => {
+          totalPositive += platform.sentiments.positive || 0;
+          totalNeutral += platform.sentiments.neutral || 0;
+          totalNegative += platform.sentiments.negative || 0;
+        });
+      });
     }
-    console.log('danmakuTexts:', danmakuTexts);
-    const yesdamaku = danmakuTexts.value;
-    const text = yesdamaku[Math.floor(Math.random() * yesdamaku.length)];
-    const danmaku = createDanmaku(text);
-    danmakuGroup.add(danmaku);
-    danmakus.push(danmaku);
+    
+    // 如果所有数据都是0，设置默认值
+    if (totalPositive === 0 && totalNeutral === 0 && totalNegative === 0) {
+      totalPositive = 40;
+      totalNeutral = 30;
+      totalNegative = 30;
+    }
+    
+    const total = totalPositive + totalNeutral + totalNegative;
+    const positiveRatio = totalPositive / total;
+    const neutralRatio = totalNeutral / total;
+    const negativeRatio = totalNegative / total;
+    
+    console.log('情感比例:', {
+      positive: positiveRatio,
+      neutral: neutralRatio,
+      negative: negativeRatio
+    });
+    
+    // 定义情感颜色
+    const positiveColor = new THREE.Color(0x4a9eff); // 蓝色
+    const neutralColor = new THREE.Color(0x67e0e3); // 青色
+    const negativeColor = new THREE.Color(0xff6b6b); // 红色
+    
+    // 使用球面坐标生成粒子位置和颜色
+    for(let i = 0; i < particlesCnt; i++) {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      const radius = 8 + Math.random() * 0.5;
+      
+      const x = radius * Math.sin(phi) * Math.cos(theta);
+      const y = radius * Math.sin(phi) * Math.sin(theta);
+      const z = radius * Math.cos(phi);
+      
+      posArray[i * 3] = x;
+      posArray[i * 3 + 1] = y;
+      posArray[i * 3 + 2] = z;
+      
+      // 根据情感比例分配颜色
+      const random = Math.random();
+      let color;
+      if (random < positiveRatio) {
+        color = positiveColor;
+      } else if (random < positiveRatio + neutralRatio) {
+        color = neutralColor;
+      } else {
+        color = negativeColor;
+      }
+      
+      colorArray[i * 3] = color.r;
+      colorArray[i * 3 + 1] = color.g;
+      colorArray[i * 3 + 2] = color.b;
+    }
+    
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+    
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 0.05,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending
+    });
+    
+    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    group.add(particlesMesh);
+
+    // 加载3D模型并添加到粒子团中
+    try {
+      const loader = new FBXLoader();
+      const modelPath = new URL('./Pagoda_Essence_0405070753_texture.fbx', import.meta.url).href;
+      
+      loader.load(
+        modelPath,
+        (object) => {
+          console.log('模型加载成功:', object);
+          object.position.set(0, 0, 0);
+          object.scale.set(0.02, 0.02, 0.02);
+          object.name = 'pagoda';
+          
+          // 加载贴图
+          const textureLoader = new THREE.TextureLoader();
+          const texturePath = new URL('./Pagoda_Essence_0405070753_texture.png', import.meta.url).href;
+          const texture = textureLoader.load(texturePath);
+
+          object.traverse((child) => {
+            if (child.isMesh) {
+              child.material = new THREE.MeshPhongMaterial({
+                map: texture,
+                color: 0xffffff,
+                emissive: 0x333333,
+                emissiveIntensity: 0.05,
+                specular: 0x888888,
+                shininess: 50,
+                transparent: true,
+                opacity: 0.95,
+                side: THREE.DoubleSide,
+                flatShading: false
+              });
+              
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+          
+          // 将模型添加到粒子团中
+          group.add(object);
+        },
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total * 100) + '% 加载中');
+        },
+        (error) => {
+          console.error('模型加载失败:', error);
+        }
+      );
+    } catch (error) {
+      console.error('创建模型时出错:', error);
+    }
+
+    return group;
   };
 
-  // 启动弹幕系统
-  danmakuInterval = setInterval(createNewDanmaku, 3000);  // 增加间隔时间到3秒
-
-  // 创建场景内容
-  globe = createDataSphere();
+  // 创建粒子团但不立即添加到场景中
+  particleGroup = createParticleGroup();
   
-  // 启动动画
+  // 修改初始状态 - 默认显示弹幕，隐藏粒子团和3D模型
+  isDanmakuEnabled.value = true;
+  if (danmakuGroup) {
+    danmakuGroup.visible = true;
+  }
+
+  // 启动动画循环
+  const animate = () => {
+    animationFrameId = requestAnimationFrame(animate);
+    
+    if (controls) controls.update();
+    if (renderer && scene && camera) {
+      renderer.render(scene, camera);
+    }
+    
+    if (isDanmakuEnabled.value && danmakuGroup) {
+      updateDanmakus();
+    }
+
+    // 更新粒子动画
+    const particles = scene.getObjectByName('particles');
+    if (particles) {
+      particles.rotation.y += 0.002;
+      const positions = particles.geometry.attributes.position.array;
+      const time = Date.now() * 0.0005;
+
+      for(let i = 0; i < positions.length; i += 3) {
+        const x = positions[i];
+        const y = positions[i + 1];
+        const z = positions[i + 2];
+        const distance = Math.sqrt(x * x + y * y + z * z);
+
+        const breathe = Math.sin(time + distance * 0.3) * 0.15;
+        const targetRadius = 8 + breathe;
+        const scale = targetRadius / distance;
+
+        positions[i] = x * scale;
+        positions[i + 1] = y * scale;
+        positions[i + 2] = z * scale;
+      }
+
+      particles.geometry.attributes.position.needsUpdate = true;
+    }
+  };
+  
   animate();
 };
 
 // 修改模型加载部分
 const createDataSphere = () => {
   const group = new THREE.Group();
-
-  // 创建粒子系统
-  const totalParticles = 2273; // 总评论数
-  const sentimentDistribution = {
-    positive: 0.65, // 65% 正面
-    neutral: 0.25,  // 25% 中性
-    negative: 0.10  // 10% 负面
-  };
-
-  const particlesCount = totalParticles;
-  const positions = new Float32Array(particlesCount * 3);
-  const colors = new Float32Array(particlesCount * 3);
-  const sizes = new Float32Array(particlesCount);
-
-  // 定义情感颜色
-  const sentimentColors = {
-    positive: new THREE.Color(0x4CAF50), // 绿色 - 正面
-    neutral: new THREE.Color(0x4a9eff),  // 蓝色 - 中性
-    negative: new THREE.Color(0xff6b6b)  // 红色 - 负面
-  };
-
-  // 创建粒子，避开中心区域
-  for(let i = 0; i < particlesCount; i++) {
-    let radius = 8 * (0.8 + Math.random() * 0.2);
-    if (radius < 4) radius += 4;
-    
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-
-    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-    positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-    positions[i * 3 + 2] = radius * Math.cos(phi);
-
-    // 根据情感分布比例分配颜色
-    let sentiment;
-    const random = Math.random();
-    if (random < sentimentDistribution.positive) {
-      sentiment = 'positive';
-    } else if (random < sentimentDistribution.positive + sentimentDistribution.neutral) {
-      sentiment = 'neutral';
-    } else {
-      sentiment = 'negative';
-    }
-
-    const color = sentimentColors[sentiment];
-    colors[i * 3] = color.r;
-    colors[i * 3 + 1] = color.g;
-    colors[i * 3 + 2] = color.b;
-
-    sizes[i] = 0.2;
-  }
-
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-  const material = new THREE.PointsMaterial({
-    size: 0.2,
-    vertexColors: true,
+  
+  // 创建完全透明的球体
+  const radius = 8;
+  const sphereGeometry = new THREE.SphereGeometry(radius, 64, 64);
+  const sphereMaterial = new THREE.MeshPhongMaterial({
+    color: 0x4a9eff,
     transparent: true,
-    opacity: 0.8,
-    blending: THREE.AdditiveBlending,
-    sizeAttenuation: true,
-    depthWrite: false,
-    map: createCircleTexture(),
+    opacity: 0,
+    side: THREE.DoubleSide
   });
+  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  group.add(sphere);
 
-  const particles = new THREE.Points(geometry, material);
-  group.add(particles);
-
-  // 尝试加载模型
+  // 加载中心Logo模型
   try {
     const loader = new FBXLoader();
     const modelPath = new URL('./Pagoda_Essence_0405070753_texture.fbx', import.meta.url).href;
@@ -680,6 +659,7 @@ const createDataSphere = () => {
         console.log('模型加载成功:', object);
         object.position.set(0, 0, 0);
         object.scale.set(0.02, 0.02, 0.02);
+        object.name = 'pagoda'; // 添加名称以便识别
         
         // 加载贴图
         const textureLoader = new THREE.TextureLoader();
@@ -688,42 +668,26 @@ const createDataSphere = () => {
 
         object.traverse((child) => {
           if (child.isMesh) {
-            // 应用贴图到材质
             child.material = new THREE.MeshPhongMaterial({
-              map: texture,  // 使用贴图
-              color: 0xffffff,  // 基础白色
-              emissive: 0x333333,  // 进一步降低自发光强度
-              emissiveIntensity: 0.05,  // 进一步降低自发光
-              specular: 0x888888,  // 调整高光颜色
-              shininess: 50,  // 降低光泽度
+              map: texture,
+              color: 0xffffff,
+              emissive: 0x333333,
+              emissiveIntensity: 0.05,
+              specular: 0x888888,
+              shininess: 50,
               transparent: true,
               opacity: 0.95,
               side: THREE.DoubleSide,
-              flatShading: false  // 使用平滑着色
+              flatShading: false
             });
             
-            // 启用阴影
             child.castShadow = true;
             child.receiveShadow = true;
           }
         });
         
-        // 调整光源设置
-        const lights = [
-          { position: [2, 2, 2], intensity: 0.4, distance: 15, color: 0xffffff },
-          { position: [-2, 1, -2], intensity: 0.3, distance: 15, color: 0xccccff },
-          { position: [0, -2, 0], intensity: 0.2, distance: 15, color: 0xffffcc }
-        ];
-        
-        lights.forEach(light => {
-          const pointLight = new THREE.PointLight(
-            light.color,
-            light.intensity,
-            light.distance
-          );
-          pointLight.position.set(...light.position);
-          object.add(pointLight);
-        });
+        // 根据当前弹幕状态设置模型的可见性
+        object.visible = !isDanmakuEnabled.value;
         
         group.add(object);
       },
@@ -732,116 +696,120 @@ const createDataSphere = () => {
       },
       (error) => {
         console.error('模型加载失败:', error);
-        // 创建替代物体
-        const geometry = new THREE.SphereGeometry(1, 32, 32);
-        const material = new THREE.MeshPhongMaterial({
-          color: 0xffffff,
-          emissive: 0x333333,
-          emissiveIntensity: 0.05,
-          specular: 0x888888,
-          shininess: 50
-        });
-        const sphere = new THREE.Mesh(geometry, material);
-        group.add(sphere);
       }
     );
   } catch (error) {
     console.error('创建模型时出错:', error);
   }
 
-  scene.add(group);
-  return group;
-};
+  // 创建文字
+  const texts = danmakuTexts.value.length > 0 ? danmakuTexts.value : [
+    '加载中...',
+    '请稍候...',
+    '正在获取数据...',
+    '数据加载中...'
+  ];
+  console.log('使用的文字数组:', texts);
 
-// 添加创建圆形纹理的函数
-const createCircleTexture = () => {
-  const canvas = document.createElement('canvas');
-  canvas.width = 64;
-  canvas.height = 64;
+  // 设置文字分布参数
+  const sphereRadius = 8; // 球体半径
+  const numLayers = 8; // 垂直层数
+  const layerSpacing = Math.PI / (numLayers ); // 减小层间距
+
+  // 计算每层可以容纳的最大文字数量
+  const maxTextsPerLayer = [];
+  for (let i = 0; i < numLayers; i++) {
+    const latitude = (i - (numLayers - 1) / 2) * layerSpacing;
+    const circleRadius = sphereRadius * Math.cos(latitude);
+    const circumference = 2 * Math.PI * circleRadius;
+    maxTextsPerLayer[i] = Math.floor(circumference / 2); // 增大文字间距
+  }
+
+  // 分配文字到各层
+  const layerTexts = Array(numLayers).fill().map(() => []);
+  let currentLayer = 0;
   
+  texts.forEach((text) => {
+    if (layerTexts[currentLayer].length >= maxTextsPerLayer[currentLayer]) {
+      currentLayer = (currentLayer + 1) % numLayers;
+    }
+    layerTexts[currentLayer].push(text);
+    currentLayer = (currentLayer + 1) % numLayers;
+  });
+
+  // 渲染每层的文字
+  layerTexts.forEach((layerTextArray, layerIndex) => {
+    const latitude = (layerIndex - (numLayers - 1) / 2) * layerSpacing;
+    const circleRadius = sphereRadius * Math.cos(latitude);
+    const textsInThisLayer = layerTextArray.length;
+    const angleStep = (2 * Math.PI) / Math.max(textsInThisLayer, 1);
+
+    layerTextArray.forEach((text, textIndex) => {
+      const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const radius = canvas.width / 3;
-  
-  // 创建径向渐变
-  const gradient = context.createRadialGradient(
-    centerX, centerY, 0,
-    centerX, centerY, radius
-  );
-  gradient.addColorStop(0, 'rgba(255,255,255,1)');
-  gradient.addColorStop(1, 'rgba(255,255,255,0)');
-  
-  // 绘制圆形
-  context.beginPath();
-  context.arc(centerX, centerY, radius, 0, Math.PI * 2);
-  context.fillStyle = gradient;
-  context.fill();
+      canvas.width = 2048;
+      canvas.height = 1024;
+
+      // 增大字体大小
+      context.font = 'bold 256px HelveticaNeue';
+      context.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      
+      context.fillText(text, canvas.width / 2, canvas.height / 2);
   
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
-  return texture;
-};
+      
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+    transparent: true,
+        side: THREE.DoubleSide,
+    depthWrite: false,
+        depthTest: false  // 禁用深度测试，确保文字始终显示在最前面
+      });
 
-// 修改热点添加函数
-const addHotspots = () => {
-  // 计算中国的总评论数和最大亮度
-  const chinaComments = mockComments.reduce((sum, comment) => sum + comment.count, 0);
-  const maxBrightness = Math.min(chinaComments / 500, 1) * 2;  // 增加最大亮度
+      // 增大平面尺寸
+      const width = 16;
+      const height = 8;
+      const segments = 32;
+      const geometry = new THREE.PlaneGeometry(width, height, segments, 1);
+      const positions = geometry.attributes.position.array;
 
-  // 更新中国区域的亮度 - 不闪烁
-  globe.children.forEach(child => {
-    if (child.userData.countryName === 'China') {
-      child.material.emissive = new THREE.Color(0xffaa00);
-      child.material.emissiveIntensity = maxBrightness;
-      countryBrightness.set('China', maxBrightness);
-    }
+      const startAngle = textIndex * angleStep;
+      
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = positions[i];
+        const y = positions[i + 1];
+        
+        const angle = startAngle + (x / width) * (Math.PI / 4);
+        
+        const xPos = circleRadius * Math.sin(angle);
+        const yPos = sphereRadius * Math.sin(latitude);
+        const zPos = circleRadius * Math.cos(angle);
+        
+        positions[i] = xPos;
+        positions[i + 1] = yPos + y * Math.cos(latitude) * 0.4;
+        positions[i + 2] = zPos;
+      }
+
+      geometry.attributes.position.needsUpdate = true;
+      geometry.computeVertexNormals();
+      
+      const textMesh = new THREE.Mesh(geometry, material);
+      textMesh.renderOrder = 1; // 设置渲染顺序，确保文字在最前面渲染
+      group.add(textMesh);
+    });
   });
 
-  mockComments.forEach(comment => {
-    const coords = comment;
-    if (!coords) return;
+  // 添加旋转动画
+  const animate = () => {
+    requestAnimationFrame(animate);
+    group.rotation.y += 0.001;
+  };
+  animate();
 
-    const phi = (90 - coords.lat) * (Math.PI / 180);
-    const theta = (coords.lng + 180) * (Math.PI / 180);
-    const radius = 5.02; // 略高于地球表面
-
-    const x = -radius * Math.sin(phi) * Math.cos(theta);
-    const y = radius * Math.cos(phi);
-    const z = radius * Math.sin(phi) * Math.sin(theta);
-
-    // 缩小热点尺寸
-    const hotspotGeometry = new THREE.SphereGeometry(0.08, 16, 16);
-    const intensity = Math.min(comment.count / 200, 1);
-    const hotspotMaterial = new THREE.MeshPhongMaterial({
-      color: new THREE.Color(1, 0.5 * intensity, 0),
-      emissive: new THREE.Color(1, 0.5 * intensity, 0),
-      emissiveIntensity: intensity * 1.5
-    });
-
-    const hotspot = new THREE.Mesh(hotspotGeometry, hotspotMaterial);
-    hotspot.position.set(x, y, z);
-    globe.add(hotspot);
-
-    // 调整光晕大小
-    const glowGeometry = new THREE.SphereGeometry(0.12, 16, 16);
-    const glowMaterial = new THREE.MeshPhongMaterial({
-      color: new THREE.Color(1, 0.7 * intensity, 0),
-      transparent: true,
-      opacity: 0.3,
-      side: THREE.BackSide
-    });
-    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-    glow.position.copy(hotspot.position);
-    globe.add(glow);
-
-    // 更新统计信息
-    commentStats.value[comment.region] = {
-      count: comment.count,
-      percentage: (comment.count / 200) * 100,
-      color: `rgb(255, ${Math.floor(128 + intensity * 127)}, 0)`
-    };
-  });
+  return group;
 };
 
 // 处理窗口大小变化
@@ -880,25 +848,41 @@ const toggleFullscreen = () => {
 const toggleDanmaku = () => {
   isDanmakuEnabled.value = !isDanmakuEnabled.value;
   
-  if (isDanmakuEnabled.value) {
-    // 开启弹幕
-    if (danmakuGroup) {
-      danmakuGroup.visible = true;
+  if (!isDanmakuEnabled.value) {
+    // 关闭弹幕时
+    if (globe) {
+      // 遍历globe中的所有文字mesh并隐藏
+      globe.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material && child.material.map) {
+          child.visible = false;
+        }
+      });
     }
-    // 重新启动弹幕生成
-    if (!danmakuInterval) {
-      danmakuInterval = setInterval(createNewDanmaku, 3000);
+    // 添加粒子团和3D模型
+    if (!scene.getObjectByName('particles')) {
+      scene.add(particleGroup);
     }
   } else {
-    // 关闭弹幕
-    if (danmakuGroup) {
-      danmakuGroup.visible = false;
+    // 开启弹幕时
+    if (globe) {
+      // 遍历globe中的所有文字mesh并显示
+      globe.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material && child.material.map) {
+          child.visible = true;
+        }
+      });
     }
-    // 停止弹幕生成
-    if (danmakuInterval) {
-      clearInterval(danmakuInterval);
-      danmakuInterval = null;
+    // 移除粒子团
+    const particles = scene.getObjectByName('particles');
+    if (particles) {
+      scene.remove(particles);
     }
+  }
+  
+  // 控制3D模型的显示/隐藏
+  const pagoda = scene.getObjectByName('pagoda');
+  if (pagoda) {
+    pagoda.visible = !isDanmakuEnabled.value;
   }
   
   console.log('弹幕状态:', isDanmakuEnabled.value ? '开启' : '关闭');
@@ -1582,6 +1566,14 @@ const fetchShortComments = async () => {
         danmakuTexts.value = themeComments.comments.map(comment => comment.text);
         console.log('更新后的弹幕文本:', danmakuTexts.value);
         
+        // 重新创建球体
+        if (scene && globe) {
+          scene.remove(globe);
+          globe = createDataSphere();
+          scene.add(globe);
+          console.log('球体已重新创建');
+        }
+        
         // 渲染词云图
         const wordCloudEl = document.querySelector('.word-cloud-container');
         console.log('词云图容器:', wordCloudEl);
@@ -1745,11 +1737,7 @@ const updateHotspots = () => {
       color: `rgb(255, ${Math.floor(128 + (percentage / 100) * 127)}, 0)`
     };
     
-    // 添加热点
-    const coords = getProvinceCoordinates(province);
-    if (coords) {
-      addHotspot(coords.lat, coords.lng, count);
-    }
+    
   });
   
   // 如果显示的省份不足5个，添加占位数据保持卡片高度
@@ -1765,48 +1753,6 @@ const updateHotspots = () => {
   console.log('热点统计数据已更新:', commentStats.value);
 };
 
-// 省份名称到经纬度的映射表
-const getProvinceCoordinates = (province) => {
-  const provinceMap = {
-    '北京': { lat: 39.9042, lng: 116.4074 },
-    '上海': { lat: 31.2304, lng: 121.4737 },
-    '广东': { lat: 23.1357, lng: 113.2644 },
-    '江苏': { lat: 32.0603, lng: 118.7969 },
-    '浙江': { lat: 30.2741, lng: 120.1551 },
-    '山东': { lat: 36.6683, lng: 117.0207 },
-    '河南': { lat: 34.7655, lng: 113.7662 },
-    '河北': { lat: 38.0428, lng: 114.5149 },
-    '辽宁': { lat: 41.8057, lng: 123.4315 },
-    '四川': { lat: 30.6500, lng: 104.0761 },
-    '湖北': { lat: 30.5928, lng: 114.3055 },
-    '福建': { lat: 26.0992, lng: 119.2956 },
-    '湖南': { lat: 28.1123, lng: 112.9837 },
-    '安徽': { lat: 31.8612, lng: 117.2835 },
-    '内蒙古': { lat: 40.8173, lng: 111.7660 },
-    '陕西': { lat: 34.2656, lng: 108.9547 },
-    '江西': { lat: 28.6760, lng: 115.9047 },
-    '广西': { lat: 22.8152, lng: 108.3275 },
-    '山西': { lat: 37.8736, lng: 112.5623 },
-    '重庆': { lat: 29.4316, lng: 106.9123 },
-    '吉林': { lat: 43.8169, lng: 125.3247 },
-    '云南': { lat: 25.0453, lng: 102.7097 },
-    '天津': { lat: 39.3433, lng: 117.3616 },
-    '黑龙江': { lat: 45.7421, lng: 126.6615 },
-    '新疆': { lat: 43.8266, lng: 87.6168 },
-    '贵州': { lat: 26.5982, lng: 106.7072 },
-    '甘肃': { lat: 36.0587, lng: 103.8263 },
-    '海南': { lat: 20.0402, lng: 110.1995 },
-    '宁夏': { lat: 38.4664, lng: 106.2731 },
-    '青海': { lat: 36.6190, lng: 101.7784 },
-    '西藏': { lat: 29.6499, lng: 91.1167 },
-    '香港': { lat: 22.3193, lng: 114.1694 },
-    '澳门': { lat: 22.1987, lng: 113.5439 },
-    '台湾': { lat: 25.0328, lng: 121.5654 },
-    '其他': { lat: 35.8617, lng: 104.1954 } // 使用中国中心点作为"其他"的坐标
-  };
-  
-  return provinceMap[province];
-};
 
 // 修改热点添加方法，支持根据评论数量调整大小
 const addHotspot = (lat, lng, count = 100) => {
@@ -1850,39 +1796,42 @@ const addHotspot = (lat, lng, count = 100) => {
 };
 
 onMounted(async () => {
+  console.log('组件挂载');
   await nextTick();
+  
+  // 确保DOM元素已经渲染
+  if (!globeCanvas.value) {
+    console.error('找不到globeCanvas元素');
+    return;
+  }
+  
+  console.log('初始化场景');
   initScene();
-  // 不再调用原来的addHotspots，因为现在我们使用真实数据添加热点
   
   // 添加事件监听
   window.addEventListener('resize', handleResize);
-  if (globeCanvas.value) {
-    globeCanvas.value.addEventListener('click', onClick);
-  }
   
-  // 获取主题数据并初始化图表
+  console.log('获取主题数据');
   await fetchThemeCommentsSentiment();
   
-  // 获取短评论数据
+  console.log('获取短评论数据');
   await fetchShortComments();
   
-  // 获取IP分布数据
+  console.log('获取IP分布数据');
   await fetchIpDistribution();
   
-  // 确保DOM已更新
   await nextTick();
   
-  // 初始化其他图表
+  // 初始化图表
+  console.log('初始化图表');
   initTrendChart();
   initTimelineChart();
+  initPlatformChart();
   
-  // 初始化传播数据分析卡片
+  // 初始化其他数据
+  console.log('初始化其他数据');
   updateAnalysisPanel();
-  
-  // 初始化统计数据
   updateStatsData();
-  
-  // 初始化顶部统计数据
   updateTopStats();
   
   // 更新时间
@@ -1891,6 +1840,8 @@ onMounted(async () => {
   
   // 添加窗口大小变化时的图表重绘
   window.addEventListener('resize', updateCharts);
+  
+  console.log('组件初始化完成');
 });
 
 onUnmounted(() => {
@@ -2684,6 +2635,9 @@ const generateAlerts = () => {
   
   console.log('已生成预警:', alerts.value);
 };
+
+// 在script setup顶部添加粒子团变量
+let particleGroup = null;
 </script> 
 
 <style scoped>
