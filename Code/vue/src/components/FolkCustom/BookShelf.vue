@@ -6,17 +6,17 @@
       <input
           type="text"
           v-model="searchTerm"
-          placeholder="搜索非物质文化..."
+          :placeholder="t('detail.folk.searchPlaceholder')"
           class="search-input"
       />
       <select v-model="selectedCategory" class="category-select">
-        <option value="">所有分类</option>
+        <option value="">{{ t('detail.folk.allCategories') }}</option>
         <option v-for="category in categories" :key="category" :value="category">
-          {{ category }}
+          {{ getFolkCategoryName(category) }}
         </option>
       </select>
       <!-- 触发过滤的按钮 -->
-      <button @click="applyFilters" class="search-button">搜索</button>
+      <button @click="applyFilters" class="search-button">{{ t('detail.folk.search') }}</button>
     </div>
 
     <!-- 动态生成书架 -->
@@ -35,7 +35,7 @@
           >
           </div>
           <div v-if="hoveredBook === book" class="book-content">
-            {{ book.content }}
+            {{ getBookContent(book) }}
           </div>
         </div>
       </div>
@@ -43,24 +43,43 @@
 
     <!-- 翻页按钮 -->
     <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
-      <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
+      <button @click="prevPage" :disabled="currentPage === 0">{{ t('detail.folk.prevPage') }}</button>
+      <button @click="nextPage" :disabled="currentPage >= totalPages - 1">{{ t('detail.folk.nextPage') }}</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import cultureElements from '@/json/culture_elements_translated.json';
+
+const { t, locale } = useI18n();
+
+// 获取民俗分类名称的翻译
+const getFolkCategoryName = (category) => {
+  return locale.value === 'en' ? 
+    (category === '非遗' ? 'Intangible Heritage' : 'Folk Custom') : 
+    category;
+};
+
+// 获取书籍内容的翻译
+const getBookContent = (book) => {
+  const element = cultureElements.find(item => item.title === book.content);
+  return locale.value === 'en' && element?.['description-en'] ? 
+    element['description-en'] : 
+    book.content;
+};
 
 // 书籍数据
 const books = ref([
-  { image: '/src/assets/folkCustom/汨罗江端午习俗.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘昆.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘剧.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/皮影戏.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/湘绣.jpg', content: 'Content for page 2', category: '非遗' },
-  { image: '/src/assets/folkCustom/赶尸.png', content: 'Content for page 2', category: '民俗' },
-  { image: '/src/assets/folkCustom/湖南傩戏.jpg', content: 'Content for page 2', category: '民俗' },
+  { image: '/src/assets/folkCustom/汨罗江端午习俗.jpg', content: '汨罗江端午习俗', category: '非遗' },
+  { image: '/src/assets/folkCustom/湘昆.jpg', content: '湘昆', category: '非遗' },
+  { image: '/src/assets/folkCustom/湘剧.jpg', content: '湘剧', category: '非遗' },
+  { image: '/src/assets/folkCustom/皮影戏.jpg', content: '皮影戏', category: '非遗' },
+  { image: '/src/assets/folkCustom/湘绣.jpg', content: '湘绣', category: '非遗' },
+  { image: '/src/assets/folkCustom/赶尸.png', content: '赶尸', category: '民俗' },
+  { image: '/src/assets/folkCustom/湖南傩戏.jpg', content: '湖南傩戏', category: '民俗' },
 
   // 继续添加更多书籍
 ]);
@@ -196,8 +215,6 @@ const onBookClick = (shelfIndex, rowIndex, bookIndex) => {
   transform: scale(1.1); /* 鼠标悬停时稍微放大书本 */
 }
 
-
-
 .pagination button {
   font-family: 'HelveticaNeue', serif;
   margin: 0 10px;
@@ -274,5 +291,18 @@ const onBookClick = (shelfIndex, rowIndex, bookIndex) => {
 
 .search-button:focus {
   outline: none; /* 去除按钮的聚焦外框 */
+}
+
+/* 英文状态下的样式调整 */
+:root[lang="en"] .search-input {
+  width: 300px; /* 英文搜索框宽度增加 */
+}
+
+:root[lang="en"] .category-select {
+  width: 200px; /* 英文分类选择器宽度增加 */
+}
+
+:root[lang="en"] .search-button {
+  min-width: 80px; /* 确保英文按钮文字不会换行 */
 }
 </style>

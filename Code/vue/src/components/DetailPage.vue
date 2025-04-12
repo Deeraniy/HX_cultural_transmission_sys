@@ -4,7 +4,7 @@
       <!-- Header 和主内容区域 -->
       <el-header class="header" style="height:90px;width: 100%">
         <Header
-          :title="title"
+          :title="currentTitle"
           @update:type="handleTypeChange"
           @update:search="handleSearchChange"
         />
@@ -61,19 +61,19 @@
           >
             <el-menu-item index="basic">
               <el-icon><InfoFilled /></el-icon>
-              <span>基本信息</span>
+              <span>{{ t('detail.tabs.basic') }}</span>
             </el-menu-item>
             <el-menu-item index="comments">
               <el-icon><ChatDotRound /></el-icon>
-              <span>评论分析</span>
+              <span>{{ t('detail.tabs.comments') }}</span>
             </el-menu-item>
             <el-menu-item index="sentiment">
               <el-icon><TrendCharts /></el-icon>
-              <span>情感分析</span>
+              <span>{{ t('detail.tabs.sentiment') }}</span>
             </el-menu-item>
             <el-menu-item index="report">
               <el-icon><Document /></el-icon>
-              <span>AI 报告</span>
+              <span>{{ t('detail.tabs.report') }}</span>
             </el-menu-item>
           </el-menu>
         </div>
@@ -85,6 +85,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { InfoFilled, ChatDotRound, TrendCharts, Document } from '@element-plus/icons-vue'
 import Header from "@/components/DetailPage/subcomponent/Header.vue"
 import { ElMessage } from 'element-plus'
@@ -94,13 +95,18 @@ import SentimentAnalysis from "@/components/DetailPage/SentimentAnalysis.vue"
 import AIReport from "@/components/DetailPage/AIReport.vue"
 import ThreeLineChart from "@/components/DetailPage/subcomponent/ThreeLineChart.vue";
 
+const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const currentTab = ref('basic')
 const name = ref('')
 const value = ref('')
 const theme = ref('')
-const title = ref('')
+
+// 计算当前标题
+const currentTitle = computed(() => {
+  return t(`detail.tabs.${currentTab.value}`)
+})
 
 // 保存上一次的路由参数用于比较
 const previousQuery = ref({
@@ -153,7 +159,7 @@ watch(
   { immediate: true, deep: true }
 )
 
-// 处理标签页切换
+// 修改标签页切换处理函数
 const handleTabChange = (tab: string) => {
   currentTab.value = tab
 }
@@ -193,11 +199,11 @@ onMounted(() => {
         name: routeName,
         value: routeValue,
         theme: routeTheme
-      };
+      }
     }
   } catch (error) {
     console.error('数据加载失败:', error)
-    ElMessage.error('数据加载失败，请重试')
+    ElMessage.error(t('common.error.loadData'))
   }
 })
 

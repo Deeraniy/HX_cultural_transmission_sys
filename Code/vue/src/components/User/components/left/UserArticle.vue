@@ -4,7 +4,7 @@
     <div class="header-section">
       <div class="title-wrapper">
         <el-icon><Clock /></el-icon>
-        <span class="main-title">浏览记录</span>
+        <span class="main-title">{{ t('user.article.title') }}</span>
       </div>
 
       <!-- 控制面板 -->
@@ -26,7 +26,7 @@
         <div class="action-section">
           <el-input
               v-model="searchQuery"
-              placeholder="搜索标题"
+              :placeholder="t('user.article.search')"
               class="search-input"
               clearable
           >
@@ -37,13 +37,13 @@
           <!-- 暂时注释清空历史按钮
           <el-button type="danger" plain @click="showClearConfirm" style="background-color: #fff; color: #b71c1c; border-color: #b71c1c; font-size: 12px;">
             <el-icon><Delete /></el-icon>
-            清空历史
+            {{ t('user.article.clearHistory') }}
           </el-button>
           -->
           <!-- 暂时注释批量管理按钮
           <el-button type="primary" plain @click="toggleBatchMode" style="background-color: #fff; color: #b71c1c; border-color: #b71c1c; font-size: 12px;">
             <el-icon><Files /></el-icon>
-            {{ isBatchMode ? '完成' : '批量管理' }}
+            {{ isBatchMode ? t('user.article.complete') : t('user.article.batchManage') }}
           </el-button>
           -->
         </div>
@@ -56,10 +56,10 @@
       <div v-if="isBatchMode" class="batch-actions">
         <el-button type="danger" @click="deleteSelected" :disabled="selectedItems.length === 0" 
           style="background-color: #b71c1c; border-color: #b71c1c;">
-          删除选中项 ({{ selectedItems.length }})
+          {{ t('user.article.deleteSelected') }} ({{ selectedItems.length }})
         </el-button>
         <el-button @click="selectAll" style="color: #b71c1c; border-color: #b71c1c;">
-          {{ isAllSelected ? '取消全选' : '全选' }}
+          {{ isAllSelected ? t('user.article.deselectAll') : t('user.article.selectAll') }}
         </el-button>
       </div>
       -->
@@ -93,11 +93,11 @@
               </p>
               <div class="article-footer">
                 <el-tag effect="light" :type="getTagType(article.type)">
-                  {{ typeMapping[article.type] || '其他' }}
+                  {{ typeMapping[article.type] || t('user.article.types.other') }}
                 </el-tag>
                 <div class="action-buttons">
                   <el-button text :style="{color: '#b71c1c'}" @click="viewDetail(article)">
-                    查看详情
+                    {{ t('user.article.viewDetail') }}
                   </el-button>
                 </div>
               </div>
@@ -123,7 +123,7 @@
     <!-- 详情弹窗 -->
     <el-dialog
       v-model="detailDialogVisible"
-      :title="selectedArticle?.name || '详情'"
+      :title="selectedArticle?.name || t('user.article.viewDetail')"
       width="60%"
       :close-on-click-modal="true"
       :show-close="true"
@@ -135,11 +135,11 @@
         </div>
         <h3 class="detail-title">{{ selectedArticle.name }}</h3>
         <el-tag class="detail-tag" effect="light" :type="getTagType(selectedArticle.type)">
-          {{ typeMapping[selectedArticle.type] || '其他' }}
+          {{ typeMapping[selectedArticle.type] || t('user.article.types.other') }}
         </el-tag>
-        <p class="detail-time">浏览时间: {{ formatDate(selectedArticle.history_time) }}</p>
+        <p class="detail-time">{{ t('user.article.viewTime') }}: {{ formatDate(selectedArticle.history_time) }}</p>
         <div class="detail-description">
-          <h4>概述</h4>
+          <h4>{{ t('user.article.overview') }}</h4>
           <div class="scrollable-content">
             <p>{{ formatDetailDescription(selectedArticle.history_describe) }}</p>
           </div>
@@ -157,16 +157,24 @@ import UserAPI from "@/api/user";
 import { useRouter, useRoute } from 'vue-router';
 import {useUserStore} from "@/stores/user.ts";
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const articleList = ref([]);
-const activeTab = ref('全部');
-const tabs = ['全部', '美食', '文学', '风景', '民俗'];
+const activeTab = ref(t('user.article.tabs.all'));
+const tabs = [
+  t('user.article.tabs.all'),
+  t('user.article.tabs.food'),
+  t('user.article.tabs.literature'),
+  t('user.article.tabs.spot'),
+  t('user.article.tabs.folk')
+];
 const searchQuery = ref('');
 const typeMapping = {
-  literature: '文学',
-  folk: '民俗',
-  placeOfInterest: '风景',
-  food: '美食'
+  literature: t('user.article.types.literature'),
+  folk: t('user.article.types.folk'),
+  placeOfInterest: t('user.article.types.placeOfInterest'),
+  food: t('user.article.types.food')
 };
 
 // 详情弹窗相关
@@ -217,7 +225,7 @@ const filteredList = computed(() => {
   let filtered = articleList.value
     .filter(article => {
       // 标签页过滤
-      const tabMatch = activeTab.value === '全部' ||
+      const tabMatch = activeTab.value === t('user.article.tabs.all') ||
           article.type === Object.keys(typeMapping).find(key => typeMapping[key] === activeTab.value)
 
       // 搜索过滤（标题和作者）
@@ -396,11 +404,11 @@ const deleteSelected = async () => {
 // 显示清空确认对话框
 const showClearConfirm = () => {
   ElMessageBox.confirm(
-    '确定要清空全部浏览历史记录吗？此操作不可恢复。',
-    '警告',
+    t('user.article.clearConfirm'),
+    t('common.warning'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       type: 'warning',
       confirmButtonClass: 'el-button--danger',
       cancelButtonClass: 'el-button--info',
@@ -410,7 +418,7 @@ const showClearConfirm = () => {
     clearAllHistory();
   })
   .catch(() => {
-    ElMessage.info('已取消清空操作');
+    ElMessage.info(t('user.article.clearCancel'));
   });
 };
 
@@ -419,7 +427,7 @@ const clearAllHistory = async () => {
   try {
     const userId = getUserId();
     if (!userId) {
-      ElMessage.warning('请先登录');
+      ElMessage.warning(t('user.article.loginRequired'));
       return;
     }
     
@@ -434,14 +442,14 @@ const clearAllHistory = async () => {
     // 调用清空历史API
     try {
       await UserAPI.ClearUserHistory(numericUserId);
-      ElMessage.success('已清空全部历史记录');
+      ElMessage.success(t('user.article.clearSuccess'));
     } catch (error) {
       console.error('服务器清空历史失败，但本地已清空:', error);
-      ElMessage.warning('历史记录已在本地清空，但可能未在服务器端完成，请刷新页面确认');
+      ElMessage.warning(t('user.article.clearError'));
     }
   } catch (error) {
     console.error('清空历史失败:', error);
-    ElMessage.error('清空历史失败，请重试');
+    ElMessage.error(t('user.article.clearError'));
   }
 };
 
@@ -468,7 +476,7 @@ const getHistory = () => {
   // 获取后端文章数据
   const userId = getUserId();
   if (!userId) {
-    ElMessage.warning('请先登录以查看浏览历史');
+    ElMessage.warning(t('user.article.loginRequired'));
     return;
   }
   
@@ -499,7 +507,7 @@ const getHistory = () => {
     }
   }).catch(error => {
     console.error('获取历史记录失败:', error);
-    ElMessage.error('获取历史记录失败，请重试');
+    ElMessage.error(t('user.article.getHistoryError'));
     articleList.value = [];
   });
 };
@@ -510,7 +518,7 @@ onMounted(() => {
 });
 
 const formatDetailDescription = (desc) => {
-  if (!desc) return '暂无描述';
+  if (!desc) return t('user.article.noDescription');
   
   // 在详情弹窗中不需要截断文本，只检查结尾是否需要添加省略号
   const lastChar = desc[desc.length - 1];

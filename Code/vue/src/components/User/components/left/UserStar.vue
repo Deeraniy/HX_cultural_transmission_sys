@@ -4,24 +4,26 @@ import { Star, Filter, Search, VideoPlay } from '@element-plus/icons-vue';
 import UserAPI from "@/api/user";
 import {useUserStore} from "@/stores/user.ts";
 import { ElMessage } from 'element-plus';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const userStore = useUserStore();
 const starList = ref([]);
 const searchQuery = ref('');
-const activeTab = ref('全部');
+const activeTab = ref(t('user.star.categories.all'));
 const showMoreTabs = ref(false);
 
 // 分类映射关系
 const categoryMapping = {
-  food: '特色美食',
-  spot: '风景名胜',
-  literature: '文学创作',
-  folk: '非遗民俗'
+  food: t('user.star.categories.food'),
+  spot: t('user.star.categories.spot'),
+  literature: t('user.star.categories.literature'),
+  folk: t('user.star.categories.folk')
 };
 
 // 标签配置
-const tabs = ref(['最近收藏', '最多浏览']);
-const moreTabs = ref(['全部', ...Object.values(categoryMapping)]);
+const tabs = ref([t('user.star.recentFavorites'), t('user.star.mostViewed')]);
+const moreTabs = ref([t('user.star.categories.all'), ...Object.values(categoryMapping)]);
 
 // 获取用户ID
 const getUserId = () => {
@@ -34,13 +36,11 @@ const getStar = () => {
   if (!userId) return;
 
   UserAPI.GetUserStar(userId).then(res => {
-    console.log("收藏数据原始响应:", res); // 添加日志，查看原始响应
+    console.log("收藏数据原始响应:", res);
     
-    // 使用Set和map来去重，基于tag_id或其他唯一标识
     const uniqueItemMap = new Map();
     
     res.filter(item => item.is_favorite).forEach(item => {
-      // 使用tag_id作为唯一键
       const key = item.tag_id || (item.name + item.theme_name);
       if (!uniqueItemMap.has(key)) {
         uniqueItemMap.set(key, item);
@@ -49,39 +49,31 @@ const getStar = () => {
     
     starList.value = Array.from(uniqueItemMap.values())
         .map(item => {
-          console.log("处理单个收藏项:", item); // 添加日志，查看每个收藏项
+          console.log("处理单个收藏项:", item);
           
-          // 检查图片URL
           let imageUrl = item.img_url;
           if (!imageUrl && item.theme_name === 'spot') {
-            // 对于景点类型，尝试从不同字段获取
             imageUrl = item.image_url || item.cover_img || '/placeholder.jpg';
           } else if (!imageUrl && item.theme_name === 'literature') {
-            // 对于文学类型，使用默认图片
             imageUrl = '/litcover.jpg';
           } else if (!imageUrl && item.theme_name === 'food') {
-            // 对于美食类型，使用默认图片
             imageUrl = '/foodcover.jpg';
           } else if (!imageUrl && item.theme_name === 'folk') {
-            // 对于民俗类型，使用默认图片
             imageUrl = '/folkcover.jpg';
           }
           
-          // 如果仍然没有图片，使用通用默认图片
           if (!imageUrl) {
             imageUrl = '/defaultcover.jpg';
           }
           
           return {
             ...item,
-            // 添加分类中文名称
-            category: categoryMapping[item.theme_name] || '其他',
-            // 使用处理后的图片URL
+            category: categoryMapping[item.theme_name] || t('user.star.categories.other'),
             image: imageUrl
           };
         });
     
-    console.log("处理后的收藏列表:", starList.value); // 添加日志，查看处理后的数据
+    console.log("处理后的收藏列表:", starList.value);
   }).catch(err => {
     console.error("获取收藏数据失败:", err);
   });
@@ -93,20 +85,15 @@ const filteredVideos = computed(() => {
 
   return starList.value
       .filter(item => {
-        // 分类过滤
-        const categoryMatch = activeTab.value === '全部' || item.category === activeTab.value;
-        // 搜索过滤（搜索tag_name）
+        const categoryMatch = activeTab.value === t('user.star.categories.all') || item.category === activeTab.value;
         const searchMatch = item.tag_name.toLowerCase().includes(searchTerm);
 
         return categoryMatch && searchMatch;
       })
       .sort((a, b) => {
-        // 排序逻辑
-        if (tabs.value[0] === '最近收藏') {
-          // 按origin_id降序模拟时间排序（需要根据实际时间字段调整）
+        if (tabs.value[0] === t('user.star.recentFavorites')) {
           return b.origin_id - a.origin_id;
         } else {
-          // 按点击量排序
           return (b.total_clicks || 0) - (a.total_clicks || 0);
         }
       });
@@ -115,21 +102,18 @@ const filteredVideos = computed(() => {
 // 切换收藏状态
 const toggleFavorite = async (item) => {
   try {
-    // 调用更新收藏状态API
     await UserAPI.UpdateFavorite({
       user_id: getUserId(),
       tag_id: item.tag_id,
-      is_favorite: 0  // 0表示取消收藏
+      is_favorite: 0
     });
     
-    // 更新本地数据，从列表中移除该项
     starList.value = starList.value.filter(i => i.tag_id !== item.tag_id);
     
-    // 显示成功消息
-    ElMessage.success('取消收藏成功');
+    ElMessage.success(t('user.star.messages.removeSuccess'));
   } catch (error) {
     console.error('更新收藏状态失败:', error);
-    ElMessage.error('取消收藏失败，请重试');
+    ElMessage.error(t('user.star.messages.removeError'));
   }
 };
 
@@ -148,7 +132,7 @@ onMounted(getStar);
     <div class="header-section">
       <div class="title-wrapper">
         <el-icon><Star /></el-icon>
-        <span class="main-title">文化元素收藏</span>
+        <span class="main-title">{{ t('user.star.title') }}</span>
       </div>
     </div>
 
@@ -167,7 +151,7 @@ onMounted(getStar);
         </el-button>
         <el-button @click="showMoreTabs = !showMoreTabs" class="more-button">
           <el-icon><Filter /></el-icon>
-          更多筛选
+          {{ t('user.star.moreFilter') }}
         </el-button>
       </div>
 
@@ -175,7 +159,7 @@ onMounted(getStar);
       <div class="search-section">
         <el-input
             v-model="searchQuery"
-            placeholder="搜索标签名称"
+            :placeholder="t('user.star.search')"
             class="search-input"
             clearable
         >
@@ -216,8 +200,8 @@ onMounted(getStar);
           <div class="video-info">
             <h3 class="video-title">{{ item.tag_name }}</h3>
             <div class="video-stats">
-              <el-tag size="small">浏览量: {{ item.total_clicks || 0 }}</el-tag>
-              <el-tag size="small" type="success">点赞: {{ item.total_likes || 0 }}</el-tag>
+              <el-tag size="small">{{ t('user.star.stats.views') }}: {{ item.total_clicks || 0 }}</el-tag>
+              <el-tag size="small" type="success">{{ t('user.star.stats.likes') }}: {{ item.total_likes || 0 }}</el-tag>
             </div>
             <div class="video-actions">
               <el-button
@@ -227,9 +211,8 @@ onMounted(getStar);
                   @click="toggleFavorite(item)"
               >
                 <el-icon><Star /></el-icon>
-                {{ item.is_favorite ? '取消收藏' : '添加收藏' }}
+                {{ item.is_favorite ? t('user.star.actions.removeFavorite') : t('user.star.actions.addFavorite') }}
               </el-button>
-
             </div>
           </div>
         </div>

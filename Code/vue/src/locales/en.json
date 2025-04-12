@@ -1,0 +1,511 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "noData": "No Data",
+        "warning": "Warning",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "error": {
+          "loadData": "Failed to load data, please try again"
+        },
+        "frequency": "Frequency",
+        "pleaseLogin": "Please login first",
+        "imageLoadError": "Image failed to load",
+        "noRating": "No rating",
+        "noDescription": "No description available"
+      },
+  "menu": {
+    "home": "Home",
+    "culture": "Culture",
+    "places": "Places of Interest",
+    "film": "Film & Literature",
+    "food": "Special Food",
+    "folk": "Folk Customs",
+    "red": "Red Culture",
+    "sentiment": "Sentiment Analysis",
+    "recommend": "Recommendations",
+    "report": "Report Generation",
+    "global": "Global Communication",
+    "background": "Background",
+    "about": "About Us"
+  },
+  "user": {
+    "login": "Login",
+    "logout": "Logout",
+    "menu": {
+      "history": "History",
+      "favorites": "Favorites",
+      "profile": "User Profile",
+      "settings": "Settings"
+    },
+    "article": {
+      "title": "Browsing History",
+      "search": "Search Title",
+      "clearHistory": "Clear History",
+      "batchManage": "Batch Manage",
+      "complete": "Complete",
+      "deleteSelected": "Delete Selected",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "viewDetail": "View Details",
+      "clearConfirm": "Are you sure you want to clear all browsing history? This action cannot be undone.",
+      "clearCancel": "Clear operation cancelled",
+      "clearSuccess": "All history has been cleared",
+      "clearError": "Failed to clear history, please try again",
+      "deleteSuccess": "Successfully deleted",
+      "deleteError": "Delete failed, please try again",
+      "loginRequired": "Please login to view browsing history",
+      "getHistoryError": "Failed to get history, please try again",
+      "noDescription": "No description",
+      "overview": "Overview",
+      "viewTime": "View Time",
+      "tabs": {
+        "all": "All",
+        "food": "Food",
+        "literature": "Literature",
+        "spot": "Scenery",
+        "folk": "Folk Custom"
+      },
+      "types": {
+        "literature": "Literature",
+        "folk": "Folk Custom",
+        "placeOfInterest": "Scenery",
+        "food": "Food",
+        "other": "Other"
+      }
+    },
+    "home": {
+      "returnHome": "Return to Home",
+      "welcome": "Welcome Back",
+      "defaultUser": "User",
+      "defaultNickname": "Nickname not set",
+      "account": "Account",
+      "gender": "Gender",
+      "age": "Age",
+      "location": "Location",
+      "email": "Email",
+      "phone": "Phone",
+      "notSet": "Not set",
+      "tags": "Interest Tags",
+      "noTags": "No tags yet",
+      "introduction": "Introduction",
+      "defaultDescription": "This user hasn't written anything yet~",
+      "getInfoError": "Failed to get user information",
+      "updateError": "Failed to update user information",
+      "genderMap": {
+        "MALE": "Male",
+        "FEMALE": "Female",
+        "OTHER": "Other"
+      }
+    },
+    "profile": {
+      "title": "Edit Profile",
+      "nickname": "Nickname",
+      "email": "Email",
+      "mobile": "Mobile",
+      "age": "Age",
+      "gender": "Gender",
+      "location": "Location",
+      "description": "Bio",
+      "descriptionPlaceholder": "Write something to introduce yourself...",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "save": "Save",
+      "clear": "Clear",
+      "avatar": "Change Avatar",
+      "saveSuccess": "Save successful",
+      "saveError": "Save failed",
+      "avatarSuccess": "Avatar uploaded successfully",
+      "avatarError": "Avatar upload failed",
+      "avatarExceed": "Image size cannot exceed 3MB"
+    },
+    "password": {
+      "title": "Security Settings",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter current password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm new password"
+    },
+    "star": {
+      "title": "Cultural Elements Collection",
+      "search": "Search Tag Name",
+      "moreFilter": "More Filters",
+      "recentFavorites": "Recent Favorites",
+      "mostViewed": "Most Viewed",
+      "categories": {
+        "all": "All",
+        "food": "Special Food",
+        "spot": "Scenic Spots",
+        "literature": "Literature",
+        "folk": "Folk Customs",
+        "other": "Other"
+      },
+      "stats": {
+        "views": "Views",
+        "likes": "Likes"
+      },
+      "actions": {
+        "addFavorite": "Add to Favorites",
+        "removeFavorite": "Remove from Favorites"
+      },
+      "messages": {
+        "removeSuccess": "Successfully removed from favorites",
+        "removeError": "Failed to remove from favorites, please try again"
+      }
+    },
+    "activity": {
+      "title": "User Profile Analysis",
+      "subtitle": "Multi-dimensional analysis based on user behavior data",
+      "messages": {
+        "getHistorySuccess": "Successfully retrieved history records",
+        "getAllHistorySuccess": "Successfully retrieved all history records",
+        "userIdMissing": "User ID is missing"
+      },
+      "interestChart": {
+        "title": "Interest Preference Distribution",
+        "description": "Shows user activity and engagement in different areas",
+        "timeRange": {
+          "week": "Week",
+          "month": "Month",
+          "year": "Year"
+        },
+        "categories": {
+          "placeOfInterest": "Scenic Spots",
+          "food": "Food Culture",
+          "literature": "Film & Literature",
+          "folk": "Folk Customs"
+        },
+        "legend": {
+          "current": "Current Posts",
+          "average": "Average Level"
+        }
+      },
+      "chart": {
+        "mainTitle": "User Profile",
+        "currentPublish": "Current Publications",
+        "averageLevel": "Average Level",
+        "comparisonTitle": "Interest Preference Comparison",
+        "categories": {
+          "placeOfInterest": "Places of Interest",
+          "food": "Food Culture",
+          "literature": "Literature & Media",
+          "folk": "Folk Customs"
+        }
+      }
+    }
+  },
+  "index": {
+    "title": {
+      "main": "Hunan Culture",
+      "sub": "Digital Communication Network"
+    },
+    "footer": {
+      "about": {
+        "title": "About Us",
+        "content": "Hunan Culture Digital Communication Network is dedicated to the digital dissemination and research of Hunan culture, providing digital platform support for the inheritance and innovation of Hunan culture."
+      },
+      "quickLinks": {
+        "title": "Quick Links",
+        "folkCustom": "Folk Customs",
+        "placeOfInterest": "Scenic Spots",
+        "redCulture": "Red Culture",
+        "filmLiterature": "Film & Literature",
+        "food": "Hunan Cuisine",
+        "globalAnalysis": "Global Communication Analysis",
+        "sentimentAnalysis": "Sentiment Analysis",
+        "strategy": "Promotion Strategy"
+      },
+      "dataSupport": {
+        "title": "Data Support",
+        "culture": "Hunan Provincial Department of Culture and Tourism",
+        "cultural": "Hunan Provincial Cultural Relics Bureau",
+        "heritage": "Hunan Provincial Intangible Cultural Heritage Protection Center",
+        "museum": "Hunan Provincial Museum"
+      },
+      "contact": {
+        "title": "Contact Us",
+        "address": "Changsha, Hunan Province",
+        "phone": "0731-XXXXXXXX",
+        "email": "huxiangwenhua@example.com"
+      },
+      "copyright": {
+        "text": "© 2023-2024 Hunan Culture Digital Communication Network | ICP XXXXXXXX",
+        "support": "Technical Support: Hunan Normal University"
+      }
+    },
+    "knowledgeGraph": {
+      "title": "Hunan Culture Knowledge Graph",
+      "categories": {
+        "core": "Core Culture",
+        "theme": "Theme Categories",
+        "spot": "Scenic Spots",
+        "literature": "Literature",
+        "food": "Cuisine",
+        "folk": "Folk Customs"
+      }
+    }
+  },
+  "features": {
+    "title": "Our Features",
+    "more": "More",
+    "cards": {
+      "classification": {
+        "title": "Hunan Culture Classification Query",
+        "description": "Provides researchers and enthusiasts with a classification query tool for Hunan culture, aiming to help readers understand and explore various aspects and characteristics of Hunan culture..."
+      },
+      "sentiment": {
+        "title": "Public Sentiment Analysis of Hunan Culture",
+        "description": "Analyzes current public sentiment towards Hunan culture, showcases public value recognition and emotional resonance with Hunan culture, and identifies potential public opinion crises..."
+      },
+      "influence": {
+        "title": "Hunan Culture Influence Analysis and Prediction",
+        "description": "Evaluates the influence of Hunan culture in various fields and predicts future influence based on existing data and trends..."
+      },
+      "report": {
+        "title": "Automated Communication Effect Analysis Report",
+        "description": "Automatically generates analysis reports on the current state of Hunan culture communication, providing comprehensive information support for researchers, cultural workers, and policymakers..."
+      }
+    },
+    "themeSelector": {
+      "title": "Select Theme",
+      "subtitle": "Please select a theme to view related content",
+      "options": {
+        "food": "Food Culture",
+        "place": "Scenic Spots",
+        "literature": "Film & Literature",
+        "folk": "Folk Customs",
+        "red": "Red Culture"
+      }
+    }
+  },
+  "app": {
+    "title": "Hunan Culture Digital Communication Network",
+    "noscript": "We're sorry but Hunan Culture Digital Communication Network doesn't work properly without JavaScript enabled. Please enable it to continue."
+  },
+  "detail": {
+    "tabs": {
+      "basic": "Basic Information",
+      "comments": "Comment Analysis",
+      "sentiment": "Sentiment Analysis",
+      "report": "AI Report"
+    },
+    "defaultTitle": "Select Cultural Element",
+    "selectTheme": "Select Theme",
+    "searchPlaceholder": "Search content...",
+    "themeTabs": {
+      "places": "🏞️",
+      "film": "🎬",
+      "food": "🍜",
+      "folk": "🏮"
+    },
+    "literature": {
+      "types": {
+        "literature": "Literature",
+        "performance": "Performing Arts",
+        "newMedia": "New Media Arts",
+        "poetry": "Classical Poetry"
+      }
+    },
+    "place": {
+      "search": "Search Hunan Places of Interest",
+      "location": "Location",
+      "history": "Historical Background",
+      "culture": "Cultural Features",
+      "description": "Detailed Introduction",
+      "sentimentAnalysis": "Sentiment Analysis",
+      "favorite": "Favorite",
+      "like": "Like",
+      "noData": "No data available",
+      "selectCity": "Select City",
+      "viewDetail": "View Details",
+      "hunanCuisine": "Hunan Classic Cuisine",
+      "searchPlaceholder": "Search Hunan Cuisine",
+      "preference": "Preference Level",
+      "visitCount": "Visit Count",
+      "preferenceUnit": " points",
+      "visitUnit": " times"
+    },
+    "folk": {
+      "searchPlaceholder": "Search intangible cultural heritage...",
+      "allCategories": "All Categories",
+      "search": "Search",
+      "prevPage": "Previous Page",
+      "nextPage": "Next Page",
+      "rank": "Level"
+    },
+    "image": {
+      "alt": "Current Image"
+    },
+    "wordcloud": {
+      "alt": "Word Cloud"
+    },
+    "comments": {
+      "positiveRanking": "Positive Comments Ranking",
+      "source": "Source"
+    },
+    "report": {
+      "clickToGenerate": "Click the generate button to get AI analysis report",
+      "generate": "Generate Report",
+      "generateSuccess": "Report generated successfully",
+      "generateError": "Failed to generate report, please try again",
+      "copySuccess": "Report copied to clipboard",
+      "copyError": "Copy failed, please copy manually",
+      "commentCount": "{count} comments",
+      "sentiment": {
+        "positive": "Positive",
+        "neutral": "Neutral",
+        "negative": "Negative"
+      },
+      "viewAnalysis": "View Analysis Report",
+      "causalAnalysis": "Causal Analysis Report",
+      "noReport": "No report available"
+    },
+    "sentiment": {
+      "analysis": "Sentiment Analysis",
+      "count": "Count",
+      "ratio": "Ratio",
+      "score": "Score",
+      "word": "Evaluation Word",
+      "type": "Sentiment Type",
+      "actual": "Actual Sentiment",
+      "predicted": "Predicted Sentiment",
+      "confidenceInterval": "Confidence Interval",
+      "changePoint": "Change Point"
+    },
+    "topic": {
+      "name": "Topic"
+    },
+    "economic": {
+      "cpi": "Consumer Price Index",
+      "investment": "Fixed Asset Investment Growth",
+      "salesRate": "Industrial Product Sales Rate",
+      "yAxisLabel1": "CPI/Sales Rate",
+      "yAxisLabel2": "Investment/Sentiment"
+    }
+  },
+  "analysis": {
+    "sentiment": "Sentiment Analysis",
+    "topic": "Topic Clustering"
+  },
+  "sentiment": {
+    "title": "Sentiment Analysis",
+    "timeTrend": "Time Trend",
+    "distribution": "Sentiment Distribution",
+    "loadError": "Failed to load data, please try again"
+  },
+  "recommend": {
+    "loadingTip": "Loading will take about 1-2 minutes",
+    "viewMore": "View More",
+    "rating": "Rating",
+    "yourPreferences": "Preferences",
+    "recommendedPreferences": "Recommended",
+    "clickForSentiment": "Click for Sentiment Analysis",
+    "more": "More",
+    "goToPage": "Go to {page}",
+    "steps": {
+      "checkLogin": "Checking login status",
+      "getUserPreferences": "Getting user preferences",
+      "getTags": "Getting tag data",
+      "processPlaces": "Processing places of interest",
+      "processFood": "Processing food culture",
+      "processLiterature": "Processing literature and film",
+      "processFolk": "Processing folk customs"
+    },
+    "tabs": {
+      "places": "Places of Interest",
+      "food": "Food Culture",
+      "literature": "Literature & Film",
+      "folk": "Folk Customs"
+    },
+    "slides": {
+      "places": {
+        "title": "Places of Interest",
+        "description": "Explore Hunan's historical and cultural heritage"
+      },
+      "food": {
+        "title": "Food Culture",
+        "description": "Experience Hunan's unique cuisine"
+      },
+      "literature": {
+        "title": "Literature & Film",
+        "description": "Discover Hunan's cultural arts"
+      },
+      "folk": {
+        "title": "Folk Customs",
+        "description": "Experience Hunan's intangible cultural heritage"
+      }
+    }
+  },
+  "globe": {
+    "title": "Global Communication Analysis",
+    "subtitle": "Intelligent analysis of global communication effect",
+    "wordCloud": "Word Cloud",
+    "stats": {
+      "totalComments": "Total Comments",
+      "platformCount": "Platforms",
+      "countryCount": "Countries",
+      "timeSpan": "Time Span"
+    },
+    "trend": {
+      "title": "Positive Communication Trend"
+    },
+    "controls": {
+      "autoRotate": "Auto Rotate",
+      "resetView": "Reset View",
+      "fullscreen": "Fullscreen",
+      "openDanmaku": "Open Danmaku",
+      "closeDanmaku": "Close Danmaku"
+    },
+    "hotspots": {
+      "title": "Hotspots"
+    },
+    "tabs": {
+      "platformSentiment": "Platform Sentiment",
+      "spreadAlert": "Spread Alert"
+    },
+    "topStats": {
+      "latestMonth": "Latest Month Comments",
+      "comments": "comments",
+      "spreadTrend": "Spread Trend",
+      "compared": "compared to last period"
+    },
+    "analysis": {
+      "title": "Spread Data Analysis",
+      "spreadSpeed": "Spread Speed Index",
+      "engagement": "Engagement Rate",
+      "sentiment": "Sentiment Analysis"
+    },
+    "sentiment": {
+      "positive": "Positive",
+      "neutral": "Neutral",
+      "negative": "Negative"
+    },
+    "nav": {
+      "backToHome": "Back to Home"
+    },
+    "themes": {
+      "places": "Places of Interest",
+      "literature": "Film & Literature",
+      "food": "Food Culture",
+      "folk": "Folk Customs"
+    },
+    "danmaku": {
+      "text1": "Amazing cultural heritage!",
+      "text2": "Love the traditional architecture",
+      "text3": "Beautiful scenery",
+      "text4": "Rich cultural atmosphere",
+      "text5": "Must visit place",
+      "text6": "Great cultural experience",
+      "text7": "Wonderful traditional food",
+      "text8": "Fascinating folk customs",
+      "text9": "Impressive cultural performance",
+      "text10": "Unique cultural elements",
+      "text11": "Rich historical background",
+      "text12": "Excellent cultural preservation"
+    }
+  }
+} 

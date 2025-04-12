@@ -1,7 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { Lock, Key, Check, Warning } from '@element-plus/icons-vue';
+import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
 
+const { t } = useI18n();
 const oldPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
@@ -11,9 +14,9 @@ const loading = ref(false);
 // 表单验证规则
 const validatePass = (rule, value, callback) => {
   if (value === '') {
-    callback(new Error('请输入密码'));
+    callback(new Error(t('user.password.currentPasswordPlaceholder')));
   } else if (value.length < 6) {
-    callback(new Error('密码长度不能小于6位'));
+    callback(new Error(t('user.password.requirementLength')));
   } else {
     callback();
   }
@@ -21,9 +24,9 @@ const validatePass = (rule, value, callback) => {
 
 const validatePass2 = (rule, value, callback) => {
   if (value === '') {
-    callback(new Error('请再次输入密码'));
+    callback(new Error(t('user.password.confirmPasswordPlaceholder')));
   } else if (value !== newPassword.value) {
-    callback(new Error('两次输入密码不一致!'));
+    callback(new Error(t('user.password.mismatch')));
   } else {
     callback();
   }
@@ -65,7 +68,7 @@ const handleSubmit = async () => {
       <template #header>
         <div class="card-header">
           <el-icon><Lock /></el-icon>
-          <span>安全设置</span>
+          <span>{{ t('user.password.title') }}</span>
         </div>
       </template>
 
@@ -74,7 +77,7 @@ const handleSubmit = async () => {
           <template #title>
             <div class="collapse-title">
               <el-icon><Key /></el-icon>
-              <span>修改登录密码</span>
+              <span>{{ t('user.password.changePassword') }}</span>
             </div>
           </template>
 
@@ -87,14 +90,14 @@ const handleSubmit = async () => {
             >
               <!-- 旧密码 -->
               <el-form-item
-                  label="当前密码"
+                  :label="t('user.password.currentPassword')"
                   prop="oldPassword"
                   class="password-item"
               >
                 <el-input
                     v-model="oldPassword"
                     type="password"
-                    placeholder="请输入当前密码"
+                    :placeholder="t('user.password.currentPasswordPlaceholder')"
                     show-password
                     :prefix-icon="Lock"
                 />
@@ -102,14 +105,14 @@ const handleSubmit = async () => {
 
               <!-- 新密码 -->
               <el-form-item
-                  label="新密码"
+                  :label="t('user.password.newPassword')"
                   prop="newPassword"
                   class="password-item"
               >
                 <el-input
                     v-model="newPassword"
                     type="password"
-                    placeholder="请输入新密码"
+                    :placeholder="t('user.password.newPasswordPlaceholder')"
                     show-password
                     :prefix-icon="Lock"
                 />
@@ -117,14 +120,14 @@ const handleSubmit = async () => {
 
               <!-- 确认密码 -->
               <el-form-item
-                  label="确认新密码"
+                  :label="t('user.password.confirmPassword')"
                   prop="confirmPassword"
                   class="password-item"
               >
                 <el-input
                     v-model="confirmPassword"
                     type="password"
-                    placeholder="请再次输入新密码"
+                    :placeholder="t('user.password.confirmPasswordPlaceholder')"
                     show-password
                     :prefix-icon="Lock"
                 />
@@ -133,15 +136,15 @@ const handleSubmit = async () => {
               <!-- 密码规则提示 -->
               <div class="password-tips">
                 <el-alert
-                    title="密码要求"
+                    :title="t('user.password.requirements')"
                     type="info"
                     :closable="false"
                     show-icon
                 >
                   <div class="tips-content">
-                    <p>• 密码长度至少6位</p>
-                    <p>• 建议包含字母、数字和符号</p>
-                    <p>• 不要使用易被猜到的密码</p>
+                    <p>{{ t('user.password.requirementLength') }}</p>
+                    <p>{{ t('user.password.requirementChars') }}</p>
+                    <p>{{ t('user.password.requirementCommon') }}</p>
                   </div>
                 </el-alert>
               </div>
@@ -154,10 +157,10 @@ const handleSubmit = async () => {
                     @click="handleSubmit"
                 >
                   <el-icon><Check /></el-icon>
-                  确认修改
+                  {{ t('user.password.confirm') }}
                 </el-button>
                 <el-button @click="formRef?.resetFields()">
-                  重置
+                  {{ t('user.password.reset') }}
                 </el-button>
               </div>
             </el-form>

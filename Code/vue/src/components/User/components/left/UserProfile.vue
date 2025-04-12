@@ -6,8 +6,10 @@ import UserPassword from '@/components/User/components/left/UserPassword.vue'
 import UserAPI from '@/api/user'
 import httpInstance from '@/utils/http.js'
 import { useUserStore } from '@/stores/user'
+import { useI18n } from 'vue-i18n'
 
 const userStore = useUserStore()
+const { t } = useI18n()
 const visible = ref(false)
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
@@ -52,19 +54,19 @@ const getUserInfo = () => {
             // 转换后端性别值为前端显示值
             console.log("用户信息为:", res.data);
             let displayGender = res.data.gender;
-            if (displayGender === 'male') {
-                displayGender = '男';
-            } else if (displayGender === 'female') {
-                displayGender = '女';
+            if (displayGender === 'MALE') {
+                displayGender = t('user.profile.male');
+            } else if (displayGender === 'FEMALE') {
+                displayGender = t('user.profile.female');
             } else {
-                displayGender = '其他';
+                displayGender = t('user.profile.other');
             }
 
             ruleForm.value = {
                 ...res.data,
                 uid: typeof res.data.uid === 'string' ? parseInt(res.data.uid) : (res.data.uid || 0),
                 age: Number(res.data.age || 0),
-                gender: displayGender,  // 使用转换后的值
+                gender: displayGender,
                 email: res.data.email || '',
                 mobile: res.data.mobile || '',
                 location: res.data.location || '',
@@ -79,22 +81,22 @@ const getUserInfo = () => {
 const submitForm = async () => {
     try {
         console.log("提交的表单数据:", ruleForm.value);
-        const res: any = await UserAPI.updateUserInfo(ruleForm.value);
+        // 转换性别值为后端需要的格式
+        const submitData = {
+            ...ruleForm.value,
+            gender: ruleForm.value.gender === t('user.profile.male') ? 'MALE' :
+                   ruleForm.value.gender === t('user.profile.female') ? 'FEMALE' : 'OTHER'
+        };
+        const res: any = await UserAPI.updateUserInfo(submitData);
         if (res?.status === 'success') {
-            ElMessage({
-                type: 'success',
-                message: '保存成功'
-            });
+            ElMessage.success(t('user.profile.saveSuccess'));
             // 触发用户信息更新事件
             window.dispatchEvent(new Event('user-info-updated'));
         } else {
-            throw new Error(res?.message || '保存失败');
+            throw new Error(res?.message || t('user.profile.saveError'));
         }
     } catch (error) {
-        ElMessage({
-            type: 'error',
-            message: error instanceof Error ? error.message : '保存失败'
-        });
+        ElMessage.error(error instanceof Error ? error.message : t('user.profile.saveError'));
     }
 };
 
@@ -128,19 +130,13 @@ const beforeAvatarUpload = (file) => {
 }
 
 // 文件上传成功后的处理
-const handleAvatarSuccess = (data) => {
-  console.log('上传响应数据:', data);
-  if (data && data.status === 'success' && data.data && data.data.url) {
-    // 确保URL是完整的
-    const imageUrl = data.data.url;
-    ruleForm.value.avatar = imageUrl;
-    ElMessage({
-      message: '上传成功',
-      type: 'success'
-    });
-  } else {
-    handleAvatarError(new Error('上传失败：返回的数据格式不正确'));
-  }
+const handleAvatarSuccess = (response: any) => {
+    if (response.code === 200) {
+        ElMessage.success(t('user.profile.avatarSuccess'))
+        getUserInfo()
+    } else {
+        ElMessage.error(t('user.profile.avatarError'))
+    }
 }
 
 const uploadFile = (params) => {
@@ -159,17 +155,17 @@ const uploadFile = (params) => {
     handleAvatarSuccess(response);
   }).catch((error) => {
     console.error('上传错误:', error);
-    handleAvatarError(error);
+    handleAvatarError();
   });
 }
 
 // 文件上传失败后的处理
-const handleAvatarError = (error) => {
-  console.error('处理上传错误:', error);
-  ElMessage({
-    message: '上传失败: ' + (error.message || '未知错误'),
-    type: 'error'
-  });
+const handleAvatarError = () => {
+  ElMessage.error(t('user.profile.avatarError'))
+}
+
+const handleAvatarExceed = () => {
+    ElMessage.warning(t('user.profile.avatarExceed'))
 }
 
 const handleImageError = () => {
@@ -181,7 +177,7 @@ const handleImageError = () => {
     <div>
         <!-- 标题 -->
         <div>
-            <el-text class="mainTitle">修改资料与密码</el-text>
+            <el-text class="mainTitle">{{ t('user.profile.title') }}</el-text>
         </div>
         <div style="display: flex;">
             <el-card shadow="hover" class="box-card">
@@ -189,7 +185,7 @@ const handleImageError = () => {
                 <div class="profile">
                     <el-form ref="ruleFormRef" :model="ruleForm" label-width="90px" label-position="left"
                         class="demo-ruleForm" :size="formSize" status-icon>
-                        <el-form-item label="修改头像">
+                        <el-form-item :label="t('user.profile.avatar')">
                           <el-upload
                               class="avatar-uploader"
                               action="#"
@@ -198,55 +194,52 @@ const handleImageError = () => {
                               list-type="picture-card"
                               :file-list="fileList"
                               :show-file-list="false"
-                              :auto-upload="true"
                           >
-                            <img v-if="ruleForm.avatar" :src="ruleForm.avatar" class="img" @error="handleImageError">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                              <img v-if="ruleForm.avatar" :src="ruleForm.avatar" class="avatar" @error="handleImageError" />
+                              <el-icon v-else><Plus /></el-icon>
                           </el-upload>
                         </el-form-item>
-                        <el-form-item label="用户昵称" prop="nickname">
+
+                        <el-form-item :label="t('user.profile.nickname')">
                             <el-input v-model="ruleForm.nickname" />
                         </el-form-item>
-                        <el-form-item label="邮箱" prop="email">
+
+                        <el-form-item :label="t('user.profile.email')">
                             <el-input v-model="ruleForm.email" />
                         </el-form-item>
-                        <el-form-item label="手机号" prop="mobile">
+
+                        <el-form-item :label="t('user.profile.mobile')">
                             <el-input v-model="ruleForm.mobile" />
                         </el-form-item>
-                        <el-form-item label="年龄" prop="age">
-                            <el-input v-model="ruleForm.age" />
+
+                        <el-form-item :label="t('user.profile.age')">
+                            <el-input-number v-model="ruleForm.age" :min="0" :max="150" />
                         </el-form-item>
 
-                        <el-form-item label="性别" prop="gender">
+                        <el-form-item :label="t('user.profile.gender')">
                             <el-radio-group v-model="ruleForm.gender">
-                                <el-radio label="男">男</el-radio>
-                                <el-radio label="女">女</el-radio>
-                                <el-radio label="其他">其他</el-radio>
+                                <el-radio :label="t('user.profile.male')" />
+                                <el-radio :label="t('user.profile.female')" />
+                                <el-radio :label="t('user.profile.other')" />
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="地区" prop="location">
+
+                        <el-form-item :label="t('user.profile.location')">
                             <el-input v-model="ruleForm.location" />
                         </el-form-item>
-                        <el-form-item label="个人简介" prop="description">
-                            <el-input
-                                v-model="ruleForm.description"
-                                type="textarea"
-                                :rows="4"
-                                placeholder="写点什么介绍一下自己吧..."
-                            />
+
+                        <el-form-item :label="t('user.profile.description')">
+                            <el-input v-model="ruleForm.description" type="textarea" :placeholder="t('user.profile.descriptionPlaceholder')" />
                         </el-form-item>
-                        <!-- 提交表单 -->
+
                         <el-form-item>
-                            <el-button type="primary" @click="submitForm()">
-                                保存
-                            </el-button>
-                            <el-button type="danger" @click="initForm()">清除</el-button>
+                            <el-button type="primary" @click="submitForm">{{ t('user.profile.save') }}</el-button>
+                            <el-button @click="initForm">{{ t('user.profile.clear') }}</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
             </el-card>
-
-        </div><UserPassword />
+        </div>
     </div>
 </template>
 

@@ -14,43 +14,41 @@
           @select="handleSelect"
       >
         <!-- 首页按钮 -->
-        <el-menu-item index="1">首页</el-menu-item>
+        <el-menu-item index="1">{{ t('menu.home') }}</el-menu-item>
 
         <!-- 作品总览菜单项 -->
         <el-sub-menu index="culture">
-         <template #title>特色文化展示</template>
-         <el-menu-item index="3">名胜古迹</el-menu-item>
-         <el-menu-item index="4">影视文学</el-menu-item>
-         <el-menu-item index="5">美食文化</el-menu-item>
-         <el-menu-item index="6">非遗民俗</el-menu-item>
-         <el-menu-item index="7">红色文化</el-menu-item>
+         <template #title>{{ t('menu.culture') }}</template>
+         <el-menu-item index="3">{{ t('menu.places') }}</el-menu-item>
+         <el-menu-item index="4">{{ t('menu.film') }}</el-menu-item>
+         <el-menu-item index="5">{{ t('menu.food') }}</el-menu-item>
+         <el-menu-item index="6">{{ t('menu.folk') }}</el-menu-item>
+         <el-menu-item index="7">{{ t('menu.red') }}</el-menu-item>
        </el-sub-menu>
-        <el-menu-item index="8">情感分析</el-menu-item>
-        <el-menu-item index="9">个性推荐</el-menu-item>
-        <el-menu-item index="10">宣传报告生成</el-menu-item>
-        <el-menu-item index="11">全球传播情况</el-menu-item>
-        <el-menu-item index="12">背景介绍</el-menu-item>
-        <el-menu-item index="13">关于我们</el-menu-item>
+        <el-menu-item index="8">{{ t('menu.sentiment') }}</el-menu-item>
+        <el-menu-item index="9">{{ t('menu.recommend') }}</el-menu-item>
+        <el-menu-item index="10">{{ t('menu.report') }}</el-menu-item>
+        <el-menu-item index="11">{{ t('menu.global') }}</el-menu-item>
+        <el-menu-item index="12">{{ t('menu.background') }}</el-menu-item>
+        <el-menu-item index="13">{{ t('menu.about') }}</el-menu-item>
       </el-menu>
       <!-- 右侧用户信息 -->
       <div class="user-info">
-        <!-- 问候语 -->
-
-
         <!-- 语言选择 -->
         <el-dropdown trigger="click" @command="handleLanguageChange">
           <el-button type="primary">
-            {{ language || '中文' }}
+            {{ currentLanguage }}
             <el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="normal">系统字体</el-dropdown-item>
-              <el-dropdown-item command="styled">风格字体</el-dropdown-item>
+              <el-dropdown-item command="zh">中文</el-dropdown-item>
+              <el-dropdown-item command="en">English</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <span class="greeting">{{ greeting }}</span>
+        <!-- 只在中文模式下显示问候语 -->
+        <span v-if="locale === 'zh'" class="greeting">{{ greeting }}</span>
         <!-- 用户头像下拉菜单 -->
         <el-dropdown v-if="userStore.isLoggedIn" trigger="click" @command="handleCommand">
           <div class="user-avatar">
@@ -58,14 +56,14 @@
           </div>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="profile">个人中心</el-dropdown-item>
-              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              <el-dropdown-item command="profile">{{ t('user.profile.title') }}</el-dropdown-item>
+              <el-dropdown-item command="logout">{{ t('user.logout') }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
 
         <!-- 未登录时显示登录按钮 -->
-        <el-button v-else type="text" @click="goToLogin">登录</el-button>
+        <el-button v-else type="text" @click="goToLogin">{{ t('user.login') }}</el-button>
       </div>
     </div>
 
@@ -88,11 +86,13 @@ import UserAPI from '@/api/user'; // 导入UserAPI
 import { useFontStore } from '@/stores/font'
 import BackgroundIntro from "@/components/Background/BackgroundIntro.vue";
 import AboutUs from "@/components/About/AboutUs.vue";
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const fontStore = useFontStore()
+const { t, locale } = useI18n();
 
 // 设置 activeIndex 初始值为 '2-1'，这样组件会默认显示 FilmLiterature
 // Sync the activeIndex with the route path
@@ -122,26 +122,29 @@ else if (route.path==='/index/background') activeIndex.value = '12'
 else if (route.path==='/index/about') activeIndex.value = '13'
 else activeIndex.value = null;
 
-const language = ref('中文');
+// 当前语言显示
+const currentLanguage = computed(() => {
+  return locale.value === 'zh' ? '中文' : 'English';
+});
+
+// 处理语言切换
+const handleLanguageChange = (command: string) => {
+  locale.value = command;
+  // 保存语言设置到本地存储
+  localStorage.setItem('language', command);
+};
 
 // 获取问候语
 const greeting = computed(() => {
   const hour = new Date().getHours();
-  if (language.value === '中文') {
-    if (hour < 6) return '凌晨好！';
-    if (hour < 9) return '早上好！';
-    if (hour < 12) return '上午好！';
-    if (hour < 14) return '中午好！';
-    if (hour < 17) return '下午好！';
-    if (hour < 19) return '傍晚好！';
-    if (hour < 22) return '晚上好！';
-    return '夜深了！';
-  } else {
-    if (hour < 6) return 'Good Early Morning!';
-    if (hour < 12) return 'Good Morning!';
-    if (hour < 18) return 'Good Afternoon!';
-    return 'Good Evening!';
-  }
+  if (hour < 6) return '凌晨好！';
+  if (hour < 9) return '早上好！';
+  if (hour < 12) return '上午好！';
+  if (hour < 14) return '中午好！';
+  if (hour < 17) return '下午好！';
+  if (hour < 19) return '傍晚好！';
+  if (hour < 22) return '晚上好！';
+  return '夜深了！';
 });
 
 // 处理菜单选择
@@ -214,20 +217,6 @@ const handleCommand = (command: string) => {
   }
 };
 
-// 处理语言切换
-const handleLanguageChange = (command) => {
-  switch (command) {
-    case 'normal':
-      language.value = '系统字体';
-      document.documentElement.setAttribute('data-font-style', 'normal');
-      break;
-    case 'styled':
-      language.value = '风格字体';
-      document.documentElement.setAttribute('data-font-style', 'styled');
-      break;
-  }
-};
-
 // 用户数据，包含头像
 const userData = ref({
   username: '',
@@ -252,8 +241,14 @@ const getUserInfo = async () => {
   }
 };
 
-// 在组件挂载时获取用户信息
+// 在组件挂载时初始化语言设置
 onMounted(() => {
+  // 从本地存储获取语言设置
+  const savedLanguage = localStorage.getItem('language');
+  if (savedLanguage) {
+    locale.value = savedLanguage;
+  }
+  
   if (userStore.isLoggedIn) {
     getUserInfo();
   }
@@ -371,7 +366,7 @@ onMounted(() => {
 }
 
 .el-menu-demo {
-  margin-left: 50px;  /* 增加与logo的距离 */
+  margin-left: 30px;  /* 增加与logo的距离 */
   display: flex;
   justify-content: flex-start;
   background-color: transparent !important;
@@ -426,7 +421,7 @@ onMounted(() => {
 /* 左侧Logo样式 */
 .logo {
   flex: 0 0 40px;
-  margin-left: 10px;
+  margin-left: 0px;
   display: flex;
   align-items: center;
 }

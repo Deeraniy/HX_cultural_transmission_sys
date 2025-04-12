@@ -1,7 +1,7 @@
 <template>
   <div class="ai-report-container" :class="{ 'styled-font': fontStore.isStyled }">
     <div class="report-header">
-      <h2>AI 情感分析报告</h2>
+      <h2>{{ t('detail.tabs.report') }}</h2>
     </div>
 
     <div class="report-content-wrapper">
@@ -11,19 +11,19 @@
           <el-skeleton :rows="10" animated />
           <div class="loading-text">
             <el-icon class="is-loading"><Loading /></el-icon>
-            正在生成 AI 分析报告...
+            {{ t('common.loading') }}
           </div>
         </div>
 
         <div v-else-if="!report" class="empty-state">
-          <el-empty description="点击生成按钮获取AI分析报告">
+          <el-empty :description="t('detail.report.clickToGenerate')">
             <el-button 
               type="primary"
               :icon="Document"
               @click="generateReport"
               class="generate-report-btn"
             >
-              生成报告
+              {{ t('detail.report.generate') }}
             </el-button>
           </el-empty>
         </div>
@@ -41,7 +41,7 @@
               <div class="timeline-date">{{ item.date }}</div>
               <div class="timeline-sentiment" :class="item.sentiment" :style="getTimelineItemStyle(item.score)">
                 {{ getSentimentText(item.sentiment) }}
-                <div class="timeline-count">{{ item.count }}条评论</div>
+                <div class="timeline-count">{{ t('detail.report.commentCount', { count: item.count }) }}</div>
               </div>
             </div>
           </div>
@@ -56,8 +56,11 @@ import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Document, Loading } from '@element-plus/icons-vue'
 import { marked } from 'marked'
+import { useI18n } from 'vue-i18n'
 import SentimentAPI from "@/api/sentiment"
 import { useFontStore } from '@/stores/font'
+
+const { t } = useI18n()
 
 const props = defineProps({
   name: {
@@ -120,13 +123,13 @@ const generateReport = async () => {
     if ((response as ReportResponse).status === 'success') {
       report.value = (response as ReportResponse).report;
       timelineItems.value = (response as ReportResponse).timeline;
-      ElMessage.success('报告生成成功');
+      ElMessage.success(t('detail.report.generateSuccess'));
     } else {
-      throw new Error((response as any).message || '报告生成失败');
+      throw new Error((response as any).message || t('detail.report.generateError'));
     }
   } catch (error) {
     console.error('生成报告失败:', error.response || error);
-    ElMessage.error('生成报告失败，请重试');
+    ElMessage.error(t('detail.report.generateError'));
   } finally {
     loading.value = false;
   }
@@ -141,10 +144,10 @@ const handleCopyReport = () => {
 
     navigator.clipboard.writeText(textContent)
       .then(() => {
-        ElMessage.success('报告已复制到剪贴板')
+        ElMessage.success(t('detail.report.copySuccess'))
       })
       .catch(() => {
-        ElMessage.error('复制失败，请手动复制')
+        ElMessage.error(t('detail.report.copyError'))
       })
   }
 }
@@ -205,12 +208,7 @@ const handleScroll = () => {
 }
 
 const getSentimentText = (sentiment: string) => {
-  const map: Record<string, string> = {
-    positive: '正面',
-    neutral: '中性',
-    negative: '负面'
-  }
-  return map[sentiment] || sentiment
+  return t(`detail.report.sentiment.${sentiment}`)
 }
 
 // 修改时间轴项的显示

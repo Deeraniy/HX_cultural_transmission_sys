@@ -1,0 +1,31 @@
+# Neo4j 配置
+neo4j:
+  host: "localhost"
+  port: 7474
+  user: "neo4j"
+  password: "Lyx040410"
+  protocol: "http"
+
+# 模型配置
+model:
+  graph-entity:
+    search-key: "name"
+
+# 缓存配置
+cache:
+  node:
+    fields:
+      - "id"
+      - "name"
+      - "type"
+      - "description"
+
+# LLM配置
+llm:
+  base_url: "https://open.bigmodel.cn/api/paas/v4"
+  api_key: "1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf"
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s" 

@@ -13,8 +13,8 @@
           <img src="@/assets/index-back3.jpg" alt="Image 3" style="width: 100%; height: 100%; object-fit: cover;" />
           <!-- 添加蒙版和文字 -->
           <div class="carousel-overlay">
-            <span class="overlay-text">湖湘文化</span>
-            <span class="overlay-text">数智传播网</span>
+            <span class="overlay-text">{{ t('index.title.main') }}</span>
+            <span class="overlay-text">{{ t('index.title.sub') }}</span>
           </div>
         </div>
         <!-- 第一个视频项 -->
@@ -64,43 +64,43 @@
       <footer class="site-footer">
         <div class="footer-container">
           <div class="footer-section about">
-            <h3>关于我们</h3>
-            <p>湖湘文化数智传播网致力于湖湘文化的数字化传播与研究，为促进湖湘文化的传承与创新提供数字平台支持。</p>
+            <h3>{{ t('index.footer.about.title') }}</h3>
+            <p>{{ t('index.footer.about.content') }}</p>
           </div>
           
           <div class="footer-section links">
-            <h3>快速链接</h3>
+            <h3>{{ t('index.footer.quickLinks.title') }}</h3>
             <ul>
-              <li><a href="#/folkCustom">非遗民俗</a></li>
-              <li><a href="#/placeOfInterest">风景名胜</a></li>
-              <li><a href="#/red">红色文化</a></li>
-              <li><a href="#/filmLiterature">影视文学</a></li>
-              <li><a href="#/food">湘菜美食</a></li>
-              <li><a href="#/globe">全球传播效果分析</a></li>
-              <li><a href="#/detail">情感分析</a></li>
-              <li><a href="#/report">宣传策略</a></li>
+              <li><a href="#/folkCustom">{{ t('index.footer.quickLinks.folkCustom') }}</a></li>
+              <li><a href="#/placeOfInterest">{{ t('index.footer.quickLinks.placeOfInterest') }}</a></li>
+              <li><a href="#/red">{{ t('index.footer.quickLinks.redCulture') }}</a></li>
+              <li><a href="#/filmLiterature">{{ t('index.footer.quickLinks.filmLiterature') }}</a></li>
+              <li><a href="#/food">{{ t('index.footer.quickLinks.food') }}</a></li>
+              <li><a href="#/globe">{{ t('index.footer.quickLinks.globalAnalysis') }}</a></li>
+              <li><a href="#/detail">{{ t('index.footer.quickLinks.sentimentAnalysis') }}</a></li>
+              <li><a href="#/report">{{ t('index.footer.quickLinks.strategy') }}</a></li>
             </ul>
           </div>
           
           <div class="footer-section data-support">
-            <h3>数据支持</h3>
-            <p>湖南省文化与旅游厅</p>
-            <p>湖南省文物局</p>
-            <p>湖南省非物质文化遗产保护中心</p>
-            <p>湖南省博物馆</p>
+            <h3>{{ t('index.footer.dataSupport.title') }}</h3>
+            <p>{{ t('index.footer.dataSupport.culture') }}</p>
+            <p>{{ t('index.footer.dataSupport.cultural') }}</p>
+            <p>{{ t('index.footer.dataSupport.heritage') }}</p>
+            <p>{{ t('index.footer.dataSupport.museum') }}</p>
           </div>
           
           <div class="footer-section contact">
-            <h3>联系我们</h3>
-            <p><i class="el-icon-location"></i> 湖南省长沙市</p>
-            <p><i class="el-icon-phone"></i> 0731-XXXXXXXX</p>
-            <p><i class="el-icon-message"></i> huxiangwenhua@example.com</p>
+            <h3>{{ t('index.footer.contact.title') }}</h3>
+            <p><i class="el-icon-location"></i> {{ t('index.footer.contact.address') }}</p>
+            <p><i class="el-icon-phone"></i> {{ t('index.footer.contact.phone') }}</p>
+            <p><i class="el-icon-message"></i> {{ t('index.footer.contact.email') }}</p>
           </div>
         </div>
         
         <div class="footer-bottom">
-          <p>© 2023-2024 湖湘文化数智传播网 | 湘ICP备XXXXXXXX号</p>
-          <p>技术支持：湖南师范大学</p>
+          <p>{{ t('index.footer.copyright.text') }}</p>
+          <p>{{ t('index.footer.copyright.support') }}</p>
         </div>
       </footer>
 
@@ -110,7 +110,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import IndexMain from "@/components/IndexMain.vue";
 import FeaturesSection from "@/components/Home/FeaturesSection.vue";
 import HuXiangCuisine from "@/components/Home/HuXiangCuisine.vue";
@@ -126,6 +127,13 @@ let carouselTimer = null; // 用于存储定时器
 import * as echarts from 'echarts';
 const chart = ref(null);
 
+const { t, locale } = useI18n();
+
+// 根据语言环境返回不同的字体大小
+const titleFontSize = computed(() => {
+  return locale.value === 'en' ? '8rem' : '14rem';
+});
+
 const onVideoEnded = () => {
   console.log('视频播放结束');
   shouldAutoplay.value = true; // 启用轮播
@@ -134,12 +142,12 @@ const onVideoEnded = () => {
 };
 const processData = (rawData) => {
   const categories = [
-    { name: '核心文化' },
-    { name: '主题分类' },
-    { name: '景点' },
-    { name: '文学' },
-    { name: '饮食' },
-    { name: '民俗' }
+    { name: t('index.knowledgeGraph.categories.core') },
+    { name: t('index.knowledgeGraph.categories.theme') },
+    { name: t('index.knowledgeGraph.categories.spot') },
+    { name: t('index.knowledgeGraph.categories.literature') },
+    { name: t('index.knowledgeGraph.categories.food') },
+    { name: t('index.knowledgeGraph.categories.folk') }
   ];
 
   const nodes = [];
@@ -203,7 +211,7 @@ const initChart = () => {
   ];
   const option = {
     title: {
-      text: '湖湘文化知识图谱',
+      text: t('index.knowledgeGraph.title'),
       top: 20,
       left: 'center'
     },
@@ -326,7 +334,7 @@ onMounted(() => {
 .overlay-text {
   font-family: 'HelveticaNeue', serif;
   color: white;
-  font-size: 14rem;
+  font-size: v-bind(titleFontSize);
   font-weight: bold;
   text-align: center;
   padding: 0px;

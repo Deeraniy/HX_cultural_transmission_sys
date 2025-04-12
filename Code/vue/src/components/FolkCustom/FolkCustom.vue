@@ -4,7 +4,7 @@
     <div class="hunan-tourist-attractions">
       <!-- 搜索框 -->
       <div class="search-container">
-        <input v-model="searchQuery" type="text" placeholder="搜索民俗文化..." class="search-box" />
+        <input v-model="searchQuery" type="text" :placeholder="t('detail.folk.searchPlaceholder')" class="search-box" />
       </div>
 
       <!-- 展示的内容 -->
@@ -13,7 +13,7 @@
           <div class="flip-card">
             <div class="flip-card-inner" @click="showDetails(folk)">
               <div class="flip-card-front">
-                <p>{{ folk.name }}</p>
+                <p>{{ getFolkName(folk.name) }}</p>
               </div>
               <div class="flip-card-back">
                 <img :src="folk.image" alt="图片" />
@@ -22,20 +22,20 @@
           </div>
           <!-- 在每个卡片下方放按钮 -->
           <div class="card-buttons">
-            <button class="emotion-btn" @click="goToPlaceDetail(folk.name)">情感分析</button>
+            <button class="emotion-btn" @click="goToPlaceDetail(folk.name)">{{ t('detail.place.sentimentAnalysis') }}</button>
           </div>
         </div>
       </div>
 
       <!-- 翻页按钮 -->
       <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
-        <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
+        <button @click="prevPage" :disabled="currentPage === 0">{{ t('detail.folk.prevPage') }}</button>
+        <button @click="nextPage" :disabled="currentPage >= totalPages - 1">{{ t('detail.folk.nextPage') }}</button>
       </div>
     </div>
 
     <!-- 弹窗 -->
-    <el-dialog v-model="dialogVisible" title="民俗文化详情" width="700px" class="folk-dialog">
+    <el-dialog v-model="dialogVisible" :title="t('menu.folk')" width="700px" class="folk-dialog">
       <!-- 添加右侧交互图标 -->
       <div class="side-interaction-icons">
         <div class="icon-wrapper" @click="toggleLike">
@@ -52,7 +52,7 @@
             :class="['icon', { 'active': tagStatus.is_favorite }]"
             alt="收藏"
           />
-          <span>收藏</span>
+          <span>{{ t('detail.place.favorite') }}</span>
         </div>
       </div>
 
@@ -60,17 +60,17 @@
         <div class="folk-header">
           <img :src="selectedFolk.image" alt="详细图片" class="dialog-image" />
           <div class="folk-title-container">
-            <h2>{{ selectedFolk.name }}</h2>
-            <h3>级别：{{selectedFolk.rank}}</h3>
+            <h2>{{ getFolkName(selectedFolk.name) }}</h2>
+            <h3>{{ t('detail.folk.rank') }}: {{selectedFolk.rank}}</h3>
           </div>
         </div>
         <div class="folk-description">
-          <p>{{ selectedFolk.description }}</p>
+          <p>{{ getFolkDescription(selectedFolk) }}</p>
         </div>
       </div>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="dialogVisible = false" class="close-btn">关闭</el-button>
+          <el-button @click="dialogVisible = false" class="close-btn">{{ t('common.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -79,12 +79,14 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router'; // 导入 useRouter
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { ElDialog, ElButton, ElMessage } from 'element-plus';
 import Lunbo from './LunBo.vue';
 import FolkAPI from "@/api/folk";
 import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
+import cultureElements from '@/json/culture_elements_translated.json';
 // 导入图标
 import likeIcon from '@/assets/setting/赞.png'
 import likeActiveIcon from '@/assets/setting/赞 (1).png'
@@ -92,6 +94,7 @@ import favoriteIcon from '@/assets/setting/收藏.png'
 import favoriteActiveIcon from '@/assets/setting/收藏(1).png'
 import UserAPI from "@/api/user";
 
+const { t, locale } = useI18n();
 const userStore = useUserStore();
 const tagStatus = ref({
   is_liked: false,
@@ -341,6 +344,22 @@ const showDetails = async (folk) => {
     };
   }
 };
+
+// 获取民俗名称的翻译
+const getFolkName = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['title-en'] ? 
+    element['title-en'] : 
+    name;
+};
+
+// 获取民俗描述的翻译
+const getFolkDescription = (folk) => {
+  const element = cultureElements.find(item => item.title === folk.name);
+  return locale.value === 'en' && element?.['description-en'] ? 
+    element['description-en'] : 
+    folk.description;
+};
 </script>
 
 <style scoped lang="scss">
@@ -423,12 +442,22 @@ const showDetails = async (folk) => {
   color: #000;
   font-size: 30px;
   font-family: 'HelveticaNeue', serif;
-  writing-mode: vertical-rl; /* 设置文字竖排，从右到左 */
-  text-align: center; /* 文字居中对齐 */
-  white-space: normal; /* 允许文字换行 */
-  word-wrap: break-word; /* 长单词或长句子可以在需要的地方换行 */
-  width: 100%; /* 确保宽度适应容器 */
-  border-radius: 0; /* 正面没有圆角 */
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  width: 100%;
+  border-radius: 0;
+}
+
+/* 根据语言设置不同的文字方向 */
+:root[lang="zh"] .flip-card-front {
+  writing-mode: vertical-rl;
+}
+
+:root[lang="en"] .flip-card-front {
+  writing-mode: horizontal-tb;
+  font-size: 20px;
+  padding: 0px;
 }
 
 /* 背面内容（设置圆角） */
@@ -666,5 +695,27 @@ const showDetails = async (folk) => {
 
 .search-box:focus {
   border-color: #b71c1c;
+}
+
+/* 英文状态下的样式调整 */
+:root[lang="en"] .search-box {
+  width: 300px; /* 英文搜索框宽度增加 */
+}
+
+:root[lang="en"] .flip-card-front {
+  font-size: 24px; /* 英文字体稍微小一点 */
+}
+
+:root[lang="en"] .card-buttons button {
+  min-width: 120px; /* 确保英文按钮文字不会换行 */
+  font-size: 12px; /* 英文按钮字体稍微小一点 */
+}
+
+:root[lang="en"] .folk-title-container h2 {
+  font-size: 22px; /* 英文标题字体稍微小一点 */
+}
+
+:root[lang="en"] .folk-description p {
+  line-height: 1.6; /* 英文描述行高稍微调整 */
 }
 </style>

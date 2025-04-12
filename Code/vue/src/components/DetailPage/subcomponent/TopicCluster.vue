@@ -1,19 +1,19 @@
 <template>
   <el-table :data="tableData" stripe border style="width: 100%;" height="700">
-    <el-table-column prop="topic" label="主题" align="center">
+    <el-table-column prop="topic" :label="t('detail.topic.name')" align="center">
       <template #default="scope">
         <span class="table-cell">{{ scope.row.topic }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="frequency" label="频数" align="center">
+    <el-table-column prop="frequency" :label="t('common.frequency')" align="center">
       <template #default="scope">
         <span class="table-cell">{{ scope.row.frequency }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="sentiment" label="情感倾向" align="center">
+    <el-table-column prop="sentiment" :label="t('detail.sentiment.type')" align="center">
       <template #default="scope">
         <span :class="getClassForSentiment(scope.row.sentiment)">
-          {{ translateSentiment(scope.row.sentiment) }}
+          {{ t(`detail.report.sentiment.${scope.row.sentiment}`) }}
         </span>
       </template>
     </el-table-column>
@@ -22,6 +22,9 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   tableData: {
@@ -30,32 +33,9 @@ const props = defineProps({
   }
 })
 
-// 翻译情感倾向
-const translateSentiment = (sentiment) => {
-  switch (sentiment) {
-    case 'positive':
-      return '正面';
-    case 'neutral':
-      return '中立';
-    case 'negative':
-      return '负面';
-    default:
-      return sentiment;
-  }
-}
-
 // 根据情感倾向返回对应的类名
 const getClassForSentiment = (sentiment) => {
-  switch (sentiment) {
-    case 'positive':
-      return 'positive';
-    case 'neutral':
-      return 'neutral';
-    case 'negative':
-      return 'negative';
-    default:
-      return '';
-  }
+  return sentiment || ''
 }
 </script>
 

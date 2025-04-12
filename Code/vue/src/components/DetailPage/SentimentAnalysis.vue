@@ -4,11 +4,11 @@
       <div class="chart-container">
         <!-- 标题和切换按钮放在一起 -->
         <div class="chart-header">
-          <div class="chart-title">情感分析</div>
+          <div class="chart-title">{{ t('sentiment.title') }}</div>
           <div class="chart-switch">
             <el-radio-group v-model="currentChart" size="large">
-              <el-radio-button label="time">时间趋势</el-radio-button>
-              <el-radio-button label="threeLine">情感分布</el-radio-button>
+              <el-radio-button label="time">{{ t('sentiment.timeTrend') }}</el-radio-button>
+              <el-radio-button label="threeLine">{{ t('sentiment.distribution') }}</el-radio-button>
             </el-radio-group>
           </div>
         </div>
@@ -24,7 +24,7 @@
               :height="'100%'"
               :width="'100%'"
             />
-            <div v-else class="no-data">暂无数据</div>
+            <div v-else class="no-data">{{ t('common.noData') }}</div>
           </template>
 
           <!-- 三线图 -->
@@ -45,11 +45,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import LineRace from "@/components/DetailPage/subcomponent/LineRace.vue";
 import ThreeLineChart from "@/components/DetailPage/subcomponent/ThreeLineChart.vue";
 import SentimentAPI from "@/api/sentiment";
 import { ElMessage } from 'element-plus';
 import { initChart } from '@/utils/echartConfig';
+
+const { t } = useI18n();
 
 // Props 定义
 interface Props {
@@ -164,7 +167,7 @@ const loadData = async () => {
     } catch (error) {
       console.error('Error loading time data:', error);
       timeData.value = [];
-      ElMessage.error('加载时间数据失败，请稍后重试');
+      ElMessage.error(t('sentiment.loadError'));
     } finally {
       isTimeChartLoading.value = false;
     }
@@ -174,7 +177,6 @@ const loadData = async () => {
       const threeLineResponse = await SentimentAPI.getCasualImpactAPI(props.name);
       console.log("三线图原始数据为:", threeLineResponse);
 
-      // 检查数据结构是否符合预期
       if (threeLineResponse &&
           typeof threeLineResponse === 'object' &&
           'economic_data' in threeLineResponse &&
@@ -185,17 +187,17 @@ const loadData = async () => {
         console.log("三线图数据处理成功");
       } else {
         console.warn("三线图数据格式不符合预期:", threeLineResponse);
-        threeLineData.value = []; // 设置为空数组避免渲染错误
+        threeLineData.value = [];
       }
     } catch (error) {
       console.error("加载三线图数据时出错:", error);
-      threeLineData.value = []; // 出错时也设置为空数组
-    }finally {
+      threeLineData.value = [];
+    } finally {
       isThreeLineLoading.value = false;
     }
   } catch (error) {
     console.error('Failed to load sentiment analysis data:', error);
-    ElMessage.error('数据加载失败，请重试');
+    ElMessage.error(t('sentiment.loadError'));
   }
 };
 

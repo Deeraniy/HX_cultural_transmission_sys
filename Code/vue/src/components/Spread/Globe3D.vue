@@ -4,17 +4,15 @@
     
     <!-- 标题 -->
     <div class="title-panel">
-      <h1>传播效果智能分析</h1>
-      <div class="subtitle">Intelligent analysis of communication effect</div>
+      <h1>{{ t('globe.title') }}</h1>
+      <div class="subtitle">{{ t('globe.subtitle') }}</div>
     </div>
 
     <!-- 左侧面板组 -->
     <div class="left-panels">
-      
-      
       <!-- 词云图卡片 -->
       <div class="data-panel word-cloud-card">
-        <h3>热点词云</h3>
+        <h3>{{ t('globe.wordCloud') }}</h3>
         <div ref="wordCloudChart" class="word-cloud-container"></div>
       </div>
     </div>
@@ -26,48 +24,48 @@
         <div class="data-grid">
           <div class="data-item">
             <div class="data-value">{{ statsData.totalComments }}</div>
-            <div class="data-label">总评论数量</div>
+            <div class="data-label">{{ t('globe.stats.totalComments') }}</div>
           </div>
           <div class="data-item">
             <div class="data-value">{{ statsData.platformCount }}</div>
-            <div class="data-label">评论平台数</div>
+            <div class="data-label">{{ t('globe.stats.platformCount') }}</div>
           </div>
           <div class="data-item">
             <div class="data-value">{{ statsData.countryCount }}</div>
-            <div class="data-label">分析国家总数</div>
+            <div class="data-label">{{ t('globe.stats.countryCount') }}</div>
           </div>
           <div class="data-item">
             <div class="data-value">{{ statsData.timeSpan }}</div>
-            <div class="data-label">评论时间跨度</div>
+            <div class="data-label">{{ t('globe.stats.timeSpan') }}</div>
           </div>
         </div>
       </div>
       <!-- 趋势图卡片 -->
       <div class="data-panel trend-card">
-        <h3>正面传播趋势</h3>
+        <h3>{{ t('globe.trend.title') }}</h3>
         <div class="trend-data">
         <div ref="trendChart" class="trend-container"></div>
         </div>
       </div>
     </div>
 
-    <!-- 控制按钮组 - 垂直排列在传播趋势右侧 -->
+    <!-- 控制按钮组 -->
     <div class="vertical-control-panel">
       <div class="control-item" @click="toggleRotation">
         <i class="iconfont icon-rotate"></i>
-        <span>自动旋转</span>
+        <span>{{ t('globe.controls.autoRotate') }}</span>
       </div>
       <div class="control-item" @click="resetCamera">
         <i class="iconfont icon-reset"></i>
-        <span>重置视角</span>
+        <span>{{ t('globe.controls.resetView') }}</span>
       </div>
       <div class="control-item" @click="toggleFullscreen">
         <i class="iconfont icon-fullscreen"></i>
-        <span>全屏显示</span>
+        <span>{{ t('globe.controls.fullscreen') }}</span>
       </div>
       <div class="control-item" @click="toggleDanmaku">
         <i class="iconfont" :class="isDanmakuEnabled ? 'icon-danmaku-on' : 'icon-danmaku-off'"></i>
-        <span>{{ isDanmakuEnabled ? '关闭弹幕' : '开启弹幕' }}</span>
+        <span>{{ isDanmakuEnabled ? t('globe.controls.closeDanmaku') : t('globe.controls.openDanmaku') }}</span>
       </div>
     </div>
 
@@ -80,7 +78,7 @@
 
     <!-- 左下角面板 -->
     <div class="data-panel bottom-left">
-      <h3>热点分布</h3>
+      <h3>{{ t('globe.hotspots.title') }}</h3>
       <div class="stats-list">
         <div v-for="(stat, region) in commentStats" 
              :key="region" 
@@ -91,7 +89,6 @@
           <div class="heat-bar" :style="{ width: `${stat.percentage}%`, backgroundColor: stat.color }"></div>
           </template>
           <template v-else>
-            <!-- 占位空间，保持高度一致 -->
             <div class="placeholder-item"></div>
           </template>
         </div>
@@ -104,7 +101,7 @@
       </div>
     </div>
 
-    <!-- 修改右下角面板,添加切换功能 -->
+    <!-- 修改右下角面板 -->
     <div class="relation-panel">
       <div class="panel-header">
         <div class="tab-buttons">
@@ -114,7 +111,7 @@
             @click="activeTab = 'relation'"
           >
             <i class="iconfont icon-chart"></i>
-            平台情感分析
+            {{ t('globe.tabs.platformSentiment') }}
           </div>
           <div 
             class="tab-btn" 
@@ -122,7 +119,7 @@
             @click="activeTab = 'alert'"
           >
             <i class="iconfont icon-warning"></i>
-            传播异常分析
+            {{ t('globe.tabs.spreadAlert') }}
             <span v-if="alerts.length" class="alert-badge">{{ alerts.length }}</span>
           </div>
         </div>
@@ -148,9 +145,6 @@
       </div>
     </div>
 
-
-  
-
     <!-- 添加顶部数据卡片 -->
     <div class="top-stats">
       <div class="stat-card">
@@ -158,10 +152,10 @@
           <i class="iconfont icon-speed"></i>
         </div>
         <div class="stat-info">
-          <div class="stat-label">最新月评论</div>
+          <div class="stat-label">{{ t('globe.topStats.latestMonth') }}</div>
           <div class="stat-value">
             <span class="number">{{ topStats.latestMonthComments }}</span>
-            <span class="unit">条</span>
+            <span class="unit">{{ t('globe.topStats.comments') }}</span>
           </div>
         </div>
       </div>
@@ -171,12 +165,12 @@
           <i class="iconfont icon-trend"></i>
         </div>
         <div class="stat-info">
-          <div class="stat-label">传播趋势</div>
+          <div class="stat-label">{{ t('globe.topStats.spreadTrend') }}</div>
           <div class="stat-value">
             <span class="number" :class="topStats.spreadTrend > 0 ? 'up' : 'down'">
               {{ topStats.spreadTrend > 0 ? '+' : '' }}{{ topStats.spreadTrend }}%
             </span>
-            <span class="unit">较上期</span>
+            <span class="unit">{{ t('globe.topStats.compared') }}</span>
           </div>
         </div>
       </div>
@@ -196,19 +190,19 @@
 
     <!-- 添加关系图面板 -->
     <div class="data-panel analysis-panel">
-      <h3>传播数据分析</h3>
+      <h3>{{ t('globe.analysis.title') }}</h3>
       <div class="analysis-content">
         <!-- 将前两项放在同一行 -->
         <div class="analysis-row">
           <div class="analysis-item half">
-            <div class="analysis-label">传播速度指数</div>
+            <div class="analysis-label">{{ t('globe.analysis.spreadSpeed') }}</div>
             <div class="analysis-value">
               <span class="number">89.5</span>
               <div class="trend up">↑12.3%</div>
             </div>
           </div>
           <div class="analysis-item half">
-            <div class="analysis-label">互动参与度</div>
+            <div class="analysis-label">{{ t('globe.analysis.engagement') }}</div>
             <div class="analysis-value">
               <span class="number">76.2</span>
               <div class="trend up">↑8.7%</div>
@@ -217,11 +211,11 @@
         </div>
         <!-- 情感倾向保持原样 -->
         <div class="analysis-item">
-          <div class="analysis-label">情感倾向</div>
+          <div class="analysis-label">{{ t('globe.analysis.sentiment') }}</div>
           <div class="sentiment-bars">
-            <div class="sentiment-bar positive" style="width: 65%">正面 65%</div>
-            <div class="sentiment-bar neutral" style="width: 25%">中性 25%</div>
-            <div class="sentiment-bar negative" style="width: 10%">负面 10%</div>
+            <div class="sentiment-bar positive" style="width: 65%">{{ t('globe.sentiment.positive') }} 65%</div>
+            <div class="sentiment-bar neutral" style="width: 25%">{{ t('globe.sentiment.neutral') }} 25%</div>
+            <div class="sentiment-bar negative" style="width: 10%">{{ t('globe.sentiment.negative') }} 10%</div>
           </div>
         </div>
       </div>
@@ -259,7 +253,8 @@ import 'echarts-wordcloud';
 import { useRouter } from 'vue-router';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import ThemeAPI from '@/api/theme'; // 引入API
-
+import { useI18n } from 'vue-i18n';
+const { t, locale } = useI18n();
 // 初始化全局变量
 const globeCanvas = ref(null);
 const radarChartRef = ref(null);
