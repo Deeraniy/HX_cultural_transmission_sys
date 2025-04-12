@@ -51,13 +51,56 @@
           </div>
         </el-carousel-item>
       </el-carousel>
-      
+
       <!-- 添加我们的功能区块 -->
       <FeaturesSection />
-      
-      
+
+<!--      这里是知识图谱-->
       <div class="knowledge-graph">
         <div ref="chart" style="height: 800px; width: 100%;"></div>
+        <div>
+          <el-input
+              v-model="searchTerm"
+              placeholder="输入节点名称搜索"
+              clearable
+              @input="handleSearch"
+          >
+            <template #prefix>
+              <el-icon><search /></el-icon>
+            </template>
+          </el-input>
+        </div>
+      </div>
+<!--      这里显示节点详情-->
+      <div class="node-detail" v-if="selectedNode">
+        <div class="detail-header">
+          <h3>{{ selectedNode.name }}</h3>
+
+        </div>
+        <div class="detail-content">
+          <div v-if="selectedNode.properties">
+            <div v-for="key in filteredPropertyKeys" :key="key">
+              <strong>{{ propertyMap[key] || key }}：</strong>
+              <template v-if="key === 'image_url' || key === 'img_url'">
+                <img
+                    :src="selectedNode.properties[key]"
+                    :alt="propertyMap[key]"
+                    style="max-width: 200px; height: auto; margin-top: 8px; border-radius: 4px;"
+                >
+              </template>
+              <!-- 其他属性处理 -->
+              <template v-else>
+                <span>{{ selectedNode.properties[key] || '暂无数据' }}</span>
+              </template>
+            </div>
+
+          </div>
+          <div v-else>
+            该节点暂无更多详细信息
+          </div>
+        </div>
+        <el-button class="close-btn" @click="selectedNode = null" circle>×</el-button>
+        <el-button @click="handleViewDetail">查看详情</el-button>
       </div>
 
       <!-- 替换原有block4跳转 -->
@@ -67,7 +110,7 @@
             <h3>{{ t('index.footer.about.title') }}</h3>
             <p>{{ t('index.footer.about.content') }}</p>
           </div>
-          
+
           <div class="footer-section links">
             <h3>{{ t('index.footer.quickLinks.title') }}</h3>
             <ul>
@@ -81,7 +124,7 @@
               <li><a href="#/report">{{ t('index.footer.quickLinks.strategy') }}</a></li>
             </ul>
           </div>
-          
+
           <div class="footer-section data-support">
             <h3>{{ t('index.footer.dataSupport.title') }}</h3>
             <p>{{ t('index.footer.dataSupport.culture') }}</p>
@@ -89,7 +132,7 @@
             <p>{{ t('index.footer.dataSupport.heritage') }}</p>
             <p>{{ t('index.footer.dataSupport.museum') }}</p>
           </div>
-          
+
           <div class="footer-section contact">
             <h3>{{ t('index.footer.contact.title') }}</h3>
             <p><i class="el-icon-location"></i> {{ t('index.footer.contact.address') }}</p>
@@ -97,7 +140,7 @@
             <p><i class="el-icon-message"></i> {{ t('index.footer.contact.email') }}</p>
           </div>
         </div>
-        
+
         <div class="footer-bottom">
           <p>{{ t('index.footer.copyright.text') }}</p>
           <p>{{ t('index.footer.copyright.support') }}</p>
@@ -112,20 +155,42 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import {ref, onMounted, onBeforeUnmount, computed} from 'vue';
 import IndexMain from "@/components/IndexMain.vue";
 import FeaturesSection from "@/components/Home/FeaturesSection.vue";
 import HuXiangCuisine from "@/components/Home/HuXiangCuisine.vue";
 // 使用 import 语法加载视频文件
 import videoFile from '@/assets/湖南形象宣传片国际版《This is Hunan》.mp4';
 import data from '../../static/data.json'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const activeIndex = ref(0); // 当前轮播项的索引
 const videoUrl = ref(videoFile); // 将视频路径赋值给变量
 const shouldAutoplay = ref(false); // 控制是否自动播放轮播图
 let carouselTimer = null; // 用于存储定时器
 // 视频播放结束后的回调
 // 视频播放结束后的处理
+import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts';
 const chart = ref(null);
+const selectedNode = ref(null);
+const searchTerm = ref('');
+const propertyMap = {
+  food_name: '菜品名称',
+  folk_name: '民俗名称',
+  spot_name: '景点名称',
+  city_id: '所属城市',
+  folk_type: '民俗类型',
+  address: '详细地址',
+  image_url: '图片',
+  opening_hours: '开放时间',
+  cuisine_type: '菜系类型',
+  author: '作者',
+  img_url: '图片',
+  text: '简要描述',
+  publish_year: '出版年份'
+};
+const filterMap = {
 
 const { t, locale } = useI18n();
 
@@ -134,13 +199,27 @@ const titleFontSize = computed(() => {
   return locale.value === 'en' ? '8rem' : '14rem';
 });
 
+  folk_id: true,
+  food_id: true,
+  literature_id: true,
+  spot_id: true,    // 过滤图片URL
+  city_id: true,      // 过滤城市ID
+  description_url: true,
+};
+let myChart = null;
+
+const filteredPropertyKeys = computed(() => {
+  if (!selectedNode.value?.properties) return [];
+  return Object.keys(selectedNode.value.properties)
+      .filter(key => !filterMap[key]);
+});
 const onVideoEnded = () => {
   console.log('视频播放结束');
   shouldAutoplay.value = true; // 启用轮播
   activeIndex.value = 1; // 切换到第二项
   startCarousel(); // 开始轮播
 };
-const processData = (rawData) => {
+const processData = (rawData, searchTerm = '') => {
   const categories = [
     { name: t('index.knowledgeGraph.categories.core') },
     { name: t('index.knowledgeGraph.categories.theme') },
@@ -148,56 +227,87 @@ const processData = (rawData) => {
     { name: t('index.knowledgeGraph.categories.literature') },
     { name: t('index.knowledgeGraph.categories.food') },
     { name: t('index.knowledgeGraph.categories.folk') }
+    { name: '核心文化' },
+    {name: '主题分类'},
+    {name: '景点'},
+    {name: '文学'},
+    {name: '饮食'},
+    {name: '民俗'}
   ];
 
-  const nodes = [];
-  const links = [];
+  let nodes = [];
   const coreNode = rawData.data.find(item => item.type === "Core");
 
-  // 处理核心节点（颜色索引0）
+  // 核心节点始终显示
   nodes.push({
     id: coreNode.id,
     name: coreNode.name,
     category: 0,
-    symbolSize: 50
+    symbolSize: 50,
+    isMatched: true
   });
 
   rawData.data.forEach(item => {
     if (item.type !== "Core") {
-      let categoryIndex;
-      const type = item.categories || item.type;
-      switch (type) {
+      const isMatched = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+      let categoryIndex = 1;
+      switch (item.categories || item.type) {
         case 'Theme': categoryIndex = 1; break;
         case 'Spot': categoryIndex = 2; break;
         case 'Literature': categoryIndex = 3; break;
         case 'Food': categoryIndex = 4; break;
         case 'Folk': categoryIndex = 5; break;
-        default: categoryIndex = 1;
       }
 
-      // 创建节点并指定分类索引
       nodes.push({
         id: item.id,
         name: item.name,
         category: categoryIndex,
-        symbolSize: categoryIndex === 1 ? 35 : 25
+        isMatched,
+        symbolSize: categoryIndex === 1 ? (isMatched ? 45 : 35) : (isMatched ? 35 : 25)
       });
 
-      // 建立关联关系
-      if (item.type === 'Theme') {
-        links.push({ source: coreNode.id, target: item.id });
-      }
-      if (item.categories === 'Spot' && item.properties?.city_id) {
-        links.push({ source: `city_${item.properties.city_id}`, target: item.id });
-      }
+      // 处理景点时生成对应的城市节点
+
     }
   });
 
-  return { nodes, links, categories };
+  // 过滤出isMatched为true的节点
+  const filteredNodes = nodes.filter(node => node.isMatched);
+
+  // 生成所有可能的链接
+  let links = [];
+  if (rawData.links) {
+    rawData.links.forEach(link => {
+      links.push({
+        source: link.source,
+        target: link.target,
+        name: link.name // 直接使用JSON中的name
+      });
+    });
+  }
+  rawData.data.forEach(item => {
+    if (item.type === 'Theme') {
+      links.push({ source: coreNode.id, target: item.id });
+    }
+    if (item.categories === 'Spot' && item.properties?.city_id) {
+      const cityId = `city_${item.properties.city_id}`;
+      links.push({ source: cityId, target: item.id });
+    }
+  });
+
+  // 过滤链接，确保source和target都存在
+  const filteredLinks = links.filter(link => {
+    const sourceExists = filteredNodes.some(n => n.id === link.source);
+    const targetExists = filteredNodes.some(n => n.id === link.target);
+    return sourceExists && targetExists;
+  });
+
+  return { nodes: filteredNodes, links: filteredLinks, categories };
 };
 
 const initChart = () => {
-  const myChart = echarts.init(chart.value);
+  myChart = echarts.init(chart.value);
   const graphData = processData(data);
 
   // 颜色映射数组（索引对应分类）
@@ -237,8 +347,23 @@ const initChart = () => {
         gravity: 0.1
       },
       draggable: true,
-      data: graphData.nodes,
-      links: graphData.links,
+      data: graphData.nodes.map(node => ({
+        ...node,
+        itemStyle: {
+          color: colorPalette[node.category] // 根据节点分类设置颜色
+        }
+      })),
+      links: graphData.links.map(link => ({
+        source: link.source,
+        target: link.target,
+        label: {
+          show: true,
+          formatter: link.name,  // 显示连接名称
+          fontSize: 12,
+          color: '#666',
+          position: 'middle'     // 标签显示在线条中间
+        }
+      })),
       categories: graphData.categories,
       edgeSymbol: ['none', 'arrow'],
       edgeSymbolSize: [0, 10],
@@ -259,14 +384,161 @@ const initChart = () => {
         }
       },
       itemStyle: {
-        color: params => colorPalette[params.data.category]
+        color:"#333",
+
       }
     }]
   };
 
   myChart.setOption(option);
+  myChart.on('click', params => {
+    if (params.dataType === 'node') {
+      const rawNode = data.data.find(item => item.id === params.data.id);
+      selectedNode.value = {
+        ...params.data,
+        properties: rawNode?.properties || {},
+        type: rawNode?.type || determineNodeType(rawNode)
+      };
+    }
+  });
+  const determineNodeType = (rawNode) => {
+    if (rawNode.properties.spot_id) return 'spot'
+    if (rawNode.properties.food_id) return 'food'
+    if (rawNode.properties.folk_id) return 'folk'
+    if (rawNode.properties.literature_id) return 'literature'
+    return 'other'
+  }
   window.addEventListener('resize', () => myChart.resize());
 };
+const handleSearch = () => {
+
+  updateChart(searchTerm.value);
+};
+const handleViewDetail = () => {
+  if (!selectedNode.value) return
+
+  const node = selectedNode.value
+  let routeParams = {
+    name: node.name,
+    value: 1,  // 默认值
+    theme: 1    // 默认主题
+  }
+
+  // 根据节点类型设置参数
+  switch(node.type) {
+    case 'spot':
+      routeParams.value = 1
+      break
+    case 'food':
+      routeParams.value = 3
+      break
+    case 'folk':
+      routeParams.value = 4
+      break
+    case 'literature':
+      routeParams.value = 2
+      // 文学类型需要子主题，这里假设数据中有subTheme属性
+      routeParams.theme = node.properties.subThemeId || 1
+      break
+    default:
+      routeParams.value = 1
+  }
+    if(node.type === 'spot' || node.type === 'food' || node.type === 'folk' || node.type === 'literature'){
+      router.push({
+        path: '/detail',
+        query: routeParams
+      })
+    }
+
+}
+const updateChart = () => {
+  console.log("搜索词：", searchTerm.value)
+  const graphData = processData(data, searchTerm.value)
+  console.log("更新后的数据：", graphData)
+  const colorPalette = [
+    '#5470c6', // 0:核心文化
+    '#91cc75', // 1:主题分类
+    '#fac858', // 2:景点
+    '#73c0de', // 3:文学
+    '#ee6666', // 4:饮食
+    '#3ba272'  // 5:民俗
+  ];
+  const option = {
+    title: {
+      text: '湖湘文化知识图谱',
+      top: 20,
+      left: 'center'
+    },
+    tooltip: {},
+    legend: {
+      data: graphData.categories.map(c => c.name),
+      selected: {
+        '核心文化': true,
+        '主题分类': false,
+        '景点': false,
+        '文学': false,
+        '饮食': false,
+        '民俗': false
+      },
+      top: 50
+    },
+    series: [{
+      type: 'graph',
+      layout: 'force',
+      force: {
+        repulsion: 200,
+        edgeLength: 100,
+        gravity: 0.1
+      },
+      draggable: true,
+      data: graphData.nodes.map(node => ({
+        ...node,
+        itemStyle: {
+          color: colorPalette[node.category] // 根据节点分类设置颜色
+        }
+      })),
+      links: graphData.links.map(link => ({
+        source: link.source,
+        target: link.target,
+        label: {
+          show: true,
+          formatter: link.name,  // 显示连接名称
+          fontSize: 12,
+          color: '#666',
+          position: 'middle'     // 标签显示在线条中间
+        }
+      })),
+      categories: graphData.categories,
+      edgeSymbol: ['none', 'arrow'],
+      edgeSymbolSize: [0, 10],
+      label: {
+        show: true,
+        position: 'right',
+        fontSize: 12
+      },
+      lineStyle: {
+        color: '#aaa',
+        curveness: 0.2
+      },
+      emphasis: {
+        focus: 'adjacency',
+        label: {
+          show: true,
+          fontSize: 14
+        }
+      },
+      itemStyle: {
+        color:"#333",
+
+      }
+    }]
+  };
+
+  myChart.setOption(option);
+};
+
+// 修改后的搜索处理
+
 // 开始轮播的函数
 const startCarousel = () => {
   if (carouselTimer) clearInterval(carouselTimer);
@@ -313,6 +585,7 @@ onMounted(() => {
     };
   }
 });
+
 </script>
 
 <style scoped>
@@ -331,6 +604,18 @@ onMounted(() => {
   z-index: 2;
 }
 
+.node-detail {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  padding: 20px;
+}
 .overlay-text {
   font-family: 'HelveticaNeue', serif;
   color: white;
@@ -478,11 +763,11 @@ html, body {
 
 /* 网站页脚样式 */
 .site-footer {
-  background: linear-gradient(to top, 
-    rgba(101, 30, 20, 1) 0%, 
-    rgba(101, 30, 20, 0.9) 30%, 
-    rgba(101, 30, 20, 0.7) 60%, 
-    rgba(101, 30, 20, 0.3) 90%, 
+  background: linear-gradient(to top,
+    rgba(101, 30, 20, 1) 0%,
+    rgba(101, 30, 20, 0.9) 30%,
+    rgba(101, 30, 20, 0.7) 60%,
+    rgba(101, 30, 20, 0.3) 90%,
     rgba(101, 30, 20, 0.0) 100%);
   color: #fff;
   padding: 20px 0 0 0;
@@ -603,19 +888,19 @@ html, body {
     flex-wrap: wrap;
     padding: 30px 40px 10px 30px;
   }
-  
+
   .footer-section {
     flex: 0 0 calc(50% - 20px);
     min-width: initial;
     margin-bottom: 20px;
   }
-  
+
   .site-footer {
-    background: linear-gradient(to top, 
-      rgba(101, 30, 20, 1) 0%, 
-      rgba(101, 30, 20, 0.9) 40%, 
-      rgba(101, 30, 20, 0.7) 70%, 
-      rgba(101, 30, 20, 0.3) 90%, 
+    background: linear-gradient(to top,
+      rgba(101, 30, 20, 1) 0%,
+      rgba(101, 30, 20, 0.9) 40%,
+      rgba(101, 30, 20, 0.7) 70%,
+      rgba(101, 30, 20, 0.3) 90%,
       rgba(101, 30, 20, 0.0) 100%);
     margin-top: 15px;
   }
@@ -623,11 +908,11 @@ html, body {
   .footer-section.links {
     flex: 0 0 calc(60% - 20px);
   }
-  
+
   .footer-section.about {
     flex: 0 0 calc(40% - 20px);
   }
-  
+
   .footer-section.data-support,
   .footer-section.contact {
     flex: 0 0 calc(50% - 20px);
@@ -638,7 +923,7 @@ html, body {
   .footer-container {
     padding: 25px 30px 10px 25px;
   }
-  
+
   .footer-section h3 {
     font-size: 16px;
     margin-bottom: 8px;
@@ -649,17 +934,17 @@ html, body {
   .footer-section {
     flex: 0 0 100%;
   }
-  
+
   .footer-container {
     padding: 20px 20px 10px 20px;
   }
-  
+
   .footer-section p,
   .footer-section.links a {
     font-size: 12px;
     line-height: 1.4;
   }
-  
+
   .footer-section.links li {
     margin-bottom: 4px;
   }
@@ -667,7 +952,7 @@ html, body {
   .footer-section.links {
     flex: 0 0 100%;
   }
-  
+
   .footer-section.links ul {
     gap: 4px 10px;
   }
