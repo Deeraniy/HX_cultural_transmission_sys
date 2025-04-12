@@ -239,13 +239,36 @@
     },
     "knowledgeGraph": {
       "title": "Hunan Culture Knowledge Graph",
+      "searchPlaceholder": "Search node name",
+      "noData": "No data available",
       "categories": {
         "core": "Core Culture",
         "theme": "Theme Categories",
-        "spot": "Scenic Spots",
-        "literature": "Literature",
-        "food": "Cuisine",
+        "spot": "Places of Interest",
+        "literature": "Literature & Arts",
+        "food": "Food Culture",
         "folk": "Folk Customs"
+      },
+      "nodeDetails": {
+        "title": "Node Details",
+        "close": "Close",
+        "viewDetails": "View Details",
+        "noMoreInfo": "No additional information available",
+        "properties": {
+          "food_name": "Dish Name",
+          "folk_name": "Folk Custom Name",
+          "spot_name": "Place Name",
+          "city_id": "City",
+          "folk_type": "Folk Type",
+          "address": "Address",
+          "image_url": "Image",
+          "opening_hours": "Opening Hours",
+          "cuisine_type": "Cuisine Type",
+          "author": "Author",
+          "img_url": "Image",
+          "text": "Description",
+          "publish_year": "Publication Year"
+        }
       }
     }
   },

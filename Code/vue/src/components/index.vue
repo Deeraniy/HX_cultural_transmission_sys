@@ -56,7 +56,7 @@
       <FeaturesSection />
 
 <!--      这里是知识图谱-->
-      <div class="knowledge-graph">
+      <div class="knowledge-graph" style="background-color: #fff;border-radius: 10px;margin: 0 60px 0px 60px;padding: 20px;">
         <div ref="chart" style="height: 800px; width: 100%;"></div>
         <div>
           <el-input
@@ -155,7 +155,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import {ref, onMounted, onBeforeUnmount, computed} from 'vue';
 import IndexMain from "@/components/IndexMain.vue";
 import FeaturesSection from "@/components/Home/FeaturesSection.vue";
 import HuXiangCuisine from "@/components/Home/HuXiangCuisine.vue";
@@ -190,8 +189,6 @@ const propertyMap = {
   text: '简要描述',
   publish_year: '出版年份'
 };
-const filterMap = {
-
 const { t, locale } = useI18n();
 
 // 根据语言环境返回不同的字体大小
@@ -199,6 +196,7 @@ const titleFontSize = computed(() => {
   return locale.value === 'en' ? '8rem' : '14rem';
 });
 
+const filterMap = {
   folk_id: true,
   food_id: true,
   literature_id: true,
@@ -226,7 +224,7 @@ const processData = (rawData, searchTerm = '') => {
     { name: t('index.knowledgeGraph.categories.spot') },
     { name: t('index.knowledgeGraph.categories.literature') },
     { name: t('index.knowledgeGraph.categories.food') },
-    { name: t('index.knowledgeGraph.categories.folk') }
+    { name: t('index.knowledgeGraph.categories.folk') },
     { name: '核心文化' },
     {name: '主题分类'},
     {name: '景点'},
@@ -323,20 +321,30 @@ const initChart = () => {
     title: {
       text: t('index.knowledgeGraph.title'),
       top: 20,
-      left: 'center'
+      left: 'center',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif'
+      }
     },
-    tooltip: {},
+    tooltip: {
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif'
+      }
+    },
     legend: {
       data: graphData.categories.map(c => c.name),
       selected: {
-        '核心文化': true,
-        '主题分类': false,
-        '景点': false,
-        '文学': false,
-        '饮食': false,
-        '民俗': false
+        [t('index.knowledgeGraph.categories.core')]: true,
+        [t('index.knowledgeGraph.categories.theme')]: false,
+        [t('index.knowledgeGraph.categories.spot')]: false,
+        [t('index.knowledgeGraph.categories.literature')]: false,
+        [t('index.knowledgeGraph.categories.food')]: false,
+        [t('index.knowledgeGraph.categories.folk')]: false
       },
-      top: 50
+      top: 50,
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif'
+      }
     },
     series: [{
       type: 'graph',
@@ -350,7 +358,13 @@ const initChart = () => {
       data: graphData.nodes.map(node => ({
         ...node,
         itemStyle: {
-          color: colorPalette[node.category] // 根据节点分类设置颜色
+          color: colorPalette[node.category]
+        },
+        label: {
+          show: true,
+          position: 'right',
+          fontSize: 12,
+          fontFamily: 'HelveticaNeue, serif'
         }
       })),
       links: graphData.links.map(link => ({
@@ -358,10 +372,11 @@ const initChart = () => {
         target: link.target,
         label: {
           show: true,
-          formatter: link.name,  // 显示连接名称
+          formatter: link.name,
           fontSize: 12,
+          fontFamily: 'HelveticaNeue, serif',
           color: '#666',
-          position: 'middle'     // 标签显示在线条中间
+          position: 'middle'
         }
       })),
       categories: graphData.categories,
@@ -370,7 +385,8 @@ const initChart = () => {
       label: {
         show: true,
         position: 'right',
-        fontSize: 12
+        fontSize: 12,
+        fontFamily: 'HelveticaNeue, serif'
       },
       lineStyle: {
         color: '#aaa',
@@ -380,12 +396,12 @@ const initChart = () => {
         focus: 'adjacency',
         label: {
           show: true,
-          fontSize: 14
+          fontSize: 14,
+          fontFamily: 'HelveticaNeue, serif'
         }
       },
       itemStyle: {
-        color:"#333",
-
+        color: "#333"
       }
     }]
   };
@@ -465,22 +481,32 @@ const updateChart = () => {
   ];
   const option = {
     title: {
-      text: '湖湘文化知识图谱',
+      text: t('index.knowledgeGraph.title'),
       top: 20,
-      left: 'center'
+      left: 'center',
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif'
+      }
     },
-    tooltip: {},
+    tooltip: {
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif'
+      }
+    },
     legend: {
       data: graphData.categories.map(c => c.name),
       selected: {
-        '核心文化': true,
-        '主题分类': false,
-        '景点': false,
-        '文学': false,
-        '饮食': false,
-        '民俗': false
+        [t('index.knowledgeGraph.categories.core')]: true,
+        [t('index.knowledgeGraph.categories.theme')]: false,
+        [t('index.knowledgeGraph.categories.spot')]: false,
+        [t('index.knowledgeGraph.categories.literature')]: false,
+        [t('index.knowledgeGraph.categories.food')]: false,
+        [t('index.knowledgeGraph.categories.folk')]: false
       },
-      top: 50
+      top: 50,
+      textStyle: {
+        fontFamily: 'HelveticaNeue, serif'
+      }
     },
     series: [{
       type: 'graph',
@@ -494,7 +520,13 @@ const updateChart = () => {
       data: graphData.nodes.map(node => ({
         ...node,
         itemStyle: {
-          color: colorPalette[node.category] // 根据节点分类设置颜色
+          color: colorPalette[node.category]
+        },
+        label: {
+          show: true,
+          position: 'right',
+          fontSize: 12,
+          fontFamily: 'HelveticaNeue, serif'
         }
       })),
       links: graphData.links.map(link => ({
@@ -502,10 +534,11 @@ const updateChart = () => {
         target: link.target,
         label: {
           show: true,
-          formatter: link.name,  // 显示连接名称
+          formatter: link.name,
           fontSize: 12,
+          fontFamily: 'HelveticaNeue, serif',
           color: '#666',
-          position: 'middle'     // 标签显示在线条中间
+          position: 'middle'
         }
       })),
       categories: graphData.categories,
@@ -514,7 +547,8 @@ const updateChart = () => {
       label: {
         show: true,
         position: 'right',
-        fontSize: 12
+        fontSize: 12,
+        fontFamily: 'HelveticaNeue, serif'
       },
       lineStyle: {
         color: '#aaa',
@@ -524,12 +558,12 @@ const updateChart = () => {
         focus: 'adjacency',
         label: {
           show: true,
-          fontSize: 14
+          fontSize: 14,
+          fontFamily: 'HelveticaNeue, serif'
         }
       },
       itemStyle: {
-        color:"#333",
-
+        color: "#333"
       }
     }]
   };
