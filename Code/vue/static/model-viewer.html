@@ -3,8 +3,15 @@
 <head>
   <meta charset="utf-8">
   <title>3D Model Viewer</title>
+  <!-- 引入汇文明朝体字体 -->
+  <link rel="stylesheet" type="text/css" href="../src/assets/font/font.css" />
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
+    /* 全局字体设置 */
+    body, html, h1, h2, h3, h4, h5, h6, p, span, div, li, a, button, input, select, textarea {
+      font-family: 'HelveticaNeue', '汇文明朝体', sans-serif !important;
+    }
+    
     body, html {
       margin: 0;
       padding: 0;
@@ -48,7 +55,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-family: sans-serif;
+      font-family: 'HelveticaNeue', '汇文明朝体', sans-serif !important;
       color: rgba(101, 30, 20, 0.8);
       font-size: 16px;
       text-align: center;
@@ -82,7 +89,7 @@
   </model-viewer>
   
   <div class="loading">
-    <p>正在加载龙形陶瓷模型...</p>
+    <p>正在加载模型...</p>
   </div>
   
   <script>

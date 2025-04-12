@@ -10,7 +10,7 @@
           <img
             :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
             :class="['icon', { 'active': tagStatus.is_liked }]"
-            alt="赞"
+            :alt="t('detail.place.like')"
           />
           <span>{{ tagStatus.total_likes || 0 }}</span>
         </div>
@@ -18,9 +18,9 @@
           <img
             :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
             :class="['icon', { 'active': tagStatus.is_favorite }]"
-            alt="收藏"
+            :alt="t('detail.place.favorite')"
           />
-          <span>收藏</span>
+          <span>{{ t('detail.place.favorite') }}</span>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
               <div v-if="page.back.type === 'title'" class="title-page">
                 <h2 class="centered-title">{{ page.back.content }}</h2>
                 <div class="button-container">
-                  <button class="jump-button" @click.stop="analyze">情感分析</button>
+                  <button class="jump-button" @click.stop="analyze">{{ t('detail.place.sentimentAnalysis') }}</button>
                 </div>
               </div>
               <!-- 内容页 -->
@@ -63,22 +63,38 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, onMounted } from 'vue';
+import { ref, defineEmits, onMounted, watch } from 'vue';
 import router from "@/router.js";
 import TagsAPI from '@/api/tags';
 import { useUserStore } from '@/stores/user';
 import { ElMessage } from 'element-plus';
 import UserAPI  from "@/api/user.ts";
+import { useI18n } from 'vue-i18n';
+import cultureElements from '@/json/culture_elements_translated.json';
 // 直接导入图片
 import likeIcon from '@/assets/setting/赞.png'
 import likeActiveIcon from '@/assets/setting/赞 (1).png'
 import favoriteIcon from '@/assets/setting/收藏.png'
 import favoriteActiveIcon from '@/assets/setting/收藏(1).png'
 
+const { t, locale } = useI18n();
+
 // 传入的 book 对象
 const props = defineProps({
   book: Object
 });
+
+// 获取书籍显示名称
+const getBookDisplayName = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['title-en'] ? element['title-en'] : name;
+};
+
+// 获取书籍描述
+const getBookDescription = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['description-en'] ? element['description-en'] : element?.description || '';
+};
 
 const addHistory = async () => {
   try {
@@ -108,8 +124,8 @@ const emit = defineEmits();
 const splitText = (text) => {
   if (!text) return [];
 
-  // 每页显示的字符数
-  const charsPerPage = 300;
+  // 根据语言设置每页显示的字符数
+  const charsPerPage = locale.value === 'en' ? 600 : 300;
 
   // 分割文本为页面内容
   const pages = [];
@@ -192,7 +208,9 @@ const nextPage = () => {
 
 // 修改初始化页面数据的逻辑
 const initializePages = () => {
-  const contents = splitText(props.book.text);
+  // 获取翻译后的文本
+  const translatedText = getBookDescription(props.book.liter_name);
+  const contents = splitText(translatedText || props.book.text);
 
   // 创建页面数组，从封面开始
   pages.value = [
@@ -205,7 +223,7 @@ const initializePages = () => {
       },
       back: {
         type: 'title',
-        content: props.book.liter_name
+        content: getBookDisplayName(props.book.liter_name)
       },
       isActive: true,
       isFlipped: false
@@ -231,6 +249,11 @@ const initializePages = () => {
     });
   }
 };
+
+// 监听语言变化，重新初始化页面
+watch(locale, () => {
+  initializePages();
+});
 
 // 页面数组
 const pages = ref([]);
@@ -399,7 +422,7 @@ const analyze = () => {
   // 跳转到 PlaceDetail 页面，带上书名和2的参数
   router.push({
     path: '/detail',
-    query: { name: props.book.liter_name, value: 2 ,theme:props.book.type_id}
+    query: { name: props.book.liter_name, value: 2, theme: props.book.type_id }
   });
 };
 </script>
@@ -650,9 +673,21 @@ const analyze = () => {
   object-fit: cover;
 }
 .centered-title {
-  font-size: 60px;
+  font-size: 48px;
   font-family: 'HelveticaNeue', serif;
-  writing-mode: vertical-rl; /* 竖排文本 */
+  margin: 0 auto;
+  text-align: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* 添加英文状态下的标题样式 */
+:root[lang="en"] .centered-title {
+  writing-mode: horizontal-tb;
+  text-orientation: unset;
+  line-height: 1.2;
+  padding: 20px;
+  word-break: break-word;
 }
 
 .button-container {

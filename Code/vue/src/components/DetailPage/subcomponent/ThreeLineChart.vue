@@ -12,6 +12,7 @@ import {
 import { LineChart } from 'echarts/charts';
 import { UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
+import { useI18n } from 'vue-i18n';
 
 echarts.use([
   TitleComponent,
@@ -31,6 +32,8 @@ const props = defineProps({
     required: true,
   }
 });
+
+const { t } = useI18n();
 
 const showReport = ref(false);
 const chartRef = ref(null);
@@ -86,22 +89,22 @@ const renderChart = () => {
     var option;
     const seriesData = [
       {
-        name: '居民消费价格指数',
+        name: t('detail.economic.cpi'),
         data: economicData.map(item => item.cpi),
         color: '#5470C6' // 蓝色
       },
       {
-        name: 'Investment',
+        name: t('detail.economic.investment'),
         data: economicData.map(item => item.investment),
         color: '#91CC75' // 绿色
       },
       {
-        name: 'Sales Rate',
+        name: t('detail.economic.salesRate'),
         data: economicData.map(item => item.sales_rate),
         color: '#FAC858' // 黄色
       },
       {
-        name: 'sentiment',
+        name: t('detail.sentiment.actual'),
         data: sentimentData.map(item => item.sentiment_score * 100),
         color: '#FFB7C5' // 粉色
       }
@@ -115,7 +118,14 @@ const renderChart = () => {
         }
       },
       legend: {
-        data: ['居民消费价格指数', '固定资产投资额累计增长', '工业产品销售率', '实际情感', '预测情感', '置信区间'],
+        data: [
+          t('detail.economic.cpi'),
+          t('detail.economic.investment'),
+          t('detail.economic.salesRate'),
+          t('detail.sentiment.actual'),
+          t('detail.sentiment.predicted'),
+          t('detail.sentiment.confidenceInterval')
+        ],
         textStyle: {
           fontFamily: 'HelveticaNeue, serif'
         }
@@ -139,7 +149,7 @@ const renderChart = () => {
       yAxis: [ // 双Y轴配置
         {
           type: 'value',
-          name: '居民消费价格指数/工业产品销售率',
+          name: t('detail.economic.yAxisLabel1'),
           position: 'left',
           scale: true,
           nameLocation: 'middle',
@@ -156,7 +166,7 @@ const renderChart = () => {
         },
         {
           type: 'value',
-          name: '固定资产投资额累计增长/情感',
+          name: t('detail.economic.yAxisLabel2'),
           position: 'right',
           axisLabel: {
             formatter: '{value}%',
@@ -178,7 +188,7 @@ const renderChart = () => {
       ],
       series: [
         {
-          name: '居民消费价格指数',
+          name: t('detail.economic.cpi'),
           type: 'line',
           yAxisIndex: 1, // 指定左轴
           data: alignData(economicData, 'cpi'),
@@ -189,7 +199,7 @@ const renderChart = () => {
           }
         },
         {
-          name: '固定资产投资额累计增长',
+          name: t('detail.economic.investment'),
           type: 'line',
           yAxisIndex: 1, // 指定右轴
           data: alignData(economicData, 'investment'),
@@ -200,7 +210,7 @@ const renderChart = () => {
           }
         },
         {
-          name: '工业产品销售率',
+          name: t('detail.economic.salesRate'),
           type: 'line',
           yAxisIndex: 1,
           data: alignData(economicData, 'sales_rate'),
@@ -211,7 +221,7 @@ const renderChart = () => {
           }
         },
         {
-          name: '实际情感',
+          name: t('detail.sentiment.actual'),
           type: 'line',
           data: alignData(sentimentData, 'sentiment_score', 100),
           smooth: true,
@@ -223,7 +233,7 @@ const renderChart = () => {
             lineStyle: { color: '#FF6B6B', type: 'dashed' },
             label: {
               position: 'end',
-              formatter: '突变点\n{@score}',
+              formatter: `${t('detail.sentiment.changePoint')}\n{@score}`,
               backgroundColor: 'rgba(255,107,107,0.3)',
               fontFamily: 'HelveticaNeue, serif'
             }
@@ -233,7 +243,7 @@ const renderChart = () => {
           }
         },
         {
-          name: '预测情感',
+          name: t('detail.sentiment.predicted'),
           type: 'line',
           data: alignData(
               props.timeData.casual_impact_analysis.counterfactual_predictions.dates
@@ -254,7 +264,7 @@ const renderChart = () => {
           }
         },
         {
-          name: '置信区间',
+          name: t('detail.sentiment.confidenceInterval'),
           type: 'line',
           data: alignData(
               props.timeData.casual_impact_analysis.counterfactual_predictions.dates
@@ -279,7 +289,7 @@ const renderChart = () => {
           }
         },
         {
-          name: '置信区间',
+          name: t('detail.sentiment.confidenceInterval'),
           type: 'line',
           data: alignData(
               props.timeData.casual_impact_analysis.counterfactual_predictions.dates
@@ -410,7 +420,7 @@ const formatReport = (report) => {
     <div class="chart-wrapper">
       <div class="report-button">
         <el-button type="danger" @click="showReport = true" size="small" class="custom-btn">
-          查看分析报告
+          {{ t('detail.report.viewAnalysis') }}
         </el-button>
       </div>
       <div ref="chartRef" class="chart-container"></div>
@@ -418,7 +428,7 @@ const formatReport = (report) => {
     
     <el-dialog
       v-model="showReport"
-      title="因果推理分析报告"
+      :title="t('detail.report.causalAnalysis')"
       width="60%"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -436,12 +446,12 @@ const formatReport = (report) => {
           <div class="report-section" v-if="props.timeData?.casual_impact_analysis?.impact_report">
             <div v-html="formatReport(props.timeData.casual_impact_analysis.impact_report)"></div>
           </div>
-          <div v-else>暂无报告</div>
+          <div v-else>{{ t('detail.report.noReport') }}</div>
         </div>
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button type="primary" @click="showReport = false">确定</el-button>
+          <el-button type="primary" @click="showReport = false">{{ t('common.confirm') }}</el-button>
         </span>
       </template>
     </el-dialog>

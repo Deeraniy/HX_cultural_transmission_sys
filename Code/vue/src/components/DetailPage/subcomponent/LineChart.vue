@@ -5,6 +5,9 @@
 <script setup>
 import * as echarts from 'echarts'
 import { defineProps, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // 接收从父组件传递的 chartData
 const props = defineProps({
@@ -46,7 +49,7 @@ const updateChart = (chart, data) => {
       }
     },
     legend: {
-      data: ['喜好程度', '参观数量'] // 图例名称
+      data: [t('detail.place.preference'), t('detail.place.visitCount')] // 图例名称
     },
     xAxis: {
       type: 'category',
@@ -58,7 +61,7 @@ const updateChart = (chart, data) => {
     yAxis: [
       {
         type: 'value',
-        name: '喜好程度',
+        name: t('detail.place.preference'),
         min: 0,
         max: 250,
         interval: 50,
@@ -68,9 +71,9 @@ const updateChart = (chart, data) => {
       },
       {
         type: 'value',
-        name: '参观数量',
+        name: t('detail.place.visitCount'),
         min: 0,
-        max: 300, // 根据实际数据调整
+        max: 300,
         interval: 50,
         axisLabel: {
           formatter: '{value}'
@@ -79,23 +82,23 @@ const updateChart = (chart, data) => {
     ],
     series: [
       {
-        name: '喜好程度',
+        name: t('detail.place.preference'),
         type: 'bar',
-        data: generateRandomData(data.xAxis.length), // 使用随机生成的数据
+        data: generateRandomData(data.xAxis.length),
         tooltip: {
           valueFormatter: function (value) {
-            return value + ' 点';
+            return value + t('detail.place.preferenceUnit');
           }
         }
       },
       {
-        name: '参观数量',
+        name: t('detail.place.visitCount'),
         type: 'line',
         yAxisIndex: 1,
         data: data.yAxis,
         tooltip: {
           valueFormatter: function (value) {
-            return value + ' 次';
+            return value + t('detail.place.visitUnit');
           }
         }
       }

@@ -1,10 +1,37 @@
 <template>
   <div class="fullpage-container" @wheel="handleWheel">
-    <!-- 添加加载状态 -->
-    <div v-if="loading" class="loading-overlay">
-      <div class="loading-spinner">加载中...</div>
+    <!-- 添加用户信息和偏好检查 -->
+    <div v-if="!userStore.isLoggedIn || !userStore.userId" class="loading-overlay">
+      <div class="loading-spinner">
+        <el-button type="primary" @click="$router.push('/login')">
+          {{ t('common.pleaseLogin') }}
+        </el-button>
+      </div>
     </div>
-
+    <!-- 数据加载中显示 -->
+    <div v-else-if="loading || !hasCheckedPreferences" class="loading-overlay">
+      <div class="loading-content">
+        <!-- 修改进度条样式 -->
+        <el-progress 
+          :percentage="loadingProgress"
+          :stroke-width="10"
+          :show-text="true"
+          class="custom-progress"
+        />
+        <div class="loading-steps">
+          <div v-for="(step, index) in loadingSteps" 
+               :key="index" 
+               :class="['step-item', { 'done': step.done }]">
+            <!-- 修改加载图标 -->
+            <i v-if="!step.done" class="el-icon-loading loading-icon"></i>
+            <i v-else class="el-icon-check"></i>
+            <span class="step-text">{{ t(step.textKey) }}</span>
+          </div>
+        </div>
+        <div class="loading-tip">{{ t('recommend.loadingTip') }}</div>
+      </div>
+    </div>
+    <!-- 内容显示 -->
     <template v-else>
       <!-- 侧边标签栏 -->
       <div class="sidebar-tabs">
@@ -12,11 +39,11 @@
              :key="index"
              :class="['tab-item', { active: currentIndex === index }]"
              @click="handleTabClick(index)">
-          {{ tab }}
+          {{ t(`recommend.tabs.${tab}`) }}
         </div>
       </div>
 
-      <!-- 滑动容器 - 移除灰点 -->
+      <!-- 滑动容器 -->
       <div class="slides-container" :style="slideStyle">
         <div v-for="(slide, index) in slides"
              :key="index"
@@ -31,18 +58,18 @@
                'slide-6': index === 5,
                active: currentIndex === index
              }">
-          <!-- 跳转按钮 - 有偏好时显示在右上角 -->
+          <!-- 跳转按钮 -->
           <div v-if="hasPreferences(slide)" class="navigate-button top-right" @click="navigateToPage(index)">
-            查看更多 <i class="el-icon-arrow-right"></i>
+            {{ t('recommend.viewMore') }} <i class="el-icon-arrow-right"></i>
           </div>
 
           <div class="slide-content">
             <!-- 无偏好时显示中央提示 -->
             <div v-if="!hasPreferences(slide)" class="empty-content">
-              <h2>{{ slide.title }}</h2>
-              <p>{{ slide.description }}</p>
+              <h2>{{ t(`recommend.slides.${slide.titleKey}`) }}</h2>
+              <p>{{ t(`recommend.slides.${slide.descriptionKey}`) }}</p>
               <button class="navigate-button center" @click="navigateToPage(index)">
-                前往{{ slide.title }}页面
+                {{ t('recommend.goToPage', { page: t(`recommend.slides.${slide.titleKey}`) }) }}
               </button>
             </div>
 
@@ -63,7 +90,7 @@
                         :alt="card.title"
                         class="card-image"
                         @error="(e) => {
-                          console.error('图片加载失败:', e.target.src);
+                          console.error(t('common.imageLoadError'), e.target.src);
                           e.target.src = defaultEmptyImg;
                         }"
                       >
@@ -79,12 +106,12 @@
 
                 <!-- 描述部分 -->
                 <div class="main-description">
-                  <h1>{{ selectedCard ? selectedCard.title : slide.title }}</h1>
+                  <h1>{{ selectedCard ? selectedCard.title : t(`recommend.slides.${slide.titleKey}`) }}</h1>
                   <div class="card-details" v-if="selectedCard">
-                    <div class="rating-badge">评分: {{ selectedCard.rating || '暂无评分' }}</div>
-                    <p class="card-description">{{ formatDescription(selectedCard.description) || '暂无描述' }}</p>
+                    <div class="rating-badge">{{ t('recommend.rating') }}: {{ selectedCard.rating || t('common.noRating') }}</div>
+                    <p class="card-description">{{ formatDescription(selectedCard.description) || t('common.noDescription') }}</p>
                   </div>
-                  <p v-else>{{ slide.description }}</p>
+                  <p v-else>{{ t(`recommend.slides.${slide.descriptionKey}`) }}</p>
                 </div>
               </div>
 
@@ -95,10 +122,7 @@
                   <div class="row user-preferences">
                     <div class="row-header">
                       <h3>
-                        <span>您</span>
-                        <span>的</span>
-                        <span>喜</span>
-                        <span>好</span>
+                        <span>{{ t('recommend.yourPreferences') }}</span>
                       </h3>
                     </div>
                     <div class="cards-container">
@@ -113,14 +137,14 @@
                           <p class="title">{{ card.folk_name || card.tag_name }}</p>
                         </div>
                         <div class="hover-mask">
-                          <span class="mask-text">点我跳转情感分析</span>
+                          <span class="mask-text">{{ t('recommend.clickForSentiment') }}</span>
                         </div>
                       </div>
                     </div>
                     <div v-if="userPreferenceCards.length > 5"
                          class="more-button"
                          @click="showMorePreferences">
-                      更多 ({{ userPreferenceCards.length - 5 }})
+                      {{ t('recommend.more') }} ({{ userPreferenceCards.length - 5 }})
                     </div>
                   </div>
 
@@ -128,10 +152,7 @@
                   <div class="row similar-users">
                     <div class="row-header">
                       <h3>
-                        <span>推</span>
-                        <span>荐</span>
-                        <span>偏</span>
-                        <span>好</span>
+                        <span>{{ t('recommend.recommendedPreferences') }}</span>
                       </h3>
                     </div>
                     <div class="cards-container">
@@ -146,14 +167,14 @@
                           <p class="title">{{ card.folk_name || card.tag_name }}</p>
                         </div>
                         <div class="hover-mask">
-                          <span class="mask-text">点我跳转情感分析</span>
+                          <span class="mask-text">{{ t('recommend.clickForSentiment') }}</span>
                         </div>
                       </div>
                     </div>
                     <div v-if="similarUserCards.length > 5"
                          class="more-button"
                          @click="showMoreSimilarPreferences">
-                      更多 ({{ similarUserCards.length - 5 }})
+                      {{ t('recommend.more') }} ({{ similarUserCards.length - 5 }})
                     </div>
                   </div>
                 </div>
@@ -180,10 +201,14 @@
       <div class="all-preferences-container">
         <div v-for="(card, index) in currentDialogCards"
              :key="index"
-             class="preference-card">
-          <img :src="getImageUrl(card.image)" :alt="card.title">
+             class="preference-card"
+             @click="navigateToSentiment(card)">
+          <img :src="getImageUrl(card.image_url || card.image)" :alt="card.folk_name || card.tag_name">
           <div class="card-overlay">
             <p class="title">{{ card.folk_name || card.tag_name }}</p>
+          </div>
+          <div class="hover-mask">
+            <span class="mask-text">{{ t('recommend.clickForSentiment') }}</span>
           </div>
         </div>
       </div>
@@ -193,6 +218,7 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Swiper from 'swiper'
 import { EffectCards } from 'swiper/modules'
 import RecommendAPI from "@/api/recommend"
@@ -200,6 +226,9 @@ import TagsAPI from "@/api/tags"
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import WorldMapChart from './WorldMapChart.vue'
+import cultureElements from '@/json/culture_elements_translated.json'
+
+const { t, locale } = useI18n()
 
 // 导入默认图片以备用
 import defaultEmptyImg from '@/assets/BookB.jpg'
@@ -210,51 +239,54 @@ const loading = ref(true)
 const userStore = useUserStore()
 const router = useRouter()
 const selectedCard = ref(null) // 当前选中的卡片
+const hasCheckedPreferences = ref(false);  // 是否已检查用户偏好
+
+// 添加进度相关的状态
+const loadingProgress = ref(0)
+const loadingSteps = ref([
+  { textKey: 'recommend.steps.checkLogin', done: false },
+  { textKey: 'recommend.steps.getUserPreferences', done: false },
+  { textKey: 'recommend.steps.getTags', done: false },
+  { textKey: 'recommend.steps.processPlaces', done: false },
+  { textKey: 'recommend.steps.processFood', done: false },
+  { textKey: 'recommend.steps.processLiterature', done: false },
+  { textKey: 'recommend.steps.processFolk', done: false }
+])
 
 // 定义所有标签页
 const tabs = ref([
-  '名胜古迹',
-  '美食文化',
-  '影视文学',
-  '非遗民俗',
-  // '发现更多'
+  'places',
+  'food',
+  'literature',
+  'folk'
 ])
-
-// 添加缓存时间记录
-const CACHE_DURATION = 600000; // 10分钟的缓存时间（毫秒）
 
 // 初始化slides数据结构
 const slides = ref([
   {
-    title: '名胜古迹',
-    description: '探索湖南历史文化遗产',
+    titleKey: 'places.title',
+    descriptionKey: 'places.description',
     favoriteCards: [],
     subCards: []
   },
   {
-    title: '美食文化',
-    description: '品味湖南特色美食',
+    titleKey: 'food.title',
+    descriptionKey: 'food.description',
     favoriteCards: [],
     subCards: []
   },
   {
-    title: '影视文学',
-    description: '感受湖南文化艺术',
+    titleKey: 'literature.title',
+    descriptionKey: 'literature.description',
     favoriteCards: [],
     subCards: []
   },
   {
-    title: '非遗民俗',
-    description: '传承湖南非物质文化遗产',
+    titleKey: 'folk.title',
+    descriptionKey: 'folk.description',
     favoriteCards: [],
     subCards: []
-  },
-  // {
-  //   title: '发现更多',
-  //   description: '探索更多湖南文化',
-  //   favoriteCards: [],
-  //   subCards: []
-  // }
+  }
 ])
 
 // 添加地图相关的状态
@@ -300,10 +332,11 @@ const currentDialogCards = ref([]);
 // 显示更多用户偏好
 const showMorePreferences = () => {
   dialogTitle.value = '全部用户偏好';
-  currentDialogCards.value = userPreferenceCards.value;
+  currentDialogCards.value = userPreferenceCards.value.slice(6); // 从第六个元素开始切割数组
   showAllPreferencesDialog.value = true;
   document.body.style.overflow = 'hidden'; // 禁用body滚动
 };
+
 
 // 显示更多相似用户推荐
 const showMoreSimilarPreferences = () => {
@@ -327,59 +360,118 @@ const getImageUrl = (url) => {
   return url;
 };
 
+// 修改 getItemTitle 函数来支持国际化
+const getItemTitle = (item) => {
+  const name = item.folk_name || item.tag_name || item.title || '';
+  
+  // 从翻译文件中查找对应的元素
+  const element = cultureElements.find(el => el.title === name);
+  
+  if (element) {
+    // 根据当前语言返回对应的标题
+    return locale.value === 'en' ? element['title-en'] : element.title;
+  }
+  
+  return name;
+};
+
+// 修改 formatDescription 函数来支持国际化
+const formatDescription = (description) => {
+  if (!description) return t('common.noDescription');
+  
+  // 如果描述是URL，返回默认文本
+  if (description.startsWith('http')) {
+    return t('common.clickToView');
+  }
+  
+  // 尝试从翻译文件中查找对应的描述
+  const element = cultureElements.find(el => el.description === description);
+  
+  if (element) {
+    // 根据当前语言返回对应的描述
+    return locale.value === 'en' ? element['description-en'] : element.description;
+  }
+  
+  return description;
+};
+
+// 修改处理标签数据的部分
+const processTagData = (tag, tagDetail, isUserPreference, preference) => {
+  const tagId = tag.tag_id || tag.id;
+  const name = tagDetail.folk_name || tag.tag_name || tag.name || t('common.unknownTag');
+  
+  // 从翻译文件中查找对应的元素
+  const element = cultureElements.find(el => el.title === name);
+  
+  const translatedName = element ? 
+    (locale.value === 'en' ? element['title-en'] : element.title) : 
+    name;
+  
+  const translatedDescription = element ? 
+    (locale.value === 'en' ? element['description-en'] : element.description) : 
+    (tagDetail.description || tag.description || t('common.noDescription'));
+
+  return {
+    ...tag,
+    userPreference: isUserPreference,
+    userScore: isUserPreference ? preference?.score || 0.7 : 0,
+    title: translatedName,
+    image_url: tagDetail.image_url || defaultEmptyImg,
+    folk_name: translatedName,
+    tag_name: translatedName,
+    description: translatedDescription
+  };
+};
+
 // 修改 fetchData 函数
 const fetchData = async () => {
-  // 使用 store 中已有的方法检查是否需要刷新
-  if (!userStore.needsRecommendRefresh() && userStore.recommendSlides.length > 0) {
-    console.log('使用缓存数据');
-    slides.value = userStore.recommendSlides;
-    loading.value = false;
-    return;
-  }
-
   loading.value = true;
+  hasCheckedPreferences.value = false;
+  loadingProgress.value = 0;
+  
   try {
-    console.log("重新获取数据");
+    // 更新第一步状态
+    loadingSteps.value[0].done = true;
+    loadingProgress.value = 10;
+
+    console.log("开始获取数据");
     const userId = userStore.userId;
     console.log("当前用户ID:", userId);
 
-    if (!userId) {
-      console.log("用户未登录，使用默认数据");
+    if (!userId || !userStore.isLoggedIn) {
+      console.log("用户未登录，跳转到登录页面");
+      router.push('/login');
       return;
     }
 
-    const [preferenceResponse, tagsResponse] = await Promise.all([
-      RecommendAPI.getPerferenceAPI(userId),
-      TagsAPI.getAllTagsAPI()
-    ]);
-
+    // 获取用户偏好数据
+    const preferenceResponse = await RecommendAPI.getPerferenceAPI(userId);
+    loadingSteps.value[1].done = true;
+    loadingProgress.value = 25;
     console.log('用户偏好数据:', preferenceResponse.data);
+
+    // 检查用户是否有任何偏好
+    const hasPreferences = preferenceResponse?.data?.detailed_preferences &&
+      Object.values(preferenceResponse.data.detailed_preferences).some(
+        prefs => Array.isArray(prefs) && prefs.length > 0
+      );
+
+    if (!hasPreferences) {
+      console.log("用户没有偏好数据");
+      hasCheckedPreferences.value = true;
+      loading.value = false;
+      return;
+    }
+
+    // 获取所有标签数据
+    const tagsResponse = await TagsAPI.getAllTagsAPI();
+    loadingSteps.value[2].done = true;
+    loadingProgress.value = 40;
     console.log('所有标签数据:', tagsResponse.data);
 
     if (preferenceResponse?.data && tagsResponse?.data) {
       const userPreferences = preferenceResponse.data;
-      const tagData = tagsResponse.data;
-
-      // 确保数据结构正确
-      let processedTagData = tagData;
-      if (!Array.isArray(tagData.folk) && !Array.isArray(tagData.food)) {
-        processedTagData = {
-          'folk': [],
-          'food': [],
-          'literature': [],
-          'spot': [],
-          'history': []
-        };
-
-        if (Array.isArray(tagData)) {
-          tagData.forEach(tag => {
-            const theme = (tag.theme_name || 'other').toLowerCase();
-            if (processedTagData[theme]) {
-              processedTagData[theme].push(tag);
-            }
-          });
-        }
-      }
+      const allTags = tagsResponse.data;
 
       // 主题映射
       const themeIndexMap = {
@@ -387,102 +479,112 @@ const fetchData = async () => {
         'food': 1,    // 美食文化
         'literature': 2, // 影视文学
         'folk': 3,    // 非遗民俗
-        'history': 4  // 发现更多
       };
 
+      // 按主题分类标签
+      const tagsByTheme = {
+        spot: [],
+        food: [],
+        literature: [],
+        folk: []
+      };
+
+      // 将标签分类到对应主题
+      allTags.forEach(tag => {
+        const theme = tag.theme_name?.toLowerCase();
+        if (tagsByTheme.hasOwnProperty(theme)) {
+          tagsByTheme[theme].push(tag);
+        }
+      });
+
+      // 初始化所有主题的数据结构
+      slides.value = slides.value.map(slide => ({
+        ...slide,
+        favoriteCards: [],
+        subCards: []
+      }));
+
       // 处理每个主题
-      for (const [theme, tags] of Object.entries(processedTagData)) {
-        const slideIndex = themeIndexMap[theme.toLowerCase()];
+      for (const [theme, tags] of Object.entries(tagsByTheme)) {
+        const slideIndex = themeIndexMap[theme];
         if (slideIndex === undefined || !Array.isArray(tags)) continue;
 
         // 获取该主题的用户偏好
-        const themePreferences = userPreferences.detailed_preferences[theme.toLowerCase()] || [];
-        console.log(`主题 ${theme} 的用户偏好:`, themePreferences);
+        const themePreferences = userPreferences.detailed_preferences[theme] || [];
+        console.log(`处理${theme}主题数据:`, {
+          偏好数量: themePreferences.length,
+          标签数量: tags.length
+        });
 
         // 获取用户偏好的标签ID
         const userPreferredTagIds = new Set(
           themePreferences
-            .filter(pref => pref.score > 0)  // 只包含正面偏好
+            .filter(pref => pref.score > 0)
             .map(pref => pref.tag_id)
         );
-
-        // 如果用户没有该主题的偏好，跳过处理
-        if (userPreferredTagIds.size === 0) {
-          slides.value[slideIndex].favoriteCards = [];
-          slides.value[slideIndex].subCards = [];
-          continue;
-        }
 
         // 获取所有需要查询的标签ID
         const tagIds = tags.map(tag => tag.tag_id || tag.id).filter(id => id);
         
-        // 获取标签详细信息
-        const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
-        console.log(`获取标签详细信息:`, tagDetailsResponse);
+        if (tagIds.length === 0) continue;
 
-        // 创建标签详情映射
-        const tagDetailsMap = new Map(
-          tagDetailsResponse.tag_details.map(detail => [detail.tag_id, detail])
-        );
+        try {
+          // 获取标签详细信息
+          const tagDetailsResponse = await RecommendAPI.getTagDetailAPI(tagIds);
+          console.log(`${theme}主题标签详情:`, tagDetailsResponse);
 
-        // 处理标签数据
-        const processedTags = tags.map(tag => {
-          const tagId = tag.tag_id || tag.id;
-          const isUserPreference = userPreferredTagIds.has(tagId);
-          const preference = themePreferences.find(p => p.tag_id === tagId);
-          const tagDetail = tagDetailsMap.get(tagId) || {};
-          
-          return {
-            ...tag,
-            userPreference: isUserPreference,
-            userScore: isUserPreference ? preference?.score || 0.7 : 0,
-            title: tagDetail.folk_name || tag.tag_name || tag.name || '未知标签',
-            image_url: tagDetail.image_url || defaultEmptyImg,
-            folk_name: tagDetail.folk_name || tag.folk_name || tag.tag_name,
-            tag_name: tag.tag_name,
-            description: tagDetail.description || tag.description || '暂无描述'
-          };
-        });
+          if (!tagDetailsResponse?.tag_details) continue;
 
-        // 分离用户偏好和推荐标签
-        const preferredTags = processedTags.filter(tag => tag.userPreference);
-        const recommendedTags = processedTags.filter(tag => !tag.userPreference);
+          // 创建标签详情映射
+          const tagDetailsMap = new Map(
+            tagDetailsResponse.tag_details.map(detail => [detail.tag_id, detail])
+          );
 
-        // 更新 slides
-        slides.value[slideIndex].favoriteCards = preferredTags.slice(0, 5).map(tag => ({
-          title: tag.title,
-          image: tag.image_url,
-          rating: (tag.userScore * 10).toFixed(1),
-          userPreference: true,
-          description: tag.description,
-          folk_name: tag.folk_name,
-          tag_name: tag.tag_name
-        }));
+          // 处理标签数据
+          const processedTags = tags.map(tag => {
+            const tagId = tag.tag_id || tag.id;
+            const isUserPreference = userPreferredTagIds.has(tagId);
+            const preference = themePreferences.find(p => p.tag_id === tagId);
+            const tagDetail = tagDetailsMap.get(tagId) || {};
+            
+            return processTagData(tag, tagDetail, isUserPreference, preference);
+          });
 
-        // 只有当有用户偏好时才添加推荐标签
-        slides.value[slideIndex].subCards = preferredTags.length > 0 ? 
-          [...preferredTags, ...recommendedTags].map(tag => ({
-            ...tag,
-            image_url: tag.image_url,  // 确保 image_url 被正确传递
-            folk_name: tag.folk_name,
-            tag_name: tag.tag_name,
-            userPreference: tag.userPreference
-          })) : [];
+          // 更新 slides
+          if (processedTags.length > 0) {
+            const preferredTags = processedTags.filter(tag => tag.userPreference);
+            const similarTags = processedTags.filter(tag => !tag.userPreference);
+
+            slides.value[slideIndex].favoriteCards = preferredTags.slice(0, 5).map(tag => ({
+              title: tag.title,
+              image: tag.image_url,
+              rating: (tag.userScore * 10).toFixed(1),
+              userPreference: true,
+              description: tag.description,
+              folk_name: tag.folk_name,
+              tag_name: tag.tag_name
+            }));
+
+            slides.value[slideIndex].subCards = [
+              ...preferredTags,  // 用户偏好
+              ...similarTags.slice(0, 10)  // 相似推荐
+            ];
+          }
+
+          // 更新对应主题的进度
+          loadingSteps.value[3 + slideIndex].done = true;
+          loadingProgress.value = 40 + ((slideIndex + 1) * 15);
+        } catch (error) {
+          console.error(`处理${theme}主题数据时出错:`, error);
+        }
       }
     }
-
-    // 成功获取数据后更新store
-    if (slides.value.length > 0) {
-      userStore.setRecommendData(slides.value);  // 这会同时更新数据和时间戳
-    }
-
   } catch (error) {
     console.error("获取数据失败:", error);
-    if (userStore.recommendSlides.length > 0) {
-      console.log('获取失败，使用缓存数据');
-      slides.value = userStore.recommendSlides;
-    }
   } finally {
+    // 完成所有加载
+    loadingProgress.value = 100;
+    hasCheckedPreferences.value = true;
     loading.value = false;
     nextTick(() => {
       initSwiper();
@@ -610,20 +712,9 @@ const selectCard = (card) => {
   }
 };
 
-// 格式化描述文本
-const formatDescription = (description) => {
-  if (!description) return '暂无描述';
-  // 如果描述是URL，则提取有用信息或返回默认文本
-  if (description.startsWith('http')) {
-    return '点击查看详细介绍';
-  }
-  return description;
-};
-
 // 检查主题是否有偏好
 const hasPreferences = (slide) => {
-  // 只有当有用户偏好时才返回 true
-  return slide.favoriteCards.length > 0;
+  return slide.favoriteCards && slide.favoriteCards.length > 0;
 };
 
 // 修改跳转到情感分析页面的方法
@@ -712,20 +803,39 @@ watch(currentIndex, (newIndex) => {
   }
 });
 
-onMounted(async () => {
-  // 检查用户登录状态
-  if (!userStore.isLoggedIn) {
-    console.log("用户未登录，重定向到登录页面");
-    router.push('/login');
-    return;
+watch(slides, (newSlides) => {
+  // 检查所有主题是否都已正确加载
+  const allThemesLoaded = newSlides.every(slide => 
+    Array.isArray(slide.favoriteCards) && Array.isArray(slide.subCards)
+  );
+  
+  if (allThemesLoaded) {
+    loading.value = false;
   }
+}, { deep: true });
 
-  console.log("当前登录用户:", {
-    userId: userStore.userId,
-    username: userStore.username
-  });
+onMounted(async () => {
+  loading.value = true;
+  hasCheckedPreferences.value = false;
+  
+  try {
+    // 简单检查用户登录状态
+    if (!userStore.isLoggedIn || !userStore.userId) {
+      console.log("用户未登录，重定向到登录页面");
+      router.push('/login');
+      return;
+    }
 
-  await fetchData();
+    console.log("当前登录用户:", {
+      userId: userStore.userId,
+      username: userStore.username
+    });
+
+    // 加载数据
+    await fetchData();
+  } catch (error) {
+    console.error("初始化失败:", error);
+  }
 });
 </script>
 
@@ -859,7 +969,7 @@ onMounted(async () => {
     line-height: 1.6;
     font-size: 1.1em;
     color: #333;
-    max-height: 200px;
+    max-height: 180px;
     overflow-y: auto;
     padding-right: 10px;
     font-family: 'HelveticaNeue', serif;
@@ -1170,18 +1280,75 @@ onMounted(async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
 }
 
-.loading-spinner {
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 80%;
+  max-width: 600px;
+}
+
+.loading-steps {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  color: #666;
+  transition: all 0.3s;
+  font-size: 14px;
+  
+  &.done {
+    color: #b71c1c;
+  }
+}
+
+.loading-icon {
+  color: #b71c1c;
+  margin-right: 10px;
+  font-size: 16px;
+  animation: rotating 1s linear infinite;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.el-icon-check {
+  color: #b71c1c;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.step-text {
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.loading-tip {
+  margin-top: 10px;
+  color: #909399;
+  font-size: 12px;
+  text-align: center;
 }
 
 .empty-card {
@@ -1202,7 +1369,7 @@ onMounted(async () => {
   height: 100%;
   object-fit: cover;
   border-radius: 10px;
-  display: block; /* 确保图片正确显示 */
+  display: block;
 }
 
 .empty-card .card-image {
@@ -1215,12 +1382,11 @@ onMounted(async () => {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 15px;
     padding: 20px;
-    max-height: 70vh; /* 限制最大高度 */
-    overflow-y: auto; /* 允许内容滚动 */
-    overscroll-behavior: contain; /* 防止滚动传播 */
+    max-height: 70vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
-  /* 自定义滚动条样式 */
   .all-preferences-container::-webkit-scrollbar {
     width: 8px;
   }
@@ -1277,7 +1443,6 @@ onMounted(async () => {
   }
 }
 
-/* 导航按钮样式 */
 .swiper-button-next,
 .swiper-button-prev {
   color: white;
@@ -1303,7 +1468,6 @@ onMounted(async () => {
   left: 10px;
 }
 
-/* 增强卡片点击区域 */
 .swiper-slide {
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -1314,7 +1478,6 @@ onMounted(async () => {
   }
 }
 
-/* 空内容样式 */
 .empty-content {
   display: flex;
   flex-direction: column;
@@ -1340,7 +1503,6 @@ onMounted(async () => {
   }
 }
 
-/* 导航按钮样式 */
 .navigate-button {
   padding: 10px 20px;
   background-color: #b71c1c;
@@ -1373,12 +1535,10 @@ onMounted(async () => {
   }
 }
 
-/* 添加全局字体样式 */
 .fullpage-container {
   font-family: 'HelveticaNeue', serif;
 }
 
-/* 确保所有文本元素都使用相同字体 */
 .tab-item,
 .main-description h2,
 .main-description p,
@@ -1397,14 +1557,13 @@ onMounted(async () => {
   font-family: 'HelveticaNeue', serif;
 }
 
-/* 修改悬停蒙版样式为淡灰色 */
 .hover-mask {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);  /* 改为淡灰色 */
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1421,6 +1580,45 @@ onMounted(async () => {
   border: 1px solid white;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* 自定义进度条样式 */
+.custom-progress {
+  width: 100%;
+  
+  :deep(.el-progress-bar__outer) {
+    background-color: #f5f5f5;
+    height: 10px;
+    border-radius: 5px;
+  }
+  
+  :deep(.el-progress-bar__inner) {
+    background-color: #b71c1c;
+    border-radius: 5px;
+  }
+  
+  :deep(.el-progress__text) {
+    color: #b71c1c;
+    font-size: 14px;
+    font-weight: bold;
+  }
+}
+
+/* 加载图标动画 */
+.loading-icon {
+  color: #b71c1c;
+  margin-right: 10px;
+  font-size: 16px;
+  animation: rotating 1s linear infinite;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
 

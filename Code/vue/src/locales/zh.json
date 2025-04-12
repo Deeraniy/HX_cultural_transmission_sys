@@ -1,0 +1,534 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "noData": "暂无数据",
+    "warning": "警告",
+    "confirm": "确定",
+    "cancel": "取消",
+    "error": {
+      "loadData": "数据加载失败，请重试"
+    },
+    "frequency": "频率",
+    "pleaseLogin": "请先登录",
+    "imageLoadError": "图片加载失败",
+    "noRating": "暂无评分",
+    "noDescription": "暂无描述"
+  },
+  "menu": {
+    "home": "首页",
+    "culture": "特色文化展示",
+    "places": "名胜古迹",
+    "film": "影视文学",
+    "food": "美食文化",
+    "folk": "非遗民俗",
+    "red": "红色文化",
+    "sentiment": "情感分析",
+    "recommend": "个性推荐",
+    "report": "宣传报告生成",
+    "global": "全球传播情况",
+    "background": "背景介绍",
+    "about": "关于我们"
+  },
+  "user": {
+    "login": "登录",
+    "logout": "退出登录",
+    "menu": {
+      "history": "浏览记录",
+      "favorites": "我的收藏",
+      "profile": "用户画像",
+      "settings": "个人设置"
+    },
+    "article": {
+      "title": "浏览记录",
+      "search": "搜索标题",
+      "clearHistory": "清空历史",
+      "batchManage": "批量管理",
+      "complete": "完成",
+      "deleteSelected": "删除选中项",
+      "selectAll": "全选",
+      "deselectAll": "取消全选",
+      "viewDetail": "查看详情",
+      "clearConfirm": "确定要清空全部浏览历史记录吗？此操作不可恢复。",
+      "clearCancel": "已取消清空操作",
+      "clearSuccess": "已清空全部历史记录",
+      "clearError": "清空历史失败，请重试",
+      "deleteSuccess": "删除成功",
+      "deleteError": "删除失败，请重试",
+      "loginRequired": "请先登录以查看浏览历史",
+      "getHistoryError": "获取历史记录失败，请重试",
+      "noDescription": "暂无描述",
+      "overview": "概述",
+      "viewTime": "浏览时间",
+      "tabs": {
+        "all": "全部",
+        "food": "美食",
+        "literature": "文学",
+        "spot": "风景",
+        "folk": "民俗"
+      },
+      "types": {
+        "literature": "文学",
+        "folk": "民俗",
+        "placeOfInterest": "风景",
+        "food": "美食",
+        "other": "其他"
+      }
+    },
+    "home": {
+      "returnHome": "返回首页",
+      "welcome": "欢迎回来",
+      "defaultUser": "用户",
+      "defaultNickname": "未设置昵称",
+      "account": "账号",
+      "gender": "性别",
+      "age": "年龄",
+      "location": "地区",
+      "email": "邮箱",
+      "phone": "手机号",
+      "notSet": "未设置",
+      "tags": "兴趣标签",
+      "noTags": "暂无标签",
+      "introduction": "个人简介",
+      "defaultDescription": "这个人很懒，什么都没写~",
+      "getInfoError": "获取用户信息失败",
+      "updateError": "更新用户信息失败",
+      "genderMap": {
+        "MALE": "男",
+        "FEMALE": "女",
+        "OTHER": "其他"
+      }
+    },
+    "profile": {
+      "title": "编辑个人资料",
+      "nickname": "昵称",
+      "email": "邮箱",
+      "mobile": "手机号",
+      "age": "年龄",
+      "gender": "性别",
+      "location": "地区",
+      "description": "个人简介",
+      "descriptionPlaceholder": "写点什么来介绍一下自己...",
+      "male": "男",
+      "female": "女",
+      "other": "其他",
+      "save": "保存",
+      "clear": "清空",
+      "avatar": "更换头像",
+      "saveSuccess": "保存成功",
+      "saveError": "保存失败",
+      "avatarSuccess": "头像上传成功",
+      "avatarError": "头像上传失败",
+      "avatarExceed": "上传的图片大小不能超过3MB"
+    },
+    "password": {
+      "title": "安全设置",
+      "changePassword": "修改密码",
+      "currentPassword": "当前密码",
+      "currentPasswordPlaceholder": "请输入当前密码",
+      "newPassword": "新密码",
+      "newPasswordPlaceholder": "请输入新密码",
+      "confirmPassword": "确认密码",
+      "confirmPasswordPlaceholder": "请确认新密码"
+    },
+    "star": {
+      "title": "文化元素收藏",
+      "search": "搜索标签名称",
+      "moreFilter": "更多筛选",
+      "recentFavorites": "最近收藏",
+      "mostViewed": "最多浏览",
+      "categories": {
+        "all": "全部",
+        "food": "特色美食",
+        "spot": "风景名胜",
+        "literature": "文学创作",
+        "folk": "非遗民俗",
+        "other": "其他"
+      },
+      "stats": {
+        "views": "浏览量",
+        "likes": "点赞"
+      },
+      "actions": {
+        "addFavorite": "添加收藏",
+        "removeFavorite": "取消收藏"
+      },
+      "messages": {
+        "removeSuccess": "取消收藏成功",
+        "removeError": "取消收藏失败，请重试"
+      }
+    },
+    "activity": {
+      "title": "用户画像分析",
+      "subtitle": "基于用户行为数据的多维度分析",
+      "messages": {
+        "getHistorySuccess": "获取历史记录成功",
+        "getAllHistorySuccess": "获取所有历史记录成功",
+        "userIdMissing": "用户ID缺失"
+      },
+      "interestChart": {
+        "title": "兴趣偏好分布",
+        "description": "展示用户在不同领域的活跃度和参与度",
+        "timeRange": {
+          "week": "周",
+          "month": "月",
+          "year": "年"
+        },
+        "categories": {
+          "placeOfInterest": "风景名胜",
+          "food": "美食文化",
+          "literature": "影视文学",
+          "folk": "非遗民俗"
+        },
+        "legend": {
+          "current": "当前发布",
+          "average": "平均水平"
+        }
+      },
+      "chart": {
+        "mainTitle": "用户画像",
+        "currentPublish": "当前发布",
+        "averageLevel": "平均水平",
+        "comparisonTitle": "兴趣偏好对比",
+        "categories": {
+          "placeOfInterest": "风景名胜",
+          "food": "美食文化",
+          "literature": "影视文学",
+          "folk": "非遗民俗"
+        }
+      }
+    }
+  },
+  "index": {
+    "title": {
+      "main": "湖湘文化",
+      "sub": "数智传播网"
+    },
+    "footer": {
+      "about": {
+        "title": "关于我们",
+        "content": "湖湘文化数智传播网致力于湖湘文化的数字化传播与研究，为促进湖湘文化的传承与创新提供数字平台支持。"
+      },
+      "quickLinks": {
+        "title": "快速链接",
+        "folkCustom": "非遗民俗",
+        "placeOfInterest": "风景名胜",
+        "redCulture": "红色文化",
+        "filmLiterature": "影视文学",
+        "food": "湘菜美食",
+        "globalAnalysis": "全球传播效果分析",
+        "sentimentAnalysis": "情感分析",
+        "strategy": "宣传策略"
+      },
+      "dataSupport": {
+        "title": "数据支持",
+        "culture": "湖南省文化与旅游厅",
+        "cultural": "湖南省文物局",
+        "heritage": "湖南省非物质文化遗产保护中心",
+        "museum": "湖南省博物馆"
+      },
+      "contact": {
+        "title": "联系我们",
+        "address": "湖南省长沙市",
+        "phone": "0731-XXXXXXXX",
+        "email": "huxiangwenhua@example.com"
+      },
+      "copyright": {
+        "text": "© 2023-2024 湖湘文化数智传播网 | 湘ICP备XXXXXXXX号",
+        "support": "技术支持：湖南师范大学"
+      }
+    },
+    "knowledgeGraph": {
+      "title": "湖湘文化知识图谱",
+      "searchPlaceholder": "输入节点名称搜索",
+      "noData": "暂无数据",
+      "categories": {
+        "core": "核心文化",
+        "theme": "主题分类",
+        "spot": "名胜古迹",
+        "literature": "文学艺术",
+        "food": "美食文化",
+        "folk": "非遗民俗"
+      },
+      "nodeDetails": {
+        "title": "节点详情",
+        "close": "关闭",
+        "viewDetails": "查看详情",
+        "noMoreInfo": "该节点暂无更多详细信息",
+        "properties": {
+          "food_name": "菜品名称",
+          "folk_name": "民俗名称",
+          "spot_name": "景点名称",
+          "city_id": "所属城市",
+          "folk_type": "民俗类型",
+          "address": "详细地址",
+          "image_url": "图片",
+          "opening_hours": "开放时间",
+          "cuisine_type": "菜系类型",
+          "author": "作者",
+          "img_url": "图片",
+          "text": "简要描述",
+          "publish_year": "出版年份"
+        }
+      }
+    }
+  },
+  "features": {
+    "title": "我们的功能",
+    "more": "更多",
+    "cards": {
+      "classification": {
+        "title": "湖湘文化分类查询",
+        "description": "为研究者和爱好者提供湖湘文化的分类查询工具，旨在帮助读者了解和探索湖湘文化的各个方面和特点..."
+      },
+      "sentiment": {
+        "title": "湖湘文化传播舆论情感分析",
+        "description": "分析当前舆论对于湖湘文化的情感倾向，展现群众对湖湘文化的价值认知与情感共鸣，识别潜在的舆论危机..."
+      },
+      "influence": {
+        "title": "湖湘文化影响力分析预测",
+        "description": "评估湖湘文化在各个领域的影响力，并基于现有数据和趋势进行未来影响力预测..."
+      },
+      "report": {
+        "title": "湖湘文化自动生成传播效果分析报告",
+        "description": "自动生成对湖湘文化传播现状的分析报告，为研究者、文化工作者和政策制定者提供全面的信息支持..."
+      }
+    },
+    "themeSelector": {
+      "title": "选择主题",
+      "subtitle": "请选择一个主题来查看相关内容",
+      "options": {
+        "food": "美食文化",
+        "place": "风景名胜",
+        "literature": "影视文学",
+        "folk": "非遗民俗",
+        "red": "红色文化"
+      }
+    }
+  },
+  "app": {
+    "title": "湖湘文化数智传播网",
+    "noscript": "很抱歉，湖湘文化数智传播网需要启用 JavaScript 才能正常工作。请启用它以继续。"
+  },
+  "detail": {
+    "tabs": {
+      "basic": "基本信息",
+      "comments": "评论分析",
+      "sentiment": "情感分析",
+      "report": "AI分析报告"
+    },
+    "defaultTitle": "选择文化元素",
+    "selectTheme": "选择主题",
+    "searchPlaceholder": "搜索内容...",
+    "themeTabs": {
+      "places": "名胜古迹",
+      "film": "影视文学",
+      "food": "美食文化",
+      "folk": "非遗民俗"
+    },
+    "literature": {
+      "types": {
+        "literature": "文学",
+        "performance": "表演艺术",
+        "newMedia": "新媒体艺术",
+        "poetry": "古诗词"
+      }
+    },
+    "place": {
+      "search": "搜索湖南名胜古迹",
+      "location": "地理位置",
+      "history": "历史背景",
+      "culture": "文化特色",
+      "description": "详细介绍",
+      "sentimentAnalysis": "情感分析",
+      "favorite": "收藏",
+      "like": "点赞",
+      "noData": "暂无数据",
+      "selectCity": "选择城市",
+      "viewDetail": "查看详情",
+      "hunanCuisine": "湖南菜经典美食",
+      "searchPlaceholder": "搜索湖南美食",
+      "preference": "喜好程度",
+      "visitCount": "参观数量",
+      "preferenceUnit": " 点",
+      "visitUnit": " 次"
+    },
+    "folk": {
+      "searchPlaceholder": "搜索非物质文化...",
+      "allCategories": "所有分类",
+      "search": "搜索",
+      "prevPage": "上一页",
+      "nextPage": "下一页",
+      "rank": "级别"
+    },
+    "image": {
+      "alt": "当前展示的图片"
+    },
+    "wordcloud": {
+      "alt": "词云图"
+    },
+    "comments": {
+      "positiveRanking": "正面评论排行",
+      "source": "来源"
+    },
+    "report": {
+      "clickToGenerate": "点击生成按钮获取AI分析报告",
+      "generate": "生成报告",
+      "generateSuccess": "报告生成成功",
+      "generateError": "报告生成失败，请重试",
+      "copySuccess": "报告已复制到剪贴板",
+      "copyError": "复制失败，请手动复制",
+      "commentCount": "{count}条评论",
+      "sentiment": {
+        "positive": "正面",
+        "neutral": "中性",
+        "negative": "负面"
+      },
+      "viewAnalysis": "查看分析报告",
+      "causalAnalysis": "因果推理分析报告",
+      "noReport": "暂无报告"
+    },
+    "sentiment": {
+      "analysis": "情感分析",
+      "score": "情感得分",
+      "type": "情感类型",
+      "count": "数量",
+      "ratio": "比例",
+      "word": "评价词",
+      "actual": "实际情感",
+      "predicted": "预测情感",
+      "confidenceInterval": "置信区间",
+      "changePoint": "突变点"
+    },
+    "topic": {
+      "name": "主题"
+    },
+    "economic": {
+      "cpi": "居民消费价格指数",
+      "investment": "固定资产投资额累计增长",
+      "salesRate": "工业产品销售率",
+      "yAxisLabel1": "居民消费价格指数/工业产品销售率",
+      "yAxisLabel2": "固定资产投资额累计增长/情感"
+    }
+  },
+  "sentiment": {
+    "title": "情感分析",
+    "timeTrend": "时间趋势",
+    "distribution": "情感分布",
+    "loadError": "数据加载失败，请重试"
+  },
+  "analysis": {
+    "sentiment": "情感分析",
+    "topic": "主题聚类"
+  },
+  "recommend": {
+    "loadingTip": "预计需要1-2分钟完成加载",
+    "viewMore": "查看更多",
+    "rating": "评分",
+    "yourPreferences": "您的喜好",
+    "recommendedPreferences": "推荐偏好",
+    "clickForSentiment": "点我跳转情感分析",
+    "more": "更多",
+    "goToPage": "前往{page}页面",
+    "steps": {
+      "checkLogin": "检查用户登录状态",
+      "getUserPreferences": "获取用户偏好数据",
+      "getTags": "获取标签数据",
+      "processPlaces": "处理名胜古迹数据",
+      "processFood": "处理美食文化数据",
+      "processLiterature": "处理影视文学数据",
+      "processFolk": "处理非遗民俗数据"
+    },
+    "tabs": {
+      "places": "名胜古迹",
+      "food": "美食文化",
+      "literature": "影视文学",
+      "folk": "非遗民俗"
+    },
+    "slides": {
+      "places": {
+        "title": "名胜古迹",
+        "description": "探索湖南历史文化遗产"
+      },
+      "food": {
+        "title": "美食文化",
+        "description": "品味湖南特色美食"
+      },
+      "literature": {
+        "title": "影视文学",
+        "description": "感受湖南文化艺术"
+      },
+      "folk": {
+        "title": "非遗民俗",
+        "description": "传承湖南非物质文化遗产"
+      }
+    }
+  },
+  "globe": {
+    "title": "全球传播效果分析",
+    "subtitle": "传播效果智能分析",
+    "wordCloud": "词云图",
+    "stats": {
+      "totalComments": "总评论数量",
+      "platformCount": "评论平台数",
+      "countryCount": "分析国家总数",
+      "timeSpan": "评论时间跨度"
+    },
+    "trend": {
+      "title": "正面传播趋势"
+    },
+    "controls": {
+      "autoRotate": "自动旋转",
+      "resetView": "重置视角",
+      "fullscreen": "全屏显示",
+      "openDanmaku": "开启弹幕",
+      "closeDanmaku": "关闭弹幕"
+    },
+    "hotspots": {
+      "title": "热点分布"
+    },
+    "tabs": {
+      "platformSentiment": "平台情感分析",
+      "spreadAlert": "传播异常分析"
+    },
+    "topStats": {
+      "latestMonth": "最新月评论",
+      "comments": "条",
+      "spreadTrend": "传播趋势",
+      "compared": "较上期"
+    },
+    "analysis": {
+      "title": "传播数据分析",
+      "spreadSpeed": "传播速度指数",
+      "engagement": "互动参与度",
+      "sentiment": "情感倾向"
+    },
+    "sentiment": {
+      "positive": "正面",
+      "neutral": "中性",
+      "negative": "负面"
+    },
+    "nav": {
+      "backToHome": "返回首页"
+    },
+    "themes": {
+      "places": "名胜古迹",
+      "literature": "影视文学",
+      "food": "美食文化",
+      "folk": "非遗民俗"
+    },
+    "danmaku": {
+      "text1": "太棒的文化遗产！",
+      "text2": "喜欢传统建筑风格",
+      "text3": "风景太美了",
+      "text4": "文化氛围浓厚",
+      "text5": "必去景点",
+      "text6": "很棒的文化体验",
+      "text7": "传统美食太赞了",
+      "text8": "民俗文化很有趣",
+      "text9": "文化表演很精彩",
+      "text10": "独特的文化元素",
+      "text11": "历史背景丰富",
+      "text12": "文化保护做得很好"
+    }
+  }
+} 

@@ -14,23 +14,23 @@
              :key="theme.id"
              :class="['theme-tab', { active: currentTheme === theme.id }]"
              @click="handleThemeSelect(theme)">
-          <div class="vertical-text-reverse">{{ theme.name }}</div>
+          <div class="vertical-text-reverse">{{ t(`detail.themeTabs.${theme.key}`) }}</div>
         </div>
       </div>
     </div>
 
     <!-- 修改按钮显示逻辑 -->
-      <el-button
+    <el-button
       v-if="hasRequiredParams"
       @click="dialogVisible = true"
       class="theme-select-btn"
     >
-      选择主题
-      </el-button>
+      {{ t('detail.selectTheme') }}
+    </el-button>
 
     <el-dialog
       v-model="dialogVisible"
-      title="选择主题"
+      :title="t('detail.selectTheme')"
       class="theme-dialog"
       :modal="true"
       :lock-scroll="true"
@@ -45,7 +45,7 @@
       <div v-if="loading" class="global-loading-container">
         <div class="loading-spinner">
           <div class="spinner-ring"></div>
-          <span class="loading-text">加载中...</span>
+          <span class="loading-text">{{ t('common.loading') }}</span>
         </div>
       </div>
 
@@ -56,7 +56,7 @@
                :key="theme.id"
                :class="['theme-tab', { active: currentTheme === theme.id }]"
                @click="handleThemeSelect(theme)">
-            <div class="vertical-text-reverse">{{ theme.name }}</div>
+            <div class="vertical-text-reverse">{{ t(`detail.themeTabs.${theme.key}`) }}</div>
           </div>
         </div>
 
@@ -65,7 +65,7 @@
           <div class="search-box">
             <el-input
               v-model="searchQuery"
-              placeholder="搜索内容..."
+              :placeholder="t('detail.searchPlaceholder')"
               :prefix-icon="Search"
             />
           </div>
@@ -81,13 +81,13 @@
                 >
                   <img 
                     :src="getImageUrl(item.image_url)"
-                    :alt="item.spot_name || item.food_name || item.folk_name || item.name || item.title || item.liter_name"
+                    :alt="getItemTitle(item)"
                     @error="(e) => e.target.src = defaultEmptyImg"
                     class="card-image"
                   >
                   <div class="item-overlay">
                     <p class="title">
-                      {{ item.spot_name || item.food_name || item.folk_name || item.name || item.title || item.liter_name }}
+                      {{ getItemTitle(item) }}
                     </p>
                   </div>
                 </div>
@@ -95,9 +95,9 @@
             </div>
             <!-- 无数据提示 -->
             <div v-else class="empty-container">
-              <el-empty description="暂无数据" />
+              <el-empty :description="t('common.noData')" />
             </div>
-      </div>
+          </div>
         </div>
       </div>
     </el-dialog>
@@ -108,7 +108,7 @@
            :key="type.id"
            :class="['subtype-item', { active: currentLiteratureType === type.id }]"
            @click="handleLiteratureTypeChange(type.id)">
-        {{ type.name }}
+        {{ t(`detail.literature.types.${type.key}`) }}
       </div>
     </div>
   </div>
@@ -117,13 +117,16 @@
 <script setup>
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { Search, ArrowRight, ArrowDown } from '@element-plus/icons-vue';
 import SpotsAPI from '@/api/spot';
 import FoodAPI from '@/api/food';
 import FolkAPI from '@/api/folk';
 import FilmLiteratureAPI from '@/api/filmLiterature';
 import defaultEmptyImg from '@/assets/img_1.png';
+import cultureElements from '@/json/culture_elements_translated.json';
 
+const { t, locale } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const dialogVisible = ref(!route.query.name);
@@ -135,9 +138,26 @@ const spotItems = ref([]);
 const foodItems = ref([]);
 const folkItems = ref([]);
 const currentItems = ref([]);
-const title = ref(decodeURIComponent(route.query.name || '默认标题'));
 const isExpanded = ref(false);
 const loading = ref(false);
+
+// 计算当前标题
+const title = computed(() => {
+  if (!route.query.name) return t('detail.defaultTitle');
+  
+  // 从翻译文件中查找对应的元素
+  const element = cultureElements.find(item => 
+    item.title === decodeURIComponent(route.query.name)
+  );
+  
+  if (element) {
+    // 根据当前语言返回对应的标题
+    return locale.value === 'en' ? element['title-en'] : element.title;
+  }
+  
+  // 如果没找到翻译，返回原始标题
+  return decodeURIComponent(route.query.name);
+});
 
 // 检查是否有必要的路由参数
 const hasRequiredParams = computed(() => {
@@ -162,10 +182,10 @@ const literatureTypeMapping = {
 
 // 文学子主题映射
 const literatureSubThemes = [
-  { id: 1, name: '文学' },
-  { id: 2, name: '表演艺术' },
-  { id: 3, name: '新媒体艺术' },
-  { id: 4, name: '古诗词' }
+  { id: 1, key: 'literature', name: '文学' },
+  { id: 2, key: 'performance', name: '表演艺术' },
+  { id: 3, key: 'newMedia', name: '新媒体艺术' },
+  { id: 4, key: 'poetry', name: '古诗词' }
 ];
 
 // 当前选中的文学子主题
@@ -186,10 +206,10 @@ watch(dialogVisible, async (newVal) => {
 
 // 主题列表
 const themes = ref([
-  { id: '1', name: '名胜古迹' },
-  { id: '2', name: '影视文学' },
-  { id: '3', name: '美食文化' },
-  { id: '4', name: '非遗民俗' },
+  { id: '1', key: 'places', name: '名胜古迹' },
+  { id: '2', key: 'film', name: '影视文学' },
+  { id: '3', key: 'food', name: '美食文化' },
+  { id: '4', key: 'folk', name: '非遗民俗' },
 ]);
 
 // 修改过滤逻辑
@@ -383,7 +403,6 @@ const selectItem = async (item) => {
   // 构建路由参数
   const routeParams = {
     name: item.spot_name || item.food_name || item.folk_name || item.liter_name || item.name || '',
-    // value 根据主题设置对应的值
     value: (() => {
       switch (currentTheme.value) {
         case '1': return 1;  // 景点
@@ -393,7 +412,6 @@ const selectItem = async (item) => {
         default: return 1;
       }
     })(),
-    // theme: 文学时使用子主题值(1-4)，其他都是1
     theme: currentTheme.value === '2' ? currentLiteratureType.value : 1
   };
   
@@ -506,6 +524,22 @@ const getImageUrl = (url) => {
     console.error('图片URL处理失败:', error);
     return defaultEmptyImg;
   }
+};
+
+// 获取项目标题的函数
+const getItemTitle = (item) => {
+  const name = item.spot_name || item.food_name || item.folk_name || 
+               item.name || item.title || item.liter_name || '';
+               
+  // 从翻译文件中查找对应的元素
+  const element = cultureElements.find(el => el.title === name);
+  
+  if (element) {
+    // 根据当前语言返回对应的标题
+    return locale.value === 'en' ? element['title-en'] : element.title;
+  }
+  
+  return name;
 };
 </script>
 <style scoped>

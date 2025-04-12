@@ -177,7 +177,7 @@ const goBack = () => {
   font-family: 'HelveticaNeue', serif;
   font-size: 24px;
   color: #fff8f0;
-  margin-right: 50px;
+  margin-right: 0px;
   margin-bottom: 10px;
 }
 

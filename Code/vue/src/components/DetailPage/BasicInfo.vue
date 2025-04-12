@@ -6,13 +6,13 @@
         <div 
           class="city-image-container"
           v-loading="isImageLoading"
-          element-loading-text="加载中..."
+          :element-loading-text="t('common.loading')"
         >
           <el-skeleton v-if="isImageLoading" :rows="3" animated />
           <img
             v-else
             :src="currentImageUrl"
-            alt="当前展示的图片"
+            :alt="t('detail.image.alt')"
             class="city-image"
           />
         </div>
@@ -21,13 +21,13 @@
         <div 
           class="wordcloud-container"
           v-loading="isWordCloudLoading"
-          element-loading-text="加载中..."
+          :element-loading-text="t('common.loading')"
         >
           <el-skeleton v-if="isWordCloudLoading" :rows="3" animated />
           <img
             v-else
             :src="cloudUrl"
-            alt="词云图"
+            :alt="t('detail.wordcloud.alt')"
             class="wordcloud"
           />
         </div>
@@ -72,7 +72,7 @@
   
         <!-- 评论排行区域 -->
         <div class="comments-ranking">
-          <h3>正面评论排行</h3>
+          <h3>{{ t('detail.comments.positiveRanking') }}</h3>
           <div class="comments-list">
             <el-scrollbar>
               <div v-for="(comment, index) in positiveComments" :key="index" class="comment-item">
@@ -81,7 +81,7 @@
                   <span class="sentiment-score">{{ comment.sentiment_confidence }}%</span>
                 </div>
                 <div class="comment-text">{{ comment.text }}</div>
-                <div class="comment-platform">来源: {{ comment.platform }}</div>
+                <div class="comment-platform">{{ t('detail.comments.source') }}: {{ comment.platform }}</div>
               </div>
             </el-scrollbar>
           </div>
@@ -106,6 +106,9 @@
   import {ref, onMounted, watch, Ref, UnwrapRef} from 'vue';
   import { useRoute } from 'vue-router';
   import { computed, withDefaults } from 'vue';
+  import { useI18n } from 'vue-i18n';
+
+  const { t } = useI18n();
 
   // Props 定义
   interface Props {
@@ -201,6 +204,71 @@
            Array.isArray((response as any).data);
   };
   
+  // 修改数据处理函数
+  const processSpotData = (data) => {
+    console.log('处理前的景点数据:', data);
+    try {
+      if (typeof data === 'string') {
+        // 使用正则表达式匹配每个完整的对象
+        const regex = /{[^}]+}/g;
+        const matches = data.match(regex);
+        
+        if (!matches) {
+          console.error('未找到有效的对象');
+          return [];
+        }
+
+        // 处理每个对象
+        const spots = matches.map(objStr => {
+          try {
+            // 清理字符串
+            const cleanStr = objStr
+              .replace(/'/g, '"')  // 替换单引号为双引号
+              .replace(/Decimal\("([\d.]+)"\)/g, '$1')  // 处理 Decimal("x.xx")
+              .replace(/Decimal\('([\d.]+)'\)/g, '$1')  // 处理 Decimal('x.xx')
+              .replace(/None/g, 'null')  // 处理 Python 的 None
+              .replace(/True/g, 'true')  // 处理 Python 的 True
+              .replace(/False/g, 'false');  // 处理 Python 的 False
+
+            // 解析 JSON
+            const obj = JSON.parse(cleanStr);
+            return {
+              spot_id: Number(obj.spot_id),
+              spot_name: String(obj.spot_name),
+              description: String(obj.description || ''),
+              image_url: String(obj.image_url || ''),
+              rating: Number(obj.rating || 0),
+              city_id: Number(obj.city_id),
+              text: String(obj.text || '')
+            };
+          } catch (e) {
+            console.error('处理单个对象时出错:', e);
+            console.error('问题对象:', objStr);
+            return null;
+          }
+        }).filter(Boolean); // 过滤掉 null 值
+
+        console.log('成功解析的数据:', spots);
+        return spots;
+      }
+      
+      // 如果已经是数组则直接返回
+      if (Array.isArray(data)) {
+        return data;
+      }
+      
+      // 如果是单个对象，转换为数组
+      if (typeof data === 'object' && data !== null) {
+        return [data];
+      }
+
+      return [];
+    } catch (e) {
+      console.error('数据解析失败:', e);
+      return [];
+    }
+  };
+
   // 加载所有数据
   const loadAllData = async () => {
     // 先设置名称
@@ -231,28 +299,25 @@
     if(pageTypeNum.value === 1){ // 景点
       try {
         const spotsResponse = await SpotsAPI.getSpotsAPI();
-        console.log("我不叫喂！")
+        console.log("获取到的原始景点数据:", spotsResponse);
+        
         if (typeof spotsResponse === "string") {
-          const fixedResponse = spotsResponse.replace(/Decimal\('([\d.]+)'\)/g, '$1');
-          const spotsArray = fixedResponse
-              .replace(/'/g, '"')
-              .match(/{[^}]+}/g)
-              .map((spot) => JSON.parse(spot));
-  
-          interestData.value = spotsArray;
-  
-          console.log("景点数据（处理后）:", interestData.value);
-  
-          if (interestData.value.length > 0) {
-            loadAttractions(nowName);
+          const processedData = processSpotData(spotsResponse);
+          if (processedData && processedData.length > 0) {
+            interestData.value = processedData;
+            console.log("处理后的景点数据:", interestData.value);
+            await loadAttractions(nowName);
           } else {
-            console.warn("景点数据为空");
+            console.warn("处理后的景点数据为空");
+            isImageLoading.value = false;
           }
         } else {
           console.error("景点数据格式错误，期望为字符串形式");
+          isImageLoading.value = false;
         }
       } catch (error) {
-        console.error("加载景点数据时出错:",error);
+        console.error("加载景点数据时出错:", error);
+        isImageLoading.value = false;
       }
     }else   if(pageTypeNum.value===2){ // 文学
       console.log("我叫喂！")
@@ -497,13 +562,13 @@
   }
   
   // 加载景点数据
-  const loadAttractions = (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
+  const loadAttractions = async (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
     if (!interestData.value || !Array.isArray(interestData.value)) {
       console.warn("景点数据未加载或格式错误");
       return;
     }
   
-    console.log("景点数据（未处理）:", spotName.value);
+    console.log("正在查找景点:", spotName.value);
     // 查找匹配的单个景点
     const spot = interestData.value.find((spot: any) => spot.spot_name === spotName.value);
     if (spot) {
@@ -513,17 +578,16 @@
         description: spot.description,
       };
   
-      // 更新图片 URL
+      // 直接使用完整的图片URL
       currentImageUrl.value = spot.image_url;
-      console.log("currentImgUrl:", currentImageUrl.value)
-      console.log("当前选中的景点:", attractions.value.name);
-      isImageLoading.value=false;
+      console.log("找到景点:", spot.spot_name);
+      console.log("图片URL:", currentImageUrl.value);
+      isImageLoading.value = false;
     } else {
-      console.warn(`未找到名称为 "${spotName}" 的景点`);
+      console.warn(`未找到名称为 "${spotName.value}" 的景点`);
       attractions.value = null;
+      isImageLoading.value = false;
     }
-  
-    console.log("当前选中的景点:", attractions);
   };
   
   // 加载书籍数据

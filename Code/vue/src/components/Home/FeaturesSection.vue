@@ -2,35 +2,35 @@
   <div class="features-container">
     <div class="features-content">
       <div class="features-left">
-        <h2 class="section-title">我们的功能</h2>
+        <h2 class="section-title">{{ t('features.title') }}</h2>
         
         <div class="features-grid">
           <!-- 湖湘文化分类查询 -->
           <div class="feature-card">
-            <h3 @click="showThemeSelector">湖湘文化分类查询</h3>
-            <p>为研究者和爱好者提供湖湘文化的分类查询工具，旨在帮助读者了解和探索湖湘文化的各个方面和特点...</p>
-            <a @click="showThemeSelector" class="more-link">更多</a>
+            <h3 @click="showThemeSelector">{{ t('features.cards.classification.title') }}</h3>
+            <p>{{ t('features.cards.classification.description') }}</p>
+            <a @click="showThemeSelector" class="more-link">{{ t('features.more') }}</a>
           </div>
           
           <!-- 湖湘文化传播舆论情感分析 -->
           <div class="feature-card">
-            <h3 @click="navigateTo('/globe')">湖湘文化传播舆论情感分析</h3>
-            <p>分析当前舆论对于湖湘文化的情感倾向，展现群众对湖湘文化的价值认知与情感共鸣，识别潜在的舆论危机...</p>
-            <a @click="navigateTo('/globe')" class="more-link">更多</a>
+            <h3 @click="navigateTo('/globe')">{{ t('features.cards.sentiment.title') }}</h3>
+            <p>{{ t('features.cards.sentiment.description') }}</p>
+            <a @click="navigateTo('/globe')" class="more-link">{{ t('features.more') }}</a>
           </div>
           
           <!-- 湖湘文化影响力分析预测 -->
           <div class="feature-card">
-            <h3 @click="navigateTo('/detail')">湖湘文化影响力分析预测</h3>
-            <p>评估湖湘文化在各个领域的影响力，并基于现有数据和趋势进行未来影响力预测...</p>
-            <a @click="navigateTo('/detail')" class="more-link">更多</a>
+            <h3 @click="navigateTo('/detail')">{{ t('features.cards.influence.title') }}</h3>
+            <p>{{ t('features.cards.influence.description') }}</p>
+            <a @click="navigateTo('/detail')" class="more-link">{{ t('features.more') }}</a>
           </div>
           
           <!-- 湖湘文化自动生成传播效果分析报告 -->
           <div class="feature-card">
-            <h3 @click="navigateTo('/report')">湖湘文化自动生成传播效果分析报告</h3>
-            <p>自动生成对湖湘文化传播现状的分析报告，为研究者、文化工作者和政策制定者提供全面的信息支持...</p>
-            <a @click="navigateTo('/report')" class="more-link">更多</a>
+            <h3 @click="navigateTo('/report')">{{ t('features.cards.report.title') }}</h3>
+            <p>{{ t('features.cards.report.description') }}</p>
+            <a @click="navigateTo('/report')" class="more-link">{{ t('features.more') }}</a>
           </div>
         </div>
       </div>
@@ -46,29 +46,29 @@
     <div id="themeSelector" class="theme-selector-modal" :class="{ 'active': showThemeSelectorDialog }">
       <div class="theme-modal-content">
         <div class="theme-modal-header">
-          <h3>选择主题</h3>
-          <p>请选择一个主题来查看相关内容</p>
+          <h3>{{ t('features.themeSelector.title') }}</h3>
+          <p>{{ t('features.themeSelector.subtitle') }}</p>
         </div>
         <div class="theme-options">
           <a href="#/food" class="theme-option" @click="navigateTo('/food')">
             <span class="theme-icon">🍜</span>
-            <span class="theme-name">美食文化</span>
+            <span class="theme-name">{{ t('features.themeSelector.options.food') }}</span>
           </a>
           <a href="#/placeOfInterest" class="theme-option" @click="navigateTo('/placeOfInterest')">
             <span class="theme-icon">🏞️</span>
-            <span class="theme-name">风景名胜</span>
+            <span class="theme-name">{{ t('features.themeSelector.options.place') }}</span>
           </a>
           <a href="#/filmLiterature" class="theme-option" @click="navigateTo('/filmLiterature')">
             <span class="theme-icon">📚</span>
-            <span class="theme-name">影视文学</span>
+            <span class="theme-name">{{ t('features.themeSelector.options.literature') }}</span>
           </a>
           <a href="#/folkCustom" class="theme-option" @click="navigateTo('/folkCustom')">
             <span class="theme-icon">🏮</span>
-            <span class="theme-name">非遗民俗</span>
+            <span class="theme-name">{{ t('features.themeSelector.options.folk') }}</span>
           </a>
           <a href="#/red" class="theme-option" @click="navigateTo('/red')">
             <span class="theme-icon">🐉</span>
-            <span class="theme-name">红色文化</span>
+            <span class="theme-name">{{ t('features.themeSelector.options.red') }}</span>
           </a>
         </div>
         <button @click="closeThemeSelector" class="theme-modal-close">×</button>
@@ -80,11 +80,13 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'FeaturesSection',
   setup() {
     const router = useRouter();
+    const { t } = useI18n();
     const showThemeSelectorDialog = ref(false);
     
     const showThemeSelector = () => {
@@ -118,6 +120,7 @@ export default {
     };
     
     return {
+      t,
       showThemeSelectorDialog,
       showThemeSelector,
       closeThemeSelector,
