@@ -4,17 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="用户中心完善">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="全球影响界面优化">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/tag_details.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/tag_details.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/香辣小龙虾_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/香辣小龙虾_wordcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/static/css/deaderindext.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/css/deaderindext.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/static/css/explore.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/css/explore.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/static/css/header.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/css/header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/static/css/关于.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/css/关于.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/About/AboutUs.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/About/AboutUs.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Background/BackgroundIntro.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Background/BackgroundIntro.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/static/model-viewer.html" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/model-viewer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -189,23 +198,9 @@
       <workItem from="1744002625093" duration="881000" />
       <workItem from="1744073282383" duration="1542000" />
       <workItem from="1744114360087" duration="794000" />
-      <workItem from="1744158394063" duration="2276000" />
-    </task>
-    <task id="LOCAL-00033" summary="情感分析界面+民俗展示界面bug修复">
-      <option name="closed" value="true" />
-      <created>1736756104914</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1736756104914</updated>
-    </task>
-    <task id="LOCAL-00034" summary="个人中心优化">
-      <option name="closed" value="true" />
-      <created>1740728157713</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1740728157713</updated>
+      <workItem from="1744158394063" duration="3326000" />
+      <workItem from="1744204672937" duration="1446000" />
+      <workItem from="1744329271970" duration="2030000" />
     </task>
     <task id="LOCAL-00035" summary="登录界面优化">
       <option name="closed" value="true" />
@@ -583,7 +578,23 @@
       <option name="project" value="LOCAL" />
       <updated>1744168337804</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="首页调整">
+      <option name="closed" value="true" />
+      <created>1744181669399</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1744181669399</updated>
+    </task>
+    <task id="LOCAL-00083" summary="全球影响界面优化">
+      <option name="closed" value="true" />
+      <created>1744331308150</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1744331308150</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -607,8 +618,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="点赞收藏维修+情感分析界面维修" />
-    <MESSAGE value="因果推理前端" />
     <MESSAGE value="情感分析界面。。。" />
     <MESSAGE value="知识图谱（红色" />
     <MESSAGE value="宣传策略初步" />
@@ -632,7 +641,9 @@
     <MESSAGE value="修复了一些已知问题" />
     <MESSAGE value="全球传播效果前后端连接" />
     <MESSAGE value="用户中心完善" />
-    <option name="LAST_COMMIT_MESSAGE" value="用户中心完善" />
+    <MESSAGE value="首页调整" />
+    <MESSAGE value="全球影响界面优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="全球影响界面优化" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

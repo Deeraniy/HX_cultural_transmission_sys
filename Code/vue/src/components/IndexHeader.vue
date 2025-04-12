@@ -13,8 +13,10 @@
           :ellipsis="false"
           @select="handleSelect"
       >
-        <!-- 作品总览菜单项 -->
+        <!-- 首页按钮 -->
+        <el-menu-item index="1">首页</el-menu-item>
 
+        <!-- 作品总览菜单项 -->
         <el-sub-menu index="culture">
          <template #title>特色文化展示</template>
          <el-menu-item index="3">名胜古迹</el-menu-item>
@@ -101,7 +103,8 @@ watch(
     () => route.path,
     (newPath) => {
       console.log("newPath", newPath)
-      if (newPath === '/placeOfInterest') activeIndex.value = '3';
+      if (newPath === '/') activeIndex.value = '1';
+      else if (newPath === '/placeOfInterest') activeIndex.value = '3';
       else if (newPath === '/filmLiterature') activeIndex.value = '4';
       else if (newPath === '/food') activeIndex.value = '5';
       else if (newPath==='/index/background') activeIndex.value = '12'
@@ -111,7 +114,8 @@ watch(
 );
 
 // Set the initial activeIndex based on the current route
-if (route.path === '/placeOfInterest') activeIndex.value = '3';
+if (route.path === '/') activeIndex.value = '1';
+else if (route.path === '/placeOfInterest') activeIndex.value = '3';
 else if (route.path === '/filmLiterature') activeIndex.value = '4';
 else if (route.path === '/food') activeIndex.value = '5'
 else if (route.path==='/index/background') activeIndex.value = '12'
@@ -146,6 +150,9 @@ const handleSelect = (key: string, keyPath: string[]) => {
   activeIndex.value = key;
 
   switch (key) {
+    case '1':
+      router.push('/index'); // 首页
+      break;
     case '2':
       router.push('/index'); // 名胜古迹
       break;

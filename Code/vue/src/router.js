@@ -82,7 +82,6 @@ const routes = [
         path: '/placeOfInterest',
         component:() => import('./components/InterestPlace/PlaceOfInterestMain.vue'),
     },
-
     {
         path: '/report',
         component:() => import('./components/ReportGeneration/ReportMain.vue'),

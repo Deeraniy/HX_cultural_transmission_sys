@@ -12,8 +12,6 @@
           :ellipsis="false"
           @select="handleSelect"
       >
-        <el-menu-item index="2">情感分析与预测</el-menu-item>
-        <el-menu-item index="3">传播策略生成</el-menu-item>
       </el-menu>
     </div>
     <el-main>
