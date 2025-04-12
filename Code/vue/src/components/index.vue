@@ -262,6 +262,15 @@ const processData = (rawData, searchTerm = '') => {
 
   // 生成所有可能的链接
   let links = [];
+  if (rawData.links) {
+    rawData.links.forEach(link => {
+      links.push({
+        source: link.source,
+        target: link.target,
+        name: link.name // 直接使用JSON中的name
+      });
+    });
+  }
   rawData.data.forEach(item => {
     if (item.type === 'Theme') {
       links.push({ source: coreNode.id, target: item.id });
@@ -329,7 +338,17 @@ const initChart = () => {
           color: colorPalette[node.category] // 根据节点分类设置颜色
         }
       })),
-      links: graphData.links,
+      links: graphData.links.map(link => ({
+        source: link.source,
+        target: link.target,
+        label: {
+          show: true,
+          formatter: link.name,  // 显示连接名称
+          fontSize: 12,
+          color: '#666',
+          position: 'middle'     // 标签显示在线条中间
+        }
+      })),
       categories: graphData.categories,
       edgeSymbol: ['none', 'arrow'],
       edgeSymbolSize: [0, 10],
@@ -463,7 +482,17 @@ const updateChart = () => {
           color: colorPalette[node.category] // 根据节点分类设置颜色
         }
       })),
-      links: graphData.links,
+      links: graphData.links.map(link => ({
+        source: link.source,
+        target: link.target,
+        label: {
+          show: true,
+          formatter: link.name,  // 显示连接名称
+          fontSize: 12,
+          color: '#666',
+          position: 'middle'     // 标签显示在线条中间
+        }
+      })),
       categories: graphData.categories,
       edgeSymbol: ['none', 'arrow'],
       edgeSymbolSize: [0, 10],
