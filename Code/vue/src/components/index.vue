@@ -100,7 +100,7 @@
           </div>
         </div>
         <el-button class="close-btn" @click="selectedNode = null" circle>×</el-button>
-        <el-button>查看详情</el-button>
+        <el-button @click="handleViewDetail">查看详情</el-button>
       </div>
 
       <!-- 替换原有block4跳转 -->
@@ -160,6 +160,8 @@ import HuXiangCuisine from "@/components/Home/HuXiangCuisine.vue";
 // 使用 import 语法加载视频文件
 import videoFile from '@/assets/湖南形象宣传片国际版《This is Hunan》.mp4';
 import data from '../../static/data.json'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const activeIndex = ref(0); // 当前轮播项的索引
 const videoUrl = ref(videoFile); // 将视频路径赋值给变量
 const shouldAutoplay = ref(false); // 控制是否自动播放轮播图
@@ -360,16 +362,61 @@ const initChart = () => {
       const rawNode = data.data.find(item => item.id === params.data.id);
       selectedNode.value = {
         ...params.data,
-        properties: rawNode?.properties || {}
+        properties: rawNode?.properties || {},
+        type: rawNode?.type || determineNodeType(rawNode)
       };
     }
   });
+  const determineNodeType = (rawNode) => {
+    if (rawNode.properties.spot_id) return 'spot'
+    if (rawNode.properties.food_id) return 'food'
+    if (rawNode.properties.folk_id) return 'folk'
+    if (rawNode.properties.literature_id) return 'literature'
+    return 'other'
+  }
   window.addEventListener('resize', () => myChart.resize());
 };
 const handleSearch = () => {
 
   updateChart(searchTerm.value);
 };
+const handleViewDetail = () => {
+  if (!selectedNode.value) return
+
+  const node = selectedNode.value
+  let routeParams = {
+    name: node.name,
+    value: 1,  // 默认值
+    theme: 1    // 默认主题
+  }
+
+  // 根据节点类型设置参数
+  switch(node.type) {
+    case 'spot':
+      routeParams.value = 1
+      break
+    case 'food':
+      routeParams.value = 3
+      break
+    case 'folk':
+      routeParams.value = 4
+      break
+    case 'literature':
+      routeParams.value = 2
+      // 文学类型需要子主题，这里假设数据中有subTheme属性
+      routeParams.theme = node.properties.subThemeId || 1
+      break
+    default:
+      routeParams.value = 1
+  }
+    if(node.type === 'spot' || node.type === 'food' || node.type === 'folk' || node.type === 'literature'){
+      router.push({
+        path: '/detail',
+        query: routeParams
+      })
+    }
+
+}
 const updateChart = () => {
   console.log("搜索词：", searchTerm.value)
   const graphData = processData(data, searchTerm.value)
