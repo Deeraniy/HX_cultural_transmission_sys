@@ -4,7 +4,7 @@
       <div class="attraction-container">
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">湖湘表演艺术是湖南省文化的重要组成部分，融合了湖南的历史、风俗、民间传统及地方特色，涵盖了多种表现形式，如戏曲、舞蹈、曲艺、民间艺术等。湖湘表演艺术不仅承载了丰富的文化内涵，还在历史的长河中形成了独特的艺术风格。</span>
+          <span class="scroll-bar-text">{{ t('hu-xiang-biao-yan') }}</span>
         </div>
         <!-- 图片轮播（垂直方向） -->
         <el-carousel height="400px" direction="vertical" :autoplay="false" v-model:active-index="currentIndex" @change="onCarouselChange">
@@ -30,7 +30,7 @@
 
         <!-- 右侧详情区域 -->
         <div class="location-box">
-          <div class="p">{{ carouselData[currentIndex]?.description }}</div>
+          <div class="p">{{ getCurrentDescription }}</div>
         </div>
 
       </div>
@@ -42,14 +42,14 @@
 
 <script lang="ts" setup>
 import {computed, nextTick, onMounted, ref, watch} from 'vue';
-
+import { useI18n } from 'vue-i18n';
 import $ from 'jquery'
-
 import turn from '@/utils/turn'
 import BookShelf from "@/components/FilmLiterature/Literature/BookShelf.vue";
 // 直接导入 JSON 文件
 import showData from '@/json/show.json';
 
+const { t, locale } = useI18n();
 const carouselData = showData
 
 const currentIndex = ref(0);
@@ -66,6 +66,18 @@ const onCarouselChange = (index: number) => {
   currentIndex.value = index;
   console.log("Carousel changed to index:", index);
 };
+
+// 获取当前显示的描述文本
+const getCurrentDescription = computed(() => {
+  const currentItem = carouselData[currentIndex.value];
+  if (!currentItem) return '';
+  
+  // 根据当前语言返回对应的描述
+  return locale.value === 'en' && currentItem.description.en ? 
+    currentItem.description.en : 
+    currentItem.description.zh;
+});
+
 const getImageUrl = (imagePath) => {
   try {
     // 替换路径中的 `@` 为 `/src`

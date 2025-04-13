@@ -1,4 +1,4 @@
-// AboutUs.vue
+
 <template>
   <div class="about-container">
     <el-carousel 
@@ -11,14 +11,14 @@
       <el-carousel-item>
         <div class="about-card">
           <div class="card-content">
-            <h2 class="title" style="margin-top:0px;">关于我们</h2>
+            <h2 class="title" :style="{ fontSize: titleFontSize }" style="margin-top:0px;">{{ $t('index.footer.about.title') }}</h2>
             <div class="divider"></div>
-            <p class="description" style="font-size: 18px;">
-              《湖湘文化数智传播网》是由湖南师范大学信息科学与工程学院蔡美玲老师和马华教授指导的核心开发团队完成的。
+            <p class="description" :style="{ fontSize: descriptionFontSize }">
+              {{ $t('hu-xiang-wen-hua-shu-zhi-chuan-bo-wang-shi-you-hu-nan-shi-fan-da-xue-xin-xi-ke-xue-yu-gong-cheng-xue-yuan-cai-mei-ling-lao-shi-he-ma-hua-jiao-shou-zhi-dao-de-he-xin-kai-fa-tuan-dui-wan-cheng-de') }}
               <br><br>
-              蔡美玲老师曾主持和参与国家自然科学基金项目、湖南省自然科学基金项目等省部级以上科研课题4项，参与了多项应用软件系统的开发，具有丰富的产品研发和应用服务经验。
+              {{ $t('cai-mei-ling-lao-shi-zeng-zhu-chi-he-can-yu-guo-jia-zi-ran-ke-xue-ji-jin-xiang-mu-hu-nan-sheng-zi-ran-ke-xue-ji-jin-xiang-mu-deng-sheng-bu-ji-yi-shang-ke-yan-ke-ti-4-xiang-can-yu-le-duo-xiang-ying-yong-ruan-jian-xi-tong-de-kai-fa-ju-you-feng-fu-de-chan-pin-yan-fa-he-ying-yong-fu-wu-jing-yan') }}
               <br><br>
-              马华教授近五年来主持国家自然科学基金面上项目2项，并主持湖南省重大科技创新平台子课题、教育部人文社会科学研究基金项目（交叉学科/综合研究）、湖南省自然科学基金面上项目、湖南省教育厅科学研究项目重点项目等纵向科研课题5项。近五年指导学生完成大学生研究性学习和创新性实验计划项目国家级2项、省级2项。
+              {{ $t('ma-hua-jiao-shou-jin-wu-nian-lai-zhu-chi-guo-jia-zi-ran-ke-xue-ji-jin-mian-shang-xiang-mu-2-xiang-bing-zhu-chi-hu-nan-sheng-zhong-da-ke-ji-chuang-xin-ping-tai-zi-ke-ti-jiao-yu-bu-ren-wen-she-hui-ke-xue-yan-jiu-ji-jin-xiang-mu-jiao-cha-xue-ke-zong-he-yan-jiu-hu-nan-sheng-zi-ran-ke-xue-ji-jin-mian-shang-xiang-mu-hu-nan-sheng-jiao-yu-ting-ke-xue-yan-jiu-xiang-mu-zhong-dian-xiang-mu-deng-zong-xiang-ke-yan-ke-ti-5-xiang-jin-wu-nian-zhi-dao-xue-sheng-wan-cheng-da-xue-sheng-yan-jiu-xing-xue-xi-he-chuang-xin-xing-shi-yan-ji-hua-xiang-mu-guo-jia-ji-2-xiang-sheng-ji-2-xiang') }}
             </p>
           </div>
         </div>
@@ -28,17 +28,17 @@
       <el-carousel-item>
         <div class="about-card">
           <div class="card-content">
-            <h2 class="title">团队介绍</h2>
+            <h2 class="title" :style="{ fontSize: titleFontSize }">{{ $t('tuan-dui-jie-shao') }}</h2>
             <div class="divider"></div>
             <div class="team-photo">
-              <img src="@/assets/img_hx/合照.jpg" alt="团队合照">
+              <img src="@/assets/img_hx/合照.jpg" alt="$t('tuan-dui-he-zhao')">
             </div>
-            <p class="description">
-              该系统的核心开发团队包括陆雨昕、刘孟煊、郑佳、蒋宇晨、刁磊五人。
+            <p class="description" :style="{ fontSize: descriptionFontSize }">
+              {{ $t('gai-xi-tong-de-he-xin-kai-fa-tuan-dui-bao-kuo-lu-yu-xin-liu-meng-xuan-zheng-jia-jiang-yu-chen-diao-lei-wu-ren') }}
               <br><br>
-              本项目成员均为软件工程专业，均展现出扎实的理论基础、敏捷的学习曲线和令人期待的创新潜力，以及在紧密协作中体现的默契配合，为项目注入了强大的动力和活力，且分工较为明确，同时均具备Vue、PyTorch等开发框架以及自然语言处理和神经网络相关的知识，了解经典的神经网络模型如RNN、Transformer等，有一定的技术和实践经历。
+              {{ $t('ben-xiang-mu-cheng-yuan-jun-wei-ruan-jian-gong-cheng-zhuan-ye-jun-zhan-xian-chu-za-shi-de-li-lun-ji-chu-min-jie-de-xue-xi-qu-xian-he-ling-ren-qi-dai-de-chuang-xin-qian-li-yi-ji-zai-jin-mi-xie-zuo-zhong-ti-xian-de-mo-qi-pei-he-wei-xiang-mu-zhu-ru-le-qiang-da-de-dong-li-he-huo-li-qie-fen-gong-jiao-wei-ming-que-tong-shi-jun-ju-bei-vuepytorch-deng-kai-fa-kuang-jia-yi-ji-zi-ran-yu-yan-chu-li-he-shen-jing-wang-luo-xiang-guan-de-zhi-shi-le-jie-jing-dian-de-shen-jing-wang-luo-mo-xing-ru-rnntransformer-deng-you-yi-ding-de-ji-shu-he-shi-jian-jing-li') }}
               <br><br>
-              小组成员在湖南师范大学信息科学与工程学院教授、"人工智能与精准国际传播"研究院研究中心主任马华的指导下参与了多个精准国际传播相关项目的研究，可为本项目提供关键的技术基础和实验平台。
+              {{ $t('xiao-zu-cheng-yuan-zai-hu-nan-shi-fan-da-xue-xin-xi-ke-xue-yu-gong-cheng-xue-yuan-jiao-shou-ren-gong-zhi-neng-yu-jing-zhun-guo-ji-chuan-bo-yan-jiu-yuan-yan-jiu-zhong-xin-zhu-ren-ma-hua-de-zhi-dao-xia-can-yu-le-duo-ge-jing-zhun-guo-ji-chuan-bo-xiang-guan-xiang-mu-de-yan-jiu-ke-wei-ben-xiang-mu-ti-gong-guan-jian-de-ji-shu-ji-chu-he-shi-yan-ping-tai') }}
             </p>
           </div>
         </div>
@@ -48,13 +48,13 @@
       <el-carousel-item>
         <div class="about-card">
           <div class="card-content">
-            <h2 class="title">使命愿景</h2>
+            <h2 class="title" :style="{ fontSize: titleFontSize }">{{ $t('shi-ming-yuan-jing') }}</h2>
             <div class="divider"></div>
-            <p class="description" style="font-size: 20px; text-align: center; margin-bottom: 30px;">
-              数联万里湖湘 · 智汇千年文脉
+            <p class="description" :style="{ fontSize: descriptionFontSize }" style="text-align: center; margin-bottom: 30px;">
+              {{ $t('shu-lian-wan-li-hu-xiang-zhi-hui-qian-nian-wen-mai') }}
             </p>
-            <p class="description" style="font-size: 18px;">
-              该系统从设计到实现过程中，得到了湖南师范大学的国家"世界一流"建设学科"外国语言文学"的大力支持。我校的"外国语言文学"学科坚持"以文化传播为抓手，服务中国文化走出去战略"，持续推进中华优秀文化的推广，已成为我国中外文化传播的重要基地之一，同时，在培养复合型拔尖外语人才，服务国家安全、外交大局、"一带一路"建设、区域经济社会发展等方面形成了鲜明特色， 在人才培养模式改革、高水平师资队伍建设、标志性科研成果产出、国际交流合作等方面成效显著。
+            <p class="description" :style="{ fontSize: descriptionFontSize }">
+              {{ $t('gai-xi-tong-cong-she-ji-dao-shi-xian-guo-cheng-zhong-de-dao-le-hu-nan-shi-fan-da-xue-de-guo-jia-shi-jie-yi-liu-jian-she-xue-ke-wai-guo-yu-yan-wen-xue-de-da-li-zhi-chi-wo-xiao-de-wai-guo-yu-yan-wen-xue-xue-ke-jian-chi-yi-wen-hua-chuan-bo-wei-zhua-shou-fu-wu-zhong-guo-wen-hua-zou-chu-qu-zhan-lve-chi-xu-tui-jin-zhong-hua-you-xiu-wen-hua-de-tui-guang-yi-cheng-wei-wo-guo-zhong-wai-wen-hua-chuan-bo-de-zhong-yao-ji-di-zhi-yi-tong-shi-zai-pei-yang-fu-he-xing-ba-jian-wai-yu-ren-cai-fu-wu-guo-jia-an-quan-wai-jiao-da-ju-yi-dai-yi-lu-jian-she-qu-yu-jing-ji-she-hui-fa-zhan-deng-fang-mian-xing-cheng-le-xian-ming-te-se-zai-ren-cai-pei-yang-mo-shi-gai-ge-gao-shui-ping-shi-zi-dui-wu-jian-she-biao-zhi-xing-ke-yan-cheng-guo-chan-chu-guo-ji-jiao-liu-he-zuo-deng-fang-mian-cheng-xiao-xian-zhu') }}
             </p>
           </div>
         </div>
@@ -63,10 +63,21 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AboutUs'
-};
+<script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n();
+
+const titleFontSize = computed(() => {
+  return locale.value === 'en' ? '18px' : '24px';  // 设置英文模式下小一点的字体
+});
+
+const descriptionFontSize = computed(() => {
+  return locale.value === 'en' ? '14px' : '16px';  // 英文模式下稍微小一点
+});
+
+
 </script>
 
 <style scoped lang="scss">
@@ -292,6 +303,7 @@ export default {
     transform: translateZ(10px);
   }
 
+
   p {
     color: #666;
     font-size: 16px;
@@ -356,4 +368,5 @@ export default {
 .about-card:hover::before {
   background-position: 100% 100%;
 }
+
 </style>

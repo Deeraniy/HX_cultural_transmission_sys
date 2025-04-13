@@ -27,9 +27,9 @@ const handleSelect = (key) => {
       :ellipsis="false"
       @select="handleSelect"
   >
-    <el-menu-item index="1" >首页</el-menu-item>
-    <el-menu-item index="2">传播效果</el-menu-item>
-    <el-menu-item index="3">情感分析</el-menu-item>
+    <el-menu-item index="1" >{{ $t('menu.home') }}</el-menu-item>
+    <el-menu-item index="2">{{ $t('chuan-bo-xiao-guo') }}</el-menu-item>
+    <!-- <el-menu-item index="3">情感分析</el-menu-item> -->
   </el-menu>
   </div>
 </template>

@@ -10,29 +10,31 @@
       <div id="table" >
         <div style=" color: #333; white-space: pre-wrap;margin-left: 20px;margin-right: 20px;">
           <p style="text-align: center;font-size: 38px">
-            <b>非遗民俗传播指数</b>
+            <b>{{ $t('fei-yi-min-su-chuan-bo-zhi-shu') }}</b>
             <br/>
-            <b>Folk Intangible Cultural Heritage Communication Index</b>
 
           </p>
-          <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;该模块主要通过跟踪各个非遗民俗项目在国内社交媒体的官方账号所发布的信息（包括视频、文章的阅读转发点赞等数据），从而通过这些信息用特定的方法计算出一个可以反映该非遗民俗项目在国际上传播的效果和影响力的非遗民俗传播指数。</p>
-          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This module mainly tracks the information published by the official accounts of various Intangible Cultural Heritage folk projects on domestic social media (including videos, tweets, reads, forwards, likes, etc.), and calculates the Folk Intangible Cultural Heritage Communication Index, which reflects the international communication effect and influence of these projects through this information.</p>
-        </div>
+          <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;{{ $t('nbsp-gai-mo-kuai-zhu-yao-tong-guo-gen-zong-ge-ge-fei-yi-min-su-xiang-mu-zai-guo-nei-she-jiao-mei-ti-de-guan-fang-zhang-hao-suo-fa-bu-de-xin-xi-bao-kuo-shi-pin-wen-zhang-de-yue-du-zhuan-fa-dian-zan-deng-shu-ju-cong-er-tong-guo-zhe-xie-xin-xi-yong-te-ding-de-fang-fa-ji-suan-chu-yi-ge-ke-yi-fan-ying-gai-fei-yi-min-su-xiang-mu-zai-guo-ji-shang-chuan-bo-de-xiao-guo-he-ying-xiang-li-de-fei-yi-min-su-chuan-bo-zhi-shu') }}</p>
+          </div>
         <el-table :data="paginatedData" border style="width: 80%; margin: 0 auto; font-size: 18px;">
-          <el-table-column label="id" width="180">
+          <el-table-column :label="locale === 'en' ? 'ID' : '序号'" width="180">
             <template v-slot="scope">
               {{ scope.$index + 1 + (currentPage - 1) * pageSize }}
             </template>
           </el-table-column>
-          <el-table-column prop="img" label="img" width="180">
+          <el-table-column prop="img" :label="locale === 'en' ? 'Image' : '图片'" width="180">
             <template #default="scope">
               <img :src="scope.row.img" alt="image" style="width: 100px; height: auto;" />
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="民俗" />
-          <el-table-column prop="internationalIndex" sortable label="国际传播系数" />
-          <el-table-column prop="externalPromotion" sortable label="对外宣传报道力度" />
-          <el-table-column prop="socialMediaScore" sortable label="社交媒体综合评分" />
+          <el-table-column prop="name" :label="locale === 'en' ? 'Folk Custom' : '民俗'" >
+            <template #default="{ row }">
+    {{ getFolkName(row.name) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="internationalIndex" sortable :label="locale === 'en' ? 'International Propagation Index' : '国际传播系数'" />
+          <el-table-column prop="externalPromotion" sortable :label="locale === 'en' ? 'External Promotion Effort' : '对外宣传报道力度'" />
+          <el-table-column prop="socialMediaScore" sortable :label="locale === 'en' ? 'Social Media Score' : '社交媒体综合评分'" />
         </el-table>
 
       <el-pagination
@@ -56,6 +58,10 @@
 
 <script lang="ts" setup>
 import {ref, onMounted, computed} from 'vue'
+import { useI18n } from 'vue-i18n';
+import cultureElements from '@/json/culture_elements_translated.json';
+const { locale } = useI18n();
+
 const activeIndex = ref('2')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -72,6 +78,14 @@ interface Product {
   amount2: string
   amount3: number
 }
+// 获取民俗名称的翻译
+const getFolkName = (name) => {
+  // Replace 'cultureElements' with the appropriate array where you store the name and translations
+  const element = cultureElements.find(item => item.title === name); // Assuming 'title' holds the original name
+  return locale.value === 'en' && element?.['title-en'] ? 
+    element['title-en'] : 
+    name; // If locale is 'en', return 'title-en'; otherwise, return the original name
+};
 
 interface SummaryMethodProps<T = Product> {
   columns: TableColumnCtx<T>[]

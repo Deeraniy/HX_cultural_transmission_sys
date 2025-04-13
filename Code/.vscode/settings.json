@@ -1,0 +1,9 @@
+{
+    "i18n-ally.localesPaths": [
+        "vue/src/locales"
+    ],
+    "vue-i18n.i18nPaths": "d:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\locales,d:\\D:\\spring_boot_content\\HX_cultural_sys\\Code\\vue\\src\\locales,/D:/spring_boot_content/HX_cultural_sys/Code/vue/src/locales",
+    "commentTranslate.multiLineMerge": true,
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.sourceLanguage": "zh"
+}

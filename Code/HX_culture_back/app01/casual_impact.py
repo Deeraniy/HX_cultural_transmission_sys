@@ -407,6 +407,30 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
    在经济指标变化后的期间，情感得分的实际值与预测值之间存在{abs(summary_data['average']['effect']):.3f}的差异。
    这表明经济变化{"产生了显著" if abs(relative_effect) > 10 else "产生了轻微" if abs(relative_effect) > 5 else "没有产生显著"}影响。
 """
+        report_text_en=f"""1. Change Point Information:
+   - Change Point Location: Month {change_point}
+   - Change Point Date: {dates[change_point].year}-{dates[change_point].month}
+   - Change Magnitude: {change_value:.3f}
+
+2. Average Effect Analysis:
+   - Actual Sentiment Score Average: {summary_data['average']['actual']:.3f}
+   - Predicted Sentiment Score Average: {summary_data['average']['predicted']:.3f}
+   - Average Causal Effect: {summary_data['average']['effect']:.3f}
+   - 95% Confidence Interval: [{summary_data['average']['ci_lower']:.3f}, {summary_data['average']['ci_upper']:.3f}]
+
+3. Cumulative Effect Analysis:
+   - Actual Cumulative Sentiment Score: {summary_data['cumulative']['actual']:.3f}
+   - Predicted Cumulative Sentiment Score: {summary_data['cumulative']['predicted']:.3f}
+   - Cumulative Causal Effect: {summary_data['cumulative']['effect']:.3f}
+   - 95% Confidence Interval: [{summary_data['cumulative']['ci_lower']:.3f}, {summary_data['cumulative']['ci_upper']:.3f}]
+
+4. Relative Effect:
+   - Relative Change: {relative_effect:.1f}%
+
+5. Conclusion:
+   During the period after the change in economic indicators, there is a difference of {abs(summary_data['average']['effect']):.3f} between the actual and predicted sentiment scores.
+   This suggests that the economic change {"had a significant" if abs(relative_effect) > 10 else "had a slight" if abs(relative_effect) > 5 else "had no significant"} impact.
+"""
         
         return {
             'change_point_info': {
@@ -419,6 +443,7 @@ def perform_casual_impact_analysis(eco_results, analysis_results):
             },
             'impact_summary': summary_data,
             'impact_report': report_text,
+            'impact_report_en': report_text_en,
             'counterfactual_predictions': counterfactual_predictions
         }
         

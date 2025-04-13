@@ -1,4 +1,4 @@
-// BackgroundIntro.vue
+
 <template>
   <div class="background-container">
     <!-- 书签导航 -->
@@ -19,18 +19,18 @@
       <div v-show="currentTab === 0" class="content-section">
         <el-card class="intro-card" shadow="hover">
           <div class="card-header">
-            <h2>项目简介</h2>
+            <h2>{{ $t('xiang-mu-jian-jie') }}</h2>
             <div class="divider"></div>
           </div>
           <div class="card-content">
             <p>
-              推动中华文化走出去，提升中华文化影响力，需要将中华文化对外传播内容的丰富性、传播途径的多样性、文化影响的持久性进行有机整合。其中，湖南不仅有远古文化的丰厚遗存,还有着传统文化的守正创新,更有近代文化的卓越建树。因此，推动文化传播，于湖湘文化而言，不仅可以使其作为中华文化的重要组成部分被更多国际社会了解，也能够为区域文化国际传播积累实践经验，从而丰富全球化时代的文化多样性，并推动中国文化传播理论体系的发展。
+              {{ $t('tui-dong-zhong-hua-wen-hua-zou-chu-qu-ti-sheng-zhong-hua-wen-hua-ying-xiang-li-xu-yao-jiang-zhong-hua-wen-hua-dui-wai-chuan-bo-nei-rong-de-feng-fu-xing-chuan-bo-tu-jing-de-duo-yang-xing-wen-hua-ying-xiang-de-chi-jiu-xing-jin-hang-you-ji-zheng-he-qi-zhong-hu-nan-bu-jin-you-yuan-gu-wen-hua-de-feng-hou-yi-cun-huan-you-zhuo-chuan-tong-wen-hua-de-shou-zheng-chuang-xin-geng-you-jin-dai-wen-hua-de-zhuo-yue-jian-shu-yin-ci-tui-dong-wen-hua-chuan-bo-yu-hu-xiang-wen-hua-er-yan-bu-jin-ke-yi-shi-qi-zuo-wei-zhong-hua-wen-hua-de-zhong-yao-zu-cheng-bu-fen-bei-geng-duo-guo-ji-she-hui-le-jie-ye-neng-gou-wei-qu-yu-wen-hua-guo-ji-chuan-bo-ji-lei-shi-jian-jing-yan-cong-er-feng-fu-quan-qiu-hua-shi-dai-de-wen-hua-duo-yang-xing-bing-tui-dong-zhong-guo-wen-hua-chuan-bo-li-lun-ti-xi-de-fa-zhan') }}
               <br><br>
-              基于此，"基于多模态人工智能的湖湘文化数智化传播系统"的设计理念应运而生，旨在填补当前文化传播领域的技术空白，并解决一些亟待解决的难题。该系统通过整合全球多元化的数据源，结合跨时空、跨语种的分析模型，能全面且系统地评估湖湘文化在全球范围内的传播效果。基于此，还引入了多模态人工智能技术，极大地提升了系统的精准度和全面性。
+              {{ $t('ji-yu-ci-ji-yu-duo-mo-tai-ren-gong-zhi-neng-de-hu-xiang-wen-hua-shu-zhi-hua-chuan-bo-xi-tong-de-she-ji-li-nian-ying-yun-er-sheng-zhi-zai-tian-bu-dang-qian-wen-hua-chuan-bo-ling-yu-de-ji-shu-kong-bai-bing-jie-jue-yi-xie-ji-dai-jie-jue-de-nan-ti-gai-xi-tong-tong-guo-zheng-he-quan-qiu-duo-yuan-hua-de-shu-ju-yuan-jie-he-kua-shi-kong-kua-yu-zhong-de-fen-xi-mo-xing-neng-quan-mian-qie-xi-tong-di-ping-gu-hu-xiang-wen-hua-zai-quan-qiu-fan-wei-nei-de-chuan-bo-xiao-guo-ji-yu-ci-huan-yin-ru-le-duo-mo-tai-ren-gong-zhi-neng-ji-shu-ji-da-di-ti-sheng-le-xi-tong-de-jing-zhun-du-he-quan-mian-xing') }}
               <br><br>
-              此外，该系统还通过优化界面设计，在文化传播中融合VR、沉浸式体验等前沿技术，以优化用户体验，提升传播效果，使得文化传播内容更加生动和富有冲击力。系统能够通过获取用户的访问历史和关注内容，为用户制作个性化的画像，提供定制化的文化内容推荐。平台还将使用大模型生成图文结合的宣传内容，结合活动主题、地区特色和用户需求，为湖湘文化的传播与区域经济发展做出积极贡献。
+              {{ $t('ci-wai-gai-xi-tong-huan-tong-guo-you-hua-jie-mian-she-ji-zai-wen-hua-chuan-bo-zhong-rong-he-vr-chen-jin-shi-ti-yan-deng-qian-yan-ji-shu-yi-you-hua-yong-hu-ti-yan-ti-sheng-chuan-bo-xiao-guo-shi-de-wen-hua-chuan-bo-nei-rong-geng-jia-sheng-dong-he-fu-you-chong-ji-li-xi-tong-neng-gou-tong-guo-huo-qu-yong-hu-de-fang-wen-li-shi-he-guan-zhu-nei-rong-wei-yong-hu-zhi-zuo-ge-xing-hua-de-hua-xiang-ti-gong-ding-zhi-hua-de-wen-hua-nei-rong-tui-jian-ping-tai-huan-jiang-shi-yong-da-mo-xing-sheng-cheng-tu-wen-jie-he-de-xuan-chuan-nei-rong-jie-he-huo-dong-zhu-ti-di-qu-te-se-he-yong-hu-xu-qiu-wei-hu-xiang-wen-hua-de-chuan-bo-yu-qu-yu-jing-ji-fa-zhan-zuo-chu-ji-ji-gong-xian') }}
               <br><br>
-              通过多模态人工智能技术的深度应用，本系统不仅为湖湘文化的国际传播提供了精准的数据支持和理论指导，更为文化的深度传播提供了坚实的技术保障。同时本系统将湖湘文化元素细致分类成五大模块，以此帮助更多湖湘文化爱好者从多方面深入了解湖湘文化的内涵和特色。通过本系统，文化研究者与文化传播者可以根据系统的评估结果，制定更加有效的传播策略，推动湖湘文化在国际的普及和发展。这一成果不仅为制定更加精准、科学的湖湘文化传播策略提供了坚实的数据支撑与理论指导，更为推动湖湘文化在全球范围内的传播与影响力提升贡献了重要力量。
+              {{ $t('tong-guo-duo-mo-tai-ren-gong-zhi-neng-ji-shu-de-shen-du-ying-yong-ben-xi-tong-bu-jin-wei-hu-xiang-wen-hua-de-guo-ji-chuan-bo-ti-gong-le-jing-zhun-de-shu-ju-zhi-chi-he-li-lun-zhi-dao-geng-wei-wen-hua-de-shen-du-chuan-bo-ti-gong-le-jian-shi-de-ji-shu-bao-zhang-tong-shi-ben-xi-tong-jiang-hu-xiang-wen-hua-yuan-su-xi-zhi-fen-lei-cheng-wu-da-mo-kuai-yi-ci-bang-zhu-geng-duo-hu-xiang-wen-hua-ai-hao-zhe-cong-duo-fang-mian-shen-ru-le-jie-hu-xiang-wen-hua-de-nei-han-he-te-se-tong-guo-ben-xi-tong-wen-hua-yan-jiu-zhe-yu-wen-hua-chuan-bo-zhe-ke-yi-gen-ju-xi-tong-de-ping-gu-jie-guo-zhi-ding-geng-jia-you-xiao-de-chuan-bo-ce-lve-tui-dong-hu-xiang-wen-hua-zai-guo-ji-de-pu-ji-he-fa-zhan-zhe-yi-cheng-guo-bu-jin-wei-zhi-ding-geng-jia-jing-zhun-ke-xue-de-hu-xiang-wen-hua-chuan-bo-ce-lve-ti-gong-le-jian-shi-de-shu-ju-zhi-cheng-yu-li-lun-zhi-dao-geng-wei-tui-dong-hu-xiang-wen-hua-zai-quan-qiu-fan-wei-nei-de-chuan-bo-yu-ying-xiang-li-ti-sheng-gong-xian-le-zhong-yao-li-liang-0') }}
             </p>
           </div>
         </el-card>
@@ -40,18 +40,18 @@
       <div v-show="currentTab === 1" class="content-section">
         <el-card class="intro-card" shadow="hover">
           <div class="card-header">
-            <h2>背景介绍</h2>
+            <h2>{{ $t('bei-jing-jie-shao-0') }}</h2>
             <div class="divider"></div>
           </div>
           <div class="card-content">
             <p>
-              近年来，随着中国综合国力的提升和国际话语权的增强，文化自信和文化"走出去"战略成为国家发展的重要议题之一。习近平总书记在中央政治局第三十次集体学习时强调，"要更好推动中华文化走出去，以文载道、以文传声、以文化人，向世界阐释推介更多具有中国特色、体现中国精神、蕴藏中国智慧的优秀文化。"湖湘文化作为中华文化的重要组成部分，其独特的地域特色、深厚的历史积淀和丰富的文化内涵，使其在全球范围内的关注度逐渐上升。
+              {{ $t('jin-nian-lai-sui-zhuo-zhong-guo-zong-he-guo-li-de-ti-sheng-he-guo-ji-hua-yu-quan-de-zeng-qiang-wen-hua-zi-xin-he-wen-hua-zou-chu-qu-zhan-lve-cheng-wei-guo-jia-fa-zhan-de-zhong-yao-yi-ti-zhi-yi-xi-jin-ping-zong-shu-ji-zai-zhong-yang-zheng-zhi-ju-di-san-shi-ci-ji-ti-xue-xi-shi-qiang-tiao-yao-geng-hao-tui-dong-zhong-hua-wen-hua-zou-chu-qu-yi-wen-zai-dao-yi-wen-chuan-sheng-yi-wen-hua-ren-xiang-shi-jie-chan-shi-tui-jie-geng-duo-ju-you-zhong-guo-te-se-ti-xian-zhong-guo-jing-shen-yun-cang-zhong-guo-zhi-hui-de-you-xiu-wen-hua-hu-xiang-wen-hua-zuo-wei-zhong-hua-wen-hua-de-zhong-yao-zu-cheng-bu-fen-qi-du-te-de-di-yu-te-se-shen-hou-de-li-shi-ji-dian-he-feng-fu-de-wen-hua-nei-han-shi-qi-zai-quan-qiu-fan-wei-nei-de-guan-zhu-du-zhu-jian-shang-sheng-1') }}
               <br><br>
-              湖湘文化的形成过程经历了复杂的历史演变：先秦、两汉时期的楚文化对其具有深远影响，而南北朝及唐宋以来，大规模的移民迁徙带来了中原文化的深度融合与发展，逐渐形成了周敦颐的理学思想、王夫之的"经世致用"理念以及魏源的"睁眼看世界"意识，塑造了湖湘文化"敢为人先、经世致用"的独特精神气质。这一文化形态不仅在中国历史上占据重要地位，更在近现代历史中凭借"湖南人才半国中"的影响力和"无湘不成军"的盛誉，推动了中国社会变革和思想解放。
+              {{ $t('hu-xiang-wen-hua-de-xing-cheng-guo-cheng-jing-li-le-fu-za-de-li-shi-yan-bian-xian-qin-liang-han-shi-qi-de-chu-wen-hua-dui-qi-ju-you-shen-yuan-ying-xiang-er-nan-bei-zhao-ji-tang-song-yi-lai-da-gui-mo-de-yi-min-qian-xi-dai-lai-le-zhong-yuan-wen-hua-de-shen-du-rong-he-yu-fa-zhan-zhu-jian-xing-cheng-le-zhou-dun-yi-de-li-xue-si-xiang-wang-fu-zhi-de-jing-shi-zhi-yong-li-nian-yi-ji-wei-yuan-de-zheng-yan-kan-shi-jie-yi-shi-su-zao-le-hu-xiang-wen-hua-gan-wei-ren-xian-jing-shi-zhi-yong-de-du-te-jing-shen-qi-zhi-zhe-yi-wen-hua-xing-tai-bu-jin-zai-zhong-guo-li-shi-shang-zhan-ju-zhong-yao-di-wei-geng-zai-jin-xian-dai-li-shi-zhong-ping-jie-hu-nan-ren-cai-ban-guo-zhong-de-ying-xiang-li-he-wu-xiang-bu-cheng-jun-de-sheng-yu-tui-dong-le-zhong-guo-she-hui-bian-ge-he-si-xiang-jie-fang') }}
               <br><br>
-              然而，如何借助现代化的传播手段和技术手段，更好地展示湖湘文化的魅力、提升其国际影响力，成为当前学界和业界亟待解决的问题。党的二十大报告明确指出，要"着力提升国际传播效能 促进文明交流互鉴"，推动具有地域特色的中华文化更好地走向世界。为此，加强湖湘文化的国际传播能力建设，特别是运用现代数据分析和技术手段，系统地评估其传播效果及策略，具有重要的现实意义。
+              {{ $t('ran-er-ru-he-jie-zhu-xian-dai-hua-de-chuan-bo-shou-duan-he-ji-shu-shou-duan-geng-hao-di-zhan-shi-hu-xiang-wen-hua-de-mei-li-ti-sheng-qi-guo-ji-ying-xiang-li-cheng-wei-dang-qian-xue-jie-he-ye-jie-ji-dai-jie-jue-de-wen-ti-dang-de-er-shi-da-bao-gao-ming-que-zhi-chu-yao-zhuo-li-ti-sheng-guo-ji-chuan-bo-xiao-neng-cu-jin-wen-ming-jiao-liu-hu-jian-tui-dong-ju-you-di-yu-te-se-de-zhong-hua-wen-hua-geng-hao-di-zou-xiang-shi-jie-wei-ci-jia-qiang-hu-xiang-wen-hua-de-guo-ji-chuan-bo-neng-li-jian-she-te-bie-shi-yun-yong-xian-dai-shu-ju-fen-xi-he-ji-shu-shou-duan-xi-tong-di-ping-gu-qi-chuan-bo-xiao-guo-ji-ce-lve-ju-you-zhong-yao-de-xian-shi-yi-yi') }}
               <br><br>
-              随着新媒体平台和数字信息技术的快速发展，社交媒体、短视频平台等新兴传播渠道突破了传统传播路径的局限，为湖湘文化走向世界提供了新的契机。近年来，学者们开始将机器学习、自然语言处理等技术应用于文化传播的效果评估中，如通过情感分析、文本挖掘、话语分析等手段，深入研究文化在不同语言环境和文化背景中的接受度及传播效果。然而，目前湖湘文化的国际传播研究主要集中在某些单个文化作品或现象的分析上，缺乏系统化的传播效果评估模型，难以全面反映湖湘文化在全球范围内的传播情况。为应对这一挑战，本系统应运而生。
+              {{ $t('sui-zhuo-xin-mei-ti-ping-tai-he-shu-zi-xin-xi-ji-shu-de-kuai-su-fa-zhan-she-jiao-mei-ti-duan-shi-pin-ping-tai-deng-xin-xing-chuan-bo-qu-dao-tu-po-le-chuan-tong-chuan-bo-lu-jing-de-ju-xian-wei-hu-xiang-wen-hua-zou-xiang-shi-jie-ti-gong-le-xin-de-qi-ji-jin-nian-lai-xue-zhe-men-kai-shi-jiang-ji-qi-xue-xi-zi-ran-yu-yan-chu-li-deng-ji-shu-ying-yong-yu-wen-hua-chuan-bo-de-xiao-guo-ping-gu-zhong-ru-tong-guo-qing-gan-fen-xi-wen-ben-wa-jue-hua-yu-fen-xi-deng-shou-duan-shen-ru-yan-jiu-wen-hua-zai-bu-tong-yu-yan-huan-jing-he-wen-hua-bei-jing-zhong-de-jie-shou-du-ji-chuan-bo-xiao-guo-ran-er-mu-qian-hu-xiang-wen-hua-de-guo-ji-chuan-bo-yan-jiu-zhu-yao-ji-zhong-zai-mou-xie-dan-ge-wen-hua-zuo-pin-huo-xian-xiang-de-fen-xi-shang-que-fa-xi-tong-hua-de-chuan-bo-xiao-guo-ping-gu-mo-xing-nan-yi-quan-mian-fan-ying-hu-xiang-wen-hua-zai-quan-qiu-fan-wei-nei-de-chuan-bo-qing-kuang-wei-ying-dui-zhe-yi-tiao-zhan-ben-xi-tong-ying-yun-er-sheng') }}
             </p>
           </div>
         </el-card>
@@ -61,7 +61,7 @@
       <div v-show="currentTab === 2" class="content-section">
         <el-card class="intro-card" shadow="hover">
           <div class="card-header">
-            <h2>技术路线</h2>
+            <h2>{{ $t('ji-shu-lu-xian') }}</h2>
             <div class="divider"></div>
           </div>
           <div class="card-content">
@@ -95,24 +95,42 @@ import KgRagImage from '@/assets/background/KG-RAG.jpg'
 import ConfedeImage from '@/assets/background/ConFEDE结构图.jpg'
 import LdaImage from '@/assets/background/LDA算法模型.jpg'
 import CfImage from '@/assets/background/协同过滤.jpg'
+import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
 
 export default {
   name: 'BackgroundIntro',
-  data() {
-    return {
-      currentTab: 0,
-      currentPage: 0,
-      tabs: ['项目简介', '背景介绍', '技术路线'],
-      techItems: [
+  setup() {
+    const { t, locale } = useI18n();
+
+const currentTab = ref(0);
+const currentPage = ref(0);
+
+const tabs = locale.value === 'en'
+  ? ['Project Introduction', 'Background Introduction', 'Technical Route']
+  : ['项目简介', '背景介绍', '技术路线'];
+    const techItems= [
         {
-          title: '1. 数据采集与处理',
-          content: '本项目采用多源数据采集策略，通过以下方式获取湖湘文化相关数据：<br><br>（1）社交媒体数据采集：利用网络爬虫和开发者API从国际主流社交媒体平台（如小红书、微博、X、Youtube等）获取用户评论、互动数据，分析用户对湖湘文化的关注点和情感倾向。<br><br>（2）官方数据整合：从湖南省人民政府门户网站、湖南省文化和旅游厅等官方渠道获取湖湘非遗名录项目、文化政策文件等权威数据。<br><br>（3）百科类数据补充：通过百度百科、维基百科等平台获取湖湘文化的背景知识、历史沿革等结构化数据。<br><br>（4）微信公众号内容采集：收集湖湘文化相关的公众号文章、视频等内容，获取更丰富的文化传播素材。<br><br>在数据处理方面，采用以下技术手段：数据清洗、数据标准化、数据分类、数据存储。'
+          title: locale.value==='en'?'1. Data collection and processing':'1. 数据采集与处理',
+          content: locale.value==='en'?'This project adopts a multi-source data collection strategy to obtain data related to Huxiang culture in the following ways: <br><br>(1) Social media data collection: use web crawlers and developer APIs to obtain user comments and interaction data from international mainstream social media platforms (such as Xiaohongshu, Weibo, X, Youtube, etc.), and analyze users concerns and emotional tendencies towards Huxiang culture. <br><br>(2) Integration of official data: Authoritative data such as Huxiang intangible cultural heritage list items and cultural policy documents are obtained from the portal of the Hunan Provincial People\'s Government and the Hunan Provincial Department of Culture and Tourism. <br><br>(3) Encyclopedia data supplement: Obtain structured data such as background knowledge and historical evolution of Huxiang culture through Baidu Encyclopedia, Wikipedia and other platforms. <br><br>(4) WeChat public account content collection: collect official account articles, videos and other content related to Huxiang culture to obtain richer cultural communication materials. <br><br>In terms of data processing, the following technical means are adopted: data cleaning, data standardization, data classification, and data storage.':'本项目采用多源数据采集策略，通过以下方式获取湖湘文化相关数据：<br><br>（1）社交媒体数据采集：利用网络爬虫和开发者API从国际主流社交媒体平台（如小红书、微博、X、Youtube等）获取用户评论、互动数据，分析用户对湖湘文化的关注点和情感倾向。<br><br>（2）官方数据整合：从湖南省人民政府门户网站、湖南省文化和旅游厅等官方渠道获取湖湘非遗名录项目、文化政策文件等权威数据。<br><br>（3）百科类数据补充：通过百度百科、维基百科等平台获取湖湘文化的背景知识、历史沿革等结构化数据。<br><br>（4）微信公众号内容采集：收集湖湘文化相关的公众号文章、视频等内容，获取更丰富的文化传播素材。<br><br>在数据处理方面，采用以下技术手段：数据清洗、数据标准化、数据分类、数据存储。'
         },
         {
-          title: '2. 知识图谱与检索增强生成',
-          content: `
+          title: locale.value==='en'?'2. Knowledge graph and retrieval enhancement generation':'2. 知识图谱与检索增强生成',
+          content: locale.value==='en'?`<div style="display: flex; align-items: start; gap: 20px;">
+              <img src="${KgRagImage}" alt="{{ $t('kgrag-jia-gou-tu') }}" style="width: 25%; object-fit: contain;">
+              <div>
+                <p style="margin-bottom: 15px;">① <strong>Construction of Huxiang cultural knowledge graph</strong><br>
+                Through multi-channel acquisition of Huxiang culture-related data, ontology structure design, entity and relationship extraction, construction of high-quality triples, storage in neo4j database, to achieve structured knowledge expression and efficient retrieval.</p>
+                
+                <p style="margin-bottom: 15px;">② <strong>Retrieval Enhanced Generation (RAG)</strong><br>
+                Based on the large language model and combined with the retrieval component, the accuracy and reliability of Q&A are improved. In view of the professional knowledge of Huxiang culture, the professionalism and comprehensiveness of the answers are enhanced through retrieval.</p>
+                
+                <p>③ <strong>Complement each other's images</strong><br>
+               Knowledge graph provides structured storage and logical reasoning, and RAG provides natural language generation and semantic retrieval, which combine to improve the accuracy, coverage, and interpretability of the Q&A system.</p>
+              </div>
+            </div>`:`
             <div style="display: flex; align-items: start; gap: 20px;">
-              <img src="${KgRagImage}" alt="KG-RAG架构图" style="width: 25%; object-fit: contain;">
+              <img src="${KgRagImage}" alt="{{ $t('kgrag-jia-gou-tu') }}" style="width: 25%; object-fit: contain;">
               <div>
                 <p style="margin-bottom: 15px;">① <strong>湖湘文化知识图谱构建</strong><br>
                 通过多渠道获取湖湘文化相关数据，设计本体结构，进行实体与关系抽取，构建高质量三元组，存入neo4j数据库，实现结构化的知识表达与高效检索。</p>
@@ -126,8 +144,25 @@ export default {
             </div>`
         },
         {
-          title: '3. 多模态情感分析',
-          content: `
+          title: locale.value==='en'?'3. Multimodal sentiment analysis':'3. 多模态情感分析',
+          content: locale.value==='en'?`
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div style="display: flex; align-items: start; gap: 20px;">
+                <div style="width: 90%;">
+                  <p style="margin-bottom: 15px;">(1) <strong>Multimodal sentiment analysis model based on ConFEDE</strong><br>
+                  Using a framework that combines contrastive learning and feature decomposition, it can process multimodal data such as text, images, and audio simultaneously. Through the optimization of three loss functions, multi-modal prediction loss, unimodal prediction loss and contrast loss, the accurate sentiment analysis of Huxiang culture-related content is realized.</p>
+                  
+                  <p>(2) <strong>Sentiment analysis based on Qwen2.5-7B-Instruct</strong><br>
+                  The high-efficiency fine-tuning scheme of parameters, combined with LoRA low-rank adapter technology, was optimized on the basis of the Qwen2.5-7B-Instruct large model. Experiments show that the fine-tuned model has an accuracy of more than 98% on sentiment analysis tasks, which is significantly better than that of the unfine-tuned model.</p>
+                </div>
+                <div style="width: 55%; display: flex; flex-direction: column; gap: 10px;margin-top: -40px;">
+                  <img src="${ConfedeImage}" alt="{{ $t('confede-jie-gou-tu') }}" style="width: 100%; object-fit: contain;">
+                </div>
+              </div>
+              <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;margin-top: -20px;">
+                <p style="margin-top: 0px; margin-bottom: 0;"><strong>Experimental results:</strong> On the weibo_senti_100k dataset, the fine-tuned large models (including Qwen2.5-7B-Instruct, DeepSeek-R1-Distill-Qwen-7B, and Meta-Llama-3.1-8B-Instruct) all performed excellently, with an accuracy of more than 98.3%, which was significantly better than the unfine-tuned baseline model.</p>
+              </div>
+            </div>`:`
             <div style="display: flex; flex-direction: column; gap: 20px;">
               <div style="display: flex; align-items: start; gap: 20px;">
                 <div style="width: 90%;">
@@ -138,7 +173,7 @@ export default {
                   采用参数高效微调方案，结合LoRA低秩适配器技术，在Qwen2.5-7B-Instruct大模型基础上进行优化。实验表明，微调后的模型在情感分析任务上准确率可达98%以上，显著优于未经微调的模型。</p>
                 </div>
                 <div style="width: 55%; display: flex; flex-direction: column; gap: 10px;margin-top: -40px;">
-                  <img src="${ConfedeImage}" alt="ConFEDE结构图" style="width: 100%; object-fit: contain;">
+                  <img src="${ConfedeImage}" alt="{{ $t('confede-jie-gou-tu') }}" style="width: 100%; object-fit: contain;">
                 </div>
               </div>
               <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;margin-top: -20px;">
@@ -147,8 +182,27 @@ export default {
             </div>`
         },
         {
-          title: '4. 基于LDA的主题提取模型',
-          content: `
+          title: locale.value==='en'?'4. LDA-based topic extraction model':'4. 基于LDA的主题提取模型',
+          content:locale.value==='en'?
+`<divstyle="display：flex;flex-direction：column;gap：20px;">
+<divstyle="display：flex;align-items：start;gap：20px;">
+<divstyle="width：60%;">
+Using Leda (Rattente Diriclette Alocation, latent Dirichlet allocation) as the core modeling method, the text data is modeled through probability generation, assuming that each document is composed of a mixture of multiple topics, and each topic is represented by a probability distribution of a set of words, so as to effectively reveal the topic patterns in the document collection. </p>
+
+<pstyle="margin-bottom:15px;"> <strong>Key features:</strong> •Modeling through document-topic distribution and topic-word distribution<br>
+• Variational Em algorithm was used for model training and <br>parameter optimization
+• Able to effectively identify high-frequency topics in review data<br>
+• Can be used for a priori analysis of hot spot tracking and sentiment classification</p>
+</div>
+<divstyle="width：40%;display：flex;flex-direction：column;gap：10px;">
+<imgsrc="${LdaImage}"alt="LDA algorithm model" style="width:100%;object-fit:contain;margin-top:50px;">
+<pstyle="text-align:center;margin:0;font-size:14px;color:#666;"> Figure 5 Leida algorithm model</p>
+</div>
+</div>
+<divstyle="background：#f5f5f5;padding：15px;border-radius：8px;">
+<pstyle="margin:0;"> <strong>application effect:</strong> The experimental results show that Leda can better distinguish the comment topics with different emotional tendencies on the dataset of this project, which provides strong support for the sentiment analysis task and effectively improves the accuracy of the analysis of the communication effect of Huxiang culture. </p>
+</div>
+</div>`: `
             <div style="display: flex; flex-direction: column; gap: 20px;">
               <div style="display: flex; align-items: start; gap: 20px;">
                 <div style="width: 60%;">
@@ -170,8 +224,34 @@ export default {
             </div>`
         },
         {
-          title: '5. 因果推理与情感走势预测',
-          content: `
+          title:locale.value==='en'? '5. Causal Reasoning and Sentiment Trend Prediction':'5. 因果推理与情感走势预测',
+          content:locale.value==='en'?`
+<div style="display: flex; align-items: start; gap: 30px;">
+<div style="width: 50%;">
+<p style="margin-bottom: -10px;">(1) <strong>CausalImpact-based causal inference model</strong></p>
+<p style="margin-bottom: -10px;" > CausalImpact was used as the core method to evaluate the impact of propagation events on sentiment trend based on Bayesian structure time series model (BSTS). The model structure contains:</p>
+<ul style="list-style-type: none; padding-left: 20px; margin-bottom: 5px;">
+<li>• Local Linear Trend Term: Characterizes long-term trends</li>
+<li>• Cyclical component: reflects the ups and downs of public opinion on a 7-day cycle</li>
+<li>• Covariates: Include factors such as holidays, specific events, and more</li>
+<li>• Stochastic perturbation: Uncertainty in the modeled data</li>
+</ul>
+<p>The MCMC method was used for parameter estimation, and the robust causal effect inference was achieved through 10,000 samples, and the significance of the impact was verified by using the posterior probability. </p>
+</div>
+<div style="width: 50%;">
+<p style="margin-bottom: -10px;">(2) <strong>Sentiment trend prediction model based on LSTM</strong></p>
+<p style="margin-bottom: -10px;"> bidirectional LSTM deep time series network is used to realize multi-step prediction and mine the temporal dependence of sentiment data. Key features:</p>
+<ul style="list-style-type: none; padding-left: 20px; margin-bottom: 5px;">
+<li>• Double-layer LSTM encoder (256 hidden units).</li>
+<li>• Temporal attention mechanism enhances feature extraction</li>
+<li>• Single-layer LSTM decoder predicts the trend in the next 7 days</li>
+<li>• Using the AdamW optimizer, the learning rate is 1e-3</li>
+</ul>
+<p style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+<strong>Experimental results:</strong> The MAE on the validation set reaches 0.148, which is 37.2% lower than the prediction error of the ARIMA model, showing superior prediction performance.
+</p>
+</div>
+</div>`: `
             <div style="display: flex; align-items: start; gap: 30px;">
               <div style="width: 50%;">
                 <p style="margin-bottom: -10px;">① <strong>基于CausalImpact的因果推理模型</strong></p>
@@ -201,8 +281,26 @@ export default {
             </div>`
         },
         {
-          title: '6. 用户画像和兴趣预测',
-          content: `
+          title:locale.value==='en'? '6. User Portrait and Interest Prediction':'6. 用户画像和兴趣预测',
+          content:locale.value==='en'? `
+<divstyle="display：flex;flex-direction：column;gap：20px;">
+<divstyle="width：50%;text-align：center;margin-bottom：-40px;margin-top：-40px;margin-left：250px;">
+<imgsrc="${CfImage}"alt="Collaborative filter diagram"style="width:80%;object-fit:contain;">
+</div>
+<divstyle="display：flex;flex-direction：column;gap：15px;">
+<pstyle="margin:0;" > <strong>collaborative filtering recommendation model</strong><br>
+The collaborative filtering (Kolabolativ Feltlin) method was used to construct a hybrid recommendation model by combining user similarity calculation and interest prediction based on scoring data. The core idea is based on the fact that similar users have historically had similar interests and preferences. </p>
+
+<pstyle="margin:0;margin-top:-10px;"> <strong>Technical features:</strong> •Use the Pearson correlation coefficient to calculate user similarity</p>
+<ulstyle="list-style-type：none;padding-left：20px;margin-top：-10px;">
+<li>• Neighborhood-based scoring prediction method</li>
+<li>&;nbsp;&nbsp;&nbsp;•Normalize treatment that takes into account user rating bias</li>
+<li>&Bsp;&Embussp;•Weighted to calculate the final referral score</li>
+</ul>
+<pstyle="margin-top:-30px;margin-bottom:0;"> <strong>application effect:</strong> The method has a significant effect on interest prediction on Huxiang culture-related datasets, and the error is significantly reduced compared with the benchmark model, which can more accurately capture user preferences and provide personalized cultural content recommendations. </p>
+
+</div>
+</div>`:`
             <div style="display: flex; flex-direction: column; gap: 20px;">
               <div style="width: 50%; text-align: center; margin-bottom: -40px;margin-top: -40px;margin-left: 250px;">
                 <img src="${CfImage}" alt="协同过滤示意图" style="width: 80%; object-fit: contain;">
@@ -224,12 +322,19 @@ export default {
             </div>`
         }
       ]
-    };
-  },
-  methods: {
-    handlePageChange(page) {
-      this.currentPage = page - 1;
-    }
+      const handlePageChange = (page) => {
+    currentPage.value = page - 1;
+  };
+
+  return {
+    currentTab,
+    currentPage,
+    tabs,
+    techItems,
+    t,
+    handlePageChange
+  };
+
   }
 };
 </script>

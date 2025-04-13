@@ -1,14 +1,23 @@
 [
   {
-    "description": "家住常德武陵境，丝瓜井畔刘家门",
+    "description": {
+      "zh": "家住常德武陵境，丝瓜井畔刘家门",
+      "en": "Living in Changde Wuling, at the Liu family gate by the Loofah Well"
+    },
     "image": "@/assets/show1.jpg"
   },
   {
-    "description": "又以童子装丑旦剧唱，金鼓喧阗，自初旬起至是夜止",
+    "description": {
+      "zh": "又以童子装丑旦剧唱，金鼓喧阗，自初旬起至是夜止",
+      "en": "Also, the boy dressed as a clown sings in the opera, with drums and gongs resounding, starting from the early days until the night ends"
+    },
     "image": "@/assets/show2.jpg"
   },
   {
-    "description": "沙弥新学唱皈依，板眼初清错字稀。贪听姨姨采茶曲，家鸡又逐野凫飞",
+    "description": {
+      "zh": "沙弥新学唱皈依，板眼初清错字稀。贪听姨姨采茶曲，家鸡又逐野凫飞",
+      "en": "The novice learns to sing the refuge prayer, with the beat clearing up and fewer mistakes. Greedy to listen to Auntie's tea-picking song, the family chicken chases wild ducks flying."
+    },
     "image": "@/assets/show3.jpg"
   }
 ]

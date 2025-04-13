@@ -3,8 +3,8 @@
     <div class="total">
       <!-- 返回按钮 -->
 
-      <h2 class="fixed-title">个性推荐界面</h2>
-      <el-button class="back-btn" @click="goBack">| 返回</el-button>
+      <h2 class="fixed-title">{{ $t('ge-xing-tui-jian-jie-mian') }}</h2>
+      <el-button class="back-btn" @click="goBack">{{ $t('fan-hui') }}</el-button>
       <el-menu
           :default-active="activeIndex"
           class="el-menu-demo"

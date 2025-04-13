@@ -3,8 +3,8 @@
       <div class="total">
         <!-- 返回按钮 -->
   
-        <h2 class="fixed-title">宣传策略生成界面</h2>
-        <el-button class="back-btn" @click="goBack">| 返回</el-button>
+        <h2 class="fixed-title">{{ $t('xuan-chuan-ce-lve-sheng-cheng-jie-mian') }}</h2>
+        <el-button class="back-btn" @click="goBack">{{ $t('fan-hui') }}</el-button>
         <el-menu
             :default-active="activeIndex"
             class="el-menu-demo"
@@ -12,8 +12,8 @@
             :ellipsis="false"
             @select="handleSelect"
         >
-          <el-menu-item index="2">情感分析与预测</el-menu-item>
-          <el-menu-item index="3">传播策略生成</el-menu-item>
+          <!-- <el-menu-item index="2">情感分析与预测</el-menu-item>
+          <el-menu-item index="3">传播策略生成</el-menu-item> -->
         
         </el-menu>
       </div>

@@ -4,11 +4,18 @@
       <div class="attraction-container">
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">湖湘新媒体艺术作为湖湘文化与现代科技的结合体，展现了湖南地区在当代艺术领域的创新与活力。它不仅是湖湘文化的新表达方式，也是现代艺术在地方文化中的重要实践。随着技术的不断进步和艺术形式的多元化，湖湘新媒体艺术的未来充满了无限的可能性，必将在全球艺术舞台上占据一席之地。</span>
+          <span class="scroll-bar-text">{{ $t('hu-xiang-xin-mei-ti-yi-shu-zuo-wei-hu-xiang-wen-hua-yu-xian-dai-ke-ji-de-jie-he-ti-zhan-xian-le-hu-nan-di-qu-zai-dang-dai-yi-shu-ling-yu-de-chuang-xin-yu-huo-li-ta-bu-jin-shi-hu-xiang-wen-hua-de-xin-biao-da-fang-shi-ye-shi-xian-dai-yi-shu-zai-di-fang-wen-hua-zhong-de-zhong-yao-shi-jian-sui-zhuo-ji-shu-de-bu-duan-jin-bu-he-yi-shu-xing-shi-de-duo-yuan-hua-hu-xiang-xin-mei-ti-yi-shu-de-wei-lai-chong-man-le-wu-xian-de-ke-neng-xing-bi-jiang-zai-quan-qiu-yi-shu-wu-tai-shang-zhan-ju-yi-xi-zhi-di') }}</span>
         </div>
         <!-- 图片轮播（垂直方向） -->
         <el-carousel height="400px" direction="vertical" :autoplay="false" v-model:active-index="currentIndex" @change="onCarouselChange" class="carousel-right">
           <el-carousel-item v-for="(item, index) in carouselData" :key="index">
+            <div class="carousel-text-container" style="margin-left: 135px;margin-top: -10px;">
+              <div class="carousel-text">
+                <div class="s-title w">
+                  <span>{{ item.name[locale] }}</span>
+                </div>
+              </div>
+            </div>
             <div class="carousel-image-container">
               <img :src="item.image" alt="image" />
             </div>
@@ -46,13 +53,25 @@ import Video3 from "@/assets/Video3.jpg"
 // 直接导入 JSON 文件
 import bookData from '@/json/Book.json';
 console.log(bookData.title)
+import { useI18n } from 'vue-i18n';
 
+const { locale } = useI18n(); // 获取当前语言
 const currentIndex = ref(0);
 const carouselData = [
-  { image: Video1 },
-  { image: Video2 },
-  { image: Video3 }
+  { 
+    image: Video1,
+    name: { zh: '再见爱人', en: 'Goodbye Lover' }
+  },
+  { 
+    image: Video2,
+    name: { zh: '声生不息', en: 'Sound and Life' }
+  },
+  { 
+    image: Video3,
+    name: { zh: '你好星期六', en: 'Hello Saturday' }
+  }
 ];
+
 // 监听 currentIndex 的变化
 watch(currentIndex, (newIndex) => {
   nextTick(() => {
@@ -175,7 +194,7 @@ onMounted(() => {
 }
 
 .carousel-right {
-  width: 500px; /* 设置轮播组件的宽度 */
+  width: 1000px; /* 设置轮播组件的宽度 */
   margin-right: 20px; /* 与左侧内容的间距 */
 }
 

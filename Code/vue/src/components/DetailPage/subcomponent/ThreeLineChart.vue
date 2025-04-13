@@ -33,12 +33,20 @@ const props = defineProps({
   }
 });
 
-const { t } = useI18n();
+const { t,locale } = useI18n();
 
 const showReport = ref(false);
 const chartRef = ref(null);
 let chart = null;
-
+// formatReport 方法
+const getReport = (report) => {
+  // 这里可以处理或格式化报告内容
+  if (locale.value === 'zh') {
+    return formatReport(report.impact_report);
+  } else {
+    return report.impact_report_en;
+  }
+};
 const renderChart = () => {
   if (!chartRef.value || !props.timeData) return;
 
@@ -443,8 +451,8 @@ const formatReport = (report) => {
     >
       <div class="analysis-report">
         <div class="report-text">
-          <div class="report-section" v-if="props.timeData?.casual_impact_analysis?.impact_report">
-            <div v-html="formatReport(props.timeData.casual_impact_analysis.impact_report)"></div>
+          <div class="report-section" v-if="props.timeData?.casual_impact_analysis">
+            <div v-html="getReport(props.timeData.casual_impact_analysis)"></div>
           </div>
           <div v-else>{{ t('detail.report.noReport') }}</div>
         </div>

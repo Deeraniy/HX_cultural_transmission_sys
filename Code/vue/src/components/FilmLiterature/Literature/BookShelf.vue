@@ -3,12 +3,13 @@
     <!-- 搜索框 -->
     <div class="search-category-container">
       <input
-          type="text"
-          v-model="searchTerm"
-          placeholder="搜索书籍..."
-          class="search-input"
-      />
-      <button @click="applyFilters" class="search-button">搜索</button>
+  type="text"
+  v-model="searchTerm"
+  :placeholder="locale === 'en' ? 'Search for books...' : '搜索书籍...'"
+  class="search-input"
+/>
+
+      <button @click="applyFilters" class="search-button">{{ $t('sou-suo-0') }}</button>
     </div>
 
     <!-- 动态生成书架 -->
@@ -25,9 +26,11 @@
               @mouseover="showBubble(book)"
               @mouseleave="hideBubble">
             <!-- 气泡提示 -->
-            <div v-if="book.showBubble" class="bubble">
-              <span>{{ book.liter_name }}</span> <!-- 显示书籍名称 -->
-            </div>
+<!-- 气泡提示 -->
+<div v-if="book.showBubble" class="bubble">
+  <span>{{ getBookDisplayName(book.liter_name) }}</span> <!-- 使用动态获取的书名 -->
+</div>
+
         </div>
       </div>
     </div>
@@ -35,8 +38,8 @@
 
   <!-- 翻页按钮 -->
   <div class="pagination">
-    <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
-    <button @click="nextPage" :disabled="currentPage >= totalPages - 1">下一页</button>
+    <button @click="prevPage" :disabled="currentPage === 0">{{ $t('shang-yi-ye') }}</button>
+    <button @click="nextPage" :disabled="currentPage >= totalPages - 1">{{ $t('xia-yi-ye') }}</button>
   </div>
 
   <!-- 弹出书籍翻页效果 -->
@@ -49,7 +52,9 @@ import { ref, computed, onMounted } from 'vue';
 import BookFlipModal from './BookFlipModel.vue'; // 引入翻书效果组件
 import FilmLiteratureAPI from "@/api/filmLiterature"; // 引入 API
 import { useRouter } from 'vue-router';
-
+import { useI18n } from 'vue-i18n';
+import cultureElements from '@/json/culture_elements_translated.json';
+const { locale } = useI18n(); // 获取当前语言
 // 接收来自父组件的 currentIndex 和 type_id
 const props = defineProps({
   currentIndex: {
@@ -69,6 +74,11 @@ const books = ref([]);
 
 // 搜索功能
 const searchTerm = ref('');
+// 获取书籍显示名称
+const getBookDisplayName = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['title-en'] ? element['title-en'] : name;
+};
 
 const filteredBooks = computed(() => {
   let result = books.value;

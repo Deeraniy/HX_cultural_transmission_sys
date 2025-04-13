@@ -60,7 +60,7 @@ import { useI18n } from 'vue-i18n'
 import SentimentAPI from "@/api/sentiment"
 import { useFontStore } from '@/stores/font'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const props = defineProps({
   name: {
@@ -121,10 +121,12 @@ const generateReport = async () => {
     console.log('API Response:', response);
 
     if ((response as ReportResponse).status === 'success') {
-      report.value = (response as ReportResponse).report;
-      timelineItems.value = (response as ReportResponse).timeline;
-      ElMessage.success(t('detail.report.generateSuccess'));
-    } else {
+  const reportField = locale.value === 'en' ? 'report_en' : 'report';
+  report.value = (response as ReportResponse)[reportField]; // 动态选择字段
+  timelineItems.value = (response as ReportResponse).timeline;
+  ElMessage.success(t('detail.report.generateSuccess'));
+}
+ else {
       throw new Error((response as any).message || t('detail.report.generateError'));
     }
   } catch (error) {

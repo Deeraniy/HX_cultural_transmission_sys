@@ -1,133 +1,77 @@
 <template>
   <el-main>
-    <div class="chat-container">
-      <!-- 聊天历史记录 -->
-      <div class="chat-history" ref="chatHistoryRef">
-        <div v-for="(msg, index) in messages" :key="index" class="message-wrapper">
-          <div class="message user-message">
-            <div class="avatar">你</div>
-            <div class="message-content">{{ msg[0] }}</div>
-          </div>
-          <div class="message bot-message">
-            <div class="avatar">AI</div>
-            <div class="message-content">{{ msg[1] }}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 输入框区域 -->
-      <div class="input-area">
-        <el-input
-          v-model="userInput"
-          type="textarea"
-          :rows="3"
-          placeholder="请输入您的问题..."
-          @keyup.enter.native="sendMessage"
-        />
-        <el-button type="primary" @click="sendMessage" :loading="isLoading">
-          发送
-        </el-button>
-      </div>
-    </div>
+      <div class="iframe-container">
+    <iframe src="http://127.0.0.1:7860" class="custom-iframe"></iframe>
+  </div>
   </el-main>
+
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import axios from 'axios'
-
-const messages = ref([])
-const userInput = ref('')
-const isLoading = ref(false)
-const chatHistoryRef = ref<HTMLElement | null>(null)
-
-// 发送消息
-const sendMessage = async () => {
-  if (!userInput.value.trim() || isLoading.value) return
-
-  isLoading.value = true
-  const message = userInput.value
-  userInput.value = ''
-
-  try {
-    const response = await axios.post('http://localhost:8080/api/ai/chat/', {
-      message: message,
-      history: messages.value
-    })
-
-    messages.value = response.data.history
-  } catch (error) {
-    console.error('发送消息失败:', error)
-  } finally {
-    isLoading.value = false
-  }
-}
 </script>
 
-<style scoped>
-.chat-container {
-  height: 100%;
+<style>
+/* 使用 flexbox 实现居中 */
+.iframe-container {
+  padding-top: 30px; /* 让 iframe 距离顶部有一定的间距 */
   display: flex;
-  flex-direction: column;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  padding: 20px;
+  justify-content: center; /* 水平居中 */
+  align-items: flex-start; /* 让内容靠上而非完全垂直居中 */
+  height: 100vh; /* 设置容器高度为视口高度 */
+  margin: 0;
 }
 
-.chat-history {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px;
-  margin-bottom: 20px;
+/* 自定义 iframe 样式 */
+.custom-iframe {
+  width: 1000px;
+  height: 900px;
+  border: none; /* 移除边框 */
+  overflow: hidden; /* 禁用滚动条 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 可选：添加阴影效果 */
+  border-radius: 10px; /* 可选：添加圆角 */
+}
+:deep(.el-main.el-main) {
+overflow: hidden !important;
+padding: 0 !important;
+height: 100% !important;
 }
 
-.message-wrapper {
-  margin-bottom: 20px;
+/* 或者使用属性选择器增加优先级 */
+:deep([class*="el-main"]) {
+overflow: hidden !important;
+padding: 0 !important;
+height: 100% !important;
 }
 
-.message {
-  display: flex;
-  margin-bottom: 10px;
+/* 如果还不行，可以尝试使用多重选择器 */
+:deep(.el-container .el-main) {
+overflow: hidden !important;
+padding: 0 !important;
+height: 100% !important;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #f0f2f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  flex-shrink: 0;
+/* 隐藏滚动条 */
+:deep(.el-main::-webkit-scrollbar) {
+width: 8px; /* 定义滚动条宽度 */
+height: 8px;
+background-color: transparent; /* 滚动条背景颜色 */
 }
 
-.message-content {
-  padding: 10px 15px;
-  border-radius: 8px;
-  max-width: 70%;
-  word-break: break-word;
+:deep(.el-main::-webkit-scrollbar-thumb) {
+background-color: transparent; /* 滚动条滑块颜色 */
+border-radius: 4px; /* 滚动条滑块圆角 */
 }
 
-.user-message .message-content {
-  background: #e6f7ff;
+:deep(.el-main::-webkit-scrollbar-thumb:hover) {
+background-color: rgba(0, 0, 0, 0.2); /* 鼠标悬停时滚动条滑块颜色 */
 }
 
-.bot-message .message-content {
-  background: #f6ffed;
-}
 
-.input-area {
-  display: flex;
-  gap: 10px;
-  padding: 20px;
-  border-top: 1px solid #eee;
-}
-
-.input-area .el-input {
-  flex: 1;
-}
-
-:deep(.el-textarea__inner) {
-  resize: none;
+.main-container {
+width: 100%;
+display: flex;
+overflow: hidden; /* 禁止滚动 */
+flex-direction: column;
 }
 </style>

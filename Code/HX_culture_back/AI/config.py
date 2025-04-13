@@ -1,0 +1,2 @@
+# AI配置
+ZHIPUAI_API_KEY = "1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf" 

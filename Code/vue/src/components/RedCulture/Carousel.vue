@@ -4,15 +4,15 @@
     <Slider :slides="slides" />
     <!-- 分页按钮 -->
     <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 0">上一页</button>
-      <button @click="nextPage" :disabled="currentPage === totalPages - 1">下一页</button>
+      <button @click="prevPage" :disabled="currentPage === 0">{{ $t('shang-yi-ye-0') }}</button>
+      <button @click="nextPage" :disabled="currentPage === totalPages - 1">{{ $t('xia-yi-ye-0') }}</button>
     </div>
     <!-- 第二排图片 -->
     <div class="images-leaning">
       <div v-for="(image, index) in currentImages" :key="index" :style="getImageStyle(index)" @click="openWalkModal(image)">
         <img :src="image.src" :alt="image.title" />
       </div>
-      <p class="quote">可以强天下<br>而保中国者，莫湘人若也</p>
+      <p class="quote">{{ $t('ke-yi-qiang-tian-xia') }}<br>{{ $t('er-bao-zhong-guo-zhe-mo-xiang-ren-ruo-ye') }}</p>
     </div>
     <!-- WalkModal 弹窗 -->
     <Walk v-if="showWalkModal" :human="selectedHuman" @close="closeWalkModal" />
