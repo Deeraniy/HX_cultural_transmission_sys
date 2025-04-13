@@ -87,9 +87,9 @@
               <div v-if="article.img_url" class="cover-image">
                 <img :src="article.img_url" :alt="article.name" />
               </div>
-              <h4 class="article-title">{{ article.name }}</h4>
+              <h4 class="article-title">{{ getName(article.name) }}</h4>
               <p v-if="article.history_describe" class="article-description">
-                {{ truncateDescription(article.history_describe) }}
+                {{ getDescription(article.name, article.history_describe) }}
               </p>
               <div class="article-footer">
                 <el-tag effect="light" :type="getTagType(article.type)">
@@ -123,7 +123,6 @@
     <!-- 详情弹窗 -->
     <el-dialog
       v-model="detailDialogVisible"
-      :title="selectedArticle?.name || t('user.article.viewDetail')"
       width="60%"
       :close-on-click-modal="true"
       :show-close="true"
@@ -133,7 +132,7 @@
         <div v-if="selectedArticle.img_url" class="detail-image">
           <img :src="selectedArticle.img_url" :alt="selectedArticle.name" />
         </div>
-        <h3 class="detail-title">{{ selectedArticle.name }}</h3>
+        <h3 class="detail-title">{{ getName(selectedArticle.name) }}</h3>
         <el-tag class="detail-tag" effect="light" :type="getTagType(selectedArticle.type)">
           {{ typeMapping[selectedArticle.type] || t('user.article.types.other') }}
         </el-tag>
@@ -141,7 +140,7 @@
         <div class="detail-description">
           <h4>{{ t('user.article.overview') }}</h4>
           <div class="scrollable-content">
-            <p>{{ formatDetailDescription(selectedArticle.history_describe) }}</p>
+            <p>{{ getDescription(selectedArticle.name, selectedArticle.history_describe) }}</p>
           </div>
         </div>
       </div>
@@ -153,13 +152,14 @@
 import { getUserArticleList } from '@/apis/user';
 import {computed, onMounted, ref} from "vue";
 import { Clock, Search, Delete, Files, Timer } from '@element-plus/icons-vue';
+import cultureElements from '@/json/culture_elements_translated.json';
 import UserAPI from "@/api/user";
 import { useRouter, useRoute } from 'vue-router';
 import {useUserStore} from "@/stores/user.ts";
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+const { t,locale } = useI18n();
 const articleList = ref([]);
 const activeTab = ref(t('user.article.tabs.all'));
 const tabs = [
@@ -176,6 +176,43 @@ const typeMapping = {
   placeOfInterest: t('user.article.types.placeOfInterest'),
   food: t('user.article.types.food')
 };
+
+// 获取名称的翻译
+const getName = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['title-en'] ? 
+    element['title-en'] : 
+    name;
+};
+
+
+// 获取描述的翻译（英文模式下根据名称查找描述，中文模式下直接用 truncateDescription）
+const getDescription = (name, description) => {
+  const maxLength = 200; // 英文描述的最大字符数
+
+  // 如果是中文模式，直接使用原有的 truncateDescription 方法
+  if (locale.value === 'zh') {
+    return truncateDescription(description);
+  }
+
+  // 如果是英文模式，根据名称找到对应的文化元素描述
+  const element = cultureElements.find(item => item.title === name);
+  if (locale.value === 'en' && element?.['description-en']) {
+    let englishDescription = element['description-en'];
+
+    // 限制英文描述的字符数
+    if (englishDescription.length > maxLength) {
+      englishDescription = englishDescription.substring(0, maxLength) + '...'; // 截断并添加省略号
+    }
+
+    return englishDescription;
+  }
+
+  // 如果没有英文描述，则返回原始描述
+  return description || t('user.article.noDescription');
+};
+
+
 
 // 详情弹窗相关
 const detailDialogVisible = ref(false);

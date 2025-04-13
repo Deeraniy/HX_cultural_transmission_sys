@@ -1,0 +1,27 @@
+2025-03-22 19:04:39.344 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7687')
+2025-03-22 19:04:41.416 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7687')
+2025-03-22 19:18:07.873 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Connection has been closed
+2025-03-22 19:18:07.919 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Connection has been closed
+2025-03-22 19:23:27.286 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Connection has been closed
+2025-03-22 19:23:27.345 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Connection has been closed
+2025-03-22 19:25:57.945 | INFO     | HXCulture_DIalog.logger:info:49 - Successfully connected to Neo4j
+2025-03-22 19:25:57.955 | INFO     | HXCulture_DIalog.logger:info:49 - Successfully connected to Neo4j
+2025-03-22 19:25:58.135 | INFO     | HXCulture_DIalog.logger:info:49 - Loaded 456 entities
+2025-03-22 19:46:05.881 | INFO     | HXCulture_DIalog.logger:info:49 - Successfully connected to Neo4j
+2025-03-22 19:46:05.893 | INFO     | HXCulture_DIalog.logger:info:49 - Successfully connected to Neo4j
+2025-03-22 19:46:05.998 | INFO     | HXCulture_DIalog.logger:info:49 - Loaded 1043 entities
+2025-03-22 19:54:59.352 | INFO     | HXCulture_DIalog.logger:info:49 - Successfully connected to Neo4j
+2025-03-22 19:54:59.405 | INFO     | HXCulture_DIalog.logger:info:49 - Successfully connected to Neo4j
+2025-03-22 19:54:59.681 | INFO     | HXCulture_DIalog.logger:info:49 - Loaded 1043 entities
+2025-03-22 19:59:30.429 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7474')
+2025-03-22 19:59:30.429 | ERROR    | HXCulture_DIalog.logger:error:55 - Connection details: host=localhost, port=7474, user=neo4j
+2025-03-22 19:59:30.512 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7474')
+2025-03-22 19:59:30.517 | ERROR    | HXCulture_DIalog.logger:error:55 - Connection details: host=localhost, port=7474, user=neo4j
+2025-03-22 21:15:36.434 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7474')
+2025-03-22 21:15:36.434 | ERROR    | HXCulture_DIalog.logger:error:55 - Connection details: host=localhost, port=7474, user=neo4j
+2025-03-22 21:15:36.474 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7474')
+2025-03-22 21:15:36.474 | ERROR    | HXCulture_DIalog.logger:error:55 - Connection details: host=localhost, port=7474, user=neo4j
+2025-03-22 21:17:13.666 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7474')
+2025-03-22 21:17:13.681 | ERROR    | HXCulture_DIalog.logger:error:55 - Connection details: host=localhost, port=7474, user=neo4j
+2025-03-22 21:17:13.754 | ERROR    | HXCulture_DIalog.logger:error:55 - Failed to connect to Neo4j: Cannot open connection to ConnectionProfile('bolt://localhost:7474')
+2025-03-22 21:17:13.754 | ERROR    | HXCulture_DIalog.logger:error:55 - Connection details: host=localhost, port=7474, user=neo4j

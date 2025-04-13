@@ -2,8 +2,8 @@
   <div class="whole">
     <div class="total">
       <div class="left-container">
-        <h2 class="fixed-title">红色文化展示界面</h2>
-        <el-button class="back-btn" @click="goBack">|返回</el-button>
+        <h2 class="fixed-title">{{ $t('hong-se-wen-hua-zhan-shi-jie-mian') }}</h2>
+        <el-button class="back-btn" @click="goBack">{{ $t('fan-hui-0') }}</el-button>
       </div>
       <el-menu
           :default-active="activeIndex"
@@ -12,9 +12,9 @@
           :ellipsis="false"
           @select="handleSelect"
       >
-        <el-menu-item index="2">红色人物展示</el-menu-item>
-        <el-menu-item index="3">智问智答</el-menu-item>
-        <el-menu-item index="4">知识图谱</el-menu-item>
+        <el-menu-item index="2">{{ $t('hong-se-ren-wu-zhan-shi') }}</el-menu-item>
+        <el-menu-item index="3">{{ $t('zhi-wen-zhi-da') }}</el-menu-item>
+        <el-menu-item index="4">{{ $t('zhi-shi-tu-pu') }}</el-menu-item>
         
       </el-menu>
     </div>

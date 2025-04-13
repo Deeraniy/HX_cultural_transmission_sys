@@ -84,7 +84,8 @@
              :key="region" 
              class="stat-item">
           <template v-if="!region.includes('占位')">
-          <span class="region">{{ region }}</span>
+            <span class="region">{{ getProvinceName(region) }}</span>
+
           <span class="count">{{ stat.count }}</span>
           <div class="heat-bar" :style="{ width: `${stat.percentage}%`, backgroundColor: stat.color }"></div>
           </template>
@@ -176,7 +177,7 @@
       </div>
 
     <!-- 添加顶部状态栏 -->
-      <div class="status-bar">
+      <div :class="locale === 'en' ? 'status-bar-en':'status-bar'">
           <div class="status-item">
             <i class="iconfont icon-signal"></i>
             <div class="pulse-dot"></div>
@@ -225,7 +226,7 @@
     <div class="nav-buttons">
       <div class="back-btn" @click="goBack">
         <i class="iconfont icon-back"></i>
-        <span>返回首页</span>
+        <span>{{ $t('fan-hui-shou-ye') }}</span>
       </div>
       <!-- <div class="view-data-btn" @click="viewAllData">
         <i class="iconfont icon-data"></i>
@@ -233,10 +234,10 @@
       </div> -->
       <div class="theme-select">
         <select v-model="selectedTheme" @change="handleThemeChange">
-          <option value="spot">名胜古迹</option>
-          <option value="literature">影视文学</option>
-          <option value="food">美食文化</option>
-          <option value="folk">非遗民俗</option>
+          <option value="spot">{{ $t('ming-sheng-gu-ji') }}</option>
+          <option value="literature">{{ $t('ying-shi-wen-xue') }}</option>
+          <option value="food">{{ $t('mei-shi-wen-hua') }}</option>
+          <option value="folk">{{ $t('fei-yi-min-su-0') }}</option>
         </select>
       </div>
     </div>
@@ -1098,13 +1099,27 @@ const fetchThemeCommentsSentiment = async () => {
   }
 };
 
-// 平台名称映射
 const platformNameMap = {
-  'dy': '抖音',
-  'bili': '哔哩哔哩',
-  'bilibili': '哔哩哔哩',
-  'zhihu': '知乎',
-  'xhs': '小红书'
+  'dy': {
+    'zh': '抖音',
+    'en': 'Douyin'
+  },
+  'bili': {
+    'zh': '哔哩哔哩',
+    'en': 'Bilibili'
+  },
+  'bilibili': {
+    'zh': '哔哩哔哩',
+    'en': 'Bilibili'
+  },
+  'zhihu': {
+    'zh': '知乎',
+    'en': 'Zhihu'
+  },
+  'xhs': {
+    'zh': '小红书',
+    'en': 'Xiaohongshu'
+  }
 };
 
 // 处理平台情感数据
@@ -1125,9 +1140,9 @@ const processPlatformSentimentData = () => {
     monthData.platforms.forEach(platform => {
       let platformName = platform.platform;
       
-      // 使用映射转换平台名称
+      // 获取平台名称的翻译
       if (platformNameMap[platformName]) {
-        platformName = platformNameMap[platformName];
+        platformName = platformNameMap[platformName][locale.value] || platformNameMap[platformName]['zh'];
       }
       
       platforms.add(platformName);
@@ -1184,6 +1199,7 @@ const processPlatformSentimentData = () => {
 };
 
 
+
 // 初始化平台情感图表
 const initPlatformChart = () => {
   if (!radarChartRef.value) return;
@@ -1199,7 +1215,7 @@ const initPlatformChart = () => {
   if (platformSentimentData.value.length === 0) {
     charts.radarChart.setOption({
       title: {
-        text: '暂无平台数据',
+        text: [locale.value === 'en' ? 'No platform data' : '暂无平台数据'],
         textStyle: { color: '#fff', fontSize: 14, fontFamily: 'HelveticaNeue' },
         left: 'center',
         top: 'middle'
@@ -1220,7 +1236,7 @@ const initPlatformChart = () => {
       },
       color: ['#57A773', '#FFD166', '#FF6B6B'],
       legend: {
-        data: ['正面情感', '中性情感', '负面情感'],
+        data: [locale.value === 'en' ? 'Positive' : '正面情感', locale.value === 'en' ? 'Neutral' : '中性情感', locale.value === 'en' ? 'Negative' : '负面情感'],
         textStyle: { 
           color: '#fff',
           fontFamily: 'HelveticaNeue'
@@ -1254,7 +1270,7 @@ const initPlatformChart = () => {
         {
           gridIndex: 0,
           type: 'value',
-          name: '评论数量',
+          name: locale.value === 'en' ? 'Comment Count' : '评论数量',
           nameTextStyle: {
             color: 'rgba(255, 255, 255, 0.7)',
             fontFamily: 'HelveticaNeue'
@@ -1273,7 +1289,7 @@ const initPlatformChart = () => {
       ],
       series: [
         {
-          name: '正面情感',
+          name: locale.value === 'en' ? 'Positive' : '正面情感',
           type: 'bar',
           stack: '情感',
           xAxisIndex: 0,
@@ -1289,7 +1305,7 @@ const initPlatformChart = () => {
           }
         },
         {
-          name: '中性情感',
+          name: locale.value === 'en' ? 'Neutral' : '中性情感',
           type: 'bar',
           stack: '情感',
           xAxisIndex: 0,
@@ -1300,7 +1316,7 @@ const initPlatformChart = () => {
           data: platformSentimentData.value.map(item => item.neutral)
         },
         {
-          name: '负面情感',
+          name: locale.value === 'en' ? 'Negative' : '负面情感',
           type: 'bar',
           stack: '情感',
           xAxisIndex: 0,
@@ -1338,15 +1354,15 @@ const initPlatformChart = () => {
           data: [
             { 
               value: platformSentimentData.value[0].positive, 
-              name: '正面情感'
+              name: locale.value === 'en' ? 'Positive' : '正面情感'
             },
             { 
               value: platformSentimentData.value[0].neutral, 
-              name: '中性情感'
+              name: locale.value === 'en' ? 'Neutral' : '中性情感'
             },
             { 
               value: platformSentimentData.value[0].negative, 
-              name: '负面情感'
+              name: locale.value === 'en' ? 'Negative' : '负面情感'
             }
           ]
         }
@@ -1387,7 +1403,7 @@ const initPlatformChart = () => {
         }
       },
       legend: {
-        data: ['正面情感', '中性情感', '负面情感'],
+        data: [locale.value === 'en' ? 'Positive' : '正面情感', locale.value === 'en' ? 'Neutral' : '中性情感', locale.value === 'en' ? 'Negative' : '负面情感'],
         textStyle: { 
           color: '#fff',
           fontFamily: 'HelveticaNeue'
@@ -1421,7 +1437,7 @@ const initPlatformChart = () => {
       },
       yAxis: {
         type: 'value',
-        name: '评论数量',
+        name: locale.value === 'en' ? 'Comment Count' : '评论数量',
         nameTextStyle: {
           color: 'rgba(255, 255, 255, 0.7)',
           fontFamily: 'HelveticaNeue',
@@ -1446,7 +1462,7 @@ const initPlatformChart = () => {
       },
       series: [
         {
-          name: '正面情感',
+          name: locale.value === 'en' ? 'Positive' : '正面情感',
           type: 'bar',
           stack: '情感',
           emphasis: {
@@ -1462,7 +1478,7 @@ const initPlatformChart = () => {
           }
         },
         {
-          name: '中性情感',
+          name: locale.value === 'en' ? 'Neutral' : '中性情感',
           type: 'bar',
           stack: '情感',
           emphasis: {
@@ -1475,7 +1491,7 @@ const initPlatformChart = () => {
           }
         },
         {
-          name: '负面情感',
+          name: locale.value === 'en' ? 'Negative' : '负面情感',
           type: 'bar',
           stack: '情感',
           emphasis: {
@@ -1494,6 +1510,49 @@ const initPlatformChart = () => {
     charts.radarChart.setOption(option);
   }
 };
+
+
+// 省份名称映射（包含中文和英文）
+const provinceNameMap = {
+  '湖南': { 'zh': '湖南', 'en': 'Hunan' },
+  '北京': { 'zh': '北京', 'en': 'Beijing' },
+  '上海': { 'zh': '上海', 'en': 'Shanghai' },
+  '广东': { 'zh': '广东', 'en': 'Guangdong' },
+  '江苏': { 'zh': '江苏', 'en': 'Jiangsu' },
+  '浙江': { 'zh': '浙江', 'en': 'Zhejiang' },
+  '四川': { 'zh': '四川', 'en': 'Sichuan' },
+  '湖北': { 'zh': '湖北', 'en': 'Hubei' },
+  '河南': { 'zh': '河南', 'en': 'Henan' },
+  '河北': { 'zh': '河北', 'en': 'Hebei' },
+  '山东': { 'zh': '山东', 'en': 'Shandong' },
+  '陕西': { 'zh': '陕西', 'en': 'Shaanxi' },
+  '安徽': { 'zh': '安徽', 'en': 'Anhui' },
+  '福建': { 'zh': '福建', 'en': 'Fujian' },
+  '江西': { 'zh': '江西', 'en': 'Jiangxi' },
+  '广西': { 'zh': '广西', 'en': 'Guangxi' },
+  '云南': { 'zh': '云南', 'en': 'Yunnan' },
+  '贵州': { 'zh': '贵州', 'en': 'Guizhou' },
+  '海南': { 'zh': '海南', 'en': 'Hainan' },
+  '新疆': { 'zh': '新疆', 'en': 'Xinjiang' },
+  '内蒙古': { 'zh': '内蒙古', 'en': 'Inner Mongolia' },
+  '宁夏': { 'zh': '宁夏', 'en': 'Ningxia' },
+  '青海': { 'zh': '青海', 'en': 'Qinghai' },
+  '西藏': { 'zh': '西藏', 'en': 'Tibet' },
+  '台湾': { 'zh': '台湾', 'en': 'Taiwan' },
+  '香港': { 'zh': '香港', 'en': 'Hong Kong' },
+  '澳门': { 'zh': '澳门', 'en': 'Macau' },
+  
+  
+  
+  
+};
+
+// 获取省份名称的翻译
+const getProvinceName = (province) => {
+  const provinceData = provinceNameMap[province];
+  return provinceData ? (provinceData[locale.value] || provinceData['zh']) : province; // 默认返回中文名称
+};
+
 
 // 更新图表方法
 const updateCharts = () => {
@@ -2239,7 +2298,7 @@ const updateAnalysisPanel = () => {
     
     if (engagementElement && engagementTrendElement) {
       engagementElement.textContent = engagementIndex;
-      engagementTrendElement.textContent = `正面评论占比`;
+      engagementTrendElement.textContent = locale.value === 'en' ? 'Positive Comment Ratio' : '正面评论占比';
       engagementTrendElement.className = 'trend up';
     }
     
@@ -2250,15 +2309,15 @@ const updateAnalysisPanel = () => {
     
     if (positiveBar) {
       positiveBar.style.width = `${positivePercentage}%`;
-      positiveBar.textContent = `正面 ${positivePercentage}%`;
+      positiveBar.textContent = `${locale.value === 'en' ? 'Positive' : '正面'} ${positivePercentage}%`;
     }
     if (neutralBar) {
       neutralBar.style.width = `${neutralPercentage}%`;
-      neutralBar.textContent = `中性 ${neutralPercentage}%`;
+      neutralBar.textContent = `${locale.value === 'en' ? 'Neutral' : '中性'} ${neutralPercentage}%`;
     }
     if (negativeBar) {
       negativeBar.style.width = `${negativePercentage}%`;
-      negativeBar.textContent = `负面 ${negativePercentage}%`;
+      negativeBar.textContent = `${locale.value === 'en' ? 'Negative' : '负面'} ${negativePercentage}%`;
     }
   }
 };
@@ -2541,9 +2600,9 @@ const generateAlerts = () => {
         alerts.value.push({
           id: 1,
           level: 'high',
-          title: '负面情感明显增长',
-          description: `${latestMonth.month}月负面评论同比增长${Math.round(negativeGrowth * 100)}%`,
-          time: `${latestMonth.month}月数据`
+          title: `${locale.value === 'en' ? 'Negative Sentiment Growth' : '负面情感明显增长'}`,
+          description: `${latestMonth.month}${locale.value === 'en' ? 'Negative Sentiment' : '负面情感'}${locale.value === 'en' ? 'Growth' : '增长'}${Math.round(negativeGrowth * 100)}%`,
+          time: `${latestMonth.month}${locale.value === 'en' ? 'Month Data' : '月数据'}`  
         });
       }
     }
@@ -2568,18 +2627,18 @@ const generateAlerts = () => {
         alerts.value.push({
           id: 2,
           level: 'medium',
-          title: '评论数量激增',
-          description: `${latestMonth.month}月评论数量同比增长${Math.round(totalGrowth * 100)}%`,
-          time: `${latestMonth.month}月数据`
+          title: `${locale.value === 'en' ? 'Comment Volume Growth' : '评论数量激增'}`,
+          description: `${latestMonth.month}${locale.value === 'en' ? 'Comment Volume' : '评论数量'}${locale.value === 'en' ? 'Growth' : '增长'}${Math.round(totalGrowth * 100)}%`,
+          time: `${latestMonth.month}${locale.value === 'en' ? 'Month Data' : '月数据'}`
         });
       } else if (totalGrowth < -0.3) {
         // 评论总量下降超过30%
         alerts.value.push({
           id: 3,
           level: 'low',
-          title: '评论数量明显下降',
-          description: `${latestMonth.month}月评论数量同比下降${Math.round(-totalGrowth * 100)}%`,
-          time: `${latestMonth.month}月数据`
+          title: `${locale.value === 'en' ? 'Comment Volume Decline' : '评论数量明显下降'}`,
+          description: `${latestMonth.month}${locale.value === 'en' ? 'Comment Volume' : '评论数量'}${locale.value === 'en' ? 'Decline' : '下降'}${Math.round(-totalGrowth * 100)}%`,
+          time: `${latestMonth.month}${locale.value === 'en' ? 'Month Data' : '月数据'}`
         });
       }
     }

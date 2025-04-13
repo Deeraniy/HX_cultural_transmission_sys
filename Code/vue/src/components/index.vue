@@ -61,7 +61,7 @@
         <div>
           <el-input
               v-model="searchTerm"
-              placeholder="输入节点名称搜索"
+              :placeholder="locale.value === 'en' ? 'Enter the node name' : '输入节点名称'"
               clearable
               @input="handleSearch"
           >
@@ -74,13 +74,12 @@
 <!--      这里显示节点详情-->
       <div class="node-detail" v-if="selectedNode">
         <div class="detail-header">
-          <h3>{{ selectedNode.name }}</h3>
-
         </div>
         <div class="detail-content">
           <div v-if="selectedNode.properties">
             <div v-for="key in filteredPropertyKeys" :key="key">
-              <strong>{{ propertyMap[key] || key }}：</strong>
+              <strong>{{ getPropertyName(key) }}：</strong>
+
               <template v-if="key === 'image_url' || key === 'img_url'">
                 <img
                     :src="selectedNode.properties[key]"
@@ -90,17 +89,16 @@
               </template>
               <!-- 其他属性处理 -->
               <template v-else>
-                <span>{{ selectedNode.properties[key] || '暂无数据' }}</span>
+                <span>{{ getPropertyValue(selectedNode.properties[key], key) }}</span>
               </template>
             </div>
 
           </div>
           <div v-else>
-            该节点暂无更多详细信息
-          </div>
+            {{ $t('gai-jie-dian-zan-wu-geng-duo-xiang-xi-xin-xi') }} </div>
         </div>
         <el-button class="close-btn" @click="selectedNode = null" circle>×</el-button>
-        <el-button @click="handleViewDetail">查看详情</el-button>
+        <el-button @click="handleViewDetail">{{ $t('cha-kan-xiang-qing') }}</el-button>
       </div>
 
       <!-- 替换原有block4跳转 -->
@@ -136,7 +134,6 @@
           <div class="footer-section contact">
             <h3>{{ t('index.footer.contact.title') }}</h3>
             <p><i class="el-icon-location"></i> {{ t('index.footer.contact.address') }}</p>
-            <p><i class="el-icon-phone"></i> {{ t('index.footer.contact.phone') }}</p>
             <p><i class="el-icon-message"></i> {{ t('index.footer.contact.email') }}</p>
           </div>
         </div>
@@ -158,6 +155,7 @@ import { useI18n } from 'vue-i18n';
 import IndexMain from "@/components/IndexMain.vue";
 import FeaturesSection from "@/components/Home/FeaturesSection.vue";
 import HuXiangCuisine from "@/components/Home/HuXiangCuisine.vue";
+import cultureElements from '@/json/culture_elements_translated.json';
 // 使用 import 语法加载视频文件
 import videoFile from '@/assets/湖南形象宣传片国际版《This is Hunan》.mp4';
 import data from '../../static/data.json'
@@ -171,25 +169,91 @@ let carouselTimer = null; // 用于存储定时器
 // 视频播放结束后的处理
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts';
+const { t, locale } = useI18n();
 const chart = ref(null);
 const selectedNode = ref(null);
 const searchTerm = ref('');
-const propertyMap = {
-  food_name: '菜品名称',
-  folk_name: '民俗名称',
-  spot_name: '景点名称',
-  city_id: '所属城市',
-  folk_type: '民俗类型',
-  address: '详细地址',
-  image_url: '图片',
-  opening_hours: '开放时间',
-  cuisine_type: '菜系类型',
-  author: '作者',
-  img_url: '图片',
-  text: '简要描述',
-  publish_year: '出版年份'
+const getName = (name) => {
+  // 假设 `cultureElements` 中存储了名称和对应的翻译
+  const element = cultureElements.find(item => item.title === name);
+  
+  // 根据语言选择标题的翻译
+  return locale.value === 'en' && element?.['title-en'] ? 
+    element['title-en'] : 
+    name;
 };
-const { t, locale } = useI18n();
+
+const propertyMap = {
+  food_name: {
+    zh: '菜品名称',
+    en: 'Dish Name'
+  },
+  folk_name: {
+    zh: '民俗名称',
+    en: 'Folk Name'
+  },
+  spot_name: {
+    zh: '景点名称',
+    en: 'Spot Name'
+  },
+  city_id: {
+    zh: '所属城市',
+    en: 'City'
+  },
+  folk_type: {
+    zh: '民俗类型',
+    en: 'Folk Type'
+  },
+  address: {
+    zh: '详细地址',
+    en: 'Address'
+  },
+  image_url: {
+    zh: '图片',
+    en: 'Image'
+  },
+  opening_hours: {
+    zh: '开放时间',
+    en: 'Opening Hours'
+  },
+  cuisine_type: {
+    zh: '菜系类型',
+    en: 'Cuisine Type'
+  },
+  author: {
+    zh: '作者',
+    en: 'Author'
+  },
+  img_url: {
+    zh: '图片',
+    en: 'Image'
+  },
+  text: {
+    zh: '简要描述',
+    en: 'Description'
+  },
+  publish_year: {
+    zh: '出版年份',
+    en: 'Publish Year'
+  }
+};
+// 获取属性名的国际化翻译
+const getPropertyName = (key) => {
+  const currentLocale = locale.value; // 当前语言
+  const property = propertyMap[key];
+
+  // 根据语言返回相应的名称
+  return property ? property[currentLocale] || key : key;
+};
+// 获取属性值的国际化
+const getPropertyValue = (value, key) => {
+  if (locale.value === 'en' && key) {
+    // 可以根据需要添加不同属性的处理逻辑，返回英文翻译
+    const translatedValue = cultureElements.find(item => item.title === value);
+    return translatedValue?.['title-en'] || value; // 如果找到翻译，返回英文描述，否则返回原值
+  }
+  return value || '暂无数据'; // 默认中文处理
+};
 
 // 根据语言环境返回不同的字体大小
 const titleFontSize = computed(() => {
@@ -225,12 +289,6 @@ const processData = (rawData, searchTerm = '') => {
     { name: t('index.knowledgeGraph.categories.literature') },
     { name: t('index.knowledgeGraph.categories.food') },
     { name: t('index.knowledgeGraph.categories.folk') },
-    { name: '核心文化' },
-    {name: '主题分类'},
-    {name: '景点'},
-    {name: '文学'},
-    {name: '饮食'},
-    {name: '民俗'}
   ];
 
   let nodes = [];
@@ -239,7 +297,7 @@ const processData = (rawData, searchTerm = '') => {
   // 核心节点始终显示
   nodes.push({
     id: coreNode.id,
-    name: coreNode.name,
+    name: locale.value === 'en' && coreNode['name-en'] ? coreNode['name-en'] : coreNode.name,
     category: 0,
     symbolSize: 50,
     isMatched: true
@@ -259,7 +317,7 @@ const processData = (rawData, searchTerm = '') => {
 
       nodes.push({
         id: item.id,
-        name: item.name,
+        name: locale.value === 'en' && item['name-en'] ? item['name-en'] : item.name,
         category: categoryIndex,
         isMatched,
         symbolSize: categoryIndex === 1 ? (isMatched ? 45 : 35) : (isMatched ? 35 : 25)
@@ -280,7 +338,7 @@ const processData = (rawData, searchTerm = '') => {
       links.push({
         source: link.source,
         target: link.target,
-        name: link.name // 直接使用JSON中的name
+        name: locale.value === 'en' ? link['name-en'] : link.name // 直接使用JSON中的name
       });
     });
   }
@@ -357,6 +415,7 @@ const initChart = () => {
       draggable: true,
       data: graphData.nodes.map(node => ({
         ...node,
+        name: getName(node.name),  // 国际化节点名称
         itemStyle: {
           color: colorPalette[node.category]
         },
@@ -494,7 +553,7 @@ const updateChart = () => {
       }
     },
     legend: {
-      data: graphData.categories.map(c => c.name),
+      data: graphData.categories.map( c.name),
       selected: {
         [t('index.knowledgeGraph.categories.core')]: true,
         [t('index.knowledgeGraph.categories.theme')]: false,
@@ -519,6 +578,7 @@ const updateChart = () => {
       draggable: true,
       data: graphData.nodes.map(node => ({
         ...node,
+        name: node.name, // 根据语言选择name或name-en
         itemStyle: {
           color: colorPalette[node.category]
         },

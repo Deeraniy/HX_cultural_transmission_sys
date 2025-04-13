@@ -3,9 +3,10 @@
     <div class="total">
       <!-- 左侧大标题 -->
       <div class="menu-title">
-        <h2>影视文学分析</h2>
+        <h2>{{ $t('ying-shi-wen-xue-fen-xi') }}</h2>
       </div>
-      <el-button class="back-btn" @click="goBack">|返回</el-button>
+      <el-button :class="['back-btn', { 'right-position': locale === 'en' }]" @click="goBack">{{ $t('fan-hui-0') }}</el-button>
+
       <!-- 菜单区域 -->
       <el-menu
           :default-active="activeIndex"
@@ -17,12 +18,12 @@
         <!-- 作品总览菜单项 -->
         <el-sub-menu index="2" class="horizontal-submenu">
           <template #title>
-            作品总览
+            {{ $t('zuo-pin-zong-lan') }}
           </template>
-          <el-menu-item index="2-1">文学</el-menu-item>
-          <el-menu-item index="2-2">古代文学</el-menu-item>
-          <el-menu-item index="2-3">新媒体艺术</el-menu-item>
-          <el-menu-item index="2-4">表演艺术</el-menu-item>
+          <el-menu-item index="2-1">{{ $t('detail.literature.types.literature') }}</el-menu-item>
+          <el-menu-item index="2-2">{{ $t('gu-dai-wen-xue') }}</el-menu-item>
+          <el-menu-item index="2-3">{{ $t('detail.literature.types.newMedia') }}</el-menu-item>
+          <el-menu-item index="2-4">{{ $t('detail.literature.types.performance') }}</el-menu-item>
         </el-sub-menu>
         <!-- <el-menu-item index="3">知识图谱</el-menu-item>
         <el-menu-item index="4">沉浸式故事体验</el-menu-item>
@@ -62,7 +63,9 @@ import FilmLiterature from "@/components/FilmLiterature/Literature/FilmLiteratur
 import PoemDisplay from "@/components/FilmLiterature/Literature/PoemDisplay.vue"; // 导入 PoemDisplay 组件
 import VideoDisplay from "@/components/FilmLiterature/Literature/VideoDisplay.vue";
 import ShowDisplay from "@/components/FilmLiterature/Literature/ShowDisplay.vue";
+import { useI18n } from 'vue-i18n';
 
+const { locale } = useI18n(); // 获取当前语言
 const route = useRoute();
 const activeIndex = ref(route.query.activeIndex || '2-1');
 
@@ -148,9 +151,13 @@ const goBack = () => {
   font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 900px; /* 给按钮添加右边距 */
+  margin-right: 950px; /* 给按钮添加右边距 */
 }
 
+/* 英文模式下的右对齐 */
+.right-position {
+  margin-right: 500px; /* 右边距，保证按钮离右边有一定间距 */
+}
 .total {
   display: flex;
   align-items: flex-end;

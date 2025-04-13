@@ -2,10 +2,10 @@
   <div class="whole">
     <div class="total">
       <!-- 左侧大标题 -->
-      <div class="menu-title">
-        <h2>美食文化分析</h2>
+      <div :class="['menu-title', { 'right-position1': locale === 'en' }]">
+        <h2>{{ $t('mei-shi-wen-hua-fen-xi') }}</h2>
         <!-- 返回按钮 -->
-        <el-button class="back-btn" @click="goBack">| 返回</el-button>
+        <el-button :class="['back-btn', { 'right-position': locale === 'en' }]" @click="goBack">{{ $t('fan-hui') }}</el-button>
       </div>
 
       <!-- 菜单区域 -->
@@ -16,11 +16,11 @@
           :router="true"
       >
         <!-- 首页菜单项 -->
-        <el-menu-item index="/food/home">首页</el-menu-item>
+        <el-menu-item index="/food/home">{{ $t('menu.home') }}</el-menu-item>
         <!-- 美食专区菜单项 -->
-        <el-menu-item index="/food/detail">美食专区</el-menu-item>
+        <el-menu-item index="/food/detail">{{ $t('mei-shi-zhuan-qu') }}</el-menu-item>
         <!-- 传播效果分析菜单项 -->
-        <el-menu-item index="/food/propagation">传播效果分析</el-menu-item>
+        <el-menu-item index="/food/propagation">{{ $t('chuan-bo-xiao-guo-fen-xi') }}</el-menu-item>
       </el-menu>
     </div>
 
@@ -30,11 +30,15 @@
   </div>
 </template>
 
+
 <script lang="ts" setup>
 // 引入 vue-router
 import { useRouter } from 'vue-router'
-
+import { useI18n } from 'vue-i18n';
+const { t, locale } = useI18n();
 const router = useRouter()
+
+
 
 // 返回上一页的方法
 const goBack = () => {
@@ -61,6 +65,7 @@ const goBack = () => {
   background-size: cover;
   background-position: center;
 }
+
 
 .el-main {
   padding: 0;
@@ -139,10 +144,19 @@ const goBack = () => {
   color: #fff8f0 !important;
   border: none;
   font-size: 20px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+/* 英文模式下的右对齐 */
+.right-position {
+  margin-left: 0px; /* 右边距，保证按钮离右边有一定间距 */
+  margin-right: 400px;
+}
+.right-position1 {
+  margin-right: 0px; /* 右边距，保证按钮离右边有一定间距 */
+
 }
 
 </style>

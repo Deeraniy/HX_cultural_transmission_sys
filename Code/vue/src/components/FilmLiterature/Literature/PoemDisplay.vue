@@ -4,22 +4,22 @@
       <div class="attraction-container" >
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">湖湘古代文学是中国文学宝库中的一颗璀璨明珠，其浪漫主义情怀、家国情怀与地方特色至今仍在影响着中国文学的发展。湖湘文学不仅是湖南文化的象征，也为中华文化的多样性和丰富性增添了独特的色彩。</span>
+          <span class="scroll-bar-text">{{ $t('hu-xiang-gu-dai-wen-xue-shi-zhong-guo-wen-xue-bao-ku-zhong-de-yi-ke-cui-can-ming-zhu-qi-lang-man-zhu-yi-qing-huai-jia-guo-qing-huai-yu-di-fang-te-se-zhi-jin-reng-zai-ying-xiang-zhuo-zhong-guo-wen-xue-de-fa-zhan-hu-xiang-wen-xue-bu-jin-shi-hu-nan-wen-hua-de-xiang-zheng-ye-wei-zhong-hua-wen-hua-de-duo-yang-xing-he-feng-fu-xing-zeng-tian-le-du-te-de-se-cai') }}</span>
         </div>
 
         <!-- 文字轮播（水平方向） -->
         <el-carousel height="300px" direction="horizontal" :autoplay="true" v-model:active-index="currentIndex" @change="onCarouselChange">
           <el-carousel-item v-for="(item, index) in carouselData" :key="index">
-            <div class="carousel-text-container">
+            <div :class="['carousel-text-container', { 'small-font': locale === 'en' }]"> <!-- 动态类绑定 -->
               <div class="carousel-text">
                 <div class="s-title w">
-                  <span>{{ item.name }}</span>
+                  <span>{{ item.name[locale] }}</span>
                 </div>
-                <div class="p">{{ item.introduction }}</div>
+                <div class="p">{{ item.introduction[locale] }}</div>
                 <div class="ts nl2p">
-                  <p>作者：{{ item.author }}</p>
-                  <p>朝代：{{ item.dynasty }}</p>
-                  <p>创作背景：{{ item.background }}</p>
+                  <p>{{ $t('zuo-zhe-itemauthorlocale', [item.author[locale]]) }}</p>
+                  <p>{{ $t('zhao-dai-itemdynastylocale', [item.dynasty[locale]]) }}</p>
+                  <p>{{ $t('chuang-zuo-bei-jing-itembackgroundlocale', [item.background[locale]]) }}</p>
                 </div>
               </div>
             </div>
@@ -51,7 +51,9 @@ import { ref, nextTick, watch } from 'vue';
 import BookShelf from "@/components/FilmLiterature/Literature/BookShelf.vue";
 // 直接导入 JSON 文件
 import poemData from '@/json/Poem.json';
+import { useI18n } from 'vue-i18n';
 
+const { locale } = useI18n(); // 获取当前语言
 const carouselData = poemData;
 
 const currentIndex = ref(0);
@@ -143,6 +145,18 @@ const onCarouselChange = (index: number) => {
 .carousel-text {
   text-align: center;
   color: #fff;
+}
+/* 英文模式下，文字大小变小 */
+.small-font .s-title {
+  font-size: 30px;  /* 英文标题字体变小 */
+}
+
+.small-font .p {
+  font-size: 28px;  /* 英文介绍文字变小 */
+}
+
+.small-font .ts {
+  font-size: 20px;  /* 英文背景文字变小 */
 }
 
 .s-title {

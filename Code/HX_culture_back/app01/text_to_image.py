@@ -98,6 +98,35 @@ def generate_image_prompt(data):
 """
     return prompt.strip()
 
+
+def generate_image_prompt_en(data):
+    """根据活动信息生成图片提示词"""
+    event_name = data.get("eventName", "")
+    event_type = data.get("eventType", "")
+    tags = data.get("tags", [])
+
+    # 根据活动类型选择场景描述
+    scene_desc = ""
+    if "非遗" in event_type or "非遗" in " ".join(tags):
+        scene_desc = "传统工艺展示场景，充满文化气息"
+    elif "展览" in event_type:
+        scene_desc = "现代展览馆场景，光线明亮"
+    elif "演出" in event_type or "表演" in event_type:
+        scene_desc = "舞台表演场景，灯光效果"
+    else:
+        scene_desc = "文化活动场景，人群互动"
+
+    # 组合提示词
+    prompt = f"""
+请生成一张富有艺术感的宣传海报，展现{event_name}活动的精彩瞬间，请使用英文。
+场景：{scene_desc}
+风格：中国传统元素与现代设计融合，色彩鲜明
+要素：{'、'.join(tags)} 等文化元素自然融入
+构图：主题突出，层次分明
+整体效果：专业大气，突出文化传承与创新
+"""
+    return prompt.strip()
+
 @require_http_methods(["POST"])
 def generate_publicity_image(request):
     """处理生成宣传图片的请求"""
@@ -116,6 +145,106 @@ def generate_publicity_image(request):
 
         # 生成提示词
         prompt = generate_image_prompt(data)
+
+        # 调用图像生成
+        rsp = ImageSynthesis.call(
+            model="wanx2.1-t2i-turbo",
+            prompt=prompt,
+            n=1,
+            size='1024*1024'
+        )
+
+        # 处理返回结果
+        if rsp.status_code == 200:
+            image_urls = []
+
+            for idx, result in enumerate(rsp.output.results):
+                # 获取图片数据
+                img_response = requests.get(result.url)
+                if img_response.status_code != 200:
+                    continue
+
+                # 生成文件名
+                file_name = f"{data['eventType']}_{data['eventName']}_{idx}.png"
+                # OSS对象名
+                oss_object_name = f"{oss_folder}/{file_name}"
+
+                try:
+                    # 修改上传逻辑
+                    retry_times = 3
+                    for attempt in range(retry_times):
+                        try:
+                            upload_result = bucket.put_object(oss_object_name, img_response.content)
+                            if upload_result.status == 200:
+                                # 构建公网访问URL
+                                public_url = f"https://{public_endpoint}/{oss_object_name}"
+                                image_urls.append(public_url)
+                                print(f"图片上传成功：{public_url}")
+                                break
+                        except Exception as e:
+                            if attempt == retry_times - 1:  # 最后一次重试
+                                print(f"上传到OSS失败（第{attempt + 1}次尝试）：{str(e)}")
+                                continue
+                            print(f"上传失败，正在重试（第{attempt + 1}次）：{str(e)}")
+                            time.sleep(1)  # 等待1秒后重试
+
+                except Exception as e:
+                    print(f"上传到OSS失败：{str(e)}")
+                    continue
+
+            if image_urls:
+                return JsonResponse({
+                    'code': 200,
+                    'message': 'success',
+                    'data': {
+                        'images': image_urls,
+                        'prompt': prompt
+                    }
+                })
+            else:
+                return JsonResponse({
+                    'code': 500,
+                    'message': '所有图片上传失败',
+                    'data': None
+                })
+        else:
+            return JsonResponse({
+                'code': 500,
+                'message': f'图片生成失败: {rsp.message}',
+                'data': None
+            })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'code': 400,
+            'message': '无效的JSON格式',
+            'data': None
+        })
+    except Exception as e:
+        return JsonResponse({
+            'code': 500,
+            'message': f'生成图片失败：{str(e)}',
+            'data': None
+        })
+
+@require_http_methods(["POST"])
+def generate_publicity_image_en(request):
+    """处理生成英文宣传图片的请求"""
+    try:
+        data = json.loads(request.body)
+
+        # 验证必要字段
+        required_fields = ["eventName", "eventType"]
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse({
+                    'code': 400,
+                    'message': f'缺少必要字段：{field}',
+                    'data': None
+                })
+
+        # 生成提示词
+        prompt = generate_image_prompt_en(data)
 
         # 调用图像生成
         rsp = ImageSynthesis.call(

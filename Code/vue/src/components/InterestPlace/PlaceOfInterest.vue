@@ -53,8 +53,8 @@
 
       <!-- 搜索功能 -->
       <div class="search-container">
-        <input v-model="searchQuery" type="text" placeholder="搜索湖南名胜古迹" />
-        <button @click="searchAttractions">搜索</button>
+        <input v-model="searchQuery" type="text"  />
+        <button @click="searchAttractions">{{ $t('sou-suo') }}</button>
       </div>
     </div>
 
@@ -806,7 +806,12 @@ const initMap = () => {
   const option = {
     tooltip: {
       trigger: 'item',
-      formatter: '{b}',
+      formatter: (params) => {
+        // 根据当前语言返回对应的城市名称
+        return locale.value === 'en' ? 
+          hunanMapData.features.find(f => f.properties.name === params.name)?.properties['en-name'] || params.name :
+          params.name;
+      },
       textStyle: {
         fontFamily: 'ZhuanTi, serif',
         fontSize: 14
@@ -823,7 +828,13 @@ const initMap = () => {
         show: true,
         fontFamily: 'ZhuanTi, serif',
         fontSize: 14,
-        color: '#333'
+        color: '#333',
+        formatter: (params) => {
+          // 根据当前语言返回对应的城市名称
+          return locale.value === 'en' ? 
+            hunanMapData.features.find(f => f.properties.name === params.name)?.properties['en-name'] || params.name :
+            params.name;
+        }
       },
       itemStyle: {
         areaColor: '#fff8f0',
@@ -834,7 +845,13 @@ const initMap = () => {
           show: true,
           fontFamily: 'ZhuanTi, serif',
           fontSize: 16,
-          color: '#333'
+          color: '#333',
+          formatter: (params) => {
+            // 根据当前语言返回对应的城市名称
+            return locale.value === 'en' ? 
+              hunanMapData.features.find(f => f.properties.name === params.name)?.properties['en-name'] || params.name :
+              params.name;
+          }
         },
         itemStyle: {
           areaColor: '#B71C1C',
@@ -851,9 +868,14 @@ const initMap = () => {
 const { t, locale } = useI18n();
 
 // 获取城市显示名称
-const getCityDisplayName = (cityName: string) => {
-  const cityInfo = cityInfoDataLocal[cityName];
-  return locale.value === 'en' && cityInfo?.['name-en'] ? cityInfo['name-en'] : cityName;
+const getCityDisplayName = (city) => {
+  // 从湖南省.json中查找对应的城市
+  const cityData = hunanMapData.features.find(feature => feature.properties.name === city);
+  if (cityData && cityData.properties) {
+    // 根据当前语言返回对应的城市名称
+    return locale.value === 'en' ? cityData.properties['en-name'] : cityData.properties.name;
+  }
+  return city;
 };
 
 // 获取城市描述

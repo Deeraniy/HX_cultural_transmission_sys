@@ -2,89 +2,93 @@
   <div class="report-generation">
     <el-card class="form-card">
       <div class="card-header">
-
-
-<p class="subtitle">选择合适的标签和平台，生成专业的宣传内容</p>
-
-</div>
+        <p class="subtitle">
+          {{ locale === 'en' ? 'Select appropriate tags and platform to generate specialized propaganda content' : '选择合适的标签和平台生成专业的宣传内容' }}
+        </p>
+      </div>
 
       <el-form :model="report" ref="form" label-width="120px" class="form">
 
         <!-- 活动信息分组 -->
         <div class="form-group">
-          <h3 class="group-title">活动信息（必填）</h3>
+          <h3 class="group-title">
+            {{ locale === 'en' ? 'Activity Information (Required)' : '活动信息（必填）' }}
+          </h3>
           <el-form-item
-            label="活动名称"
+            :label="locale === 'en' ? 'Event Name' : '活动名称'"
             prop="eventName"
-            :rules="[{ required: true, message: '请输入活动名称', trigger: 'blur' }]"
+            :rules="[{ required: true, message: locale === 'en' ? 'Please enter the event name' : '请输入活动名称', trigger: 'blur' }]"
           >
             <el-input
               v-model="report.eventName"
-              placeholder="例如：2024湖南非物质文化遗产展示周"
+              placeholder=""
             />
           </el-form-item>
           <el-form-item
-            label="活动属性"
+            :label="locale === 'en' ? 'Event Type' : '活动属性'"
             prop="eventType"
-            :rules="[{ required: true, message: '请输入活动属性', trigger: 'blur' }]"
+            :rules="[{ required: true, message: locale === 'en' ? 'Please enter the event type' : '请输入活动属性', trigger: 'blur' }]"
           >
             <el-input
               v-model="report.eventType"
-              placeholder="例如：文化展览/非遗传承/民俗活动"
+              :placeholder="locale === 'en' ? 'e.g. Cultural Exhibition/Intangible Cultural Heritage Inheritance/Folk Activities' : '例如：文化展览/非遗传承/民俗活动'"
             />
           </el-form-item>
         </div>
 
         <!-- 宣传信息分组 -->
         <div class="form-group">
-          <h3 class="group-title">宣传策略</h3>
-          <el-form-item label="宣传倾向" prop="promotionTendency">
+          <h3 class="group-title">
+            {{ locale === 'en' ? 'Promotion Strategy' : '宣传策略' }}
+          </h3>
+          <el-form-item :label="locale === 'en' ? 'Promotion Tendency' : '宣传倾向'" prop="promotionTendency">
             <el-input
               v-model="report.promotionTendency"
-              placeholder="例如：突出文化传承价值/提升青年参与感"
+              :placeholder="locale === 'en' ? 'e.g. Highlighting cultural heritage value / Increasing youth participation' : '例如：突出文化传承价值/提升青年参与感'"
             />
           </el-form-item>
-          <el-form-item label="宣传方式" prop="promotionMethod">
+          <el-form-item :label="locale === 'en' ? 'Promotion Method' : '宣传方式'" prop="promotionMethod">
             <el-input
               v-model="report.promotionMethod"
-              placeholder="例如：图文结合/短视频/现场直播"
+              :placeholder="locale === 'en' ? 'e.g. Combination of images and text / Short videos / Live broadcasting' : '例如：图文结合/短视频/现场直播'"
             />
           </el-form-item>
         </div>
+
         <!-- 平台选择 -->
-        <el-form-item label="宣传平台" prop="platform" :rules="[{ required: true, message: '请选择宣传平台', trigger: 'change' }]">
-          <el-select v-model="report.platform" placeholder="请选择宣传平台" class="platform-select">
-            <el-option-group label="社交种草平台">
-              <el-option label="小红书" value="小红书" />
-              <el-option label="微博" value="微博" />
+        <el-form-item :label="locale === 'en' ? 'Promotion Platform' : '宣传平台'" prop="platform" :rules="[{ required: true, message: locale === 'en' ? 'Please select a promotion platform' : '请选择宣传平台', trigger: 'change' }]">
+          <el-select v-model="report.platform" :placeholder="locale === 'en' ? 'Please select a promotion platform' : '请选择宣传平台'" class="platform-select">
+            <el-option-group :label="locale === 'en' ? 'Social Media Platforms' : '社交种草平台'">
+              <el-option :label="locale === 'en' ? 'Xiaohongshu' : '小红书'" value="小红书" />
+              <el-option :label="locale === 'en' ? 'Weibo' : '微博'" value="微博" />
             </el-option-group>
-            <el-option-group label="短视频平台">
-              <el-option label="抖音" value="抖音" />
-              <el-option label="B站" value="B站" />
+            <el-option-group :label="locale === 'en' ? 'Short Video Platforms' : '短视频平台'">
+              <el-option :label="locale === 'en' ? 'Douyin' : '抖音'" value="抖音" />
+              <el-option :label="locale === 'en' ? 'Bilibili' : 'B站'" value="B站" />
             </el-option-group>
-            <el-option-group label="政务发布平台">
-              <el-option label="政府平台" value="政府平台" />
-              <el-option label="党建平台" value="党建平台" />
+            <el-option-group :label="locale === 'en' ? 'Government Release Platforms' : '政务发布平台'">
+              <el-option :label="locale === 'en' ? 'Government Platform' : '政府平台'" value="政府平台" />
+              <el-option :label="locale === 'en' ? 'Party Building Platform' : '党建平台'" value="党建平台" />
             </el-option-group>
-            <el-option-group label="新闻媒体">
-              <el-option label="新闻媒体" value="新闻媒体" />
+            <el-option-group :label="locale === 'en' ? 'News Media' : '新闻媒体'">
+              <el-option :label="locale === 'en' ? 'News Media' : '新闻媒体'" value="新闻媒体" />
             </el-option-group>
-            <el-option-group label="其他平台">
-              <el-option label="海外传播" value="海外传播" />
-              <el-option label="线下物料" value="线下物料" />
-              <el-option label="研学活动" value="研学活动" />
-              <el-option label="商业合作" value="商业合作" />
-              <el-option label="学术研究" value="学术研究" />
+            <el-option-group :label="locale === 'en' ? 'Other Platforms' : '其他平台'">
+              <el-option :label="locale === 'en' ? 'Overseas Propagation' : '海外传播'" value="海外传播" />
+              <el-option :label="locale === 'en' ? 'Offline Materials' : '线下物料'" value="线下物料" />
+              <el-option :label="locale === 'en' ? 'Research Activities' : '研学活动'" value="研学活动" />
+              <el-option :label="locale === 'en' ? 'Commercial Cooperation' : '商业合作'" value="商业合作" />
+              <el-option :label="locale === 'en' ? 'Academic Research' : '学术研究'" value="学术研究" />
             </el-option-group>
           </el-select>
         </el-form-item>
 
         <!-- 可选标签展示 -->
-        <el-form-item label="选择标签" prop="tags">
+        <el-form-item :label="locale === 'en' ? 'Select Tags' : '选择标签'" prop="tags">
           <div class="tag-section">
             <div class="tag-header">
-              <span class="tag-title">推荐标签</span>
-              <span class="tag-count">已选择 {{ selectedTags.length }} 个标签</span>
+              <span class="tag-title">{{ locale === 'en' ? 'Recommended Tags' : '推荐标签' }}</span>
+              <span class="tag-count">{{ $t('yi-xuan-ze-selectedtagslength-ge-biao-qian', [selectedTags.length]) }}</span>
             </div>
 
             <!-- 左侧推荐标签 -->
@@ -99,26 +103,26 @@
                       :class="['tag-item', { 'selected': isTagSelected(tag) }]"
                       @click="toggleTagSelection(tag)"
                     >
-                      {{ tag }}
-                    </el-tag>
+                    >
+  {{ getName(tag) }} <!-- 这里使用getName来获取标签的翻译 -->
+      </el-tag>
                     <el-button
                       class="more-tags-btn"
                       type="text"
                       @click="showAllTags"
                     >
-                      更多...
-                    </el-button>
+                      {{ $t('geng-duo-0') }} </el-button>
                   </div>
                 </div>
                 <div v-else class="no-preferences">
-                  <span>您还没有偏好标签</span>
-                  <el-button type="text" @click="showAllTags">查看所有标签</el-button>
+                  <span>{{ $t('nin-huan-mei-you-pian-hao-biao-qian-0') }}</span>
+                  <el-button type="text" @click="showAllTags">{{ $t('cha-kan-suo-you-biao-qian-0') }}</el-button>
                 </div>
               </div>
 
               <!-- 右侧已选标签 -->
               <div class="selected-tags">
-                <h4>已选标签</h4>
+                <h4>{{ locale === 'en' ? 'Selected Tags' : '已选标签' }}</h4>
                 <div class="selected-tags-container">
                   <el-tag
                     v-for="tag in selectedTags"
@@ -127,7 +131,9 @@
                     effect="dark"
                     @close="removeTag(tag)"
                   >
-                    {{ tag }}
+                  >
+  {{ getName(tag) }} <!-- 这里使用getName来获取标签的翻译 -->
+
                   </el-tag>
                 </div>
               </div>
@@ -136,32 +142,33 @@
         </el-form-item>
 
         <!-- 标题输入 -->
-        <el-form-item label="标题" prop="title">
+        <el-form-item :label="locale === 'en' ? 'Title' : '标题'" prop="title">
           <el-input
             v-model="report.title"
-            placeholder="例如：探寻千年瑶族文化，感受非遗魅力（选填，如果填写我们会着重分析您的标题）"
+            :placeholder="locale === 'en' ? 'For example: Explore thousand-year-old Yao culture, feel the charm of intangible cultural heritage (optional, if provided, we will focus on analyzing your title)' : '例如：探寻千年瑶族文化，感受非遗魅力（选填，如果填写我们会着重分析您的标题）'"
             maxlength="50"
             show-word-limit
           />
         </el-form-item>
 
         <!-- 内容输入 -->
-        <el-form-item label="内容" prop="content">
+        <el-form-item :label="locale === 'en' ? 'Content' : '内容'" prop="content">
           <el-input
             type="textarea"
             v-model="report.content"
-            placeholder="例如：本次活动将展示瑶族传统服饰制作工艺，并邀请非遗传承人现场展示...（选填，如果填写我们会着重分析您的内容）"
+            :placeholder="locale === 'en' ? 'For example: This event will showcase the traditional costume-making process of the Yao ethnic group, and invite intangible cultural heritage inheritors to demonstrate on-site...' : '例如：本次活动将展示瑶族传统服饰制作工艺，并邀请非遗传承人现场展示...（选填，如果填写我们会着重分析您的内容）'"
             rows="6"
             maxlength="500"
             show-word-limit
           />
         </el-form-item>
+
         <!-- 操作按钮 -->
         <el-form-item class="form-actions">
           <el-button type="primary" @click="generateReport" :loading="generating">
-            {{ generating ? '生成中...' : '生成报道' }}
+            {{ generating ? locale === 'en' ? 'Generating...' : '生成报道' : locale === 'en' ? 'Generate Report' : '生成报道' }}
           </el-button>
-          <el-button @click="resetForm">重置表单</el-button>
+          <el-button @click="resetForm">{{ $t('zhong-zhi-biao-dan') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -169,9 +176,9 @@
     <!-- 修改报告卡片部分 -->
     <el-card class="report-card" v-if="generating || generatedReport">
       <div class="report-header">
-        <h3>宣传报告</h3>
+        <h3>{{ locale === 'en' ? 'Propagation Report' : '宣传报告' }}</h3>
         <el-button type="primary" @click="copyReport" v-if="generatedReport">
-          复制内容
+          {{ locale === 'en' ? 'Copy Content' : '复制内容' }}
         </el-button>
       </div>
 
@@ -180,7 +187,7 @@
         <el-skeleton :rows="10" animated />
         <div class="loading-text">
           <el-icon class="is-loading"><Loading /></el-icon>
-          正在生成报告，请稍候...
+          {{ locale === 'en' ? 'Generating report, please wait...' : '正在生成报告，请稍等...' }}
         </div>
       </div>
 
@@ -188,8 +195,9 @@
       <div v-else-if="generatedReport" class="report-content">
         <div class="report-section">
           <div class="platform-info">
-            <el-tag size="large" effect="dark" type="success">{{ report.platform }}</el-tag>
-          </div>
+  <el-tag size="large" effect="dark" type="success">{{ getPlatformName(report.platform) }}</el-tag>
+</div>
+
           <div class="tags-info">
             <el-tag
               v-for="tag in selectedTags"
@@ -198,7 +206,7 @@
               effect="plain"
               class="report-tag"
             >
-              {{ tag }}
+              {{ getName(tag) }} <!-- 这里使用getName来获取标签的翻译 -->
             </el-tag>
           </div>
           <div class="content-text markdown-body" v-html="renderedMarkdown"></div>
@@ -209,14 +217,14 @@
     <!-- 修改图片生成卡片 -->
     <el-card class="image-card" v-if="report.eventName && report.eventType">
       <div class="card-header">
-        <h3>宣传图片</h3>
+        <h3>{{ locale === 'en' ? 'Generate Propaganda Image' : '生成宣传图片' }}</h3>
         <el-button
           type="primary"
           @click="generateImage"
           :loading="generatingImage"
           :icon="Picture"
         >
-          生成宣传图片
+          {{ locale === 'en' ? 'Generate Propaganda Image' : '生成宣传图片' }}
         </el-button>
       </div>
 
@@ -234,13 +242,13 @@
                 <template #placeholder>
                   <div class="image-loading">
                     <el-icon class="is-loading"><Loading /></el-icon>
-                    <span>加载中...</span>
+                    <span>{{ locale === 'en' ? 'Loading...(This may take 2-3 minutes)' : '加载中...（这可能需要2-3分钟时间）' }}</span>
                   </div>
                 </template>
                 <template #error>
                   <div class="image-error">
                     <el-icon><Picture /></el-icon>
-                    <span>加载失败</span>
+                    <span>{{ locale === 'en' ? 'Loading failed' : '加载失败' }}</span>
                   </div>
                 </template>
               </el-image>
@@ -252,7 +260,7 @@
                 class="download-btn"
               >
                 <el-icon><Download /></el-icon>
-                下载图片
+                {{ locale === 'en' ? 'Download Image' : '下载图片' }}
               </el-button>
             </div>
           </div>
@@ -263,14 +271,14 @@
     <!-- 添加标签选择弹窗 -->
     <el-dialog
       v-model="tagDialogVisible"
-      title="选择标签"
+      :title="locale === 'en' ? 'Select Tags' : '选择标签'"
       width="50%"
       class="tag-dialog"
     >
       <div class="tag-search">
         <el-input
           v-model="tagSearchQuery"
-          placeholder="搜索标签"
+          :placeholder="locale === 'en' ? 'Search tags' : '搜索标签'"
           prefix-icon="el-icon-search"
           clearable
         />
@@ -289,7 +297,7 @@
               :class="['tag-item', { 'selected': isTagSelected(tag.name) }]"
               @click="toggleTagSelection(tag.name)"
             >
-              {{ tag.name }}
+              {{ getName(tag.name) }} <!-- 这里使用getName来获取标签的翻译 -->
             </el-tag>
           </div>
         </div>
@@ -297,6 +305,7 @@
     </el-dialog>
   </div>
 </template>
+
 
 <style scoped>
 .report-generation {
@@ -1041,7 +1050,16 @@ import RecommendAPI from '@/api/recommend';
 import TagsAPI from '@/api/tags';
 import ReportAPI from '@/api/report';
 import { Loading, Document, Picture, Download } from '@element-plus/icons-vue'
-
+import cultureElements from '@/json/culture_elements_translated.json'; // 假设包含菜名的翻译数据
+// 获取名称的翻译
+const getName = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['title-en'] ? 
+    element['title-en'] : 
+    name;
+};
+import { useI18n } from 'vue-i18n';
+const {t,locale} = useI18n();
 const availableTags = [
   "文化", "科技", "教育", "公益", "环境", "健康", "经济", "体育", "艺术", "创新",
   "社会", "旅游", "历史", "政治", "法律", "军事", "生态", "企业", "金融", "城市"
@@ -1078,7 +1096,8 @@ const toggleTagSelection = (tag) => {
     if (selectedTags.value.length < 5) {
       selectedTags.value.push(tag);
     } else {
-      ElMessage.warning('最多只能选择5个标签');
+      const warningMessage = locale.value === 'en' ? 'You can only select up to 5 tags' : '最多只能选择5个标签';
+      ElMessage.warning(warningMessage);
     }
   }
 };
@@ -1093,7 +1112,11 @@ const removeTag = (tag) => {
 const generateReport = async () => {
   generating.value = true;
   try {
-    const response = await ReportAPI.generatePublicityReportAPI({
+    // 判断当前语言，选择不同的 API 调用
+    const apiMethod = locale.value === 'en' ? ReportAPI.generatePublicityENReportAPI : ReportAPI.generatePublicityReportAPI;
+
+    // 调用相应的 API
+    const response = await apiMethod({
       platform: report.value.platform,
       title: report.value.title,
       content: report.value.content,
@@ -1103,19 +1126,24 @@ const generateReport = async () => {
       promotionTendency: report.value.promotionTendency,
       promotionMethod: report.value.promotionMethod
     });
+
     console.log('生成报告响应:', response);
+
     if (response.code === 200) {
       generatedReport.value = response.data.report;
-      ElMessage.success('报告生成成功！');
+      const successMessage = locale.value === 'en' ? 'Report generated successfully!' : '报告生成成功！';
+      ElMessage.success(successMessage);
     }
     console.log("省钱");
   } catch (error) {
     console.error('生成报告失败:', error);
-    ElMessage.error('生成报告失败，请重试');
+    const errorMessage = locale.value === 'en' ? 'Failed to generate report, please try again.' : '生成报告失败，请重试';
+    ElMessage.error(errorMessage);
   } finally {
     generating.value = false;
   }
 };
+
 
 const resetForm = () => {
   Object.keys(report.value).forEach(key => report.value[key] = '');
@@ -1127,10 +1155,12 @@ const copyReport = () => {
   if (generatedReport.value) {
     navigator.clipboard.writeText(generatedReport.value)
       .then(() => {
-        ElMessage.success('内容已复制到剪贴板');
+        const successMessage = locale.value === 'en' ? 'Content copied to clipboard' : '内容已复制到剪贴板';
+        ElMessage.success(successMessage);
       })
       .catch(() => {
-        ElMessage.error('复制失败，请手动复制');
+        const errorMessage = locale.value === 'en' ? 'Failed to copy' : '复制失败，请手动复制';
+        ElMessage.error(errorMessage);
       });
   }
 };
@@ -1140,7 +1170,8 @@ const fetchUserPreferences = async () => {
   try {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      ElMessage.warning('请先登录');
+      const warningMessage = locale.value === 'en' ? 'Please log in first' : '请先登录';
+      ElMessage.warning(warningMessage);
       return;
     }
 
@@ -1199,7 +1230,8 @@ const fetchUserPreferences = async () => {
     }
   } catch (error) {
     console.error('获取用户偏好标签失败:', error);
-    ElMessage.error('获取用户偏好标签失败');
+    const errorMessage = locale.value === 'en' ? 'Failed to get user preference tags' : '获取用户偏好标签失败';
+    ElMessage.error(errorMessage);
   }
 };
 
@@ -1208,22 +1240,40 @@ const visiblePreferences = computed(() => {
   return userPreferences.value.slice(0, maxVisibleTags);
 });
 
-// 主题名称映射
-const themeDisplayNames = {
-  folk: '民俗文化',
-  food: '饮食文化',
-  spot: '文化景点',
-  literature: '文学艺术',
-  other: '其他'
-};
 
-// 获取主题显示名称
+
+// 获取主题显示名称的翻译
 const getThemeDisplayName = (theme) => {
-  return themeDisplayNames[theme] || theme;
+  const themeNames = {
+    folk: { cn: '民俗文化', en: 'Folk Culture' },
+    food: { cn: '饮食文化', en: 'Food Culture' },
+    spot: { cn: '名胜古迹', en: 'Cultural Heritage Sites' },
+    literature: { cn: '文学艺术', en: 'Literature and Arts' },
+    other: { cn: '其他', en: 'Other' }
+  };
+  
+  return locale.value === 'en' ? themeNames[theme]?.en : themeNames[theme]?.cn || theme;
 };
 
 // 按主题分组的标签
 const groupedTags = ref({});
+const getPlatformName = (platform) => {
+  const platformNames = {
+    '小红书': locale.value === 'en' ? 'Xiaohongshu' : '小红书',
+    '微博': locale.value === 'en' ? 'Weibo' : '微博',
+    '抖音': locale.value === 'en' ? 'Douyin' : '抖音',
+    'B站': locale.value === 'en' ? 'Bilibili' : 'B站',
+    '政府平台': locale.value === 'en' ? 'Government Platform' : '政府平台',
+    '党建平台': locale.value === 'en' ? 'Party Building Platform' : '党建平台',
+    '新闻媒体': locale.value === 'en' ? 'News Media' : '新闻媒体',
+    '海外传播': locale.value === 'en' ? 'Overseas Spread' : '海外传播',
+    '线下物料': locale.value === 'en' ? 'Offline Materials' : '线下物料',
+    '研学活动': locale.value === 'en' ? 'Research and Study Activities' : '研学活动',
+    '商业合作': locale.value === 'en' ? 'Business Cooperation' : '商业合作',
+    '学术研究': locale.value === 'en' ? 'Academic Research' : '学术研究'
+  };
+  return platformNames[platform] || platform;
+};
 
 // 获取所有标签
 const fetchAllTags = async () => {
@@ -1298,13 +1348,15 @@ const generatedImages = ref([]);
 // 生成图片方法
 const generateImage = async () => {
   if (!report.value.eventName || !report.value.eventType) {
-    ElMessage.warning('请先填写活动名称和类型');
+    const warningMessage = locale.value === 'en' ? 'Please fill in the event name and type first' : '请先填写活动名称和类型';
+    ElMessage.warning(warningMessage);
     return;
   }
 
   generatingImage.value = true;
   try {
-    const response = await ReportAPI.generatePublicityImageAPI({
+    const apiMethod = locale.value === 'en' ? ReportAPI.generatePublicityImageENAPI : ReportAPI.generatePublicityImageAPI;
+    const response = await apiMethod({
       eventName: report.value.eventName,
       eventType: report.value.eventType,
       tags: selectedTags.value,
@@ -1314,11 +1366,14 @@ const generateImage = async () => {
 
     if (response.code === 200) {
       generatedImages.value = response.data.images;
-      ElMessage.success('图片生成成功！');
+// 根据语言环境显示不同的提示信息
+const successMessage = locale.value === 'en' ? 'Image generated successfully!' : '图片生成成功！';
+    ElMessage.success(successMessage);
     }
   } catch (error) {
     console.error('生成图片失败:', error);
-    ElMessage.error('生成图片失败，请重试');
+    const errorMessage = locale.value === 'en' ? 'Failed to generate image, please try again.' : '生成图片失败，请重试';
+    ElMessage.error(errorMessage);
   } finally {
     generatingImage.value = false;
   }
@@ -1335,10 +1390,12 @@ const handleDownload = (imageUrl) => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    ElMessage.success('开始下载');
+    const downloadMessage = locale.value === 'en' ? 'Download started' : '开始下载';
+    ElMessage.success(downloadMessage);
   } catch (error) {
     console.error('下载失败:', error);
-    ElMessage.error('下载失败，请重试');
+    const downloadErrorMessage = locale.value === 'en' ? 'Failed to download' : '下载失败';
+    ElMessage.error(downloadErrorMessage);
   }
 };
 

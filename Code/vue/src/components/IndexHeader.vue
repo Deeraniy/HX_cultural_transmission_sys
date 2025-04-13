@@ -132,6 +132,8 @@ const handleLanguageChange = (command: string) => {
   locale.value = command;
   // 保存语言设置到本地存储
   localStorage.setItem('language', command);
+    // 刷新页面
+    window.location.reload();  // 刷新页面
 };
 
 // 获取问候语

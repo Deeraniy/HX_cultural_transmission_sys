@@ -4,7 +4,7 @@
       <div class="attraction-container">
         <!-- 上方的淡红色条 -->
         <div class="scroll-bar">
-          <span class="scroll-bar-text">湖湘文学以其丰富的文化内涵、浓郁的地方风情和鲜明的精神追求，成为中国文学的重要组成部分。它不仅是湖南人民文化身份的象征，也是中华文化多样性和丰富性的体现。湖湘文学承载着湖湘文化的悠久历史，并继续影响着当代中国文学的创作与发展。</span>
+          <span class="scroll-bar-text">{{ $t('hu-xiang-wen-xue-yi-qi-feng-fu-de-wen-hua-nei-han-nong-yu-de-di-fang-feng-qing-he-xian-ming-de-jing-shen-zhui-qiu-cheng-wei-zhong-guo-wen-xue-de-zhong-yao-zu-cheng-bu-fen-ta-bu-jin-shi-hu-nan-ren-min-wen-hua-shen-fen-de-xiang-zheng-ye-shi-zhong-hua-wen-hua-duo-yang-xing-he-feng-fu-xing-de-ti-xian-hu-xiang-wen-xue-cheng-zai-zhuo-hu-xiang-wen-hua-de-you-jiu-li-shi-bing-ji-xu-ying-xiang-zhuo-dang-dai-zhong-guo-wen-xue-de-chuang-zuo-yu-fa-zhan') }}</span>
         </div>
         <!-- 图片轮播（垂直方向） -->
         <el-carousel height="400px" direction="vertical" :autoplay="false" v-model:active-index="currentIndex" @change="onCarouselChange">
@@ -31,17 +31,17 @@
         <!-- 右侧详情区域 -->
         <div class="location-box">
           <div class="s-title w">
-            <span>{{ carouselData[currentIndex]?.title }}</span>
+            <span>{{ carouselData[currentIndex]?.title[locale] }}</span>
           </div>
-          <div class="p">{{ carouselData[currentIndex]?.description }}</div>
+          <div class="p">{{ carouselData[currentIndex]?.description[locale] }}</div>
           <div class="ts nl2p">
-            <p>主编：{{ carouselData[currentIndex]?.editor }}</p>
-            <p>书号：{{ carouselData[currentIndex]?.isbn }}</p>
-            <p>出版：{{ carouselData[currentIndex]?.publisher }}</p>
-            <p>定价：{{ carouselData[currentIndex]?.price }}</p>
-            <p>版次：{{ carouselData[currentIndex]?.edition }}</p>
-            <p>印张：{{ carouselData[currentIndex]?.prints }}</p>
-            <p>开本：{{ carouselData[currentIndex]?.format }}</p>
+            <p>{{ $t('zhu-bian-carouseldatacurrentindexeditorlocale', [carouselData[currentIndex]?.editor[locale]]) }}</p>
+            <p>{{ $t('shu-hao-carouseldatacurrentindexisbn', [carouselData[currentIndex]?.isbn]) }}</p>
+            <p>{{ $t('chu-ban-carouseldatacurrentindexpublisherlocale', [carouselData[currentIndex]?.publisher[locale]]) }}</p>
+            <p>{{ $t('ding-jia-carouseldatacurrentindexpricelocale', [carouselData[currentIndex]?.price[locale]]) }}</p>
+            <p>{{ $t('ban-ci-carouseldatacurrentindexeditionlocale', [carouselData[currentIndex]?.edition[locale]]) }}</p>
+            <p>{{ $t('yin-zhang-carouseldatacurrentindexprints', [carouselData[currentIndex]?.prints]) }}</p>
+            <p>{{ $t('kai-ben-carouseldatacurrentindexformatlocale', [carouselData[currentIndex]?.format[locale]]) }}</p>
           </div>
         </div>
 
@@ -61,7 +61,9 @@ import turn from '@/utils/turn'
 import BookShelf from "@/components/FilmLiterature/Literature/BookShelf.vue";
 // 直接导入 JSON 文件
 import bookData from '@/json/Book.json';
-
+import { useI18n } from 'vue-i18n'; // 引入 vue-i18n
+const { t, locale } = useI18n();  // 使用 vue-i18n 的 t 函数
+console.log(locale.value)
 console.log(bookData.title)
 const carouselData = bookData
 

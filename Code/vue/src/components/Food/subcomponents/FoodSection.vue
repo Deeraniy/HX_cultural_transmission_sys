@@ -3,8 +3,8 @@
     <!-- 卡片容器 -->
     <el-card class="content-card" :body-style="{ padding: '20px' }">
       <div class="section-title">
-        湘菜韵味<br />
-        <span>—— The Essence of Hunan Cuisine ——</span>
+        {{ $t('xiang-cai-yun-wei') }}<br />
+        <span>{{ $t('the-essence-of-hunan-cuisine') }}</span>
       </div>
 
       <!-- 使用 el-row 和 el-col 布局 -->
@@ -15,12 +15,12 @@
             <el-image
                 class="image-container"
                 :src="food3"
-                alt="臭豆腐"
+                alt="$t('chou-dou-fu')"
                 fit="contain"
             />
             <div class="description-container">
-              <div class="item-title">臭豆腐</div>
-              <p>臭豆腐是湖南的传统小吃，外皮酥脆，内里软嫩，味道独特。具有开胃消食、增进食欲的功效，同时含有丰富的蛋白质和维生素。</p>
+              <div class="item-title">{{ $t('chou-dou-fu-0') }}</div>
+              <p :style="descriptionStyle">{{ $t('chou-dou-fu-shi-hu-nan-de-chuan-tong-xiao-chi-wai-pi-su-cui-nei-li-ruan-nen-wei-dao-du-te-ju-you-kai-wei-xiao-shi-zeng-jin-shi-yu-de-gong-xiao-tong-shi-han-you-feng-fu-de-dan-bai-zhi-he-wei-sheng-su') }}</p>
             </div>
           </el-card>
         </el-col>
@@ -31,12 +31,12 @@
             <el-image
                 class="image-container"
                 :src="food4"
-                alt="攸县香干"
+                alt="$t('you-xian-xiang-gan')"
                 fit="contain"
             />
             <div class="description-container">
-              <div class="item-title item-title-secondary">攸县香干</div>
-              <p>攸县香干是湖南省攸县的传统食品，口感香脆，味道鲜美。具有健脾开胃、清热解毒的功效，适合多种烹饪方式。</p>
+              <div class="item-title item-title-secondary">{{ $t('you-xian-xiang-gan-0') }}</div>
+              <p :style="descriptionStyle">{{ $t('you-xian-xiang-gan-shi-hu-nan-sheng-you-xian-de-chuan-tong-shi-pin-kou-gan-xiang-cui-wei-dao-xian-mei-ju-you-jian-pi-kai-wei-qing-re-jie-du-de-gong-xiao-shi-he-duo-zhong-peng-ren-fang-shi') }}</p>
             </div>
           </el-card>
         </el-col>
@@ -47,12 +47,12 @@
             <el-image
                 class="image-container"
                 :src="food1"
-                alt="糖油粑粑"
+                alt="$t('tang-you-ba-ba')"
                 fit="contain"
             />
             <div class="description-container">
-              <div class="item-title item-title-secondary">糖油粑粑</div>
-              <p>糖油粑粑是湖南的传统小吃，外皮酥脆，内里软糯，甜而不腻。具有滋补养颜、健脾开胃的功效，是冬季的佳品。</p>
+              <div class="item-title item-title-secondary">{{ $t('tang-you-ba-ba-0') }}</div>
+              <p :style="descriptionStyle">{{ $t('tang-you-ba-ba-shi-hu-nan-de-chuan-tong-xiao-chi-wai-pi-su-cui-nei-li-ruan-nuo-tian-er-bu-ni-ju-you-zi-bu-yang-yan-jian-pi-kai-wei-de-gong-xiao-shi-dong-ji-de-jia-pin') }}</p>
             </div>
           </el-card>
         </el-col>
@@ -61,10 +61,20 @@
   </div>
 </template>
 
+
 <script setup>
 import food1 from "@/assets/foodImg/food1.jpg";
 import food4 from "@/assets/foodImg/food4.jpg";
 import food3 from "@/assets/foodImg/food3.jpg";
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n();
+
+// 动态设置文本样式
+const descriptionStyle = computed(() => {
+  return locale.value === 'en' ? { fontSize: '12px' } : { fontSize: '20px' };
+});
 </script>
 
 <style scoped>

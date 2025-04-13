@@ -482,7 +482,22 @@ h3 {
   font-size: 14px;
   z-index: 10;
 }
-
+.status-bar-en {
+  position: absolute;
+  top: 505px;
+  left: 10%;
+  width: 150px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  padding: 8px 20px;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  z-index: 10;
+}
 .status-item {
   display: flex;
   align-items: center;

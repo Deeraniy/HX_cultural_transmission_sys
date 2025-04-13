@@ -271,6 +271,137 @@ def generate_simple_report(data):
         print(f"生成报告时出错: {str(e)}")
         raise e
 
+
+def generate_simple_report_en(data):
+    """生成英文宣传文案的主函数"""
+    try:
+        # 获取基本信息
+        title = data["title"]
+        content = data["content"]
+        platform = data["platform"]
+        tags = ", ".join(data.get("tags", []))
+        event_name = data["eventName"]
+        event_type = data["eventType"]
+        promotion_tendency = data["promotionTendency"]
+        promotion_method = data["promotionMethod"]
+        
+        # 构建活动基本信息
+        event_context = f"""
+活动名称：{event_name}
+活动属性：{event_type}
+宣传倾向：{promotion_tendency}
+宣传方式：{promotion_method}
+相关标签：{tags}
+"""
+
+        # 根据是否提供标题和内容构建不同的分析提示
+        content_context = ""
+        if title and content:
+            content_context = f"""
+参考标题：{title}
+参考内容：{content}
+
+请基于以上参考内容进行优化和扩展。"""
+        elif title:
+            content_context = f"""
+参考标题：{title}
+
+请参考这个标题的风格和重点进行内容创作，记住，标题十分重要。"""
+        elif content:
+            content_context = f"""
+参考内容：{content}
+
+请在保持核心信息的基础上进行优化和扩展。"""
+
+        # 生成主要内容
+        main_content = ""
+        if platform in PLATFORM_PROMPTS:
+            # 根据平台类型调用对应的 lambda 函数
+            if platform == "小红书":
+                prompt = PLATFORM_PROMPTS[platform](event_context)
+            elif platform == "微博":
+                prompt = PLATFORM_PROMPTS[platform](title, tags)
+            else:
+                # 其他平台的处理...
+                prompt = PLATFORM_PROMPTS[platform](title, tags)
+                
+            response = client.chat.completions.create(
+                model="glm-4",
+                messages=[{
+                    "role": "user", 
+                    "content": f"""作为一名专业的文化活动策划师，请根据以下信息生成一篇富有感染力的宣传内容,请全文使用英文，内容排版紧凑一点：
+
+{prompt}
+
+请确保生成的内容：
+1. 紧密围绕活动主题和目标，尤其是活动名称，一定要有体现
+2. 突出活动特色和亮点
+3. 符合目标平台的传播特点
+4. 注重文化传承和创新
+5. 吸引目标受众参与互动
+6. 标题必须包含活动名称中的2-3个核心词
+7. 正文前100字必须明确提及完整活动名称
+📢 硬性要求：
+1. 活动名称"{event_name}"必须完整出现在正文前两段
+2. 名称中的关键词（如"{'、'.join(event_name.split())}"）需在全文出现3次以上
+🎯 创作技巧：
+1. 把名称拆解为记忆点（示例："瑶族传统|文化展示|湘西盛会"）
+2. 在每部分内容自然植入名称要素
+3. 将名称关键词与平台特色结合（如小红书打卡点命名）
+
+注意：
+1. 不要使用 \\n 作为换行，使用 markdown 格式
+2. 使用 # ## ### 等标记来标识标题层级
+3. 正文内容使用段落格式，不要加多余的换行
+4. 宣传策略建议部分使用规范的 markdown 格式"""
+                }]
+            )
+            main_content = response.choices[0].message.content.strip()
+
+        # 生成宣传策略建议
+        strategy_prompt = f"""
+基于以下活动信息，请生成详细的宣传策略建议，请全文使用英文，内容排版紧凑一点：
+
+{event_context}
+
+请从以下几个方面提供建议（使用markdown格式）：
+
+### 宣传策略建议
+
+#### 1. 最佳发布时间和频率
+- 具体说明发布时间和频率安排
+
+#### 2. 内容呈现形式
+- 详细说明如何通过{platform}平台进行宣传
+- 根据活动特点设计内容形式
+
+#### 3. 互动策略
+- 设计与活动主题强相关的互动方案
+- 提供吸引目标受众的具体方法
+
+请确保建议具体可行，便于执行。
+注意：使用markdown格式，不要使用\\n换行"""
+
+        strategy_response = client.chat.completions.create(
+            model="glm-4-air",
+            messages=[{"role": "user", "content": strategy_prompt}]
+        )
+        strategy_content = strategy_response.choices[0].message.content.strip()
+
+        # 组合内容和策略，使用markdown格式
+        final_content = f"""
+{main_content}
+
+━━━━━━━━━━ Publicity Strategy Recommendations ━━━━━━━━━━
+
+{strategy_content}"""
+
+        return final_content.strip()
+    except Exception as e:
+        print(f"生成报告时出错: {str(e)}")
+        raise e
+
+
 @require_http_methods(["POST"])
 def generate_publicity_report(request):
     """处理生成宣传报告的请求"""
@@ -318,6 +449,55 @@ def generate_publicity_report(request):
             'message': f'生成报告失败：{str(e)}',
             'data': None
         })
+
+@require_http_methods(["POST"])
+def generate_publicity_en_report(request):
+    """处理生成英文宣传报告的请求"""
+    try:
+        data = json.loads(request.body)
+        
+        # 验证必要字段
+        required_fields = ["platform", "eventName", "eventType"]  # 修改必要字段
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse({
+                    'code': 400,
+                    'message': f'缺少必要字段：{field}',
+                    'data': None
+                })
+        
+        # 验证平台类型
+        if data["platform"] not in PLATFORM_PROMPTS:
+            return JsonResponse({
+                'code': 400,
+                'message': f'不支持的平台类型：{data["platform"]}',
+                'data': None
+            })
+        
+        # 生成报告
+        report = generate_simple_report_en(data)
+        
+        return JsonResponse({
+            'code': 200,
+            'message': 'success',
+            'data': {
+                'report': report,
+                'platform': data["platform"]
+            }
+        })
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'code': 400,
+            'message': '无效的JSON格式',
+            'data': None
+        })
+    except Exception as e:
+        return JsonResponse({
+            'code': 500,
+            'message': f'生成报告失败：{str(e)}',
+            'data': None
+        })
+
 
 # 测试数据
 test_data = {

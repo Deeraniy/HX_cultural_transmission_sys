@@ -10,9 +10,9 @@
         <!-- 文字内容列 -->
         <el-col :span="16">
           <div class="text-container">
-            <div class="title">湖湘饮食文化</div>
-            <p>
-              湖湘饮食文化源远流长，可以追溯到先秦时期。湖南地处中国南部，气候湿润，物产丰富，为湖湘饮食提供了丰富的原材料。湖湘饮食文化深受楚文化的影响，具有浓郁的地方特色
+            <div class="title">{{ $t('hu-xiang-yin-shi-wen-hua') }}</div>
+            <p :style="textStyle">
+              {{ $t('hu-xiang-yin-shi-wen-hua-yuan-yuan-liu-chang-ke-yi-zhui-su-dao-xian-qin-shi-qi-hu-nan-di-chu-zhong-guo-nan-bu-qi-hou-shi-run-wu-chan-feng-fu-wei-hu-xiang-yin-shi-ti-gong-le-feng-fu-de-yuan-cai-liao-hu-xiang-yin-shi-wen-hua-shen-shou-chu-wen-hua-de-ying-xiang-ju-you-nong-yu-de-di-fang-te-se') }} 
             </p>
           </div>
         </el-col>
@@ -21,9 +21,19 @@
   </div>
 </template>
 
+
 <script setup>
-// 这里可以加入其他逻辑
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n();
+
+// 动态设置文本样式
+const textStyle = computed(() => {
+  return locale.value === 'en' ? { fontSize: '24px' } : { fontSize: '30px' };
+});
 </script>
+
 
 <style scoped>
 @import '@/assets/font/font.css';

@@ -52,7 +52,7 @@
                 class="tag"
                 :type="getTagType(tag.count)"
               >
-                {{ tag.name }}
+              {{ getName(tag.name) }}
               </el-tag>
               <div v-if="tags.length === 0" class="no-tags">
                 {{ t('user.home.noTags') }}
@@ -82,11 +82,17 @@ import { useRouter } from 'vue-router';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
-
+import cultureElements from '@/json/culture_elements_translated.json';
 const userStore = useUserStore();
 const router = useRouter();
-const { t } = useI18n();
-
+const { t,locale } = useI18n();
+// 获取名称的翻译
+const getName = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['title-en'] ? 
+    element['title-en'] : 
+    name;
+};
 // 初始化默认值
 let userData = ref([{
   uid: userStore.userId || 0,
@@ -97,7 +103,7 @@ let userData = ref([{
   location: '',
   email: '',
   mobile: '',
-  description: t('user.home.defaultDescription', { defaultValue: '这个人很懒，什么都没写~' }),
+  description: t('user.home.defaultDescription', { defaultValue: locale.value === 'en' ? 'This person is lazy, and nothing is written~' : '这个人很懒，什么都没写~' }),
   avatar: new URL('@/assets/default-avatar.png', import.meta.url).href,
 }]);
 

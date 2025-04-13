@@ -3,9 +3,9 @@
     <div class="total">
       <!-- 左侧大标题 -->
       <div class="menu-title">
-        <h2>非遗民俗分析</h2>
+        <h2>{{ $t('fei-yi-min-su-fen-xi') }}</h2>
       </div>
-      <el-button class="back-btn" @click="goBack">|返回</el-button>
+      <el-button :class="['back-btn', { 'right-position': locale === 'en' }]" @click="goBack">{{ $t('fan-hui-0') }}</el-button>
       <!-- 菜单区域 -->
       <el-menu
           :default-active="activeIndex"
@@ -16,9 +16,9 @@
       ><!--开启vue-router模式-->
 
         <!-- 首页菜单项 -->
-        <el-menu-item index="2">首页</el-menu-item> <!--index配置跳转路径-->
+        <el-menu-item index="2">{{ $t('menu.home') }}</el-menu-item> <!--index配置跳转路径-->
         <!-- 美食专区菜单项 -->
-        <el-menu-item index="3">传播效果</el-menu-item>
+        <el-menu-item index="3">{{ $t('chuan-bo-xiao-guo') }}</el-menu-item>
         <!-- 传播效果分析菜单项 -->
         <!-- <el-menu-item index="4">情感分析</el-menu-item> -->
       </el-menu>
@@ -40,6 +40,8 @@ import router from '@/router'
 import Carousel from "@/components/RedCulture/Carousel.vue";
 import RedCultureMain from "@/components/RedCulture/RedCultureMain.vue";
 import { ref, onMounted, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n';
+const { t, locale } = useI18n();
 // 导入背景图片
 import backgroundImage from '@/assets/img_4.png';
 
@@ -87,6 +89,11 @@ onMounted(() => {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-right: 850px; /* 给按钮添加右边距 */
+}
+
+/* 英文模式下的右对齐 */
+.right-position {
+  margin-right: 150px; /* 右边距，保证按钮离右边有一定间距 */
 }
 .el-menu--popup .el-menu-item,
 .el-menu .el-menu-item {

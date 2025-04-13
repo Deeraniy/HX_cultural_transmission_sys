@@ -3,8 +3,8 @@
     <div class="total">
       <!-- 返回按钮 -->
 
-      <h2 class="fixed-title">名胜古迹分析界面</h2>
-      <el-button class="back-btn" @click="goBack">| 返回</el-button>
+      <h2 class="fixed-title">{{ $t('ming-sheng-gu-ji-fen-xi-jie-mian') }}</h2>
+      <el-button class="back-btn" @click="goBack">{{ $t('fan-hui') }}</el-button>
       <el-menu
           :default-active="activeIndex"
           class="el-menu-demo"

@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "echarts": "^5.5.1",
-    "element-plus": "^2.8.7"
+    "element-plus": "^2.8.7",
+    "vue-i18n": "^11.1.3"
   }
 }

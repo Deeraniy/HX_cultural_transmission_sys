@@ -1,38 +1,101 @@
 [
   {
-    "title": "故宫日历·2025年·汉英对照",
-    "description": "2025年，乙巳年，生肖蛇，适逢故宫博物院建院一百周年。汉英对照版日历通过文物展示故宫百年来的发展历程。",
-    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png",
-    "editor": "陈丽华",
+    "title": {
+      "zh": "故宫日历·2025年·汉英对照",
+      "en": "Palace Museum Calendar 2025 (Bilingual Edition)"
+    },
+    "description": {
+      "zh": "2025年，乙巳年，生肖蛇，适逢故宫博物院建院一百周年。",
+      "en": "2025, Year of the Snake, marks the 100th anniversary of the establishment of the Palace Museum."
+    },
+    "editor": {
+      "zh": "陈丽华",
+      "en": "Chen Lihua"
+    },
     "isbn": "978-7-5134-1668-9",
-    "publisher": "故宫出版社",
-    "price": "96元",
-    "edition": "2024年11月第1版",
+    "publisher": {
+      "zh": "故宫出版社",
+      "en": "Palace Museum Press"
+    },
+    "price": {
+      "zh": "96元",
+      "en": "96 CNY"
+    },
+    "edition": {
+      "zh": "2024年11月第1版",
+      "en": "First edition, November 2024"
+    },
     "prints": "16",
-    "format": "48开"
+    "format": {
+      "zh": "48开",
+      "en": "48K"
+    },
+    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png"
   },
   {
-    "title": "汉代玉器研究",
-    "description": "汉代是玉器发展史中的繁荣时代，玉器艺术进入高峰。",
-    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉代玉器研究-FXpuCWAOK260.png",
-    "editor": "徐琳",
+    "title": {
+      "zh": "汉代玉器研究",
+      "en": "Studies on Han Dynasty Jade"
+    },
+    "description": {
+      "zh": "汉代是玉器发展史中的繁荣时代，玉器艺术进入高峰。",
+      "en": "The Han Dynasty was a prosperous period in the history of jade craftsmanship, marking the peak of jade artistry."
+    },
+    "editor": {
+      "zh": "徐琳",
+      "en": "Xu Lin"
+    },
     "isbn": "978-7-5134-1614-6",
-    "publisher": "故宫出版社",
-    "price": "236元",
-    "edition": "2024年9月第1版",
+      "publisher": {
+        "zh": "故宫出版社",
+        "en": "Palace Museum Press"
+      },
+    "price": {
+      "zh": "236元",
+      "en": "236 CNY"
+    },
+    "edition": {
+      "zh": "2024年9月第1版",
+      "en": "First edition, September 2024"
+    },
     "prints": "34",
-    "format": "16开"
+    "format": {
+      "zh": "16开",
+      "en": "16K"
+    },
+    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉代玉器研究-FXpuCWAOK260.png"
   },
   {
-    "title": "清代大运彩瓷（全二册）",
-    "description": "清代大运瓷器是御窑厂每年烧制并送往清宫的基本任务。",
-    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546清代大运彩瓷-QWGTJeobg260.png",
-    "editor": "故宫博物院",
+    "title": {
+      "zh": "清代大运彩瓷（全二册）",
+      "en": "Qing Dynasty Imperial Porcelain (Two Volumes)"
+    },
+    "description": {
+      "zh": "清代大运瓷器是御窑厂每年烧制并送往清宫的基本任务。",
+      "en": "Qing Dynasty Imperial porcelain was a key task for the Imperial Kiln Factory each year, creating porcelain for the Qing court."
+    },
+    "editor": {
+      "zh": "故宫博物院",
+      "en": "Palace Museum"
+    },
     "isbn": "978-7-5134-1653-5",
-    "publisher": "故宫出版社",
-    "price": "880元",
-    "edition": "2024年8月第1版",
+    "publisher": {
+      "zh": "故宫出版社",
+      "en": "Palace Museum Press"
+    },
+    "price": {
+      "zh": "880元",
+      "en": "880 CNY"
+    },
+    "edition": {
+      "zh": "2024年8月第1版",
+      "en": "First edition, August 2024"
+    },
     "prints": "66.5",
-    "format": "12开"
+    "format": {
+      "zh": "12开",
+      "en": "12K"
+    },
+    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546清代大运彩瓷-QWGTJeobg260.png"
   }
 ]

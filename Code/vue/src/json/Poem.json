@@ -1,29 +1,83 @@
 [
   {
-    "name": "登岳阳楼",
-    "introduction": "《登岳阳楼》是唐代文学家范仲淹创作的词，描写了岳阳楼的雄伟景象，并且表达了作者的政治抱负和深刻的历史感。",
-    "short_description": "范仲淹在《登岳阳楼》一文中表达了自己的忧国忧民的情怀，称赞了岳阳楼的壮丽景色，并探讨了历史的兴衰。",
-    "author": "范仲淹",
-    "dynasty": "唐代",
-    "background": "范仲淹在担任岳阳楼的职务时，写下了这篇千古名篇，以表自己的心志。",
+    "name": {
+      "zh": "登岳阳楼",
+      "en": "Climbing Yueyang Tower"
+    },
+    "introduction": {
+      "zh": "《登岳阳楼》是唐代文学家范仲淹创作的词，描写了岳阳楼的雄伟景象，并且表达了作者的政治抱负和深刻的历史感。",
+      "en": "'Climbing Yueyang Tower' is a poem written by the Tang dynasty literary figure Fan Zhongyan. It depicts the magnificent scene of Yueyang Tower while expressing the author's political ambitions and profound historical insights."
+    },
+    "short_description": {
+      "zh": "范仲淹在《登岳阳楼》一文中表达了自己的忧国忧民的情怀，称赞了岳阳楼的壮丽景色，并探讨了历史的兴衰。",
+      "en": "In 'Climbing Yueyang Tower', Fan Zhongyan expresses his concern for the country and the people, praises the magnificent scenery of Yueyang Tower, and explores the rise and fall of history."
+    },
+    "author": {
+      "zh": "范仲淹",
+      "en": "Fan Zhongyan"
+    },
+    "dynasty": {
+      "zh": "唐代",
+      "en": "Tang Dynasty"
+    },
+    "background": {
+      "zh": "范仲淹在担任岳阳楼的职务时，写下了这篇千古名篇，以表自己的心志。",
+      "en": "Fan Zhongyan wrote this timeless masterpiece while serving at Yueyang Tower, expressing his aspirations."
+    },
     "image": "@/assets/poem1.jpg"
   },
   {
-    "name": "芙蓉楼送辛渐二首",
-    "introduction": "《芙蓉楼送辛渐二首》是唐代文学家王昌龄创作的诗，诗中描述了辛渐即将离去的情景，并抒发了作者的离愁别绪。",
-    "short_description": "王昌龄的《芙蓉楼送辛渐二首》通过对友人离去的描写，体现了深厚的友情和惜别的情感。",
-    "author": "王昌龄",
-    "dynasty": "唐代",
-    "background": "王昌龄在长沙与辛渐结识，此诗是送别之作，展示了他对友情的珍视。",
+    "name": {
+      "zh": "芙蓉楼送辛渐二首",
+      "en": "Two Poems of Sending Xin Jian at Furong Tower"
+    },
+    "introduction": {
+      "zh": "《芙蓉楼送辛渐二首》是唐代文学家王昌龄创作的诗，诗中描述了辛渐即将离去的情景，并抒发了作者的离愁别绪。",
+      "en": "'Two Poems of Sending Xin Jian at Furong Tower' is a poem written by the Tang dynasty literary figure Wang Changling, describing the scene of Xin Jian's departure and expressing the author's sorrow of parting."
+    },
+    "short_description": {
+      "zh": "王昌龄的《芙蓉楼送辛渐二首》通过对友人离去的描写，体现了深厚的友情和惜别的情感。",
+      "en": "Wang Changling's 'Two Poems of Sending Xin Jian at Furong Tower' reflects deep friendship and the sorrow of farewell through the depiction of a friend's departure."
+    },
+    "author": {
+      "zh": "王昌龄",
+      "en": "Wang Changling"
+    },
+    "dynasty": {
+      "zh": "唐代",
+      "en": "Tang Dynasty"
+    },
+    "background": {
+      "zh": "王昌龄在长沙与辛渐结识，此诗是送别之作，展示了他对友情的珍视。",
+      "en": "Wang Changling met Xin Jian in Changsha, and this poem was written as a farewell, showcasing his deep appreciation for friendship."
+    },
     "image": "@/assets/poem2.jpg"
   },
   {
-    "name": "贼退示官吏",
-    "introduction": "《贼退示官吏》是唐代文学家杜甫创作的诗，通过诗歌杜甫向官吏表达自己对贼军撤退的安慰，并探讨了社会安定的重要性。",
-    "short_description": "杜甫在《贼退示官吏》中通过简短的诗句表露了自己对社会安定的向往，呼吁官吏要忠诚于人民，振兴国家。",
-    "author": "杜甫",
-    "dynasty": "唐代",
-    "background": "杜甫在安史之乱后创作此诗，反映了社会动荡时期的民生困苦。",
+    "name": {
+      "zh": "贼退示官吏",
+      "en": "Poem to Officials After the Bandits' Retreat"
+    },
+    "introduction": {
+      "zh": "《贼退示官吏》是唐代文学家杜甫创作的诗，通过诗歌杜甫向官吏表达自己对贼军撤退的安慰，并探讨了社会安定的重要性。",
+      "en": "'Poem to Officials After the Bandits' Retreat' is a poem written by the Tang dynasty poet Du Fu. Through the poem, Du Fu expresses his comfort to the officials after the bandits' retreat and explores the importance of social stability."
+    },
+    "short_description": {
+      "zh": "杜甫在《贼退示官吏》中通过简短的诗句表露了自己对社会安定的向往，呼吁官吏要忠诚于人民，振兴国家。",
+      "en": "In 'Poem to Officials After the Bandits' Retreat', Du Fu expresses his longing for social stability through short verses and urges the officials to remain loyal to the people and rejuvenate the country."
+    },
+    "author": {
+      "zh": "杜甫",
+      "en": "Du Fu"
+    },
+    "dynasty": {
+      "zh": "唐代",
+      "en": "Tang Dynasty"
+    },
+    "background": {
+      "zh": "杜甫在安史之乱后创作此诗，反映了社会动荡时期的民生困苦。",
+      "en": "Du Fu wrote this poem after the An Lushan Rebellion, reflecting the hardships of the people during a period of social turmoil."
+    },
     "image": "@/assets/poem3.jpg"
   }
 ]
