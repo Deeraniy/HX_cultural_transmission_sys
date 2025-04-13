@@ -180,13 +180,13 @@
           "folk": "非遗民俗"
         },
         "legend": {
-          "current": "当前发布",
+          "current": "我的发布",
           "average": "平均水平"
         }
       },
       "chart": {
         "mainTitle": "用户画像",
-        "currentPublish": "当前发布",
+        "currentPublish": "我的分布",
         "averageLevel": "平均水平",
         "comparisonTitle": "兴趣偏好对比",
         "categories": {
