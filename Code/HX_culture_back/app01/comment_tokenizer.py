@@ -194,7 +194,7 @@ def get_word_frequency(request):
         # 查询中间40个高频词
         frequency_sql = """
             SELECT token_name as word, count as frequency, sentiment
-            FROM token 
+            FROM spot_token 
             WHERE spot_id = %s 
             ORDER BY count DESC 
             LIMIT 30 OFFSET 40

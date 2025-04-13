@@ -434,8 +434,8 @@ def generate_report(request):
             tag_id = tag_result['tag_id']
             logger.info(f"找到标签ID: {tag_id}")
 
-            # 查询报告内容
-            cursor.execute("SELECT content FROM report WHERE tag_id = %s", (tag_id,))
+            # 查询报告内容（包括中英文）
+            cursor.execute("SELECT content, en_content FROM report WHERE tag_id = %s", (tag_id,))
             report_result = cursor.fetchone()
 
             if not report_result:
@@ -445,7 +445,7 @@ def generate_report(request):
                     'message': f'未找到景点的报告: {spot_name}'
                 }, status=404)
 
-            # 获取时间线数据 - 修改SQL查询
+            # 获取时间线数据
             timeline_sql = """
             SELECT 
                 CONCAT(YEAR(comment_time), '-', LPAD(MONTH(comment_time), 2, '0')) as date,
@@ -478,6 +478,7 @@ def generate_report(request):
             return JsonResponse({
                 'status': 'success',
                 'report': report_result['content'],
+                'report_en': report_result['en_content'],
                 'timeline': timeline_data,
                 'spot_name': spot_name
             })
