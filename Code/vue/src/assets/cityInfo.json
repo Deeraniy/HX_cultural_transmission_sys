@@ -2,71 +2,100 @@
   "张家界市": {
     "wordCloudImage": "@/assets/ZJJ.png",
     "image": "https://img1.qunarzz.com/travel/d4/1712/e5/cfaa43dab52a2ab5.jpg?ver=1",
-    "description": "张家界市，原名“大庸”，湖南省辖地级市，是中国最重要的旅游城市之一，国家重点生态功能区、长江中下游重要生态屏障。全市下辖2个区、2个县，总面积9533平方公里，[51]截至2022年末，张家界市常住人口为150.4万人。[67]张家界市位于湖南省西北部，澧水中上游，属武陵山区腹地，[1]是湘鄂渝黔革命根据地的发源地和中心区域，因旅游建市，是湖南开放的窗口、迎宾的客厅、全域旅游的龙头和美丽中国的靓丽名片，被誉为“扩大的盆景，缩小的仙境”。[51]1982年9月，张家界国家森林公园成为中国第一个国家森林公园。1988年8月，张家界武陵源风景名胜区被列入国家重点风景名胜区。1992年，由张家界国家森林公园等三大景区构成的武陵源风景名胜区被联合国教科文组织列入《世界自然遗产名录》；2004年2月，被列入全球首批《世界地质公园》；2007年，被列入中国首批国家5A级旅游景区。[2]2017年，张家界市被授予“国家森林城市”荣誉称号。[3]2023年，张家界市地区生产总值613.9亿元，比上年增长4.6%。[82]"
+    "description": "张家界市，原名“大庸”，湖南省辖地级市，是中国最重要的旅游城市之一，国家重点生态功能区、长江中下游重要生态屏障。全市下辖2个区、2个县，总面积9533平方公里，[51]截至2022年末，张家界市常住人口为150.4万人。[67]张家界市位于湖南省西北部，澧水中上游，属武陵山区腹地，[1]是湘鄂渝黔革命根据地的发源地和中心区域，因旅游建市，是湖南开放的窗口、迎宾的客厅、全域旅游的龙头和美丽中国的靓丽名片，被誉为“扩大的盆景，缩小的仙境”。[51]1982年9月，张家界国家森林公园成为中国第一个国家森林公园。1988年8月，张家界武陵源风景名胜区被列入国家重点风景名胜区。1992年，由张家界国家森林公园等三大景区构成的武陵源风景名胜区被联合国教科文组织列入《世界自然遗产名录》；2004年2月，被列入全球首批《世界地质公园》；2007年，被列入中国首批国家5A级旅游景区。[2]2017年，张家界市被授予“国家森林城市”荣誉称号。[3]2023年，张家界市地区生产总值613.9亿元，比上年增长4.6%。[82]",
+    "name-en": "Zhangjiajie City",
+    "description-en": "Zhangjiajie, formerly known as 'Dayong,' is a prefecture-level city in Hunan Province and one of China's most important tourist cities. It is a key ecological function area and an important ecological barrier in the middle and lower reaches of the Yangtze River. The city covers an area of 9,533 square kilometers, and as of 2022, has a population of 1.504 million. Located in the northwest of Hunan Province, it is the center of the Wuling Mountain region. Famous for its tourism, Zhangjiajie is known as a 'window to Hunan,' a 'reception hall,' and a leading force in regional tourism. The city is home to the Zhangjiajie National Forest Park, the first national forest park in China, and the Wulingyuan Scenic Area, a UNESCO World Heritage site."
   },
   "常德市": {
     "wordCloudImage": "@/assets/CD.png",
     "image": "https://qnimg.zowoyoo.com/img/15463/1553241445302.jpg",
-    "description": "常德市，古称武陵、朗州，别称柳城，湖南省辖地级市，是长江经济带的重要节点城市、洞庭湖生态经济区的重要组成部分[31]。截至2023年，全市下辖2个市辖区、6个县，代管1个县级市，总面积1.82万平方千米，常住人口518.7万人，城镇人口300.7万人，城镇化率57.98%[72]。常德市位于湖南省北部，江南洞庭湖西侧，武陵山下，史称“川黔咽喉，云贵门户”[31]。常德城名源自《老子》“为天下溪，常德不离”；历史故事“刘海砍樵”“孟姜女哭长城”以及陶渊明笔下的《桃花源记》等浪漫主义情结贯穿常德城二千多年的历史，开创了常德独有的“善德文化”[1]。常德市先后获得中国优秀旅游城市、国家卫生城市、国家园林城市、中国首届魅力城市、国际湿地城市[2]、国际花园城市、全国交通管理模范城市、国家环境保护模范城市、中华诗词之市等称号。2023年，常德市实现地区生产总值4385.7亿元，比上年增长3.6%[72]。"
+    "description": "常德市，古称武陵、朗州，别称柳城，湖南省辖地级市，是长江经济带的重要节点城市、洞庭湖生态经济区的重要组成部分[31]。截至2023年，全市下辖2个市辖区、6个县，代管1个县级市，总面积1.82万平方千米，常住人口518.7万人，城镇人口300.7万人，城镇化率57.98%[72]。常德市位于湖南省北部，江南洞庭湖西侧，武陵山下，史称“川黔咽喉，云贵门户”[31]。",
+    "name-en": "Changde City",
+    "description-en": "Changde, formerly known as Wuling and Langzhou, is a prefecture-level city in Hunan Province. It is a key node in the Yangtze River Economic Belt and an important part of the Dongting Lake Ecological Economic Zone. As of 2023, it covers an area of 18,200 square kilometers and has a population of 5.187 million. Changde is located in the northern part of Hunan Province, on the west side of Dongting Lake in Jiangnan, at the foot of the Wuling Mountains. It is historically significant as the 'throat of Sichuan and Guizhou' and the 'gateway to Yunnan and Guizhou.'"
   },
   "岳阳市": {
     "wordCloudImage": "@/assets/YY.png",
     "image": "https://youimg1.c-ctrip.com/target/100c1800000157cnxDA97.jpg",
-    "description": "岳阳市[2]，古称“巴陵”，又名“岳州”，湖南省辖地级市，省域副中心城市，省内第二大经济体[78]，位于湖南省东北部[4]，北枕长江，南纳三湘四水，怀抱洞庭，江湖交汇；截至2023年3月，全市下辖3个区、4个县、代管2个县级市，行政区域面积14858平方千米[61]；截至2022年底，全市常住人口501.75万人。[72]岳阳市是国务院首批沿江开放城市，长江中游重要的区域中心城市[1-2]。建城始于前505年，因原郡治位于天岳幕阜山之南而得名[3]，是一座有着2500多年悠久历史的文化名城。岳阳市交通极为便利，长江、京广铁路、浩吉铁路、京广高铁、京港澳高速公路、杭瑞高速公路等国家交通主动脉在市区交织成网。岳阳是湖南唯一的国际贸易口岸城市，也是中国著名的港口城市。城陵矶港通江达海，设有城陵矶综合保税区[5]。2018年12月26日岳阳三荷机场正式通航。[6]岳阳市人文深厚、风景秀丽，集名山、名水、名楼、名人、名文于一体，是中华文化重要的始源地之一，亦是海内外闻名的旅游胜地。2014年获评中国最具幸福感和最具文化软实力之城，是全国唯一获取两项殊荣的地级市。2015年，岳阳荣膺“中国十大活力休闲城市”。2015年，岳阳获得“全国文明城市”称号[7]。2020年6月，经中央依法治国委入选为第一批全国法治政府建设示范地区和项目名单。[8]2020年7月，全国爱卫会确认岳阳市城市为国家卫生城市。[9]2022年，岳阳市地区生产总值4710.67亿元，比上年增长5.4%。[72]2023年，岳阳市地区生产总值4841.78亿元，比上年增长4.6%。[80]"
+    "description": "岳阳市，古称“巴陵”，又名“岳州”，湖南省辖地级市，省域副中心城市，省内第二大经济体[78]，位于湖南省东北部[4]，北枕长江，南纳三湘四水，怀抱洞庭，江湖交汇；截至2023年3月，全市下辖3个区、4个县、代管2个县级市，行政区域面积14858平方千米[61]；截至2022年底，全市常住人口501.75万人。[72]",
+    "name-en": "Yueyang City",
+    "description-en": "Yueyang, historically known as 'Baling' and also called 'Yuezhou,' is a prefecture-level city in Hunan Province. It is the province's secondary economic hub and second-largest economy. Yueyang is located in the northeastern part of Hunan Province, where the Yangtze River meets Dongting Lake. It covers an area of 14,858 square kilometers and has a population of 5.0175 million as of 2022. Yueyang is a significant regional center and a key city in the Yangtze River Economic Belt."
   },
   "益阳市": {
     "wordCloudImage": "@/assets/YY1.png",
     "image": "https://th.bing.com/th/id/OIP.IyZgJG0HdG0530TSZUPhOwHaEY?w=925&h=548&rs=1&pid=ImgDetMain",
-    "description": "益阳市，别称银城、丽都，是湖南省辖地级市，长江中游城市群重要成员、洞庭湖生态经济区核心城市之一，也是长株潭3+5城市群重要成员[1]。截至2022年，全市下辖2个区、3个县，代管1个县级市，总面积12320平方千米。2023年末，益阳市常住人口375.92万人。[61]益阳市位于湖南中北部，洞庭湖南岸，居雪峰山北段及其余脉带，地理坐标为北纬27°58'38″至29°31'42″、东经110°43'02″至112°55'48″，东西最长距离217千米，南北最宽距离173千米，从地图上看，像一头翘首东望、伏地待跃的雄狮，威踞于湖南中北部。它北近长江，同湖北省石首市抵界，西和西南与本省常德市、怀化市接壤，南与娄底市毗邻，东和东南紧靠岳阳市和省会长沙市[1]。益阳市是中国羽毛球运动之乡、中国竹子之乡、中国黑茶之乡、中国淡水渔都、花鼓戏窝子，先后获得省级园林城市、中国杰出绿色生态城市、国家森林城市、国家卫生城市、全国文明城市提名城市、湖南省历史文化名城等称号，自古是江南富饶的鱼米之乡[1]。2023年，益阳市地区生产总值2136.21亿元，比2022年增长3.4%。[56]"
+    "description": "益阳市，别称银城、丽都，是湖南省辖地级市，长江中游城市群重要成员、洞庭湖生态经济区核心城市之一，也是长株潭3+5城市群重要成员[1]。截至2022年，全市下辖2个区、3个县，代管1个县级市，总面积12320平方千米。",
+    "name-en": "Yiyang City",
+    "description-en": "Yiyang, also known as 'Silver City' and 'Lidu,' is a prefecture-level city in Hunan Province and an important member of the Yangtze River Midstream City Cluster and the core city of the Dongting Lake Ecological Economic Zone. As of 2022, it covers an area of 12,320 square kilometers and includes 2 districts and 3 counties, with a population of 3.75 million by the end of 2023."
   },
   "长沙市": {
     "wordCloudImage": "@/assets/CS.png",
     "image": "https://n.sinaimg.cn/sinakd20115/213/w2048h1365/20200717/8b0e-iwpcxkr6574042.jpg",
-    "description": "长沙市（英文名：Changsha City[136]），别称星城，[131]中国湖南省下辖地级市，湖南省省会。[131]长沙市位于湖南省东部偏北，湘江下游和长浏盆地西缘，下辖6个区、1个县，代管2个县级市，总面积11819平方千米，2023年全市常住总人口1051.31万人，[20]长沙方言属湘语方言。[195][330]长沙市人民政府驻岳麓区岳麓大道218号。[137][302]长沙市地势起伏较大，[218]地形以山地、岗地、平原为主，[217]湘江穿市区而过。[218]长沙市属亚热带季风气候，四季分明，春温变化大，夏初雨水多，伏秋高温久，冬季严寒少。[169]在旧石器时代，长沙地区就有原始人类活动。[4]秦时设长沙郡，长沙地区纳入统一国家视野。[5]南朝时期的长沙曾有“海内雄郡”之称。[127]1920年9月，长沙正式成为省会。[129]长沙是首批国家历史文化名城，凝练出“经世致用、兼收并蓄”的湖湘文化，不仅是清末维新运动和旧民主主义革命策源地之一，还是新民主主义的发祥地之一。[20]长沙市是湖南省政治、经济、文化、科教、贸易中心，是“一带一路”重要节点城市和长江经济带中心城市。[131]2023年，长沙市实现地区生产总值14331.98亿元，同比增长4.8%，[20]第一、二、三产业增加值占地区生产总值的比重分别为3.2％、37.4％和59.4％。[37]2023年，长沙市连续第16年获评“中国最具幸福感城市”。[62]2024年，长沙市上榜《2024新一线城市魅力排行榜》，位居第八。[219]此外，长沙市还拥有中国（大陆）国际形象最佳城市[221]、东亚文化之都[228]、世界“媒体艺术之都”等美誉。[220]"
+    "description": "长沙市（英文名：Changsha City[136]），别称星城，湖南省省会。长沙市位于湖南省东部偏北，湘江下游和长浏盆地西缘，下辖6个区、1个县，代管2个县级市，总面积11819平方千米，2023年全市常住总人口1051.31万人。[20]长沙方言属湘语方言。",
+    "name-en": "Changsha City",
+    "description-en": "Changsha, also known as 'Star City,' is the capital of Hunan Province. Located in the northeastern part of Hunan, Changsha covers an area of 11,819 square kilometers and has a population of 10.51 million as of 2023. It is an important economic, cultural, and educational hub, and a key city in the Yangtze River Economic Belt and the Belt and Road Initiative."
   },
-  "湘潭市": {
-    "wordCloudImage": "@/assets/XT.png",
-    "image": "https://n.sinaimg.cn/sinacn23/384/w2048h1536/20180730/d9bc-hhacrcc8080441.jpg",
-    "description": "湘潭市，湖南省辖地级市，简称潭，因盛产湘莲而别称“莲城”，又称“潭城”，总的地貌轮廓是北、西、南地势高，中部、东部地势低平。截至2023年，全市辖2个区、1个县，代管2个县级市，总面积5006平方千米。2023年末，湘潭市常住人口270.12万人。[103]湘潭市从南朝开始建县，距今已有1500多年，是湖湘文化的重要发祥地、中国红色文化的摇篮，有“湘中灵秀千秋永，天下英雄一郡多”的美誉[41]，湘潭伟人、巨匠灿若星辰——一代领袖毛泽东、开国元勋彭德怀、蜀汉名相蒋琬，晚清重臣曾国藩，文化名人齐白石，著名将领黄公略、开国大将陈赓、谭政等都诞生于此。湘潭市是长江中游城市群成员、国家长株潭城市群“两型社会”综合配套改革试验区中心城市，曾获得中国优秀旅游城市、国家园林城市、全国文明城市等荣誉[1]。2016年12月7日，湘潭被列为第三批国家新型城镇化综合试点地区。[2]2018年11月，入选中国城市全面小康指数前100名。2021年1月29日，入选湖南省人民政府公布的2020年度真抓实干成效明显的地区名单。2022年2月24日，国家发改委发布《国家发展改革委关于同意长株潭都市圈发展规划的复函》，正式批复《长株潭都市圈发展规划》。[42]2023年，湘潭市地区生产总值2741.84亿元，比上年增长5.1%。[101]2023年，湖南首条“跨城”地铁开通运营[106]，长沙、湘潭实现地铁系统互联互通[107]。"
-  },
-  "株洲市": {
-    "wordCloudImage": "@/assets/ZZ.png",
-    "image": "https://img1.voc.com.cn/UpLoadFile/2019/04/03/201904031658185480.jpg",
-    "description": "株洲市，古称建宁，湖南省辖地级市，长株潭城市群核心城市、长江中游城市群城市之一，位于湖南东部、湘江下游；截至2022年，下辖5区、3县，代管1个县级市，总面积11200平方千米[74]；2023年末，株洲市常住人口385.20万人。[108]株洲市是新中国成立后首批重点建设的八个工业城市之一，是中国老工业基地。京广铁路和沪昆铁路在此交汇，成为中国重要的“十字型”铁路枢纽。株洲是长株潭两型社会建设综合配套改革试验区的组成部分，株洲还是国家绿化城市、国家卫生城市、全国文明城市和国家园林城市。[1]2020年9月2日，被交通运输部评为国家公交都市建设示范城市。[2]2021年1月29日，入选湖南省人民政府公布的2020年度真抓实干成效明显的地区名单。[75]2022年2月24日，国家发改委发布《国家发展改革委关于同意长株潭都市圈发展规划的复函发改规划的复函》，正式批复《长株潭都市圈发展规划》。[81]2023年，被评为三线城市[100]。2023年，株洲市地区生产总值3667.88亿元，增长5.2%。其中，第一产业增加值276.20亿元，增长3.5%；第二产业增加值1613.86亿元，增长5.0%；第三产业增加值1777.82亿元，增长5.6%。[107]"
-  },
-  "衡阳市": {
-    "wordCloudImage": "@/assets/HY.png",
-    "image": "https://www.hengyang.gov.cn/bcms/DFS/file/2020/06/24/20200624160818860ucmvgz.jpg?iid=35541",
-    "description": "衡阳市，别称雁城、衡州，湖南省辖地级市、国家区域重点城市[103]、省域副中心城市、国家Ⅱ型大城市[77]，三线城市[91]，位于中国南部，湖南省中南部。全市辖5个区、5个县，代管2个县级市，总面积15310平方千米。[9]截至2023年末，全市常住人口为649.70万人。[98]衡阳市是长江中游城市群重要成员，湘南地区的政治、经济、军事、文化中心[1]，被国家定位为中部地区重点城市。衡阳城区横跨湘江，是湖南省以及中南地区重要的交通枢纽之一。[68]衡阳市是中南地区重要的工业城市，是“中国制造2025”试点示范城市群城市之一，拥有湖南第一家综合保税区和国家级高新区，被定位为国家承接产业转移示范区以及全国加工贸易重点承接地。衡阳也是国家服务业综合配套改革试点城市、国家生态文明先行示范区，国家卫生城市[92]，国家园林城市[2]，“中国抗战纪念城”。此外，境内还有“雁峰烟雨”“石鼓江山”“朱陵后洞”“青草渔家”“花药春溪”“岳屏雪霁”“东洲桃浪”“西湖白莲”等衡州八景。[93]2023年，衡阳市实现地区生产总值4190.87亿元，同比增长5.3%。[95]"
-  },
-  "郴州市": {
-    "wordCloudImage": "@/assets/CZ.png",
-    "image": "https://img-baofun.zhhainiao.com/pcwallpaper_ugc/static/d06ced266abb9206e06e43581053a2f2.jpg?x-oss-process=image%2fresize%2cm_lfit%2cw_2560%2ch_1440",
-    "description": "郴（chēn）州市别称“福城”“林城”[41]，位于中国湖南省东南部，是湖南省下辖地级市[1]，郴州市现辖两区、一市、八县[1]，截至2023年2月郴州市总面积19341.66平方千米[2]。2023年末，全市常住人口460.05万人[1]。郴州方言分三大块，分别为：北方方言-西南官话；赣语、客家话[18]。郴州市属中亚热带季风性湿润气候，四季分明，春早多变，夏热期长，秋晴多旱，冬寒期短[22]。郴州境内地貌复杂多样，其特点以山丘为主[22]。特色地貌为丹霞地貌，高椅岭是郴州丹霞地貌中最突出的代表和象征[73]。“郴”字最早见于秦朝，秦嬴政二十六年始设郴县。隋朝时期，桂阳郡、卢阳郡统为郴州[3]。1994年12月，郴州市设为地级市[2]。郴州主导产业为有色金属、电子电池、文化旅游[127]，其中有色金属产业是郴州市千亿级传统优势产业[128]，郴州被自然资源部确定为全国绿色矿业发展示范区[29]。2023年，郴州市全年地区生产总值3110.58亿元，三次产业结构比为10.4：38.6：51.0[40]。郴州是一座具有两千多年历史的城市，是中华民族农耕文化的发祥地之一；也是道教和佛教文化发扬壮大的地方，自古被誉为“九仙二佛之地”。1988年，郴州市被湖南省政府公布为历史文化名城[5]。郴州市旅游资源丰富，拥有国家AAAAA级旅游景区，湿地公园东江湖，第二西双版纳之称莽山国家森林公园，莽山温泉，中国历史文化名村的板梁古村等优秀旅游景区[56]。"
-  },
-  "永州市": {
-    "wordCloudImage": "@/assets/YZ.png",
-    "image": "https://p0.itc.cn/q_70/images03/20220828/a0be3e0fc6b74748acb32ffb53266331.jpeg",
-    "description": "永州市（英文：Yongzhou city、Yungchow city[42]）是湖南省辖地级市，简称“永”，别称“零陵”或“潇湘”。位于湖南南部，潇、湘二水汇合处，地势三面环山、地貌复杂多样。截至2022年10月，永州市辖2个区8个县，代管1个县级市[4][10]，总面积2.24万平方千米[31]。2023年末，永州市常住人口507.62万人。[49]西汉元朔五年（前124年），始置泉陵侯国以来，永州已有2100多年的建制史，是国务院批复确定的国家历史文化名城[2]，首批“全国禁毒示范城市”名单城市[27-28]、国家森林城市，境内通过湘江北上可抵长江，南下经灵渠可通珠江水系，自古代便是重要的交通要塞，是湖南通往广西、海南、粤西及西南各地的门户；此外，还是怀素、黄盖、周敦颐、李达、陶铸等历史名人的故乡，有九嶷山、浯溪碑林、舜皇山国家森林公园、阳明山国家森林公园等4A景点。2021年1月29日，入选湖南省真抓实干成效明显的地区名单。2023，永州市实现地区生产总值2495.83亿元，同比增长4.2%。[49]"
-  },
-  "邵阳市": {
-    "wordCloudImage": "@/assets/SY.png",
-    "image": "https://www.shaoyang.gov.cn/shaoyang/symj/201111/95b5a5647ca64e20accdd195f6b124e7/images/27687998ba32475eb39600f0d13bde0c.jpg",
-    "description": "邵阳市，古称宝庆，湖南省辖地级市，位于湘中偏西南，资江上游；中间为丘陵盆地，东与衡阳为邻，南与永州和桂林接壤，西与怀化交界，北与娄底毗连；截至2021年底，全市辖3个市辖区、7个县（其中1个自治县），代管2个县级市，总面积20824平方千米。[1]截至2022年底，全市常住人口641.78万人。[40]邵阳市历史悠久，名传潇湘。境内早在商代即有先民繁衍生息，西汉初置县，历经昭陵、邵陵、邵阳、敏州、邵州、宝庆，最后定名为邵阳。清代，宝庆府城资江绕郭，邵水穿城，环城墙炮台林立，加之山环水复，攻之不易，留下“铁打的宝庆”美名。邵阳有大小旅游资源三百余处，有世界自然遗产和AAAAA级景区新宁崀山、南山国家公园、绥宁黄桑、武冈云山、隆回虎形山、隆回魏源故居、洞口蔡锷公馆、邵东昭阳侯国城址、武冈法相岩等人文美景[1]；曾入选第一批全国法治政府建设示范地区和项目名单[2]、全国双拥模范城（县）名单[3]、湖南省真抓实干成效明显的地区名单。[4]2023年，邵阳市实现地区生产总值2731.42亿元，同比增长4.8%。[54]"
-  },
-  "娄底市": {
-    "wordCloudImage": "@/assets/LD.png",
-    "image": "https://www.hanpokou.com/wp-content/uploads/2022/01/bb8fb945d401f3b90f0fd7e58d5c00e0.png",
-    "description": "娄底市，湖南省辖地级市，别称星城，境内地势西高东低，呈阶梯状倾斜；西部山峰雄伟，地势险峻，海拔较高；东部地势逐步降低，地形起伏平缓，海拔较低。地处中亚热带季风湿润气候区，既具季风性，又兼具大陆性。截至2022年，全市辖1个区、2个县，代管2个县级市，总面积8117平方千米。截至2023年末，娄底市户籍总人口445.88万人，常住人口374.32万人。[34][54]1999年1月，经国务院批准，娄底撤地设市。娄底市据传天上二十八星宿中的“娄星”和“氐星”在这里交相辉映，故而得名，是被后世尊为“战神”的中华民族三大始祖之一蚩尤的故里，是湖湘文化的主要发源地之一。境内有梅山龙宫、曾国藩故居、紫鹊界梯田、三联峒景区四个国家AAAA级旅游景区，有大熊山、龙山两个国家级森林公园和湄江、波月洞等精品旅游景点70多处。区位优越，交通便捷，地处湖南几何中心，湘黔铁路和沪昆高铁横穿东西，洛湛铁路纵贯南北，40条铁路专用线沟通全市主要厂矿，形成了“米字型”铁路网。娄新高速全面贯通，新溆、安邵、娄益、娄衡、娄长高速同时规划建设，国省干道改造完成。2020年2月12日，被民政部和财政部共同确定为第五批中央财政支持开展居家和社区养老服务改革试点地区。[1-2][26-27][41]2023年，娄底市全年实现地区生产总值1990.5亿元，同比增长5.0%。其中：第一产业增加值224.91亿元，增长3.4%；第二产业增加值762.42亿元，增长5.1%；第三产业增加值1003.18亿元，增长5.2%。[54]"
-  },
-  "怀化市": {
-    "wordCloudImage": "@/assets/HH.png",
-    "image": "https://img1.qunarzz.com/travel/poi/1808/b0/1d8c42d4edeaa537.jpg",
-    "description": "怀化市，别称“鹤城”，古称“鹤州”“五溪”，湖南省辖地级市，[1]位于湖南省西部偏南，处于武陵山脉和雪峰山脉之间，地处北纬25°52′22″～29°01′25″，东经108°47′13″～111°06′30″之间，总面积27564平方千米。[2]怀化市地处中亚热带川鄂湘黔气候区和江南气候区的过渡部位，[3]境内四季分明，严寒酷暑期短。[4]截至2023年6月，怀化市辖1个市辖区、10个县，代管1个县级市，另辖1个管理区、1个国家级高新区、1个国际陆港经济开发区，[5][96]市政府驻鹤城区。[54]截至2023年末，怀化市常住人口447.21万人。[66]春秋之时，属楚巫中地。战国之世，属楚黔中郡地。[6]秦朝统一中国后，在此设黔中郡[57]，开始了国家的行政治理。[6]民国，属第九、十行政区[57]。中华人民共和国成立后，怀化分设会同、沅陵两个专区。1998年，撤销怀化地区，改设地级怀化市。[6]怀化市自古以来就有“黔滇门户”“全楚咽喉”之称，是中央红军通道转兵发生地、抗日战争胜利受降见证地、世界杂交水稻发源地。怀化是全国性综合交通枢纽，是共建西部陆海新通道、面向印度洋国际陆海大通道和“一带一路”的重要节点城市，先后获批商贸服务型国家物流枢纽、国家复合型流通支点城市。依托怀化国际陆港，怀化已打通中老、中越、中缅等4条国际大通道，开辟主要出海口4个，开通国际国内运输线路98条。怀化市境内高庙文化遗址将中华文明史上溯到7800年前，是中国南方农耕文明的重要发祥地之一。[86]2023年，怀化市实现地区生产总值1948.52亿元，比上年增长5.6%。[66]"
-  },
-  "湘西土家族苗族自治州": {
-    "wordCloudImage": "@/assets/XX.png",
-    "image": "https://img.zcool.cn/community/01c24b57d0d1c20000018c1b93df0e.jpg",
-    "description": "湘西土家族苗族自治州，湖南省辖自治州，地处湖南省西北部，位于湘鄂渝黔四省市交界处，北接湖北省，西与重庆市为邻，西南与贵州省接壤。行政区域总面积1.55万平方千米。辖1个县级市，7个县，州人民政府驻吉首市人民北路58号。[17]截至2023年末，湘西土家族苗族自治州常住人口为243.2万人，城镇化率53.93%。[74]湘西土家族苗族自治州境域，战国时，属楚黔中郡。1952年8月1日，经中央人民政府批准，划乾城、凤凰、永绥、泸溪、古丈、保靖6县地，成立湘西苗族自治区（地市级）。1955年，湘西苗族自治区改设湘西苗族自治州。1957年9月20日，设立湘西土家族苗族自治州。[16]湘西土家族苗族自治州是国家级文化生态保护区[20]、国家全域旅游示范区，辖区内有首批国家历史文化名城凤凰县，州内人文古迹众多，老司城及其周边有大量的自然及人文景观遗迹。湘西也是武陵文化的发源地之一。同时享受国家西部大开发计划政策，是单列的三个地级行政区享受相关政策的地区之一。[1]2023年，湘西土家族苗族自治州地区生产总值825.85亿元，比2022年增长2.6% 。[74]"
+    "湘潭市": {
+      "wordCloudImage": "@/assets/XT.png",
+      "image": "https://n.sinaimg.cn/sinacn23/384/w2048h1536/20180730/d9bc-hhacrcc8080441.jpg",
+      "description": "湘潭市，湖南省辖地级市，简称潭，因盛产湘莲而别称“莲城”，又称“潭城”，总的地貌轮廓是北、西、南地势高，中部、东部地势低平。截至2023年，全市辖2个区、1个县，代管2个县级市，总面积5006平方千米。2023年末，湘潭市常住人口270.12万人。[103]湘潭市从南朝开始建县，距今已有1500多年，是湖湘文化的重要发祥地、中国红色文化的摇篮，有“湘中灵秀千秋永，天下英雄一郡多”的美誉[41]，湘潭伟人、巨匠灿若星辰——一代领袖毛泽东、开国元勋彭德怀、蜀汉名相蒋琬，晚清重臣曾国藩，文化名人齐白石，著名将领黄公略、开国大将陈赓、谭政等都诞生于此。",
+      "name-en": "Xiangtan City",
+      "description-en": "Xiangtan, a prefecture-level city in Hunan Province, is known for its rich history and cultural significance. The city, also called 'Lotus City' due to its abundant production of Xianglian, is an important cradle of Lake Xiang culture and the birthplace of China's red culture. Xiangtan is home to several historical figures, including Mao Zedong, Peng Dehuai, and Zeng Guofan. The city has a history of over 1,500 years and covers an area of 5,006 square kilometers with a population of over 2.7 million in 2023."
+    },
+    "株洲市": {
+      "wordCloudImage": "@/assets/ZZ.png",
+      "image": "https://img1.voc.com.cn/UpLoadFile/2019/04/03/201904031658185480.jpg",
+      "description": "株洲市，古称建宁，湖南省辖地级市，长株潭城市群核心城市、长江中游城市群城市之一，位于湖南东部、湘江下游；截至2022年，下辖5区、3县，代管1个县级市，总面积11200平方千米[74]；2023年末，株洲市常住人口385.20万人。[108]株洲市是新中国成立后首批重点建设的八个工业城市之一，是中国老工业基地。",
+      "name-en": "Zhuzhou City",
+      "description-en": "Zhuzhou, historically known as Jianning, is a prefecture-level city in Hunan Province and a core city of the Chang-Zhu-Tan City Cluster. Located in eastern Hunan along the lower reaches of the Xiang River, Zhuzhou is a key industrial city and one of the first eight major industrial cities built after the founding of New China. The city covers an area of 11,200 square kilometers and had a population of 3.85 million by the end of 2023."
+    },
+    "衡阳市": {
+      "wordCloudImage": "@/assets/HY.png",
+      "image": "https://www.hengyang.gov.cn/bcms/DFS/file/2020/06/24/20200624160818860ucmvgz.jpg?iid=35541",
+      "description": "衡阳市，别称雁城、衡州，湖南省辖地级市、国家区域重点城市[103]、省域副中心城市、国家Ⅱ型大城市[77]，三线城市[91]，位于中国南部，湖南省中南部。全市辖5个区、5个县，代管2个县级市，总面积15310平方千米。[9]截至2023年末，全市常住人口为649.70万人。[98]",
+      "name-en": "Hengyang City",
+      "description-en": "Hengyang, also known as 'Yan City' and 'Hengzhou,' is a prefecture-level city in Hunan Province. It is a key regional city and an important industrial center in southern China. Hengyang is located in central and southern Hunan and serves as a hub for transportation and logistics. With a population of nearly 6.5 million as of 2023, Hengyang is known for its rich history and economic importance."
+    },
+    "郴州市": {
+      "wordCloudImage": "@/assets/CZ.png",
+      "image": "https://img-baofun.zhhainiao.com/pcwallpaper_ugc/static/d06ced266abb9206e06e43581053a2f2.jpg?x-oss-process=image%2fresize%2cm_lfit%2cw_2560%2ch_1440",
+      "description": "郴（chēn）州市别称“福城”“林城”[41]，位于中国湖南省东南部，是湖南省下辖地级市[1]，郴州市现辖两区、一市、八县[1]，截至2023年2月郴州市总面积19341.66平方千米[2]。",
+      "name-en": "Chenzhou City",
+      "description-en": "Chenzhou, also known as 'Fortune City' and 'Forest City,' is a prefecture-level city in the southeastern part of Hunan Province. The city covers an area of 19,341 square kilometers and has a diverse geography, with features such as Danxia landforms and significant natural beauty. Chenzhou is known for its mining industry and rich cultural heritage."
+    },
+    "永州市": {
+      "wordCloudImage": "@/assets/YZ.png",
+      "image": "https://p0.itc.cn/q_70/images03/20220828/a0be3e0fc6b74748acb32ffb53266331.jpeg",
+      "description": "永州市（英文：Yongzhou city、Yungchow city[42]）是湖南省辖地级市，简称“永”，别称“零陵”或“潇湘”。位于湖南南部，潇、湘二水汇合处，地势三面环山、地貌复杂多样。",
+      "name-en": "Yongzhou City",
+      "description-en": "Yongzhou, also known as 'Lingling' or 'Xiaoxiang,' is a prefecture-level city in the southern part of Hunan Province. It is located at the confluence of the Xiao and Xiang rivers, surrounded by mountains, with complex and diverse geography. The city has a rich cultural history and is known as an important transportation hub linking Hunan to surrounding regions."
+    },
+    "邵阳市": {
+      "wordCloudImage": "@/assets/SY.png",
+      "image": "https://www.shaoyang.gov.cn/shaoyang/symj/201111/95b5a5647ca64e20accdd195f6b124e7/images/27687998ba32475eb39600f0d13bde0c.jpg",
+      "description": "邵阳市，古称宝庆，湖南省辖地级市，位于湘中偏西南，资江上游；中间为丘陵盆地，东与衡阳为邻，南与永州和桂林接壤，西与怀化交界，北与娄底毗连。",
+      "name-en": "Shaoyang City",
+      "description-en": "Shaoyang, formerly known as Baoqing, is a prefecture-level city in the southwestern part of Hunan Province. It is located in the upper reaches of the Zi River, surrounded by hills and basins. Shaoyang has a rich historical heritage and is known for its cultural landmarks and natural scenery. The city covers an area of 20,824 square kilometers and has a population of over 6.4 million."
+    },
+    "娄底市": {
+      "wordCloudImage": "@/assets/LD.png",
+      "image": "https://www.hanpokou.com/wp-content/uploads/2022/01/bb8fb945d401f3b90f0fd7e58d5c00e0.png",
+      "description": "娄底市，湖南省辖地级市，别称星城，境内地势西高东低，呈阶梯状倾斜；西部山峰雄伟，地势险峻，海拔较高；东部地势逐步降低，地形起伏平缓，海拔较低。",
+      "name-en": "Loudi City",
+      "description-en": "Loudi, known as 'Star City,' is a prefecture-level city in Hunan Province. The city's terrain is characterized by high mountains in the west and lower land in the east. Loudi is located in a key geographical position in Hunan, serving as an important transportation and industrial hub. It covers an area of 8,117 square kilometers and has a population of over 4.4 million."
+    },
+    "怀化市": {
+      "wordCloudImage": "@/assets/HH.png",
+      "image": "https://img1.qunarzz.com/travel/poi/1808/b0/1d8c42d4edeaa537.jpg",
+      "description": "怀化市，别称“鹤城”，古称“鹤州”“五溪”，湖南省辖地级市，位于湖南省西部偏南，处于武陵山脉和雪峰山脉之间，地处北纬25°52′22″～29°01′25″，东经108°47′13″～111°06′30″之间，总面积27564平方千米。",
+      "name-en": "Huaihua City",
+      "description-en": "Huaihua, also known as 'Crane City' and historically 'Hezhou' and 'Wuxi,' is a prefecture-level city in southwestern Hunan Province. Located between the Wuling and Xuefeng mountains, the city covers an area of 27,564 square kilometers and is known for its strategic location, rich history, and agricultural importance."
+    },
+    "湘西土家族苗族自治州": {
+      "wordCloudImage": "@/assets/XX.png",
+      "image": "https://img.zcool.cn/community/01c24b57d0d1c20000018c1b93df0e.jpg",
+      "description": "湘西土家族苗族自治州，湖南省辖自治州，地处湖南省西北部，位于湘鄂渝黔四省市交界处，北接湖北省，西与重庆市为邻，西南与贵州省接壤。",
+      "name-en": "Xiangxi Tujia and Miao Autonomous Prefecture",
+      "description-en": "Xiangxi Tujia and Miao Autonomous Prefecture is located in the northwest of Hunan Province, at the intersection of Hunan, Hubei, Chongqing, and Guizhou. Known for its rich ethnic diversity, it is home to Tujia and Miao communities, and the area is famous for its cultural heritage and natural landscapes. The prefecture has a significant role in preserving cultural ecology and tourism."
+    }
   }
-}
+  

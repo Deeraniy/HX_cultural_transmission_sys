@@ -4,23 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="全球影响界面优化">
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="各种问题微调">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/tag_details.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/tag_details.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/岳麓山_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/辣椒炒肉_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/香辣小龙虾_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/香辣小龙虾_wordcloud.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/About/AboutUs.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/About/AboutUs.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Background/BackgroundIntro.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Background/BackgroundIntro.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Food/FoodPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Home/FeaturesSection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Home/FeaturesSection.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/IndexHeader.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/InterestPlace/PlaceOfInterest.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/Recommend/RecommendPageMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/static/model-viewer.html" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/static/model-viewer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserActivity.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserActivity.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserArticle.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserArticle.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserHomeLeft.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserHomeLeft.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserPassword.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserPassword.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserProfile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserProfile.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserStar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/left/UserStar.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/User/components/main/UserHomeMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/User/components/main/UserHomeMain.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/vite.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
@@ -200,15 +201,8 @@
       <workItem from="1744114360087" duration="794000" />
       <workItem from="1744158394063" duration="3326000" />
       <workItem from="1744204672937" duration="1446000" />
-      <workItem from="1744329271970" duration="2030000" />
-    </task>
-    <task id="LOCAL-00035" summary="登录界面优化">
-      <option name="closed" value="true" />
-      <created>1740731732246</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1740731732246</updated>
+      <workItem from="1744329271970" duration="2165000" />
+      <workItem from="1744433451974" duration="3523000" />
     </task>
     <task id="LOCAL-00036" summary="个性推荐页面demo+前后端连接">
       <option name="closed" value="true" />
@@ -594,7 +588,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744331308150</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="各种问题微调">
+      <option name="closed" value="true" />
+      <created>1744361621016</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1744361621016</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -618,7 +620,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="情感分析界面。。。" />
     <MESSAGE value="知识图谱（红色" />
     <MESSAGE value="宣传策略初步" />
     <MESSAGE value="宣传策略微调" />
@@ -643,7 +644,8 @@
     <MESSAGE value="用户中心完善" />
     <MESSAGE value="首页调整" />
     <MESSAGE value="全球影响界面优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="全球影响界面优化" />
+    <MESSAGE value="各种问题微调" />
+    <option name="LAST_COMMIT_MESSAGE" value="各种问题微调" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

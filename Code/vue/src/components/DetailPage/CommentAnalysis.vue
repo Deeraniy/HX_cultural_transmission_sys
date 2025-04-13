@@ -6,8 +6,8 @@
         <!-- 切换按钮 -->
         <div class="switch-buttons">
           <el-radio-group v-model="currentTable" size="large" @change="handleTableChange">
-            <el-radio-button label="sentiment">情感分析</el-radio-button>
-            <el-radio-button label="topic">主题聚类</el-radio-button>
+            <el-radio-button label="sentiment">{{ t('analysis.sentiment') }}</el-radio-button>
+            <el-radio-button label="topic">{{ t('analysis.topic') }}</el-radio-button>
           </el-radio-group>
         </div>
         
@@ -44,6 +44,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch, computed, nextTick, onActivated } from 'vue';
+import { useI18n } from 'vue-i18n';
 import BarChart from "@/components/DetailPage/subcomponent/BarChart.vue";
 import TopicCluster from "@/components/DetailPage/subcomponent/TopicCluster.vue";
 import SentimentStats from "@/components/DetailPage/subcomponent/SentimentStats.vue";
@@ -51,6 +52,8 @@ import LdaAPI from "@/api/lda";
 import SentimentAPI from "@/api/sentiment";
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
+
+const { t } = useI18n();
 
 // Props 定义
 interface Props {

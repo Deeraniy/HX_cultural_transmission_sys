@@ -4,25 +4,25 @@
     <div class="header-section">
       <div class="title-wrapper">
         <el-icon><DataAnalysis /></el-icon>
-        <span class="main-title">用户画像分析</span>
+        <span class="main-title">{{ t('user.activity.title') }}</span>
       </div>
-      <div class="subtitle">基于用户行为数据的多维度分析</div>
+      <div class="subtitle">{{ t('user.activity.subtitle') }}</div>
     </div>
 
     <!-- 图表区域 -->
     <el-card class="chart-card">
       <div class="chart-header">
         <div class="chart-title">
-          <h3>兴趣偏好分布</h3>
-          <p class="chart-desc">展示用户在不同领域的活跃度和参与度</p>
+          <h3>{{ t('user.activity.interestChart.title') }}</h3>
+          <p class="chart-desc">{{ t('user.activity.interestChart.description') }}</p>
         </div>
-<!--        <div class="chart-actions">-->
-<!--          <el-radio-group v-model="timeRange" size="small">-->
-<!--            <el-radio-button label="week">周</el-radio-button>-->
-<!--            <el-radio-button label="month">月</el-radio-button>-->
-<!--            <el-radio-button label="year">年</el-radio-button>-->
-<!--          </el-radio-group>-->
-<!--        </div>-->
+        <!-- <div class="chart-actions">
+          <el-radio-group v-model="timeRange" size="small">
+            <el-radio-button label="week">{{ t('user.activity.interestChart.timeRange.week') }}</el-radio-button>
+            <el-radio-button label="month">{{ t('user.activity.interestChart.timeRange.month') }}</el-radio-button>
+            <el-radio-button label="year">{{ t('user.activity.interestChart.timeRange.year') }}</el-radio-button>
+          </el-radio-group>
+        </div> -->
       </div>
       <div id="main" class="chart-container"></div>
     </el-card>
@@ -35,15 +35,19 @@ import { DataAnalysis } from "@element-plus/icons-vue";
 import * as echarts from 'echarts';
 import UserAPI from "@/api/user";
 import {useUserStore} from "@/stores/user.ts";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const SingleHistoryList = ref([]);
 const AllHistoryList = ref([]);
 const userStore = useUserStore();
 const timeRange = ref('month');
 const TYPE_MAPPING = {
-  placeOfInterest: '风景名胜',
-  food: '美食文化',
-  literature: '影视文学',
-  folk: '非遗民俗'
+  placeOfInterest: t('user.activity.chart.categories.placeOfInterest'),
+  food: t('user.activity.chart.categories.food'),
+  literature: t('user.activity.chart.categories.literature'),
+  folk: t('user.activity.chart.categories.folk')
 };
 const processData = () => {
   // 确保有有效数据
@@ -114,24 +118,23 @@ const updateChart = () => {
 
   const option = {
     title: {
-      text: '用户画像',
+      text: t('user.activity.chart.mainTitle'),
       textStyle: {
         fontFamily: 'HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif',
         fontSize: 16
       }
     },
     legend: {
-      data: ['当前发布', '平均水平'],
+      data: [t('user.activity.chart.currentPublish'), t('user.activity.chart.averageLevel')],
       textStyle: {
         fontFamily: 'HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif'
       },
-      bottom: 0  // 将图例放到底部
+      bottom: 0
     },
     radar: {
-      // shape: 'circle',
-      radius: '65%',  // 稍微缩小雷达图尺寸
-      center: ['50%', '50%'],  // 居中放置
-      splitNumber: 4,  // 分割段数
+      radius: '65%',
+      center: ['50%', '50%'],
+      splitNumber: 4,
       axisName: {
         show: true,
         fontFamily: 'HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif'
@@ -142,24 +145,24 @@ const updateChart = () => {
         }
       },
       indicator: [
-        { name: '风景名胜', max: indicatorMaxValues[0] },
-        { name: '美食文化', max: indicatorMaxValues[1] },
-        { name: '影视文学', max: indicatorMaxValues[2] },
-        { name: '非遗民俗', max: indicatorMaxValues[3] },
+        { name: t('user.activity.chart.categories.placeOfInterest'), max: indicatorMaxValues[0] },
+        { name: t('user.activity.chart.categories.food'), max: indicatorMaxValues[1] },
+        { name: t('user.activity.chart.categories.literature'), max: indicatorMaxValues[2] },
+        { name: t('user.activity.chart.categories.folk'), max: indicatorMaxValues[3] },
       ]
     },
     series: [
       {
-        name: '兴趣偏好对比',
+        name: t('user.activity.chart.comparisonTitle'),
         type: 'radar',
-        symbolSize: 6,  // 数据点大小
+        symbolSize: 6,
         lineStyle: {
-          width: 2  // 线条宽度
+          width: 2
         },
         data: [
           {
             value: chartData.currentData,
-            name: '当前发布',
+            name: t('user.activity.chart.currentPublish'),
             itemStyle: {
               color: '#5470c6'
             },
@@ -169,7 +172,7 @@ const updateChart = () => {
           },
           {
             value: chartData.averageData,
-            name: '平均水平',
+            name: t('user.activity.chart.averageLevel'),
             itemStyle: {
               color: '#91cc75'
             },
@@ -192,12 +195,12 @@ const getHistory = () => {
   const userId = getUserId();
   UserAPI.GetUserHistory(userId).then(res => {
     SingleHistoryList.value = res;
-    console.log('获取历史记录成功')
+    console.log(t('user.activity.messages.getHistorySuccess'))
     console.log(SingleHistoryList.value)
   });
   UserAPI.GetAllHistory().then(res => {
     AllHistoryList.value = res;
-    console.log('获取所有历史记录成功')
+    console.log(t('user.activity.messages.getAllHistorySuccess'))
     console.log(AllHistoryList.value)
   })
 }
@@ -214,7 +217,7 @@ const getUserId = () => {
   }
 
   // 如果都没有，返回 null
-  console.warn('User ID is missing');
+  console.warn(t('user.activity.messages.userIdMissing'));
   return null;
 };
 onMounted(async () => {

@@ -5,6 +5,9 @@
 <script setup>
 import * as echarts from 'echarts'
 import { onMounted, ref, watch, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // 引入 props
 const props = defineProps({
@@ -91,7 +94,7 @@ const updateChart = (chart, data, type) => {
   // 设置图表选项
   const option = {
     title: {
-      text: type === 'sentiment' ? '词语情感分析' : '主题情感分析',
+      text: type === 'sentiment' ? t('analysis.sentiment') : t('analysis.topic'),
       left: '45%',
       top: 30,
       textStyle: {
@@ -107,7 +110,11 @@ const updateChart = (chart, data, type) => {
       }
     },
     legend: {
-      data: ['正面', '中性', '负面'],
+      data: [
+        t('detail.report.sentiment.positive'),
+        t('detail.report.sentiment.neutral'),
+        t('detail.report.sentiment.negative')
+      ],
       top: 70,
       left: '40%',
       textStyle: {
@@ -135,7 +142,7 @@ const updateChart = (chart, data, type) => {
     },
     yAxis: {
       type: 'value',
-      name: '频率',
+      name: t('common.frequency'),
       nameTextStyle: {
         fontSize: 14,
         fontFamily: 'HelveticaNeue, serif'
@@ -147,7 +154,7 @@ const updateChart = (chart, data, type) => {
     },
     series: [
       {
-        name: '正面',
+        name: t('detail.report.sentiment.positive'),
         type: 'bar',
         stack: 'total',
         barWidth: '50%',
@@ -160,7 +167,7 @@ const updateChart = (chart, data, type) => {
         data: positiveData
       },
       {
-        name: '中性',
+        name: t('detail.report.sentiment.neutral'),
         type: 'bar',
         stack: 'total',
         barWidth: '50%',
@@ -173,7 +180,7 @@ const updateChart = (chart, data, type) => {
         data: neutralData
       },
       {
-        name: '负面',
+        name: t('detail.report.sentiment.negative'),
         type: 'bar',
         stack: 'total',
         barWidth: '50%',

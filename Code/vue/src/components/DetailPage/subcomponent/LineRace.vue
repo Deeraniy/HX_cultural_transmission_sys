@@ -7,6 +7,9 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import * as echarts from 'echarts';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   timeData: {
@@ -48,9 +51,9 @@ const updateChart = () => {
       formatter: function(params: any) {
         const data = params[0];
         return `${data.name}<br/>
-                情感得分: ${data.value}<br/>
-                评论数量: ${data.data.count}<br/>
-                情感类型: ${data.data.type}`;
+                ${t('detail.sentiment.score')}: ${data.value}<br/>
+                ${t('detail.report.commentCount', { count: data.data.count })}<br/>
+                ${t('detail.sentiment.type')}: ${t(`detail.report.sentiment.${data.data.type}`)}`;
       }
     },
     xAxis: {
@@ -66,7 +69,7 @@ const updateChart = () => {
     },
     yAxis: {
       type: 'value',
-      name: '情感得分',
+      name: t('detail.sentiment.score'),
       min: 0,
       max: 1,
       scale: true,

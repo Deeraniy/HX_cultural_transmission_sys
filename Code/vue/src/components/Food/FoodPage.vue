@@ -7,16 +7,15 @@
         <div class="food-block" v-for="(item, index) in paginatedFoodItems" :key="index">
           <el-card @click="selectFoodItem(index)" class="food-card-sidebar">
             <div class="card-header">
-              <img :src="item.img" :alt="item.name" class="food-image-sidebar" />
+              <img :src="item.img" :alt="getFoodDisplayName(item.name)" class="food-image-sidebar" />
             </div>
             <div class="card-content">
-              <h3>{{ item.name }}</h3>
+              <h3>{{ getFoodDisplayName(item.name) }}</h3>
               <div class="button-container">
-                <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
-                <el-button @click.stop="goToSentimentAnalysis(item.name)" size="small">情感分析</el-button>
+                <el-button @click.stop="showFoodDetail(item)" size="small">{{ t('detail.place.viewDetail') }}</el-button>
+                <el-button @click.stop="goToSentimentAnalysis(item.name)" size="small">{{ t('detail.place.sentimentAnalysis') }}</el-button>
               </div>
             </div>
-
           </el-card>
         </div>
       </aside>
@@ -26,12 +25,12 @@
         <div class="search-container">
           <el-input
               v-model="searchQuery"
-              placeholder="搜索美食..."
+              :placeholder="t('detail.place.searchPlaceholder')"
               class="search-input"
               prefix-icon="el-icon-search"
           />
         </div>
-        <h2 class="titleH">湖南菜经典美食</h2>
+        <h2 class="titleH">{{ t('detail.place.hunanCuisine') }}</h2>
         <!-- Carousel -->
         <div class="carousel-container">
           <div
@@ -46,15 +45,16 @@
             >
               <el-card class="food-card" @click="rotateRight">
                 <div class="card-header">
-                  <img :src="item.img" :alt="item.name" class="food-image" />
+                  <img :src="item.img" :alt="getFoodDisplayName(item.name)" class="food-image" />
                 </div>
 
                 <div class="card-content">
-                  <h3>{{ item.name }}</h3>
+                  <h3>{{ getFoodDisplayName(item.name) }}</h3>
                   <div class="button-container">
-                    <el-button @click.stop="showFoodDetail(item)" size="small">查看详情</el-button>
-                    <el-button @click.stop="sentimentAnalysis(item)" size="small">情感分析</el-button>
-                  </div></div>
+                    <el-button @click.stop="showFoodDetail(item)" size="small">{{ t('detail.place.viewDetail') }}</el-button>
+                    <el-button @click.stop="sentimentAnalysis(item)" size="small">{{ t('detail.place.sentimentAnalysis') }}</el-button>
+                  </div>
+                </div>
               </el-card>
             </div>
           </div>
@@ -82,12 +82,12 @@
   >
     <div class="food-detail-content">
       <div class="food-image-container">
-        <img :src="foodDetail.item?.img" :alt="foodDetail.item?.name" class="food-detail-image">
+        <img :src="foodDetail.item?.img" :alt="foodDetail.name" class="food-detail-image">
       </div>
       <div class="food-info">
-        <h2>{{ foodDetail.item?.name }}</h2>
+        <h2>{{ foodDetail.name }}</h2>
         <div class="food-description">
-          <p>{{ foodDetail.item?.description }}</p>
+          <p>{{ foodDetail.description }}</p>
         </div>
         <div class="food-actions">
           <div class="interaction-icons">
@@ -95,7 +95,7 @@
               <img
                   :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
                   :class="['icon', { 'active': tagStatus.is_liked }]"
-                  alt="赞"
+                  :alt="t('detail.place.like')"
               />
               <span>{{ tagStatus.total_likes || 0 }}</span>
             </div>
@@ -103,9 +103,9 @@
               <img
                   :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
                   :class="['icon', { 'active': tagStatus.is_favorite }]"
-                  alt="收藏"
+                  :alt="t('detail.place.favorite')"
               />
-              <span>收藏</span>
+              <span>{{ t('detail.place.favorite') }}</span>
             </div>
           </div>
           <el-button
@@ -113,7 +113,7 @@
               class="analysis-btn"
               @click="goToSentimentAnalysis(foodDetail.item?.name)"
           >
-            情感分析
+            {{ t('detail.place.sentimentAnalysis') }}
           </el-button>
         </div>
       </div>
@@ -124,6 +124,7 @@
 <script setup>
 import {ref, computed, onMounted} from 'vue';
 import { useRouter } from 'vue-router'; // 导入 useRouter 来进行跳转
+import { useI18n } from 'vue-i18n';
 import food1 from '@/assets/foodImg/food1.jpg'
 import food2 from '@/assets/foodImg/food2.jpg'
 import food3 from '@/assets/foodImg/food3.jpg'
@@ -134,11 +135,14 @@ import TagsAPI from '@/api/tags';
 import UserAPI from '@/api/user'
 import { useUserStore } from '@/stores/user';
 import { ElMessage } from 'element-plus';
+import cultureElements from '@/json/culture_elements_translated.json';
 // 导入图标
 import likeIcon from '@/assets/setting/赞.png'
 import likeActiveIcon from '@/assets/setting/赞 (1).png'
 import favoriteIcon from '@/assets/setting/收藏.png'
 import favoriteActiveIcon from '@/assets/setting/收藏(1).png'
+
+const { t, locale } = useI18n();
 
 const searchQuery = ref('');
 const rotationAngle = ref(0); // 旋转角度
@@ -335,11 +339,23 @@ const addHistory = async (item) => {
   }
 };
 
+// 获取美食显示名称
+const getFoodDisplayName = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['title-en'] ? element['title-en'] : name;
+};
+
+// 获取美食描述
+const getFoodDescription = (name) => {
+  const element = cultureElements.find(item => item.title === name);
+  return locale.value === 'en' && element?.['description-en'] ? element['description-en'] : element?.description || '';
+};
+
 // 修改显示食品详情的函数
 const showFoodDetail = async (item) => {
   foodDetail.visible = true;
-  foodDetail.name = item.name;
-  foodDetail.description = item.description;
+  foodDetail.name = getFoodDisplayName(item.name);
+  foodDetail.description = getFoodDescription(item.name);
   foodDetail.img = item.img;
   foodDetail.item = item;
   foodDetail.id = item.food_id || item.id;
@@ -410,7 +426,7 @@ async function fetchFoodData() {
   try {
     const response = await FoodAPI.getFoodAPI();
     foodItems.value = response.data.map(item => ({
-      id: item.food_id, // 确保添加 id
+      id: item.food_id,
       name: item.food_name,
       img: item.image_url || '',
       description: item.description || ''
@@ -603,7 +619,7 @@ const goToFoodHome = () => {
 
 .button-container {
   display: flex;
-  justify-content: space-between; /* 使按钮分布在左右两边 */
+  justify-content: space-between;
   width: 100%;
 }
 .food-detail-dialog {
@@ -652,13 +668,18 @@ const goToFoodHome = () => {
 }
 
 .titleH {
-  position: absolute; /* 绝对定位 */
-  right: 0; /* 放在最右边 */
-  top: 220px; /* 距离顶部20px，调整可根据需求 */
-  writing-mode: vertical-rl; /* 竖直从右到左 */
-  white-space: nowrap; /* 防止文字换行 */
+  position: absolute;
+  right: 0;
+  top: 180px; /* 调整标题位置，上移40px */
+  writing-mode: vertical-rl;
+  white-space: nowrap;
   font-family: 'HelveticaNeue', serif;
   margin-right: 150px;
+}
+
+/* 英文状态下的标题位置调整 */
+:root[lang="en"] .titleH {
+  top: 150px; /* 英文状态下再上移30px */
 }
 
 /* 搜索框容器样式 */
@@ -982,5 +1003,53 @@ margin-left: 390px;
       }
     }
   }
+}
+
+/* 左侧卡片按钮组样式 */
+.food-card-sidebar .button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* 英文状态下左侧卡片按钮组位置调整 */
+:root[lang="en"] .food-card-sidebar .button-container {
+  margin-left: -20px;
+  width: 90%;
+  justify-content: flex-start;
+}
+
+/* 轮播卡片按钮组样式 */
+.food-card .button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* 英文状态下轮播卡片按钮组位置调整 */
+:root[lang="en"] .food-card .button-container {
+  margin-left: -40px;
+  width: 95%;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+/* 英文状态下左侧卡片按钮样式 */
+:root[lang="en"] .food-card-sidebar .el-button {
+  font-size: 11px;
+  padding: 8px 10px;
+}
+
+/* 英文状态下轮播卡片按钮样式 */
+:root[lang="en"] .food-card .el-button {
+  font-size: 10px;
+  padding: 6px 8px;
+}
+
+/* 移除之前的通用按钮组样式 */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 </style>

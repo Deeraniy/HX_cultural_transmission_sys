@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
 import { ref, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 // 导入图标
 import {
   Document,
@@ -14,9 +15,10 @@ import {
   Upload
 } from '@element-plus/icons-vue';
 
-// 使用路由
+// 使用路由和国际化
 const router = useRouter();
 const route = useRoute();
+const { t } = useI18n();
 
 // 监听按钮状态
 const createArticle = () => {
@@ -132,7 +134,7 @@ const handleMenuClick = (index) => {
         <el-icon>
           <Document />
         </el-icon>
-        <span class="menu-text">浏览记录</span>
+        <span class="menu-text">{{ t('user.menu.history') }}</span>
       </el-menu-item>
 
       <!-- 菜单项2: 收藏 -->
@@ -140,7 +142,7 @@ const handleMenuClick = (index) => {
         <el-icon>
           <Star />
         </el-icon>
-        <span class="menu-text">收藏</span>
+        <span class="menu-text">{{ t('user.menu.favorites') }}</span>
       </el-menu-item>
 
       <!-- 菜单项3: 用户画像 -->
@@ -148,7 +150,7 @@ const handleMenuClick = (index) => {
         <el-icon>
           <DataAnalysis />
         </el-icon>
-        <span class="menu-text">用户画像</span>
+        <span class="menu-text">{{ t('user.menu.profile') }}</span>
       </el-menu-item>
 
       <!-- 菜单项4: 关系上传 -->
@@ -156,7 +158,7 @@ const handleMenuClick = (index) => {
 <!--        <el-icon>-->
 <!--          <Upload />-->
 <!--        </el-icon>-->
-<!--        <span class="menu-text">关系上传</span>-->
+<!--        <span class="menu-text">{{ t('user.menu.relations') }}</span>-->
 <!--      </el-menu-item>-->
 
       <!-- 菜单项5: 设置 -->
@@ -164,7 +166,7 @@ const handleMenuClick = (index) => {
         <el-icon>
           <Setting />
         </el-icon>
-        <span class="menu-text">设置</span>
+        <span class="menu-text">{{ t('user.menu.settings') }}</span>
       </el-menu-item>
     </el-menu>
   </div>

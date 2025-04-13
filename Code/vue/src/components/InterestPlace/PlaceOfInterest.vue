@@ -10,44 +10,42 @@
         <!-- 地理位置名称显示框 -->
         <div class="location-box">
           <!-- 城市选择下拉框 -->
-          <el-select v-model="selectedCity" placeholder="选择城市" @change="onCitySelect" class="city-select">
+          <el-select v-model="selectedCity" :placeholder="t('detail.selectTheme')" @change="onCitySelect" class="city-select">
             <el-option
                 v-for="city in cityList"
                 :key="city"
-                :label="city"
+                :label="getCityDisplayName(city)"
                 :value="city">
             </el-option>
           </el-select>
           <div>
-            <h3 class="location-title">地理位置</h3>
+            <h3 class="location-title">{{ t('detail.tabs.basic') }}</h3>
             <div v-if="selectedCityInfoLocal" class="city-info">
               <div class="image-container">
-                <img :src="selectedCityInfoLocal.image" alt="城市图片" class="city-image" />
-                <img :src="getImageUrl(selectedCityInfoLocal.wordCloudImage)" alt="词云图片" class="wordcloud-image" />
+                <img :src="selectedCityInfoLocal.image" :alt="getCityDisplayName(selectedCity)" class="city-image" />
+                <img :src="getImageUrl(selectedCityInfoLocal.wordCloudImage)" :alt="getCityDisplayName(selectedCity)" class="wordcloud-image" />
               </div>
               <div class="description-box">
-                <p>{{ selectedCityInfoLocal.description }}</p>
+                <p>{{ getCityDescription(selectedCity) }}</p>
               </div>
             </div>
             <div v-else class="city-name-display" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-              <el-text style="color: darkgray;">请点击地图中的城市以显示其名称</el-text>
+              <el-text style="color: darkgray;">{{ t('detail.defaultTitle') }}</el-text>
             </div>
           </div>
-
-
         </div>
       </div>
       <div class="attraction-card-box">
         <!-- 动态展示当前选中的城市景点 -->
         <div class="attractions-container">
           <div class="attraction-card" @click="showDetail(attraction)" v-for="attraction in filteredAttractions" :key="attraction.name">
-            <img :src="attraction.image" :alt="attraction.name" class="attraction-image" />
+            <img :src="attraction.image" :alt="getAttractionDisplayName(attraction.name)" class="attraction-image" />
             <div class="attraction-details">
               <h3>
-                {{ attraction.name }}
+                {{ getAttractionDisplayName(attraction.name) }}
                 <span class="fancy-name">({{ attraction.name }})</span>
               </h3>
-              <p>{{ attraction.description }}</p>
+              <p>{{ getAttractionDescription(attraction.name) }}</p>
             </div>
           </div>
         </div>
@@ -86,7 +84,7 @@
           <!-- 固定顶栏 -->
           <div class="right-header">
             <div class="title-wrapper">
-              <h2>{{ selectedPlace?.name }}</h2>
+              <h2>{{ getAttractionDisplayName(selectedPlace?.name) }}</h2>
             </div>
           </div>
 
@@ -95,21 +93,21 @@
             <div class="info-content">
               <div class="info-item">
                 <div class="info-title">
-                  <h3>地理位置</h3>
+                  <h3>{{ t('detail.place.location') }}</h3>
                 </div>
                 <p>{{ selectedPlace?.location }}</p>
               </div>
               <div class="info-item">
-                <h3>历史背景</h3>
+                <h3>{{ t('detail.place.history') }}</h3>
                 <p>{{ selectedPlace?.history }}</p>
               </div>
               <div class="info-item">
-                <h3>文化特色</h3>
+                <h3>{{ t('detail.place.culture') }}</h3>
                 <p>{{ selectedPlace?.culture }}</p>
               </div>
               <div class="info-item">
-                <h3>详细介绍</h3>
-                <p>{{ selectedPlace?.description }}</p>
+                <h3>{{ t('detail.place.description') }}</h3>
+                <p>{{ getAttractionDescription(selectedPlace?.name) }}</p>
               </div>
             </div>
           </div>
@@ -121,14 +119,14 @@
               class="analysis-btn"
               @click="goToAnalysis(selectedPlace)"
             >
-              情感分析
+              {{ t('detail.place.sentimentAnalysis') }}
             </el-button>
             <div class="dialog-interaction-icons">
               <div class="icon-wrapper" @click="toggleLike(selectedPlace)">
                 <img
                   :src="tagStatus.is_liked ? likeActiveIcon : likeIcon"
                   :class="['icon', { 'active': tagStatus.is_liked }]"
-                  alt="赞"
+                  :alt="t('detail.place.like')"
                 />
                 <span>{{ tagStatus.total_likes || 0 }}</span>
               </div>
@@ -136,9 +134,9 @@
                 <img
                   :src="tagStatus.is_favorite ? favoriteActiveIcon : favoriteIcon"
                   :class="['icon', { 'active': tagStatus.is_favorite }]"
-                  alt="收藏"
+                  :alt="t('detail.place.favorite')"
                 />
-                <span>收藏</span>
+                <span>{{ t('detail.place.favorite') }}</span>
               </div>
             </div>
           </div>
@@ -154,6 +152,7 @@ import {computed, onMounted, ref, watch} from 'vue';
 import * as echarts from 'echarts';
 import hunanMapData from '@/json/湖南省.json';
 import cityInfoDataLocal from '@/assets/cityInfo.json'; // 导入城市信息
+import cultureElements from '@/json/culture_elements_translated.json';
 //import interestDataLocal from '@/json/interests.json'; // 导入景点信息
 import SpotsAPI  from "@/api/spot";
 import CityAPI from "@/api/city";
@@ -169,6 +168,7 @@ import { ElMessage } from 'element-plus';
 import UserAPI from "@/api/user";
 import {hColgroup} from "element-plus/es/components/table/src/h-helper";
 import props = hColgroup.props;
+import { useI18n } from 'vue-i18n';
 
 // 使用import导入图标
 import likeIcon from '@/assets/setting/赞.png';
@@ -848,6 +848,32 @@ const initMap = () => {
   myChart.setOption(option);
 };
 
+const { t, locale } = useI18n();
+
+// 获取城市显示名称
+const getCityDisplayName = (cityName: string) => {
+  const cityInfo = cityInfoDataLocal[cityName];
+  return locale.value === 'en' && cityInfo?.['name-en'] ? cityInfo['name-en'] : cityName;
+};
+
+// 获取城市描述
+const getCityDescription = (cityName: string) => {
+  const cityInfo = cityInfoDataLocal[cityName];
+  return locale.value === 'en' && cityInfo?.['description-en'] ? cityInfo['description-en'] : cityInfo?.description;
+};
+
+// 获取景点显示名称
+const getAttractionDisplayName = (attractionName: string) => {
+  const element = cultureElements.find(item => item.title === attractionName);
+  return locale.value === 'en' && element?.['title-en'] ? element['title-en'] : attractionName;
+};
+
+// 获取景点描述
+const getAttractionDescription = (attractionName: string) => {
+  const element = cultureElements.find(item => item.title === attractionName);
+  return locale.value === 'en' && element?.['description-en'] ? element['description-en'] : element?.description || '';
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -1113,14 +1139,14 @@ const initMap = () => {
 }
 
 /* 防止背景滚动 */
-:deep(.el-overlay-dialog) {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  overflow: hidden;
-}
+// :deep(.el-overlay-dialog) {
+//   position: fixed;
+//   top: 0;
+//   right: 0;
+//   bottom: 0;
+//   left: 0;
+//   overflow: hidden;
+// }
 
 .dialog-content {
   display: flex;

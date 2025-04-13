@@ -10,10 +10,10 @@
           @click="goToHome"
         >
           <el-icon><ArrowLeft /></el-icon>
-          返回主页
+          {{ t('user.home.returnHome') }}
         </el-button>
         <div class="welcome-text">
-          {{ userData[0].nickname || '用户' }}，欢迎来到个人中心！
+          {{ userData[0].nickname || t('user.home.defaultUser', { defaultValue: '用户' }) }}，{{ t('user.home.welcome') }}
         </div>
         <div class="placeholder"></div>
       </div>
@@ -28,23 +28,23 @@
             <div class="avatar-name-section">
               <img :src="userData[0].avatar || '/default-avatar.png'" class="avatar">
               <div class="user-name">
-                <h3>{{ userData[0].nickname || '未设置昵称' }}</h3>
-                <p>账号：{{ userData[0].account }}</p>
+                <h3>{{ userData[0].nickname || t('user.home.defaultNickname', { defaultValue: '未设置昵称' }) }}</h3>
+                <p>{{ t('user.home.account') }}：{{ userData[0].account }}</p>
               </div>
             </div>
             <!-- 基本信息 -->
             <div class="basic-info">
-              <p class="info-item">性别: {{ formatGender(userData[0].gender) || '未设置' }}</p>
-              <p class="info-item">年龄: {{ userData[0].age || '未设置' }}</p>
-              <p class="info-item">地区: {{ userData[0].location || '未设置' }}</p>
-              <p class="info-item">邮箱: {{ userData[0].email || '未设置' }}</p>
-              <p class="info-item">电话: {{ userData[0].mobile || '未设置' }}</p>
+              <p class="info-item">{{ t('user.home.gender') }}: {{ formatGender(userData[0].gender) || t('user.home.notSet', { defaultValue: '未设置' }) }}</p>
+              <p class="info-item">{{ t('user.home.age') }}: {{ userData[0].age || t('user.home.notSet', { defaultValue: '未设置' }) }}</p>
+              <p class="info-item">{{ t('user.home.location') }}: {{ userData[0].location || t('user.home.notSet', { defaultValue: '未设置' }) }}</p>
+              <p class="info-item">{{ t('user.home.email') }}: {{ userData[0].email || t('user.home.notSet', { defaultValue: '未设置' }) }}</p>
+              <p class="info-item">{{ t('user.home.phone') }}: {{ userData[0].mobile || t('user.home.notSet', { defaultValue: '未设置' }) }}</p>
             </div>
           </div>
 
           <!-- 右侧：标签展示 -->
           <div class="tag-section">
-            <div class="section-title">我的标签</div>
+            <div class="section-title">{{ t('user.home.tags') }}</div>
             <div class="tags-container">
               <el-tag
                 v-for="tag in tags"
@@ -55,7 +55,7 @@
                 {{ tag.name }}
               </el-tag>
               <div v-if="tags.length === 0" class="no-tags">
-                暂无标签
+                {{ t('user.home.noTags') }}
               </div>
             </div>
           </div>
@@ -64,9 +64,9 @@
         <!-- 个人简介 -->
         <div class="description-section">
           <div class="description-header">
-            <div class="section-title">个人简介</div>
+            <div class="section-title">{{ t('user.home.introduction') }}</div>
           </div>
-          <p>{{ userData[0].description }}</p>
+          <p>{{ userData[0].description || t('user.home.defaultDescription', { defaultValue: '这个人很懒，什么都没写~' }) }}</p>
         </div>
       </div>
     </el-card>
@@ -80,9 +80,12 @@ import RecommendAPI from '@/api/recommend';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 import { ArrowLeft } from '@element-plus/icons-vue';
+import { useI18n } from 'vue-i18n';
+import { ElMessage } from 'element-plus';
 
 const userStore = useUserStore();
 const router = useRouter();
+const { t } = useI18n();
 
 // 初始化默认值
 let userData = ref([{
@@ -94,7 +97,7 @@ let userData = ref([{
   location: '',
   email: '',
   mobile: '',
-  description: '这个人很懒，什么都没写~',
+  description: t('user.home.defaultDescription', { defaultValue: '这个人很懒，什么都没写~' }),
   avatar: new URL('@/assets/default-avatar.png', import.meta.url).href,
 }]);
 
@@ -112,10 +115,9 @@ const goToHome = () => {
 };
 
 const formatGender = (gender) => {
-  if (gender === '男' || gender === 'male') return '男';
-  if (gender === '女' || gender === 'female') return '女';
-  if (gender === '其他' || gender === 'other') return '其他';
-  return gender;
+  if (gender === 'MALE') return t('user.home.genderMap.MALE');
+  if (gender === 'FEMALE') return t('user.home.genderMap.FEMALE');
+  return t('user.home.genderMap.OTHER');
 };
 
 // 添加刷新用户信息的方法
@@ -126,19 +128,20 @@ const refreshUserInfo = async () => {
       userData.value = [{
         ...userData.value[0],
         ...res.data,
-        nickname: res.data.nickname || userStore.username,
+        nickname: res.data.nickname || userStore.username || t('user.home.defaultNickname'),
         account: res.data.account || userStore.userId,
-        gender: res.data.gender || '未设置',
-        age: res.data.age || '未设置',
-        location: res.data.location || '未设置',
-        email: res.data.email || '未设置',
-        mobile: res.data.mobile || '未设置',
-        description: res.data.description || '这个人很懒，什么都没写~',
+        gender: formatGender(res.data.gender),
+        age: res.data.age || t('user.home.notSet'),
+        location: res.data.location || t('user.home.notSet'),
+        email: res.data.email || t('user.home.notSet'),
+        mobile: res.data.mobile || t('user.home.notSet'),
+        description: res.data.description || t('user.home.defaultDescription'),
         avatar: res.data.avatar || new URL('@/assets/default-avatar.png', import.meta.url).href,
       }];
     }
   } catch (error) {
     console.error('刷新用户信息失败:', error);
+    ElMessage.error(t('user.home.getInfoError'));
   }
 };
 

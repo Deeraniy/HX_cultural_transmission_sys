@@ -6,6 +6,21 @@
 import * as echarts from 'echarts'
 import { onMounted, ref, watch, onUnmounted } from 'vue'
 import { defineProps } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+// 添加情感类型映射
+const sentimentTypeMap = {
+  '正面': 'positive',
+  '中立': 'neutral',
+  '负面': 'negative'
+}
+
+// 获取情感类型的英文映射
+const getSentimentType = (chineseName) => {
+  return sentimentTypeMap[chineseName] || chineseName.toLowerCase()
+}
 
 // 引入 props
 const props = defineProps({
@@ -27,7 +42,8 @@ const labelOptions = {
   show: true,
   position: 'inside',
   formatter: (params) => {
-    return `${params.name}\n数量: ${params.value}\n比例: ${params.percent}%`
+    const sentimentType = getSentimentType(params.name)
+    return `${t(`detail.report.sentiment.${sentimentType}`)}\n${t('detail.sentiment.count')}: ${params.value}\n${t('detail.sentiment.ratio')}: ${params.percent}%`
   },
   backgroundColor: 'rgba(0,0,0,0.5)', // 半透明背景
   borderRadius: 5,
@@ -39,10 +55,19 @@ const labelOptions = {
 
 // 初始化和更新图表的函数
 const updateChart = (chart, data) => {
+  // 处理数据，将中文情感类型映射为英文
+  const processedData = data.map(item => ({
+    ...item,
+    name: getSentimentType(item.name)
+  }))
+
   const option = {
     tooltip: {
       trigger: 'item',
-      formatter: '{a} <br/>{b}: {c} ({d}%)',
+      formatter: (params) => {
+        const sentimentType = getSentimentType(params.name)
+        return `${t('detail.sentiment.analysis')} <br/>${t(`detail.report.sentiment.${sentimentType}`)}: ${params.value} (${params.percent}%)`
+      },
       textStyle: {
         fontFamily: 'HelveticaNeue, serif',
         fontSize: 16
@@ -52,11 +77,15 @@ const updateChart = (chart, data) => {
       orient: 'vertical',  // 垂直方向
       right: '5%',         // 放置在右侧
       top: 'middle',       // 垂直居中
-      data: data.map(item => item.name), // 根据数据动态生成图例
+      data: processedData.map(item => t(`detail.report.sentiment.${item.name}`)),
       textStyle: {
         color: '#333', // 图例文本颜色
         fontSize: 14,
         fontFamily: 'HelveticaNeue, serif'
+      },
+      formatter: (name) => {
+        const sentimentType = getSentimentType(name)
+        return t(`detail.report.sentiment.${sentimentType}`)
       },
       itemWidth: 15,      // 图例标记的宽度
       itemHeight: 15,     // 图例标记的高度
@@ -64,12 +93,16 @@ const updateChart = (chart, data) => {
     },
     series: [
       {
-        name: '情感分析',
+        name: t('detail.sentiment.analysis'),
         type: 'pie',
         radius: ['45%', '93%'], // 调整环形饼图的内外半径
         center: ['35%', '50%'], // 将饼图更靠左，为右侧图例腾出更多空间
         avoidLabelOverlap: false,
-        data: data,
+        data: processedData.map(item => ({
+          ...item,
+          name: item.name,
+          value: item.value
+        })),
         color: chartColors,
         label: labelOptions,
         emphasis: {
