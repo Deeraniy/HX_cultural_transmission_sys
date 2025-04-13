@@ -5,7 +5,10 @@ import pymysql
 import json
 from django.http import JsonResponse
 from zhipuai import ZhipuAI
+
+# 初始化 zhipuai 客户端
 client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")
+
 # 配置日志
 logging.basicConfig(
     level=logging.INFO,
@@ -28,20 +31,23 @@ def get_literature_sentiment_label(text):
         if len(text) > max_length:
             text = text[:max_length]
 
-        # 假设模型已初始化为 distilled_student_sentiment_classifier
-        # !! 如果模型变量名不同，请修改 !!
-        global distilled_student_sentiment_classifier # 确保能访问到全局模型
-        if 'distilled_student_sentiment_classifier' not in globals():
-             # 如果尚未初始化，在这里初始化或记录错误
-             logger.error("情感分析模型尚未初始化！")
-             return 'neutral', 0.0
-
-        results = distilled_student_sentiment_classifier(text)[0]
-        max_score_label = max(results, key=lambda x: x['score'])
-        return max_score_label['label'], max_score_label['score']
+        # 使用 zhipuai 进行情感分析
+        response = client.chat.completions.create(
+            model="glm-4",
+            messages=[
+                {"role": "system", "content": "你是一个专业的情感分析助手，请分析以下文本的情感倾向，只返回 positive、neutral 或 negative 中的一个词。"},
+                {"role": "user", "content": text}
+            ],
+            temperature=0.1
+        )
+        
+        sentiment = response.choices[0].message.content.strip().lower()
+        confidence = 0.9  # 由于是确定性输出，设置较高的置信度
+        
+        return sentiment, confidence
     except Exception as e:
         logger.error(f"处理文学评论文本时出错: {text}. 错误信息: {str(e)}")
-        return 'neutral', 0.0 # 返回默认值
+        return 'neutral', 0.0
 
 def process_literature_comments(comments_list):
     """处理文学评论列表并返回带标签的字典列表"""
@@ -352,8 +358,8 @@ def generate_report(request):
             tag_id = tag_result['tag_id']
             logger.info(f"找到标签ID: {tag_id}")
 
-            # 查询报告内容
-            cursor.execute("SELECT content FROM report WHERE tag_id = %s", (tag_id,))
+            # 查询报告内容（包括中英文）
+            cursor.execute("SELECT content, en_content FROM report WHERE tag_id = %s", (tag_id,))
             report_result = cursor.fetchone()
 
             if not report_result:
@@ -396,6 +402,7 @@ def generate_report(request):
             return JsonResponse({
                 'status': 'success',
                 'report': report_result['content'],
+                'report_en': report_result['en_content'],
                 'timeline': timeline_data,
                 'liter_name': liter_name
             })

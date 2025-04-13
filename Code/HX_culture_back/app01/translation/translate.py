@@ -2,6 +2,7 @@ import pymysql
 from deep_translator import GoogleTranslator
 import re
 import emoji
+import time
 
 def get_db_connection():
     """获取数据库连接"""
@@ -22,24 +23,35 @@ def extract_format_symbols(text):
     # 存储所有需要保护的特殊内容
     protected_items = []
     
-    # 1. 首先保护所有**包围的内容
-    asterisk_pattern = r'(\*\*.*?\*\*)'
-    asterisk_matches = re.finditer(asterisk_pattern, text)
-    for match in asterisk_matches:
+    # 1. 保护所有**包围的年份和月份
+    year_month_pattern = r'(\*\*\d{4}年\d{1,2}月：\*\*)'
+    year_month_matches = re.finditer(year_month_pattern, text)
+    for match in year_month_matches:
         protected_items.append(match.group())
-        
-    # 2. 使用emoji库识别和保护所有表情符号
-    emoji_pattern = emoji.get_emoji_regexp()
-    emoji_matches = emoji_pattern.finditer(text)
-    for match in emoji_matches:
+
+    # 2. 保护所有数字和百分比
+    number_pattern = r'(\d+\.?\d*%?)'
+    number_matches = re.finditer(number_pattern, text)
+    for match in number_matches:
         protected_items.append(match.group())
     
-    # 3. 保护其他特殊Unicode字符（比如箭头、特殊符号等）
-    special_chars_pattern = r'([^\w\s\u4e00-\u9fff.,?!，。？！、])'
-    special_matches = re.finditer(special_chars_pattern, text)
-    for match in special_matches:
-        if match.group() not in protected_items:  # 避免重复添加已保护的内容
-            protected_items.append(match.group())
+    # 3. 保护情感分布的括号内容
+    distribution_pattern = r'(\(\d+\.?\d*%\))'
+    distribution_matches = re.finditer(distribution_pattern, text)
+    for match in distribution_matches:
+        protected_items.append(match.group())
+    
+    # 4. 识别和保护所有表情符号
+    for char in text:
+        if emoji.is_emoji(char):
+            if char not in protected_items:
+                protected_items.append(char)
+    
+    # 5. 保护特定的标点符号和特殊字符
+    special_chars = ['——', '、', '-', '&', '：', '**']
+    for char in special_chars:
+        if char in text:
+            protected_items.append(char)
     
     # 替换所有需要保护的内容为占位符
     processed_text = text
@@ -66,15 +78,36 @@ def translate_content():
         cursor.execute("SELECT report_id, content FROM report WHERE en_content IS NULL OR en_content = ''")
         rows = cursor.fetchall()
         
-        for row in rows:
+        total_count = len(rows)
+        print(f"总共需要翻译 {total_count} 条记录")
+        
+        for i, row in enumerate(rows, 1):
             report_id, content = row
             
             try:
                 # 提取需要保护的内容
                 protected_items, clean_text = extract_format_symbols(content)
                 
-                # 翻译清理后的文本
-                translated = translator.translate(clean_text)
+                # 将长文本分段翻译，避免超出API限制
+                segments = [clean_text[i:i+1000] for i in range(0, len(clean_text), 1000)]
+                translated_segments = []
+                
+                for segment in segments:
+                    # 添加重试机制
+                    max_retries = 3
+                    for attempt in range(max_retries):
+                        try:
+                            translated_segment = translator.translate(segment)
+                            translated_segments.append(translated_segment)
+                            # 成功翻译后等待一小段时间，避免请求过快
+                            time.sleep(1)
+                            break
+                        except Exception as e:
+                            if attempt == max_retries - 1:
+                                raise e
+                            time.sleep(2 ** attempt)  # 指数退避
+                
+                translated = ' '.join(translated_segments)
                 
                 # 还原被保护的内容
                 final_translation = restore_format_symbols(translated, protected_items)
@@ -85,7 +118,7 @@ def translate_content():
                     (final_translation, report_id)
                 )
                 conn.commit()
-                print(f"已翻译 report_id: {report_id}")
+                print(f"已翻译 {i}/{total_count}: report_id: {report_id}")
                 
             except Exception as e:
                 print(f"翻译失败 report_id: {report_id}, 错误: {str(e)}")

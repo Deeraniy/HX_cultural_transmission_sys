@@ -418,8 +418,8 @@ def generate_report(request):
             tag_id = tag_result['tag_id']
             logger.info(f"找到标签ID: {tag_id}")
 
-            # 查询报告内容
-            cursor.execute("SELECT content FROM report WHERE tag_id = %s", (tag_id,))
+            # 查询报告内容（包括中英文）
+            cursor.execute("SELECT content, en_content FROM report WHERE tag_id = %s", (tag_id,))
             report_result = cursor.fetchone()
 
             if not report_result:
@@ -462,6 +462,7 @@ def generate_report(request):
             return JsonResponse({
                 'status': 'success',
                 'report': report_result['content'],
+                'report_en': report_result['en_content'],
                 'timeline': timeline_data,
                 'folk_name': folk_name
             })
