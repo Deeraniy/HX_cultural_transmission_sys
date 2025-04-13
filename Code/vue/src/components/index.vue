@@ -176,10 +176,10 @@ const searchTerm = ref('');
 const getName = (name) => {
   // 假设 `cultureElements` 中存储了名称和对应的翻译
   const element = cultureElements.find(item => item.title === name);
-  
+
   // 根据语言选择标题的翻译
-  return locale.value === 'en' && element?.['title-en'] ? 
-    element['title-en'] : 
+  return locale.value === 'en' && element?.['title-en'] ?
+    element['title-en'] :
     name;
 };
 
@@ -553,7 +553,7 @@ const updateChart = () => {
       }
     },
     legend: {
-      data: graphData.categories.map( c.name),
+      data: graphData.categories.map( c => c.name),
       selected: {
         [t('index.knowledgeGraph.categories.core')]: true,
         [t('index.knowledgeGraph.categories.theme')]: false,
@@ -627,7 +627,7 @@ const updateChart = () => {
       }
     }]
   };
-
+  console.log("设置option");
   myChart.setOption(option);
 };
 
