@@ -3,16 +3,16 @@
     <div class="left-section">
       <div class="filter-section">
         <el-select
-          v-model="selectedTags" 
-          multiple 
+          v-model="selectedTags"
+          multiple
           collapse-tags-tooltip
           placeholder="选择要显示的人物"
           class="tag-select"
           @change="handleTagsChange"
         >
           <el-option
-            v-for="person in availablePersons" 
-            :key="person" 
+            v-for="person in availablePersons"
+            :key="person"
             :label="person"
             :value="person"
           />
@@ -70,42 +70,104 @@
 
 <script>
 import * as d3 from "d3";
-import 毛泽东图片 from '@/assets/Red/毛泽东.jpg'
-import 刘少奇图片 from '@/assets/Red/刘少奇.jpg'
-import 贺龙图片 from '@/assets/Red/贺龙.jpg'
-import 中国共产党图片 from '@/assets/Red/中国共产党.jpg'
-import 八路军图片 from '@/assets/Red/八路军.jpg'
-import 中华人民共和国图片 from '@/assets/Red/中华人民共和国.jpg'
-import 红军长征图片 from '@/assets/Red/红军长征.jpg'
-import 彭德怀图片 from '@/assets/Red/彭德怀.jpg'
-import 向警予图片 from '@/assets/Red/向警予.jpg'
-import 何叔衡图片 from '@/assets/Red/何叔衡.jpg'
-import 任弼时图片 from '@/assets/Red/任弼时.jpg'
-import 雷锋图片 from '@/assets/Red/雷锋.jpg'
-import 罗荣桓图片 from '@/assets/Red/罗荣桓.jpg'
-import 林伯渠图片 from '@/assets/Red/林伯渠.jpg'
-import 百团大战图片 from '@/assets/Red/百团大战.jpg'
-import 抗美援朝战争图片 from '@/assets/Red/抗美援朝战争.jpg'
-import 辽沈战役图片 from '@/assets/Red/辽沈战役.jpg'
-import 淮海战役图片 from '@/assets/Red/淮海战役.jpg'
-import 西北战役图片 from '@/assets/Red/西北战役.jpg'
-import 平江起义图片 from '@/assets/Red/平江起义.jpg'
-import 遵义会议图片 from '@/assets/Red/遵义会议.jpg'
-import 中华苏维埃共和国图片 from '@/assets/Red/中华苏维埃共和国.jpg'
-import 中华人民共和国元帅图片 from '@/assets/Red/中华人民共和国元帅.jpg'
-import 中共中央政治局委员图片 from '@/assets/Red/中共中央政治局委员.jpg'
-import 国防部部长图片 from '@/assets/Red/国防部部长.jpg'
-import 中共中央书记处书记图片 from '@/assets/Red/中共中央书记处书记.jpg'
-import 中共中央军委委员图片 from '@/assets/Red/中共中央军委委员.jpg'
-import 志愿军司令员图片 from '@/assets/Red/志愿军司令员.jpg'
-import 庐山会议图片 from '@/assets/Red/庐山会议.jpg'
-import 大跃进图片 from '@/assets/Red/大跃进.jpg'
-import 军事系统高干会议图片 from '@/assets/Red/军事系统高干会议.jpg'
-import 辛亥革命图片 from '@/assets/Red/辛亥革命.jpg'
+import 位新中国成立以来感动中国人物图片 from '@/assets/Red/100位新中国成立以来感动中国人物.jpg'
 import 中共一大图片 from '@/assets/Red/中共一大.jpg'
-import 苏维埃革命图片 from '@/assets/Red/苏维埃革命.jpg'
+import 中共中央书记处书记图片 from '@/assets/Red/中共中央书记处书记.jpg'
+import 中共中央党校校长图片 from '@/assets/Red/中共中央党校校长.jpg'
+import 中共中央军委副主席图片 from '@/assets/Red/中共中央军委副主席.jpg'
+import 中共中央军委委员图片 from '@/assets/Red/中共中央军委委员.jpg'
+import 中共中央局副书记图片 from '@/assets/Red/中共中央局副书记.jpg'
+import 中共中央政治局委员图片 from '@/assets/Red/中共中央政治局委员.jpg'
+import 中华人民共和国图片 from '@/assets/Red/中华人民共和国.jpg'
+import 中华人民共和国主要缔造者和领导人图片 from '@/assets/Red/中华人民共和国主要缔造者和领导人.jpg'
+import 中华人民共和国元帅图片 from '@/assets/Red/中华人民共和国元帅.jpg'
+import 中华人民共和国国务院副总理图片 from '@/assets/Red/中华人民共和国国务院副总理.jpg'
+import 中华人民共和国开国元勋图片 from '@/assets/Red/中华人民共和国开国元勋.jpg'
+import 中华苏维埃共和国图片 from '@/assets/Red/中华苏维埃共和国.jpg'
+import 中国人民志愿军司令员兼政治委员图片 from '@/assets/Red/中国人民志愿军司令员兼政治委员.jpg'
+import 中国人民解放军主要缔造者和领导人图片 from '@/assets/Red/中国人民解放军主要缔造者和领导人.jpg'
+import 中国人民解放军高级将领图片 from '@/assets/Red/中国人民解放军高级将领.jpg'
+import 中国共产党图片 from '@/assets/Red/中国共产党.jpg'
+import 中国共产党主要缔造者和领导人图片 from '@/assets/Red/中国共产党主要缔造者和领导人.jpg'
+import 中国共产党党员图片 from '@/assets/Red/中国共产党党员.jpg'
+import 中国共产党和中华人民共和国的主要领导人之一图片 from '@/assets/Red/中国共产党和中华人民共和国的主要领导人之一.jpg'
+import 中国共产党唯一的女创始人图片 from '@/assets/Red/中国共产党唯一的女创始人.jpg'
+import 中国共产党第一代领导集体成员图片 from '@/assets/Red/中国共产党第一代领导集体成员.jpg'
+import 中国共产党高级领导人图片 from '@/assets/Red/中国共产党高级领导人.jpg'
+import 中国十大元帅之一图片 from '@/assets/Red/中国十大元帅之一.jpg'
+import 中国妇女运动的先驱图片 from '@/assets/Red/中国妇女运动的先驱.jpg'
+import 中央组织部长图片 from '@/assets/Red/中央组织部长.jpg'
+import 二等功1次图片 from '@/assets/Red/二等功1次.jpg'
+import 二等功2次图片 from '@/assets/Red/二等功2次.jpg'
+import 井冈山革命根据地图片 from '@/assets/Red/井冈山革命根据地.jpg'
+import 任弼时图片 from '@/assets/Red/任弼时.jpg'
+import 伟大的马克思主义者图片 from '@/assets/Red/伟大的马克思主义者.jpg'
+import 何叔衡图片 from '@/assets/Red/何叔衡.jpg'
+import 全军挂像英模图片 from '@/assets/Red/全军挂像英模.jpg'
+import 八路军图片 from '@/assets/Red/八路军.jpg'
+import 军事家图片 from '@/assets/Red/军事家.jpg'
+import 军事系统高干会议图片 from '@/assets/Red/军事系统高干会议.jpg'
+import 刘少奇图片 from '@/assets/Red/刘少奇.jpg'
+import 协助毛泽东等指挥三大战役图片 from '@/assets/Red/协助毛泽东等指挥三大战役.jpg'
+import 原名任培国图片 from '@/assets/Red/原名任培国.jpg'
+import 原名罗慎镇图片 from '@/assets/Red/原名罗慎镇.jpg'
+import 原工程兵工程某团汽车连班长图片 from '@/assets/Red/原工程兵工程某团汽车连班长.jpg'
+import 参与筹建中华苏维埃共和国图片 from '@/assets/Red/参与筹建中华苏维埃共和国.jpg'
 import 反围剿图片 from '@/assets/Red/反围剿.jpg'
+import 号宗人图片 from '@/assets/Red/号宗人.jpg'
+import 向警予图片 from '@/assets/Red/向警予.jpg'
+import 国家体委主任图片 from '@/assets/Red/国家体委主任.jpg'
+import 国防委员会副主席图片 from '@/assets/Red/国防委员会副主席.jpg'
+import 国防部部长图片 from '@/assets/Red/国防部部长.jpg'
+import 大跃进图片 from '@/assets/Red/大跃进.jpg'
+import 字二南图片 from '@/assets/Red/字二南.jpg'
+import 字雅怀图片 from '@/assets/Red/字雅怀.jpg'
+import 平江起义图片 from '@/assets/Red/平江起义.jpg'
+import 庐山会议图片 from '@/assets/Red/庐山会议.jpg'
+import 延安五老之一图片 from '@/assets/Red/延安五老之一.jpg'
+import 彭德怀图片 from '@/assets/Red/彭德怀.jpg'
+import 影响两个女儿加入革命并从事地下工作图片 from '@/assets/Red/影响两个女儿加入革命并从事地下工作.jpg'
+import 志愿军司令员图片 from '@/assets/Red/志愿军司令员.jpg'
+import 我党早期革命活动参与者图片 from '@/assets/Red/我党早期革命活动参与者.jpg'
+import 抗美援朝战争图片 from '@/assets/Red/抗美援朝战争.jpg'
+import 推动国防工业和部队现代化建设图片 from '@/assets/Red/推动国防工业和部队现代化建设.jpg'
+import 支持抗美援朝战争物资动员图片 from '@/assets/Red/支持抗美援朝战争物资动员.jpg'
+import 政治家图片 from '@/assets/Red/政治家.jpg'
+import 教育家图片 from '@/assets/Red/教育家.jpg'
+import 新中国成立图片 from '@/assets/Red/新中国成立.jpg'
+import 无产阶级革命家图片 from '@/assets/Red/无产阶级革命家.jpg'
+import 早期女共产主义战士图片 from '@/assets/Red/早期女共产主义战士.jpg'
+import 杰出的政治家图片 from '@/assets/Red/杰出的政治家.jpg'
+import 杰出的无产阶级革命家图片 from '@/assets/Red/杰出的无产阶级革命家.jpg'
+import 杰出的革命家图片 from '@/assets/Red/杰出的革命家.jpg'
+import 林伯渠图片 from '@/assets/Red/林伯渠.jpg'
+import 毛岸英图片 from '@/assets/Red/毛岸英.jpg'
+import 毛岸青图片 from '@/assets/Red/毛岸青.jpg'
+import 毛氏红烧肉图片 from '@/assets/Red/毛氏红烧肉.jpg'
+import 毛泽东图片 from '@/assets/Red/毛泽东.jpg'
+import 毛泽东故居图片 from '@/assets/Red/毛泽东故居.jpg'
+import 淮海战役图片 from '@/assets/Red/淮海战役.jpg'
 import 游击战图片 from '@/assets/Red/游击战.jpg'
+import 理论家图片 from '@/assets/Red/理论家.jpg'
+import 百团大战图片 from '@/assets/Red/百团大战.jpg'
+import 秋收起义图片 from '@/assets/Red/秋收起义.jpg'
+import 第五次反围剿失败后坚守苏区开展游击战图片 from '@/assets/Red/第五次反围剿失败后坚守苏区开展游击战.jpg'
+import 红军长征图片 from '@/assets/Red/红军长征.jpg'
+import 组织家图片 from '@/assets/Red/组织家.jpg'
+import 罗荣桓图片 from '@/assets/Red/罗荣桓.jpg'
+import 苏维埃革命图片 from '@/assets/Red/苏维埃革命.jpg'
+import 西北战役图片 from '@/assets/Red/西北战役.jpg'
+import 西南军区司令员图片 from '@/assets/Red/西南军区司令员.jpg'
+import 西南局第三书记图片 from '@/assets/Red/西南局第三书记.jpg'
+import 贺龙图片 from '@/assets/Red/贺龙.jpg'
+import 辛亥革命图片 from '@/assets/Red/辛亥革命.jpg'
+import 辽沈战役图片 from '@/assets/Red/辽沈战役.jpg'
+import 遵义会议图片 from '@/assets/Red/遵义会议.jpg'
+import 长征图片 from '@/assets/Red/长征.jpg'
+import 雷锋图片 from '@/assets/Red/雷锋.jpg'
+import 雷锋班图片 from '@/assets/Red/雷锋班.jpg'
+import 青年团第一次全国代表大会主持人图片 from '@/assets/Red/青年团第一次全国代表大会主持人.jpg'
+import 领导平江起义图片 from '@/assets/Red/领导平江起义.jpg'
 
 export default {
   data() {
@@ -603,11 +665,6 @@ export default {
     "size": 5
   },
   {
-    "id": "李敏",
-    "group": 1,
-    "size": 5
-  },
-  {
     "id": "秋收起义",
     "group": 3,
     "size": 3
@@ -1089,7 +1146,7 @@ export default {
       "target": "组织家",
       "label": "人物身份"
     },
-    
+
   {
     "source": "毛泽东",
     "target": "毛岸英",
@@ -1099,11 +1156,6 @@ export default {
     "source": "毛泽东",
     "target": "毛岸青",
     "label": "儿子"
-  },
-  {
-    "source": "毛泽东",
-    "target": "李敏",
-    "label": "女儿"
   },
   {
     "source": "毛泽东",
@@ -1245,17 +1297,17 @@ export default {
         // 首先找出所有选中人物的直接关联节点
         const directNodes = new Set();
         const directLinks = new Set();
-        
+
         // 添加选中的人物节点
         this.selectedTags.forEach(personId => {
           directNodes.add(personId);
         });
-        
+
         // 找出所有与选中人物直接相关的节点和连接
         this.datajson.links.forEach(link => {
           const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
           const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-          
+
           if (this.selectedTags.includes(sourceId)) {
             directNodes.add(targetId);
             directLinks.add(link);
@@ -1265,13 +1317,13 @@ export default {
             directLinks.add(link);
           }
         });
-        
+
         // 如果选择了多个人物，添加人物之间的关联
         if (this.selectedTags.length > 1) {
           this.datajson.links.forEach(link => {
             const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
             const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-            
+
             // 如果连接的两端都在已选节点中，添加这个连接
             if (directNodes.has(sourceId) && directNodes.has(targetId)) {
               directLinks.add(link);
@@ -1279,7 +1331,7 @@ export default {
           });
         }
 
-        const filteredNodes = this.datajson.nodes.filter(node => 
+        const filteredNodes = this.datajson.nodes.filter(node =>
           directNodes.has(node.id)
         );
 
@@ -1290,7 +1342,7 @@ export default {
           links: filteredLinks
         };
       }
-      
+
       this.$nextTick(() => {
         this.renderGraph(this.filteredData);
       });
@@ -1302,25 +1354,25 @@ export default {
     renderGraph(data) {
       d3.select(this.$refs.svg).selectAll("*").remove();
       const svg = d3.select(this.$refs.svg);
-      
+
       // 设置初始缩放比例（相当于点击缩小按钮3次：0.8^3 ≈ 0.512）
       const initialScale = 0.43;
-      
+
       // 设置初始偏移，使图谱居中并稍微向左上偏移
       const initialTransform = d3.zoomIdentity
         .translate(this.width / 2 - 50, this.height / 2 - 40)  // 向左上各偏移100像素
         .scale(initialScale)
         .translate(-this.width / 2, -this.height / 2);
-      
+
       const color = d3.scaleOrdinal(d3.schemeCategory10);
       const nodeRadius = d => d.size * 6;
-      
+
       const svgWidth = this.$refs.svg.clientWidth;
       const svgHeight = this.$refs.svg.clientHeight;
-      
+
       this.width = svgWidth;
       this.height = svgHeight;
-      
+
       svg.append("defs").selectAll("marker")
           .data(["end"])
           .enter().append("marker")
@@ -1334,9 +1386,9 @@ export default {
           .append("path")
           .attr("d", "M0,-5L10,0L0,5")
           .attr("fill", "#999");
-      
+
       const defs = svg.append("defs");
-      
+
       data.nodes.forEach(node => {
         if (node.image) {
           const imgPattern = defs.append("pattern")
@@ -1344,7 +1396,7 @@ export default {
               .attr("width", 1)
               .attr("height", 1)
               .attr("patternUnits", "objectBoundingBox");
-          
+
           imgPattern.append("image")
               .attr("xlink:href", this.getNodeImage(node.id))
               .attr("width", nodeRadius(node) * 2)
@@ -1367,7 +1419,7 @@ export default {
 
       const g = svg.append("g")
           .attr("transform", `translate(0, 0)`);
-      
+
       const zoom = d3.zoom()
           .extent([[0, 0], [this.width, this.height]])
           .scaleExtent([0.2, 5])
@@ -1375,7 +1427,7 @@ export default {
             this.zoomTransform = event.transform;
             g.attr("transform", event.transform);
           });
-      
+
       svg.call(zoom)
          .on("wheel.zoom", null);
 
@@ -1422,13 +1474,13 @@ export default {
                 .attr("width", "100%")
                 .attr("height", "100%")
                 .attr("patternContentUnits", "objectBoundingBox");
-              
+
               pattern.append("image")
                 .attr("href", img)
                 .attr("width", 1)
                 .attr("height", 1)
                 .attr("preserveAspectRatio", "xMidYMid slice");
-              
+
               return `url(#pattern-${d.id})`;
             }
             // 没有图片时使用颜色
@@ -1478,15 +1530,15 @@ export default {
           const dx = d.target.x - d.source.x;
           const dy = d.target.y - d.source.y;
           const dr = Math.sqrt(dx * dx + dy * dy);
-          
+
           const sourceRadius = nodeRadius(d.source);
           const targetRadius = nodeRadius(d.target);
-          
+
           const sourceX = d.source.x + (dx * sourceRadius) / dr;
           const sourceY = d.source.y + (dy * sourceRadius) / dr;
           const targetX = d.target.x - (dx * targetRadius) / dr;
           const targetY = d.target.y - (dy * targetRadius) / dr;
-          
+
           return `M${sourceX},${sourceY}L${targetX},${targetY}`;
         });
 
@@ -1530,42 +1582,105 @@ export default {
     },
     getNodeImage(nodeId) {
       const images = {
-        '毛泽东': 毛泽东图片,
-        '刘少奇': 刘少奇图片,
-        '贺龙': 贺龙图片,
-        '彭德怀': 彭德怀图片,
-        '向警予': 向警予图片,
-        '何叔衡': 何叔衡图片,
-        '任弼时': 任弼时图片,
-        '雷锋': 雷锋图片,
-        '罗荣桓': 罗荣桓图片,
-        '林伯渠': 林伯渠图片,
-        '中国共产党': 中国共产党图片,
-        '八路军': 八路军图片,
-        '中华人民共和国': 中华人民共和国图片,
-        '红军长征': 红军长征图片,
-        '百团大战': 百团大战图片,
-        '抗美援朝战争': 抗美援朝战争图片,
-        '辽沈战役': 辽沈战役图片,
-        '淮海战役': 淮海战役图片,
-        '西北战役': 西北战役图片,
-        '平江起义': 平江起义图片,
-        '遵义会议': 遵义会议图片,
-        '中华苏维埃共和国': 中华苏维埃共和国图片,
-        '中华人民共和国元帅': 中华人民共和国元帅图片,
-        '中共中央政治局委员': 中共中央政治局委员图片,
-        '国防部部长': 国防部部长图片,
-        '中共中央书记处书记': 中共中央书记处书记图片,
-        '中共中央军委委员': 中共中央军委委员图片,
-        '志愿军司令员': 志愿军司令员图片,
-        '庐山会议': 庐山会议图片,
-        '大跃进': 大跃进图片,
-        '军事系统高干会议': 军事系统高干会议图片,
-        '辛亥革命': 辛亥革命图片,
-        '中共一大': 中共一大图片,
-        '苏维埃革命': 苏维埃革命图片,
-        '反围剿': 反围剿图片,
-        '游击战': 游击战图片
+        '100位新中国成立以来感动中国人物':位新中国成立以来感动中国人物图片,
+'中共一大':中共一大图片,
+'中共中央书记处书记':中共中央书记处书记图片,
+'中共中央党校校长':中共中央党校校长图片,
+'中共中央军委副主席':中共中央军委副主席图片,
+'中共中央军委委员':中共中央军委委员图片,
+'中共中央局副书记':中共中央局副书记图片,
+'中共中央政治局委员':中共中央政治局委员图片,
+'中华人民共和国':中华人民共和国图片,
+'中华人民共和国主要缔造者和领导人':中华人民共和国主要缔造者和领导人图片,
+'中华人民共和国元帅':中华人民共和国元帅图片,
+'中华人民共和国国务院副总理':中华人民共和国国务院副总理图片,
+'中华人民共和国开国元勋':中华人民共和国开国元勋图片,
+'中华苏维埃共和国':中华苏维埃共和国图片,
+'中国人民志愿军司令员兼政治委员':中国人民志愿军司令员兼政治委员图片,
+'中国人民解放军主要缔造者和领导人':中国人民解放军主要缔造者和领导人图片,
+'中国人民解放军高级将领':中国人民解放军高级将领图片,
+'中国共产党':中国共产党图片,
+'中国共产党主要缔造者和领导人':中国共产党主要缔造者和领导人图片,
+'中国共产党党员':中国共产党党员图片,
+'中国共产党和中华人民共和国的主要领导人之一':中国共产党和中华人民共和国的主要领导人之一图片,
+'中国共产党唯一的女创始人':中国共产党唯一的女创始人图片,
+'中国共产党第一代领导集体成员':中国共产党第一代领导集体成员图片,
+'中国共产党高级领导人':中国共产党高级领导人图片,
+'中国十大元帅之一':中国十大元帅之一图片,
+'中国妇女运动的先驱':中国妇女运动的先驱图片,
+'中央组织部长':中央组织部长图片,
+'二等功1次':二等功1次图片,
+'二等功2次':二等功2次图片,
+'井冈山革命根据地':井冈山革命根据地图片,
+'任弼时':任弼时图片,
+'伟大的马克思主义者':伟大的马克思主义者图片,
+'何叔衡':何叔衡图片,
+'全军挂像英模':全军挂像英模图片,
+'八路军':八路军图片,
+'军事家':军事家图片,
+'军事系统高干会议':军事系统高干会议图片,
+'刘少奇':刘少奇图片,
+'协助毛泽东等指挥三大战役':协助毛泽东等指挥三大战役图片,
+'原名任培国':原名任培国图片,
+'原名罗慎镇':原名罗慎镇图片,
+'原工程兵工程某团汽车连班长':原工程兵工程某团汽车连班长图片,
+'参与筹建中华苏维埃共和国':参与筹建中华苏维埃共和国图片,
+'反围剿':反围剿图片,
+'号宗人':号宗人图片,
+'向警予':向警予图片,
+'国家体委主任':国家体委主任图片,
+'国防委员会副主席':国防委员会副主席图片,
+'国防部部长':国防部部长图片,
+'大跃进':大跃进图片,
+'字二南':字二南图片,
+'字雅怀':字雅怀图片,
+'平江起义':平江起义图片,
+'庐山会议':庐山会议图片,
+'延安五老之一':延安五老之一图片,
+'彭德怀':彭德怀图片,
+'影响两个女儿加入革命并从事地下工作':影响两个女儿加入革命并从事地下工作图片,
+'志愿军司令员':志愿军司令员图片,
+'我党早期革命活动参与者':我党早期革命活动参与者图片,
+'抗美援朝战争':抗美援朝战争图片,
+'推动国防工业和部队现代化建设':推动国防工业和部队现代化建设图片,
+'支持抗美援朝战争物资动员':支持抗美援朝战争物资动员图片,
+'政治家':政治家图片,
+'教育家':教育家图片,
+'新中国成立':新中国成立图片,
+'无产阶级革命家':无产阶级革命家图片,
+'早期女共产主义战士':早期女共产主义战士图片,
+'杰出的政治家':杰出的政治家图片,
+'杰出的无产阶级革命家':杰出的无产阶级革命家图片,
+'杰出的革命家':杰出的革命家图片,
+'林伯渠':林伯渠图片,
+'毛岸英':毛岸英图片,
+'毛岸青':毛岸青图片,
+'毛氏红烧肉':毛氏红烧肉图片,
+'毛泽东':毛泽东图片,
+'毛泽东故居':毛泽东故居图片,
+'淮海战役':淮海战役图片,
+'游击战':游击战图片,
+'理论家':理论家图片,
+'百团大战':百团大战图片,
+'秋收起义':秋收起义图片,
+'第五次反围剿失败后坚守苏区开展游击战':第五次反围剿失败后坚守苏区开展游击战图片,
+'红军长征':红军长征图片,
+'组织家':组织家图片,
+'罗荣桓':罗荣桓图片,
+'苏维埃革命':苏维埃革命图片,
+'西北战役':西北战役图片,
+'西南军区司令员':西南军区司令员图片,
+'西南局第三书记':西南局第三书记图片,
+'贺龙':贺龙图片,
+'辛亥革命':辛亥革命图片,
+'辽沈战役':辽沈战役图片,
+'遵义会议':遵义会议图片,
+'长征':长征图片,
+'雷锋':雷锋图片,
+'雷锋班':雷锋班图片,
+'青年团第一次全国代表大会主持人':青年团第一次全国代表大会主持人图片,
+'领导平江起义':领导平江起义图片,
+
       };
       return images[nodeId];
     },
@@ -1589,9 +1704,9 @@ export default {
       return levels[size] || '普通';
     },
     getNodeRelations(nodeId) {
-      return this.datajson.links.filter(link => 
-        link.source === nodeId || link.target === nodeId || 
-        (typeof link.source === 'object' && link.source.id === nodeId) || 
+      return this.datajson.links.filter(link =>
+        link.source === nodeId || link.target === nodeId ||
+        (typeof link.source === 'object' && link.source.id === nodeId) ||
         (typeof link.target === 'object' && link.target.id === nodeId)
       );
     },
@@ -1601,16 +1716,16 @@ export default {
     getNodeRelationsText(nodeId) {
       const relations = this.getNodeRelations(nodeId);
       let text = '';
-      
+
       relations.forEach(relation => {
         const sourceId = typeof relation.source === 'object' ? relation.source.id : relation.source;
         const targetId = typeof relation.target === 'object' ? relation.target.id : relation.target;
-        
+
         const otherNodeId = sourceId === nodeId ? targetId : sourceId;
-        
+
         text += `${relation.label} ${otherNodeId}\n`;
       });
-      
+
       return text || '暂无关系数据';
     }
   }
@@ -1646,7 +1761,7 @@ export default {
 .info-panel {
   flex: 3;
   padding: 20px;
- 
+
   overflow-y: auto;
   /* 自定义滚动条样式 */
   &::-webkit-scrollbar {

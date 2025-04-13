@@ -4,10 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="!!双语启动（饿死了">
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/app01/casual_impact.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/app01/casual_impact.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/Code/HX_culture_back/static/wordclouds/橘子洲_wordcloud.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/ThreeLineChart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/DetailPage/subcomponent/ThreeLineChart.vue" afterDir="false" />
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="红色文化图片上传">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/中共中央书记处书记.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/中共中央书记处书记.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/中共中央军委委员.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/中共中央军委委员.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/中共中央政治局委员.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/中共中央政治局委员.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/国防部部长.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/国防部部长.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/抗美援朝战争.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/抗美援朝战争.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/林伯渠.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/林伯渠.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/淮海战役.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/淮海战役.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/百团大战.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/百团大战.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/西北战役.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/西北战役.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/辽沈战役.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/辽沈战役.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/Red/遵义会议.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/Red/遵义会议.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/KnowledgeGraph.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/RedCulture/KnowledgeGraph.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/locales/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/vue/src/locales/zh.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/locales/zh.json" afterDir="false" />
     </list>
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
@@ -187,15 +199,7 @@
       <workItem from="1744329271970" duration="2165000" />
       <workItem from="1744433451974" duration="3523000" />
       <workItem from="1744455711475" duration="2787000" />
-      <workItem from="1744510707135" duration="3660000" />
-    </task>
-    <task id="LOCAL-00039" summary="个性推荐前后端连接">
-      <option name="closed" value="true" />
-      <created>1741677693246</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1741677693246</updated>
+      <workItem from="1744510707135" duration="5801000" />
     </task>
     <task id="LOCAL-00040" summary="登陆注册实现">
       <option name="closed" value="true" />
@@ -581,7 +585,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744539571032</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="!!双语再启动（更饿了">
+      <option name="closed" value="true" />
+      <created>1744540588402</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1744540588402</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -605,8 +617,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="之前修改内容整合" />
-    <MESSAGE value="前面修改内容整合" />
     <MESSAGE value="情感分析页面样式调整" />
     <MESSAGE value="情感分析界面美化" />
     <MESSAGE value="情感分析界面美化完成+字体更换+用户初始头像" />
@@ -630,7 +640,9 @@
     <MESSAGE value="双语" />
     <MESSAGE value="首页微调（饿死了" />
     <MESSAGE value="!!双语启动（饿死了" />
-    <option name="LAST_COMMIT_MESSAGE" value="!!双语启动（饿死了" />
+    <MESSAGE value="!!双语再启动（更饿了" />
+    <MESSAGE value="红色文化图片上传" />
+    <option name="LAST_COMMIT_MESSAGE" value="红色文化图片上传" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
