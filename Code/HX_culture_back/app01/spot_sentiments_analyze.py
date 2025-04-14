@@ -12,7 +12,6 @@ import pymysql
 import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-from zhipuai import ZhipuAI
 
 # 配置日志
 logging.basicConfig(
@@ -380,8 +379,6 @@ def sentiments_result(request):
         if 'conn' in locals():
             conn.close()
 
-from zhipuai import ZhipuAI
-client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")  # 请替换为您的真实API密钥
 
 def generate_report(request):
     """获取景点评论的情感分析报告"""
