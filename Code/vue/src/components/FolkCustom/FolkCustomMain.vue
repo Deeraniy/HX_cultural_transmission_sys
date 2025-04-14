@@ -88,7 +88,7 @@ onMounted(() => {
   font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-right: 850px; /* 给按钮添加右边距 */
+  margin-right: 800px; /* 给按钮添加右边距 */
 }
 
 /* 英文模式下的右对齐 */
