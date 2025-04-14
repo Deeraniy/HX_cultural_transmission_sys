@@ -1,12 +1,9 @@
-from transformers import pipeline
+# from transformers import pipeline
 import pandas as pd
 import logging
 import pymysql
 import json
 from django.http import JsonResponse
-from zhipuai import ZhipuAI
-
-client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")
 
 # 配置日志
 logging.basicConfig(
@@ -17,135 +14,135 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # 初始化情感分析模型
-sentiment_classifier = pipeline(
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
-    return_all_scores=True
-)
+# sentiment_classifier = pipeline(
+#     model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
+#     return_all_scores=True
+# )
 
-def get_food_sentiment_label(text):
-    """获取食品评论的情感标签和得分"""
-    try:
-        max_length = 512
-        if len(text) > max_length:
-            text = text[:max_length]
-        results = sentiment_classifier(text)[0]
-        max_score_label = max(results, key=lambda x: x['score'])
-        return max_score_label['label'], max_score_label['score']
-    except Exception as e:
-        logger.error(f"处理食品评论文本时出错: {text}. 错误信息: {str(e)}")
-        return 'neutral', 0.0 # 或者 'error_processing', 0.0
+# def get_food_sentiment_label(text):
+#     """获取食品评论的情感标签和得分"""
+#     try:
+#         max_length = 512
+#         if len(text) > max_length:
+#             text = text[:max_length]
+#         results = sentiment_classifier(text)[0]
+#         max_score_label = max(results, key=lambda x: x['score'])
+#         return max_score_label['label'], max_score_label['score']
+#     except Exception as e:
+#         logger.error(f"处理食品评论文本时出错: {text}. 错误信息: {str(e)}")
+#         return 'neutral', 0.0 # 或者 'error_processing', 0.0
 
-def process_food_comments(comments_list):
-    """处理食品评论列表并返回带标签的字典列表"""
-    results = []
-    for comment in comments_list:
-        label, score = get_food_sentiment_label(comment)
-        results.append({
-            'comment': comment,
-            'sentiment': label,
-            'confidence': score
-        })
-    return results
+# def process_food_comments(comments_list):
+#     """处理食品评论列表并返回带标签的字典列表"""
+#     results = []
+#     for comment in comments_list:
+#         label, score = get_food_sentiment_label(comment)
+#         results.append({
+#             'comment': comment,
+#             'sentiment': label,
+#             'confidence': score
+#         })
+#     return results
 
-def sentiments_all():
-    """对所有食品评论进行情感分析并更新数据库"""
-    try:
-        conn = pymysql.connect(
-            host='8.148.26.99',
-            port=3306,
-            user='root',
-            passwd='song',
-            db='hx_cultural_transmission_sys',
-            charset='utf8',
-            connect_timeout=10,
-            read_timeout=30,
-            write_timeout=30,
-            autocommit=True
-        )
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+# def sentiments_all():
+#     """对所有食品评论进行情感分析并更新数据库"""
+#     try:
+#         conn = pymysql.connect(
+#             host='8.148.26.99',
+#             port=3306,
+#             user='root',
+#             passwd='song',
+#             db='hx_cultural_transmission_sys',
+#             charset='utf8',
+#             connect_timeout=10,
+#             read_timeout=30,
+#             write_timeout=30,
+#             autocommit=True
+#         )
+#         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        cursor.execute("SELECT comment_id, comment_text FROM user_comment_food WHERE sentiment IS NULL OR sentiment = ''")
-        comments = cursor.fetchall()
+#         cursor.execute("SELECT comment_id, comment_text FROM user_comment_food WHERE sentiment IS NULL OR sentiment = ''")
+#         comments = cursor.fetchall()
 
-        processed_count = 0
+#         processed_count = 0
 
-        for comment in comments:
-            try:
-                sentiment_label, confidence = get_food_sentiment_label(comment['comment_text'])
-                logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
+#         for comment in comments:
+#             try:
+#                 sentiment_label, confidence = get_food_sentiment_label(comment['comment_text'])
+#                 logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
 
-                update_sql = """
-                    UPDATE user_comment_food 
-                    SET sentiment = %s, sentiment_confidence = %s 
-                    WHERE comment_id = %s
-                """
-                cursor.execute(update_sql, (sentiment_label, confidence, comment['comment_id']))
-                processed_count += 1
+#                 update_sql = """
+#                     UPDATE user_comment_food 
+#                     SET sentiment = %s, sentiment_confidence = %s 
+#                     WHERE comment_id = %s
+#                 """
+#                 cursor.execute(update_sql, (sentiment_label, confidence, comment['comment_id']))
+#                 processed_count += 1
 
-                if processed_count % 10 == 0:
-                    logger.info(f"已处理 {processed_count} 条评论")
+#                 if processed_count % 10 == 0:
+#                     logger.info(f"已处理 {processed_count} 条评论")
 
-            except pymysql.Error as e:
-                logger.error(f"数据库操作出错 (评论ID: {comment['comment_id']}): {str(e)}")
-                continue
-            except Exception as e:
-                logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
-                continue
+#             except pymysql.Error as e:
+#                 logger.error(f"数据库操作出错 (评论ID: {comment['comment_id']}): {str(e)}")
+#                 continue
+#             except Exception as e:
+#                 logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
+#                 continue
 
-        logger.info(f"所有食品评论的情感分析已完成，共处理 {processed_count} 条评论")
+#         logger.info(f"所有食品评论的情感分析已完成，共处理 {processed_count} 条评论")
 
-    except Exception as e:
-        logger.error(f"情感分析过程中出错: {str(e)}")
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conn' in locals() and conn.open:
-            conn.close()
+#     except Exception as e:
+#         logger.error(f"情感分析过程中出错: {str(e)}")
+#     finally:
+#         if 'cursor' in locals():
+#             cursor.close()
+#         if 'conn' in locals() and conn.open:
+#             conn.close()
 
-def sentiments_analyze(request):
-    """获取食品评论的情感分析"""
-    name = request.GET.get('name')
-    try:
-        conn = pymysql.connect(
-            host='8.148.26.99',
-            port=3306,
-            user='root',
-            passwd='song',
-            db='hx_cultural_transmission_sys',
-            charset='utf8'
-        )
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+# def sentiments_analyze(request):
+#     """获取食品评论的情感分析"""
+#     name = request.GET.get('name')
+#     try:
+#         conn = pymysql.connect(
+#             host='8.148.26.99',
+#             port=3306,
+#             user='root',
+#             passwd='song',
+#             db='hx_cultural_transmission_sys',
+#             charset='utf8'
+#         )
+#         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        cursor.execute("SELECT food_id FROM food WHERE food_name=%s", (name,))
-        food_result = cursor.fetchone()
+#         cursor.execute("SELECT food_id FROM food WHERE food_name=%s", (name,))
+#         food_result = cursor.fetchone()
 
-        if not food_result:
-            return {
-                'status': 'error',
-                'message': f'未找到食品: {name}'
-            }
+#         if not food_result:
+#             return {
+#                 'status': 'error',
+#                 'message': f'未找到食品: {name}'
+#             }
 
-        sql_query = "SELECT comment_text FROM user_comment_food WHERE food_id=%s"
-        cursor.execute(sql_query, (food_result['food_id'],))
-        comment_list = cursor.fetchall()
+#         sql_query = "SELECT comment_text FROM user_comment_food WHERE food_id=%s"
+#         cursor.execute(sql_query, (food_result['food_id'],))
+#         comment_list = cursor.fetchall()
 
-        comment_list = [comment['comment_text'] for comment in comment_list]
+#         comment_list = [comment['comment_text'] for comment in comment_list]
 
-        results = process_food_comments(comment_list)
+#         results = process_food_comments(comment_list)
 
-        cursor.close()
-        conn.close()
+#         cursor.close()
+#         conn.close()
 
-        results_list = results
+#         results_list = results
 
-        return results_list
+#         return results_list
 
-    except Exception as e:
-        logger.error(f"处理食品评论情感分析时出错: {str(e)}")
-        return {
-            'status': 'error',
-            'message': str(e)
-        }
+#     except Exception as e:
+#         logger.error(f"处理食品评论情感分析时出错: {str(e)}")
+#         return {
+#             'status': 'error',
+#             'message': str(e)
+#         }
 
 def sentiment_month_analyze(sentiments):
     """

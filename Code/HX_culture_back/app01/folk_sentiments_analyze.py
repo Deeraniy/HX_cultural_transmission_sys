@@ -1,7 +1,7 @@
 import pymysql
 import logging
 import json
-from transformers import pipeline
+# from transformers import pipeline
 import pandas as pd
 from django.http import JsonResponse
 
@@ -14,10 +14,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # 初始化情感分析模型
-distilled_student_sentiment_classifier = pipeline(
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
-    return_all_scores=True
-)
+# sentiment_classifier = pipeline(
+#     model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
+#     return_all_scores=True
+# )
 
 def get_folk_sentiment_label(text):
     """获取民俗评论的情感标签和得分"""
@@ -25,9 +25,9 @@ def get_folk_sentiment_label(text):
         max_length = 512
         if len(text) > max_length:
             text = text[:max_length]
-        results = distilled_student_sentiment_classifier(text)[0]
-        max_score_label = max(results, key=lambda x: x['score'])
-        return max_score_label['label'], max_score_label['score']
+        # results = sentiment_classifier(text)[0]
+        # max_score_label = max(results, key=lambda x: x['score'])
+        return 'neutral', 0.0
     except Exception as e:
         logger.error(f"处理民俗评论文本时出错: {text}. 错误信息: {str(e)}")
         return 'neutral', 0.0
@@ -61,7 +61,7 @@ def sentiments_all():
         )
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        cursor.execute("SELECT comment_id, comment_text FROM user_comment_folk WHERE sentiment IS NULL")
+        cursor.execute("SELECT comment_id, comment_text FROM user_comment_folk WHERE sentiment IS NULL OR sentiment = ''")
         comments = cursor.fetchall()
 
         processed_count = 0
@@ -100,8 +100,8 @@ def sentiments_all():
             conn.close()
 
 def sentiments_analyze(request):
-    """获取民俗作品的评论情感分析"""
-    folk_name = request.GET.get('name')
+    """获取民俗评论的情感分析"""
+    name = request.GET.get('name')
     try:
         conn = pymysql.connect(
             host='8.148.26.99',
@@ -113,13 +113,13 @@ def sentiments_analyze(request):
         )
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        cursor.execute("SELECT folk_id FROM folk WHERE folk_name=%s", (folk_name,))
+        cursor.execute("SELECT folk_id FROM folk WHERE folk_name=%s", (name,))
         folk_result = cursor.fetchone()
 
         if not folk_result:
             return {
                 'status': 'error',
-                'message': f'未找到民俗: {folk_name}'
+                'message': f'未找到民俗: {name}'
             }
 
         sql_query = "SELECT comment_text FROM user_comment_folk WHERE folk_id=%s"
