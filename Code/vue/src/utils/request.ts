@@ -40,7 +40,7 @@ export  const request =(options:any)=> {
                 if(error.response.status == 403){
                     ElMessage.error('错了')
                 }else{
-                    ElMessage.error('服务器请求错误，请稍后再试')
+                    // ElMessage.error('服务器请求错误，请稍后再试')
                 }
                 return Promise.reject(error)
             }
