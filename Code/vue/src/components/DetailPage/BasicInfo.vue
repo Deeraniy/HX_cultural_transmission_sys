@@ -3,7 +3,7 @@
       <!-- 图片和弹幕区域 -->
       <div class="image-danmu-container">
         <!-- 左边图片区域 -->
-        <div 
+        <div
           class="city-image-container"
           v-loading="isImageLoading"
           :element-loading-text="t('common.loading')"
@@ -16,9 +16,9 @@
             class="city-image"
           />
         </div>
-  
+
         <!-- 词云图区域 -->
-        <div 
+        <div
           class="wordcloud-container"
           v-loading="isWordCloudLoading"
           :element-loading-text="t('common.loading')"
@@ -31,7 +31,7 @@
             class="wordcloud"
           />
         </div>
-  
+
         <!-- 弹幕区域 -->
         <div class="danmu-container">
           <el-skeleton v-if="isDanmuLoading" :rows="3" animated />
@@ -57,7 +57,7 @@
           </div>
         </div>
       </div>
-  
+
       <!-- 饼图和评论排行区域 -->
       <div class="charts-container">
         <!-- 饼图区域 -->
@@ -69,7 +69,7 @@
             style="width: 100%; height: 100%;"
           />
         </div>
-  
+
         <!-- 评论排行区域 -->
         <div class="comments-ranking">
           <h3>{{ t('detail.comments.positiveRanking') }}</h3>
@@ -89,7 +89,7 @@
       </div>
     </div>
   </template>
-  
+
 
 
 <script lang="ts" setup>
@@ -146,24 +146,24 @@
   const books = ref<any>({});
   const food = ref<any>({});
   const folk = ref<any>({});
-  
+
   const cloudUrl = ref('');
   const processedTimeData = ref<any>([]);
   const sentiment = ref<any>([]); // LDA 数据绑定到 SentimentStats
   const topic = ref<any>([]);
   const currentImageUrl = ref<string>(''); // 用于存储当前需要展示的图片 URL
-  
+
   const isImageLoading = ref(true);
   const isWordCloudLoading = ref(true);
   const isDanmuLoading = ref(true);
   const isPieChartLoading = ref(true);
-  
+
   const data1 = ref([  // 将 data1 用 ref 包装成响应式数据
     { name: '正面', value: 58.84 },
     { name: '中立', value: 7.28 },
     { name: '负面', value: 33.73 }
   ]);
-  
+
   const fetchAttractionName = () => {
     if (props.name) {
       nowName.value = props.name;
@@ -172,7 +172,7 @@
       console.warn("未收到有效的景点名称");
     }
   };
-  
+
   // 添加重试机制
   const fetchWithRetry = async (fetchFn: () => Promise<any>, retries = 3) => {
     for (let i = 0; i < retries; i++) {
@@ -184,7 +184,7 @@
       }
     }
   };
-  
+
   // 修改 isPieResponse 的类型定义和判断逻辑
   interface PieData {
     data: Array<{
@@ -203,7 +203,7 @@
            'data' in response &&
            Array.isArray((response as any).data);
   };
-  
+
   // 修改数据处理函数
   const processSpotData = (data) => {
     console.log('处理前的景点数据:', data);
@@ -212,7 +212,7 @@
         // 使用正则表达式匹配每个完整的对象
         const regex = /{[^}]+}/g;
         const matches = data.match(regex);
-        
+
         if (!matches) {
           console.error('未找到有效的对象');
           return [];
@@ -251,12 +251,12 @@
         console.log('成功解析的数据:', spots);
         return spots;
       }
-      
+
       // 如果已经是数组则直接返回
       if (Array.isArray(data)) {
         return data;
       }
-      
+
       // 如果是单个对象，转换为数组
       if (typeof data === 'object' && data !== null) {
         return [data];
@@ -273,7 +273,7 @@
   const loadAllData = async () => {
     // 先设置名称
     fetchAttractionName();
-    
+
     // 检查必要参数
     if (!nowName.value) {
       console.warn('缺少景点名称:', { name: nowName.value });
@@ -293,14 +293,14 @@
       pageType: pageTypeNum.value,
       themeType: pageTheme.value
     });
-  
+
     console.log("这里pageType", pageTypeNum.value);
-  
+
     if(pageTypeNum.value === 1){ // 景点
       try {
         const spotsResponse = await SpotsAPI.getSpotsAPI();
         console.log("获取到的原始景点数据:", spotsResponse);
-        
+
         if (typeof spotsResponse === "string") {
           const processedData = processSpotData(spotsResponse);
           if (processedData && processedData.length > 0) {
@@ -339,7 +339,7 @@
    // 调用 getBook 并传递 type_id
    const booksResponse = await FilmLiterature.getBook(type_id);
         console.log("书籍数据（未处理）:", type_id);
-  
+
         if (booksResponse && typeof booksResponse === 'object' && 'data' in booksResponse) {
           if (Array.isArray(booksResponse.data)) {
             const booksArray = booksResponse.data.map((book) => {
@@ -349,11 +349,11 @@
               }
               return book;
             });
-  
+
             bookData.value = booksArray;
-  
+
             console.log("书籍数据（处理后）:", bookData.value);
-  
+
             if (bookData.value.length > 0) {
               loadBooks(nowName);
             } else {
@@ -382,11 +382,11 @@
               }
               return food;
             });
-  
+
             foodData.value = foodArray;
-  
+
             console.log("美食数据（处理后）:", foodData.value);
-  
+
             if (foodData.value.length > 0) {
               loadFood(nowName);
             } else {
@@ -415,11 +415,11 @@
               }
               return folk;
             });
-  
+
             folkData.value = folkArray;
-  
+
             console.log("民俗数据（处理后）:", folkData.value);
-  
+
             if (folkData.value.length > 0) {
               loadFolk(nowName);
             } else {
@@ -436,13 +436,13 @@
         console.error("加载民俗数据时出错:",error);
       }
     }
-  
+
 
     // 加载词云数据
     try {
       const cloudResponse = await CloudAPI.getCloudAPI(nowName.value,pageTypeNum.value);
       console.log("词云地址:", cloudResponse);
-  
+
       if (cloudResponse && typeof cloudResponse === 'object' && 'wordcloud_url' in cloudResponse) {
         isWordCloudLoading.value=false;
         cloudUrl.value="http://127.0.0.1:8080"+cloudResponse.wordcloud_url;
@@ -454,13 +454,13 @@
       isWordCloudLoading.value = false;
       // 设置一个默认的词云图片或显示错误提示
       cloudUrl.value = ''; // 或设置为默认图片
-      ElMessage.error('词云数据加载失败，请稍后重试');
+      ElMessage.warning('暂无相关词云数据');
     }
-  
+
     // 加载饼图数据
     try {
       const pieResponse = await SentimentAPI.getSentimentPieAPI(nowName.value, pageTypeNum.value);
-  
+
       if (isPieResponse(pieResponse)) {
         // 计算各情感类别的总数量和百分比
         const sentimentTotals = {
@@ -468,7 +468,7 @@
           neutral: { count: 0, percentage: 0 },
           negative: { count: 0, percentage: 0 }
         };
-  
+
         // 累加每个情感类别的数量和百分比
         pieResponse.data.forEach(item => {
           if (item.sentiment === 'positive') {
@@ -482,21 +482,21 @@
             sentimentTotals.negative.percentage += item.percentage;
           }
         });
-  
+
         // 更新饼图数据
         data1.value = [
-          { 
-            name: '正面', 
+          {
+            name: '正面',
             value: Number(sentimentTotals.positive.percentage.toFixed(2)) || 0,
             count: Math.round(sentimentTotals.positive.count)
           },
-          { 
-            name: '中立', 
+          {
+            name: '中立',
             value: Number(sentimentTotals.neutral.percentage.toFixed(2)) || 0,
             count: Math.round(sentimentTotals.neutral.count)
           },
-          { 
-            name: '负面', 
+          {
+            name: '负面',
             value: Number(sentimentTotals.negative.percentage.toFixed(2)) || 0,
             count: Math.round(sentimentTotals.negative.count)
           }
@@ -525,16 +525,16 @@
     }
         // 使用重试机制
         try {
-      const commentResponse = await fetchWithRetry(() => 
+      const commentResponse = await fetchWithRetry(() =>
         CommentAPI.getPostiveComment(nowName.value)
       );
       // 评论改了格式，要记得修改
       console.log("原始评论数据:", commentResponse);
-  
+
       // 确保返回的数据包含 comments 数组
       if (commentResponse && typeof commentResponse === 'object' && 'comments' in commentResponse && Array.isArray(commentResponse.comments)) {
         const commentsArray = commentResponse.comments;
-  
+
         // 映射到弹幕数据
         danmus.value = commentsArray.map(comment => ({
           name: comment.user_id || '匿名用户',
@@ -556,18 +556,18 @@
       // 可以显示一个友好的错误提示
       ElMessage.error('评论数据加载失败，请稍后重试');
     }
-  
-  
-  
+
+
+
   }
-  
+
   // 加载景点数据
   const loadAttractions = async (spotName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
     if (!interestData.value || !Array.isArray(interestData.value)) {
       console.warn("景点数据未加载或格式错误");
       return;
     }
-  
+
     console.log("正在查找景点:", spotName.value);
     // 查找匹配的单个景点
     const spot = interestData.value.find((spot: any) => spot.spot_name === spotName.value);
@@ -577,7 +577,7 @@
         image: spot.image_url,
         description: spot.description,
       };
-  
+
       // 直接使用完整的图片URL
       currentImageUrl.value = spot.image_url;
       console.log("找到景点:", spot.spot_name);
@@ -589,14 +589,14 @@
       isImageLoading.value = false;
     }
   };
-  
+
   // 加载书籍数据
   const loadBooks = (bookName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
     if (!bookData.value || !Array.isArray(bookData.value)) {
       console.warn("书籍数据未加载或格式错误");
       return;
     }
-  
+
     console.log("书籍数据（未处理）1111:", bookName.value);
     // 查找匹配的单个书籍
     const book = bookData.value.find((book: any) => book.liter_name === bookName.value);
@@ -615,7 +615,7 @@
       console.warn(`未找到名称为 "${bookName.value}" 的书`);
       books.value = null;
     }
-  
+
     console.log("当前选中的书籍:", book);
   };
 
@@ -625,7 +625,7 @@
       console.warn("美食数据未加载或格式错误");
       return;
     }
-  
+
     console.log("美食数据（未处理）:", foodName.value);
     // 查找匹配的单个景点
     const foods = foodData.value.find((foods: any) => foods.food_name === foodName.value);
@@ -635,7 +635,7 @@
         image: foods.image_url,
         description: foods.description,
       };
-  
+
       // 更新图片 URL
       currentImageUrl.value = foods.image_url;
       console.log("currentImgUrl:", currentImageUrl.value)
@@ -645,17 +645,17 @@
       console.warn(`未找到名称为 "${foodName}" 的美食`);
       food.value = null;
     }
-  
+
     console.log("当前选中的美食:", food);
   };
-  
+
   // 加载民俗数据
   const loadFolk = (folkName: Ref<UnwrapRef<string>, UnwrapRef<string> | string>) => {
     if (!folkData.value || !Array.isArray(folkData.value)) {
       console.warn("民俗数据未加载或格式错误");
       return;
     }
-  
+
     console.log("民俗数据（未处理）:", folkName.value);
     // 查找匹配的单个景点
     const folks = folkData.value.find((folks: any) => folks.folk_name === folkName.value);
@@ -665,21 +665,21 @@
         image: folks.image_url,
         description: folks.description,
       };
-  
+
       // 更新图片 URL
       currentImageUrl.value = folks.image_url;
       console.log("currentImgUrl:", currentImageUrl.value)
       console.log("当前选中的民俗:", folk.value?.name);
       isImageLoading.value=false;
-  
+
     } else {
       console.warn(`未找到名称为 "${folkName}" 的民俗`);
       folk.value = null;
     }
-  
+
     console.log("当前选中的民俗:", folk);
   };
-  
+
   // 生成随机颜色的函数
   const danmus = ref([]);
   const colorList = ref(['rgb(204,255,255)', 'white', 'rgb(204,255,204)', 'white', 'rgb(0,255,255)', 'white', 'rgb(255,204,255)', 'pink']);
@@ -728,7 +728,7 @@
     const color = colorList.value[Math.floor(Math.random() * 8)];
     return color;
   }
-  
+
   // 添加正面评论计算属性
   const positiveComments = computed(() => {
     return danmus.value
@@ -736,16 +736,16 @@
       .sort((a, b) => (Number(b.sentiment_confidence) || 0) - (Number(a.sentiment_confidence) || 0))
       .slice(0, 10); // 只显示前10条
   });
-  
+
   onMounted(async () => {
-    console.log('Component mounted with props:', { 
-      name: props.name, 
-      pageType: props.pageType, 
-      themeType: props.themeType 
+    console.log('Component mounted with props:', {
+      name: props.name,
+      pageType: props.pageType,
+      themeType: props.themeType
     });
     await loadAllData();
   });
-  
+
 </script>
 
 <style scoped>
@@ -757,7 +757,7 @@
     padding: 10px;
     overflow: hidden; /* 改为 hidden，防止滚动 */
   }
-  
+
   .image-danmu-container {
     display: flex;
     justify-content: space-between;
@@ -766,7 +766,7 @@
     min-height: 280px;
     width: 97%;
   }
-  
+
   .city-image-container,
   .wordcloud-container {
     flex: 0 0 auto;
@@ -776,14 +776,14 @@
     overflow: hidden;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
   }
-  
+
   .city-image,
   .wordcloud {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  
+
   .danmu-container {
     flex: 1;
     height: 93.5%;
@@ -794,13 +794,13 @@
     overflow: hidden;
     position: relative;
   }
-  
+
   .danmu {
     width: 100%;
     height: 100%;
     position: relative;
   }
-  
+
   .charts-container {
     display: flex;
     gap: 20px;
@@ -809,7 +809,7 @@
     margin-top: 10px;
     justify-content: flex-start;
   }
-  
+
   .pie-chart-container {
     flex: 0 0 420px;
     padding: 10px;
@@ -819,7 +819,7 @@
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
     height: 100%;
   }
-  
+
   .comments-ranking {
     flex: 1;
     min-width: 0;
@@ -832,54 +832,54 @@
     flex-direction: column;
     height: 92.5%;
   }
-  
+
   .comments-ranking h3 {
     margin: 0 0 12px 0;
     font-size: 16px;
   }
-  
+
   .comments-list {
     flex: 1;
     overflow: hidden;
     position: relative;
   }
-  
+
   :deep(.el-scrollbar) {
     height: 100%;
   }
-  
+
   :deep(.el-scrollbar__wrap) {
     overflow-x: hidden;
   }
-  
+
   .comment-item {
     padding: 8px;
     font-size: 13px;
     border-bottom: 1px solid #ebeef5;
     transition: background-color 0.3s;
   }
-  
+
   .comment-item:hover {
     background-color: #f5f7fa;
   }
-  
+
   .comment-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
   }
-  
+
   .user-name {
     font-weight: 600;
     color: #b71c1c;
   }
-  
+
   .sentiment-score {
     color: #67c23a;
     font-size: 14px;
   }
-  
+
   .comment-text {
     color: #606266;
     line-height: 1.5;
@@ -887,7 +887,7 @@
     word-break: break-all;
     white-space: normal;
   }
-  
+
   .comment-platform {
     color: #909399;
     font-size: 12px;
