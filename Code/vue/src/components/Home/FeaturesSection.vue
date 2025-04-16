@@ -3,7 +3,7 @@
     <div class="features-content">
       <div class="features-left">
         <h2 class="section-title">{{ t('features.title') }}</h2>
-        
+
         <div class="features-grid">
           <!-- 湖湘文化分类查询 -->
           <div class="feature-card">
@@ -11,21 +11,21 @@
             <p>{{ t('features.cards.classification.description') }}</p>
             <a @click="showThemeSelector" class="more-link">{{ t('features.more') }}</a>
           </div>
-          
+
           <!-- 湖湘文化传播舆论情感分析 -->
           <div class="feature-card">
             <h3 @click="navigateTo('/globe')">{{ t('features.cards.sentiment.title') }}</h3>
             <p>{{ t('features.cards.sentiment.description') }}</p>
             <a @click="navigateTo('/globe')" class="more-link">{{ t('features.more') }}</a>
           </div>
-          
+
           <!-- 湖湘文化影响力分析预测 -->
           <div class="feature-card">
             <h3 @click="navigateTo('/detail')">{{ t('features.cards.influence.title') }}</h3>
             <p>{{ t('features.cards.influence.description') }}</p>
             <a @click="navigateTo('/detail')" class="more-link">{{ t('features.more') }}</a>
           </div>
-          
+
           <!-- 湖湘文化自动生成传播效果分析报告 -->
           <div class="feature-card">
             <h3 @click="navigateTo('/report')">{{ t('features.cards.report.title') }}</h3>
@@ -34,14 +34,15 @@
           </div>
         </div>
       </div>
-      
+
       <div class="features-right">
         <div class="model-container">
           <iframe src="/static/model-viewer.html" frameborder="0" width="100%" height="100%"></iframe>
+<!--          <iframe src="@/assets/model-viewer.html" frameborder="0" width="100%" height="100%"></iframe>-->
         </div>
       </div>
     </div>
-    
+
     <!-- 主题选择弹窗 -->
     <div id="themeSelector" class="theme-selector-modal" :class="{ 'active': showThemeSelectorDialog }">
       <div class="theme-modal-content">
@@ -88,20 +89,20 @@ export default {
     const router = useRouter();
     const { t } = useI18n();
     const showThemeSelectorDialog = ref(false);
-    
+
     const showThemeSelector = () => {
       showThemeSelectorDialog.value = true;
     };
-    
+
     const closeThemeSelector = () => {
       showThemeSelectorDialog.value = false;
     };
-    
+
     const navigateTo = (path) => {
       closeThemeSelector();
       router.push(path);
     };
-    
+
     // 点击弹窗外部关闭弹窗
     const handleClickOutside = (event) => {
       const modal = document.getElementById('themeSelector');
@@ -109,16 +110,16 @@ export default {
         closeThemeSelector();
       }
     };
-    
+
     // 添加和移除事件监听器
     const addEventListeners = () => {
       window.addEventListener('click', handleClickOutside);
     };
-    
+
     const removeEventListeners = () => {
       window.removeEventListener('click', handleClickOutside);
     };
-    
+
     return {
       t,
       showThemeSelectorDialog,
@@ -158,11 +159,11 @@ export default {
 
 .features-left {
   padding: 20px 40px 60px 40px;
-  background: linear-gradient(to bottom, 
-    rgba(101, 30, 20, 1) 0%, 
-    rgba(101, 30, 20, 0.9) 30%, 
-    rgba(101, 30, 20, 0.7) 60%, 
-    rgba(101, 30, 20, 0.3) 90%, 
+  background: linear-gradient(to bottom,
+    rgba(101, 30, 20, 1) 0%,
+    rgba(101, 30, 20, 0.9) 30%,
+    rgba(101, 30, 20, 0.7) 60%,
+    rgba(101, 30, 20, 0.3) 90%,
     rgba(101, 30, 20, 0.0) 100%);
   border-radius: 10px;
   flex: 1;
@@ -187,7 +188,7 @@ export default {
   background: linear-gradient(135deg, rgba(240, 234, 214, 0.5), rgba(226, 219, 196, 0.3));
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.1),
     inset 0 0 10px rgba(0, 0, 0, 0.1),
     inset 0 0 30px rgba(0, 0, 0, 0.05);
@@ -216,7 +217,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  box-shadow: 
+  box-shadow:
     inset 0 0 50px rgba(0, 0, 0, 0.15),
     inset 0 0 100px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
@@ -330,7 +331,7 @@ export default {
   border-radius: 20px;
   padding: 40px 30px;
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.15),
     inset 0 0 30px rgba(255, 255, 255, 0.4);
   transform: translateY(20px) scale(0.98);
@@ -433,7 +434,7 @@ export default {
   padding: 12px 20px;
   border-radius: 10px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
-  box-shadow: 
+  box-shadow:
     0 3px 10px rgba(0, 0, 0, 0.05),
     inset 0 0 10px rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
@@ -448,7 +449,7 @@ export default {
 .theme-option:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
   transform: translateX(8px);
-  box-shadow: 
+  box-shadow:
     0 5px 15px rgba(0, 0, 0, 0.08),
     inset 0 0 15px rgba(255, 255, 255, 0.7);
 }
@@ -491,7 +492,7 @@ export default {
   .features-content {
     flex-direction: column;
   }
-  
+
   .features-right {
     margin-top: 30px;
     width: 100%;
@@ -499,7 +500,7 @@ export default {
     max-width: 500px;
     align-self: center;
   }
-  
+
   .model-container {
     height: 380px;
     min-height: 380px;
@@ -510,50 +511,50 @@ export default {
   .features-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .section-title {
     font-size: 24px;
   }
-  
+
   .feature-card {
     padding: 10px 15px;
     height: 130px;
   }
-  
+
   .feature-card h3 {
     font-size: 18px;
   }
-  
+
   .feature-card p {
     font-size: 13px;
   }
-  
+
   .features-left {
     padding-right: 0;
   }
-  
+
   .model-container {
     height: 380px;
     min-height: 380px;
   }
-  
+
   .theme-option {
     padding: 10px 15px;
   }
-  
+
   .theme-icon {
     font-size: 26px;
     margin-right: 15px;
   }
-  
+
   .theme-name {
     font-size: 16px;
   }
-  
+
   .theme-modal-header h3 {
     font-size: 28px;
   }
-  
+
   .theme-modal-content {
     padding: 30px 20px;
   }
@@ -563,27 +564,27 @@ export default {
   .theme-option {
     padding: 8px 12px;
   }
-  
+
   .theme-icon {
     font-size: 22px;
     margin-right: 12px;
   }
-  
+
   .theme-name {
     font-size: 14px;
   }
-  
+
   .theme-modal-header h3 {
     font-size: 24px;
   }
-  
+
   .theme-modal-content {
     padding: 25px 15px;
     width: 95%;
   }
-  
+
   .theme-options {
     max-height: 300px;
   }
 }
-</style> 
+</style>
