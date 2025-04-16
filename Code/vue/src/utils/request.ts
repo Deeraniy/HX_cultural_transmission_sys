@@ -8,7 +8,7 @@ export  const request =(options:any)=> {
         // create an axios instance
         const service = axios.create({
             // baseURL: process.env.BASE_API, // api 的 base_url
-            baseURL: '/api/',//这里填写后端的ip和端口号
+            baseURL: 'http://127.0.0.1:8080/',//这里填写后端的ip和端口号
             timeout: 80000 // request timeout
         })
 
