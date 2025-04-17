@@ -134,7 +134,7 @@
           <div class="footer-section contact">
             <h3>{{ t('index.footer.contact.title') }}</h3>
             <p><i class="el-icon-location"></i> {{ t('index.footer.contact.address') }}</p>
-            <p><i class="el-icon-message"></i> {{ t('index.footer.contact.email') }}</p>
+<!--            <p><i class="el-icon-message"></i> {{ t('index.footer.contact.email') }}</p>-->
           </div>
         </div>
 

@@ -4,10 +4,6 @@ import logging
 import pymysql
 import json
 from django.http import JsonResponse
-from zhipuai import ZhipuAI
-
-# 初始化 zhipuai 客户端
-client = ZhipuAI(api_key="1af4f35363ea97ed269ee3099c04f7f3.3AGroi22UtegCtjf")
 
 # 配置日志
 logging.basicConfig(
@@ -17,170 +13,170 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# 初始化情感分析模型
-distilled_student_sentiment_classifier = pipeline(
-    model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
-    return_all_scores=True
-)
+# # 初始化情感分析模型
+# distilled_student_sentiment_classifier = pipeline(
+#     model="lxyuan/distilbert-base-multilingual-cased-sentiments-student",
+#     return_all_scores=True
+# )
 
-def get_literature_sentiment_label(text):
-    """获取文学评论的情感标签和得分"""
-    try:
-        # 如果文本过长，截取前512个字符
-        max_length = 512
-        if len(text) > max_length:
-            text = text[:max_length]
+# def get_literature_sentiment_label(text):
+#     """获取文学评论的情感标签和得分"""
+#     try:
+#         # 如果文本过长，截取前512个字符
+#         max_length = 512
+#         if len(text) > max_length:
+#             text = text[:max_length]
 
-        # 使用 zhipuai 进行情感分析
-        response = client.chat.completions.create(
-            model="glm-4",
-            messages=[
-                {"role": "system", "content": "你是一个专业的情感分析助手，请分析以下文本的情感倾向，只返回 positive、neutral 或 negative 中的一个词。"},
-                {"role": "user", "content": text}
-            ],
-            temperature=0.1
-        )
+#         # 使用 zhipuai 进行情感分析
+#         response = client.chat.completions.create(
+#             model="glm-4",
+#             messages=[
+#                 {"role": "system", "content": "你是一个专业的情感分析助手，请分析以下文本的情感倾向，只返回 positive、neutral 或 negative 中的一个词。"},
+#                 {"role": "user", "content": text}
+#             ],
+#             temperature=0.1
+#         )
         
-        sentiment = response.choices[0].message.content.strip().lower()
-        confidence = 0.9  # 由于是确定性输出，设置较高的置信度
+#         sentiment = response.choices[0].message.content.strip().lower()
+#         confidence = 0.9  # 由于是确定性输出，设置较高的置信度
         
-        return sentiment, confidence
-    except Exception as e:
-        logger.error(f"处理文学评论文本时出错: {text}. 错误信息: {str(e)}")
-        return 'neutral', 0.0
+#         return sentiment, confidence
+#     except Exception as e:
+#         logger.error(f"处理文学评论文本时出错: {text}. 错误信息: {str(e)}")
+#         return 'neutral', 0.0
 
-def process_literature_comments(comments_list):
-    """处理文学评论列表并返回带标签的字典列表"""
-    results = []
-    for comment in comments_list:
-        label, score = get_literature_sentiment_label(comment)
-        results.append({
-            'comment': comment,
-            'sentiment': label,
-            'confidence': score
-        })
-    return results
+# def process_literature_comments(comments_list):
+#     """处理文学评论列表并返回带标签的字典列表"""
+#     results = []
+#     for comment in comments_list:
+#         label, score = get_literature_sentiment_label(comment)
+#         results.append({
+#             'comment': comment,
+#             'sentiment': label,
+#             'confidence': score
+#         })
+#     return results
 
-def sentiments_all():
-    """对所有文学评论进行情感分析并更新数据库"""
-    try:
-        # 建立数据库连接，添加超时设置
-        conn = pymysql.connect(
-            host='8.148.26.99',
-            port=3306,
-            user='root',
-            passwd='song',
-            db='hx_cultural_transmission_sys',
-            charset='utf8',
-            connect_timeout=10,        # 连接超时
-            read_timeout=30,           # 读取超时
-            write_timeout=30,          # 写入超时
-            autocommit=True            # 自动提交
-        )
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+# def sentiments_all():
+#     """对所有文学评论进行情感分析并更新数据库"""
+#     try:
+#         # 建立数据库连接，添加超时设置
+#         conn = pymysql.connect(
+#             host='8.148.26.99',
+#             port=3306,
+#             user='root',
+#             passwd='song',
+#             db='hx_cultural_transmission_sys',
+#             charset='utf8',
+#             connect_timeout=10,        # 连接超时
+#             read_timeout=30,           # 读取超时
+#             write_timeout=30,          # 写入超时
+#             autocommit=True            # 自动提交
+#         )
+#         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 确保开始前没有未完成的事务
-        conn.rollback()
+#         # 确保开始前没有未完成的事务
+#         conn.rollback()
 
-        # 获取所有评论
-        cursor.execute("SELECT comment_id, comment_text FROM user_comment_literature WHERE sentiment IS NULL OR sentiment = ''")
-        comments = cursor.fetchall()
+#         # 获取所有评论
+#         cursor.execute("SELECT comment_id, comment_text FROM user_comment_literature WHERE sentiment IS NULL OR sentiment = ''")
+#         comments = cursor.fetchall()
 
-        processed_count = 0
+#         processed_count = 0
 
-        for comment in comments:
-            try:
-                sentiment_label, confidence = get_literature_sentiment_label(comment['comment_text'])
-                logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
+#         for comment in comments:
+#             try:
+#                 sentiment_label, confidence = get_literature_sentiment_label(comment['comment_text'])
+#                 logger.info(f"评论ID: {comment['comment_id']}, 情感标签: {sentiment_label}, 置信度: {confidence}")
 
-                # 更新数据库
-                update_sql = """
-                    UPDATE user_comment_literature 
-                    SET sentiment = %s, sentiment_confidence = %s 
-                    WHERE comment_id = %s
-                """
-                cursor.execute(update_sql, (sentiment_label, confidence, comment['comment_id']))
-                processed_count += 1
+#                 # 更新数据库
+#                 update_sql = """
+#                     UPDATE user_comment_literature 
+#                     SET sentiment = %s, sentiment_confidence = %s 
+#                     WHERE comment_id = %s
+#                 """
+#                 cursor.execute(update_sql, (sentiment_label, confidence, comment['comment_id']))
+#                 processed_count += 1
 
-                if processed_count % 10 == 0:  # 每10条记录输出一次进度
-                    logger.info(f"已处理 {processed_count} 条评论")
+#                 if processed_count % 10 == 0:  # 每10条记录输出一次进度
+#                     logger.info(f"已处理 {processed_count} 条评论")
 
-            except pymysql.Error as e:
-                logger.error(f"数据库操作出错 (评论ID: {comment['comment_id']}): {str(e)}")
-                # 尝试重新连接
-                if not conn.open:
-                    conn = pymysql.connect(
-                        host='8.148.26.99',
-                        port=3306,
-                        user='root',
-                        passwd='song',
-                        db='hx_cultural_transmission_sys',
-                        charset='utf8',
-                        connect_timeout=10,
-                        read_timeout=30,
-                        write_timeout=30,
-                        autocommit=True
-                    )
-                    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-            except Exception as e:
-                logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
-                continue
+#             except pymysql.Error as e:
+#                 logger.error(f"数据库操作出错 (评论ID: {comment['comment_id']}): {str(e)}")
+#                 # 尝试重新连接
+#                 if not conn.open:
+#                     conn = pymysql.connect(
+#                         host='8.148.26.99',
+#                         port=3306,
+#                         user='root',
+#                         passwd='song',
+#                         db='hx_cultural_transmission_sys',
+#                         charset='utf8',
+#                         connect_timeout=10,
+#                         read_timeout=30,
+#                         write_timeout=30,
+#                         autocommit=True
+#                     )
+#                     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+#             except Exception as e:
+#                 logger.error(f"处理评论时出错 (评论ID: {comment['comment_id']}): {str(e)}")
+#                 continue
 
-        logger.info(f"所有文学评论的情感分析已完成，共处理 {processed_count} 条评论")
+#         logger.info(f"所有文学评论的情感分析已完成，共处理 {processed_count} 条评论")
 
-    except Exception as e:
-        logger.error(f"情感分析过程中出错: {str(e)}")
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conn' in locals() and conn.open:
-            conn.close()
+#     except Exception as e:
+#         logger.error(f"情感分析过程中出错: {str(e)}")
+#     finally:
+#         if 'cursor' in locals():
+#             cursor.close()
+#         if 'conn' in locals() and conn.open:
+#             conn.close()
 
-def sentiments_analyze(request):
-    """获取文学作品的评论情感分析"""
-    name = request.GET.get('name')
-    try:
-        conn = pymysql.connect(
-            host='8.148.26.99',
-            port=3306,
-            user='root',
-            passwd='song',
-            db='hx_cultural_transmission_sys',
-            charset='utf8'
-        )
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+# def sentiments_analyze(request):
+#     """获取文学作品的评论情感分析"""
+#     name = request.GET.get('name')
+#     try:
+#         conn = pymysql.connect(
+#             host='8.148.26.99',
+#             port=3306,
+#             user='root',
+#             passwd='song',
+#             db='hx_cultural_transmission_sys',
+#             charset='utf8'
+#         )
+#         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
-        # 首先获取文学作品ID
-        literature_id = cursor.execute(
-            "SELECT liter_id FROM literature WHERE liter_name=%s",
-            (name,)
-        )
+#         # 首先获取文学作品ID
+#         literature_id = cursor.execute(
+#             "SELECT liter_id FROM literature WHERE liter_name=%s",
+#             (name,)
+#         )
 
-        # 获取该文学作品的所有评论
-        sql_query = "SELECT comment_text FROM user_comment_literature WHERE liter_id=%s"
-        effect_row = cursor.execute(sql_query, (literature_id,))
-        comment_list = cursor.fetchall()
+#         # 获取该文学作品的所有评论
+#         sql_query = "SELECT comment_text FROM user_comment_literature WHERE liter_id=%s"
+#         effect_row = cursor.execute(sql_query, (literature_id,))
+#         comment_list = cursor.fetchall()
 
-        # 提取评论文本
-        comment_list = [comment['comment_text'] for comment in comment_list]
+#         # 提取评论文本
+#         comment_list = [comment['comment_text'] for comment in comment_list]
 
-        # 处理评论
-        results = process_literature_comments(comment_list)
+#         # 处理评论
+#         results = process_literature_comments(comment_list)
 
-        cursor.close()
-        conn.close()
+#         cursor.close()
+#         conn.close()
 
-        # 将DataFrame转换为列表以便JSON序列化
-        results_list = results
+#         # 将DataFrame转换为列表以便JSON序列化
+#         results_list = results
 
-        return results_list
+#         return results_list
 
-    except Exception as e:
-        logger.error(f"处理文学评论情感分析时出错: {str(e)}")
-        return {
-            'status': 'error',
-            'message': str(e)
-        }
+#     except Exception as e:
+#         logger.error(f"处理文学评论情感分析时出错: {str(e)}")
+#         return {
+#             'status': 'error',
+#             'message': str(e)
+#         }
 
 def sentiment_month_analyze(sentiments):
     """

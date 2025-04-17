@@ -69,7 +69,8 @@
 
     <el-main>
       <!-- 根据 activeIndex 显示不同的组件 -->
-      <index v-if="activeIndex===null" />
+      <index v-if="activeIndex===null || route.path === '/index'" />
+<!--      <index/>-->
       <router-view/>
     </el-main>
   </div>
@@ -250,7 +251,7 @@ onMounted(() => {
   if (savedLanguage) {
     locale.value = savedLanguage;
   }
-  
+
   if (userStore.isLoggedIn) {
     getUserInfo();
   }

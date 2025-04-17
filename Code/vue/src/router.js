@@ -96,10 +96,6 @@ const routes = [
         component:() => import('./components/IndexHeader.vue'),
     },
     {
-        path: '/placeDetail',
-        component:() => import('./components/InterestPlace/PlaceDetail.vue'),
-    },
-    {
         path: '/detail',
         component:() => import('./components/DetailPage.vue'),
     },

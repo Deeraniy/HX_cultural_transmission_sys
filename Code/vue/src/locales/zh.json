@@ -230,7 +230,7 @@
         "title": "联系我们",
         "address": "湖南省长沙市",
         "phone": "0731-XXXXXXXX",
-        "email": "15366911568@163.com"
+        "email": "'15366911568@163.com'"
       },
       "copyright": {
         "text": "湖湘文化数智传播网",
@@ -532,12 +532,12 @@
     }
   },
   "ming-sheng-gu-ji-fen-xi-jie-mian": "名胜古迹分析界面",
-  "fan-hui": "| 返回",
+  "fan-hui": "返回",
   "sou-suo-hu": "搜索湖南名胜古迹",
   "sou-suo": "搜索",
   "gu-dai-wen-xue": "古代文学",
   "zuo-pin-zong-lan": "作品总览",
-  "fan-hui-0": "|返回",
+  "fan-hui-0": "返回",
   "ying-shi-wen-xue-fen-xi": "影视文学分析",
   "hu-xiang-biao-yan": "湖湘表演艺术是湖南省文化的重要组成部分，融合了湖南的历史、风俗、民间传统及地方特色，涵盖了多种表现形式，如戏曲、舞蹈、曲艺、民间艺术等。湖湘表演艺术不仅承载了丰富的文化内涵，还在历史的长河中形成了独特的艺术风格。",
   "kai-ben-carouseldatacurrentindexformatlocale": "开本：{0}",

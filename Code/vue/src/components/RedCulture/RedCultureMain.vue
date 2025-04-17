@@ -1,7 +1,7 @@
 <template>
   <el-main>
       <div class="iframe-container">
-    <iframe src="http://127.0.0.1:7860" class="custom-iframe"></iframe>
+    <iframe src="http://127.0.0.1:410" class="custom-iframe"></iframe>
   </div>
   </el-main>
 
