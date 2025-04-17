@@ -23,7 +23,7 @@
          <el-menu-item index="4">{{ t('menu.film') }}</el-menu-item>
          <el-menu-item index="5">{{ t('menu.food') }}</el-menu-item>
          <el-menu-item index="6">{{ t('menu.folk') }}</el-menu-item>
-         <el-menu-item index="7">{{ t('menu.red') }}</el-menu-item>
+         <el-menu-item v-if="locale === 'zh'" index="7">{{ t('menu.red') }}</el-menu-item>
        </el-sub-menu>
         <el-menu-item index="8">{{ t('menu.sentiment') }}</el-menu-item>
         <el-menu-item index="9">{{ t('menu.recommend') }}</el-menu-item>

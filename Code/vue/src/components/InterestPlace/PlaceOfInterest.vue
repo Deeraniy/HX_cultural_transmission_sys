@@ -2,9 +2,32 @@
   <el-main>
     <div class="hunan-tourist-attractions">
       <div class="map-info-container">
-        <!-- 地图区域 -->
+        <!-- 气泡动画区域 -->
         <div class="map-box">
-          <div style="width:100%;height:100%;" ref="chartsDOM"></div>
+          <div class="bubble-container"
+               :data-city-name="selectedCity ? getCityDisplayName(selectedCity) : ''"
+               @mousemove="handleMouseMove"
+               @mouseup="handleMouseUp"
+               @mouseleave="handleMouseUp">
+            <div v-for="city in cityList" 
+                 :key="city"
+                 class="city-bubble"
+                 :class="{ 
+                   'selected': selectedCity === city,
+                   'dragging': draggedBubble === city
+                 }"
+                 :style="{
+                   width: bubbleStates[city]?.size + 'px',
+                   height: bubbleStates[city]?.size + 'px',
+                   left: bubbleStates[city]?.x + 'px',
+                   top: bubbleStates[city]?.y + 'px',
+                   transform: draggedBubble === city ? 'scale(1.2)' : 'scale(1)'
+                 }"
+                 @mousedown="handleMouseDown(city, $event)"
+                 @click="onCitySelect(city)">
+              <span class="bubble-text">{{ getCityDisplayName(city) }}</span>
+            </div>
+          </div>
         </div>
 
         <!-- 地理位置名称显示框 -->
@@ -149,11 +172,8 @@
 
 <script lang="ts" setup>
 import {computed, onMounted, ref, watch} from 'vue';
-import * as echarts from 'echarts';
-import hunanMapData from '@/json/湖南省.json';
-import cityInfoDataLocal from '@/assets/cityInfo.json'; // 导入城市信息
+import cityInfoDataLocal from '@/assets/cityInfo.json';
 import cultureElements from '@/json/culture_elements_translated.json';
-//import interestDataLocal from '@/json/interests.json'; // 导入景点信息
 import SpotsAPI  from "@/api/spot";
 import CityAPI from "@/api/city";
 import CloudAPI from "@/api/cloud";
@@ -177,19 +197,17 @@ import favoriteIcon from '@/assets/setting/收藏.png';
 import favoriteActiveIcon from '@/assets/setting/收藏(1).png';
 
 const router = useRouter()
-const chartsDOM = ref<HTMLElement | null>(null);
 const searchQuery = ref<string>('');
-const selectedCity = ref<string>(''); // 保存选中的城市名称
-const selectedCityInfo = ref<any | null>(null); // 保存选中城市的详细信息
-const selectedCityInfoLocal = ref<any | null>(null);
-const selectedCityWordCloudImage = ref<string | null>(null);
-const cityList = ref<string[]>([
-  '张家界市', '常德市', '岳阳市', '益阳市', '长沙市', '湘潭市', '株洲市',
-  '衡阳市', '郴州市', '永州市', '邵阳市', '娄底市', '怀化市', '湘西土家族苗族自治州'
+const selectedCity = ref('');
+const selectedCityInfo = ref(null);
+const selectedCityInfoLocal = ref(null);
+const selectedCityWordCloudImage = ref(null);
+const cityList = ref([
+  '长沙市', '株洲市', '湘潭市', '衡阳市', '邵阳市', '岳阳市', '常德市',
+  '张家界市', '益阳市', '郴州市', '永州市', '怀化市', '娄底市', '湘西土家族苗族自治州'
 ]);
-const interestData = ref<any>(null);
-const cityInfoData = ref<any>(null);
-let myChart: any;
+const interestData = ref(null);
+const cityInfoData = ref(null);
 
 const attractions = ref([]); // 保存当前选中的城市的所有景点
 
@@ -400,18 +418,149 @@ const showPlaceDetails = async (place) => {
   await fetchTags(place.id);
 };
 
+// 添加气泡位置和速度状态
+const bubbleStates = ref({});
+const draggedBubble = ref(null);
+const isDragging = ref(false);
+
+// 初始化气泡状态
+const initBubbleStates = () => {
+  cityList.value.forEach(city => {
+    bubbleStates.value[city] = {
+      x: Math.random() * 400, // 初始x位置
+      y: Math.random() * 500, // 初始y位置
+      vx: (Math.random() - 0.5) * 2, // x方向速度
+      vy: (Math.random() - 0.5) * 2, // y方向速度
+      size: 60 + Math.random() * 40, // 随机大小
+      mass: 1 // 质量，用于碰撞计算
+    };
+  });
+};
+
+// 计算两个气泡之间的距离
+const getDistance = (bubble1, bubble2) => {
+  const dx = bubble1.x - bubble2.x;
+  const dy = bubble1.y - bubble2.y;
+  return Math.sqrt(dx * dx + dy * dy);
+};
+
+// 处理气泡碰撞
+const handleCollision = (bubble1, bubble2) => {
+  const distance = getDistance(bubble1, bubble2);
+  const minDistance = (bubble1.size + bubble2.size) / 2;
+  
+  if (distance < minDistance) {
+    // 计算碰撞后的速度
+    const dx = bubble2.x - bubble1.x;
+    const dy = bubble2.y - bubble1.y;
+    const angle = Math.atan2(dy, dx);
+    
+    // 计算碰撞后的速度
+    const speed1 = Math.sqrt(bubble1.vx * bubble1.vx + bubble1.vy * bubble1.vy);
+    const speed2 = Math.sqrt(bubble2.vx * bubble2.vx + bubble2.vy * bubble2.vy);
+    
+    // 更新速度
+    bubble1.vx = -speed1 * Math.cos(angle);
+    bubble1.vy = -speed1 * Math.sin(angle);
+    bubble2.vx = speed2 * Math.cos(angle);
+    bubble2.vy = speed2 * Math.sin(angle);
+    
+    // 防止重叠
+    const overlap = minDistance - distance;
+    const moveX = (overlap * Math.cos(angle)) / 2;
+    const moveY = (overlap * Math.sin(angle)) / 2;
+    
+    bubble1.x -= moveX;
+    bubble1.y -= moveY;
+    bubble2.x += moveX;
+    bubble2.y += moveY;
+  }
+};
+
+// 更新气泡位置
+const updateBubblePositions = () => {
+  cityList.value.forEach(city => {
+    const state = bubbleStates.value[city];
+    
+    // 如果是正在拖动的气泡，跳过位置更新
+    if (isDragging.value && city === draggedBubble.value) {
+      return;
+    }
+    
+    // 更新位置
+    state.x += state.vx;
+    state.y += state.vy;
+    
+    // 边界检测和反弹
+    if (state.x <= 0 || state.x >= 400) {
+      state.vx *= -1;
+      state.x = Math.max(0, Math.min(400, state.x));
+    }
+    if (state.y <= 0 || state.y >= 500) {
+      state.vy *= -1;
+      state.y = Math.max(0, Math.min(500, state.y));
+    }
+    
+    // 检查与其他气泡的碰撞
+    cityList.value.forEach(otherCity => {
+      if (city !== otherCity) {
+        // 如果两个气泡中有一个正在被拖动，跳过碰撞检测
+        if (isDragging.value && (city === draggedBubble.value || otherCity === draggedBubble.value)) {
+          return;
+        }
+        handleCollision(state, bubbleStates.value[otherCity]);
+      }
+    });
+  });
+};
+
+// 鼠标事件处理
+const handleMouseDown = (city, event) => {
+  isDragging.value = true;
+  draggedBubble.value = city;
+  const state = bubbleStates.value[city];
+  state.vx = 0;
+  state.vy = 0;
+};
+
+const handleMouseMove = (event) => {
+  if (!isDragging.value || !draggedBubble.value) return;
+  
+  const state = bubbleStates.value[draggedBubble.value];
+  const container = event.currentTarget;
+  const rect = container.getBoundingClientRect();
+  
+  state.x = Math.max(0, Math.min(400, event.clientX - rect.left - state.size / 2));
+  state.y = Math.max(0, Math.min(500, event.clientY - rect.top - state.size / 2));
+};
+
+const handleMouseUp = () => {
+  if (!isDragging.value || !draggedBubble.value) return;
+  
+  const state = bubbleStates.value[draggedBubble.value];
+  // 给被拖动的气泡一个初始速度
+  state.vx = (Math.random() - 0.5) * 4;
+  state.vy = (Math.random() - 0.5) * 4;
+  
+  isDragging.value = false;
+  draggedBubble.value = null;
+};
+
+// 启动动画
+onMounted(() => {
+  initBubbleStates();
+  setInterval(updateBubblePositions, 50);
+});
+
 onMounted(async () => {
   try {
     const spotsResponse = await SpotsAPI.getSpotsAPI();
 
     if (typeof spotsResponse === "string") {
-      // 将连续的JSON对象分割成数组
       const jsonObjects = spotsResponse.match(/{[^}]+}/g) || [];
       
-      // 解析每个JSON对象
       const parsedSpots = jsonObjects.map(jsonStr => {
         try {
-          // 清理JSON字符串
           const cleanJson = jsonStr
             .replace(/Decimal\('([\d.]+)'\)/g, '$1')
             .replace(/'/g, '"')
@@ -423,7 +572,7 @@ onMounted(async () => {
           console.error('错误详情:', parseError);
           return null;
         }
-      }).filter(spot => spot !== null); // 过滤掉解析失败的数据
+      }).filter(spot => spot !== null);
 
       interestData.value = parsedSpots;
       console.log("解析后的景点数据:", interestData.value);
@@ -433,20 +582,17 @@ onMounted(async () => {
   } catch (error) {
     console.error("加载景点数据时出错:", error);
   }
+
   try {
     const cityResponse = await CityAPI.getCityAPI();
 
     if (typeof cityResponse === "string") {
-      // 替换单引号为双引号
       const fixedString = cityResponse.replace(/'/g, '"');
-
-      // 添加数组括号并分割字符串
       const cityArray = fixedString
-          .match(/{[^}]+}/g) // 匹配所有 JSON 对象
-          .map((city) => JSON.parse(city)); // 解析为 JSON 对象
+          .match(/{[^}]+}/g)
+          .map((city) => JSON.parse(city));
 
       cityInfoData.value = cityArray;
-
       console.log("城市数据（处理后）:", cityInfoData.value);
     } else {
       console.error("城市数据格式错误，期望为字符串形式");
@@ -454,61 +600,13 @@ onMounted(async () => {
   } catch (error) {
     console.error("加载城市数据时出错:", error);
   }
-  // SentimentAPI.getSentimentAnalyzeAPI("橘子洲").then(data=>{
-  //   console.log("情感分析",data);
-  // })
-  // SentimentAPI.getSentimentResultAPI("橘子洲", "place").then(data=>{
-  //   console.log("情感结果",data);
-  // })
-
-  myChart = echarts.init(chartsDOM.value as HTMLElement);
-
-  myChart.showLoading();
-  echarts.registerMap('HN', hunanMapData);
-
-  const option = {
-    series: [
-      {
-        name: '湖南地图',
-        type: 'map',
-        map: 'HN',
-        label: {
-          show: true,
-        },
-        emphasis: {
-          itemStyle: {
-            areaColor: '#FFD700' // 高亮颜色
-          }
-        }
-      },
-    ],
-  };
-
-  myChart.setOption(option);
-  myChart.hideLoading();
-
-  // 添加地图点击事件监听
-  myChart.on('click', function (params) {
-    if (params.name) {
-      selectedCity.value = params.name; // 设置选中的城市名称
-      highlightCity(); // 调用高亮函数
-      updateCityInfo(); // 更新城市信息
-      loadAttractions(params.name); // 加载选中城市的景点信息
-    }
-  });
-
-  initWordCloud();
-  // 如果有初始数据，直接更新
-  if (tags.value && tags.value.length > 0) {
-    updateWordCloud(tags.value);
-  }
 });
 
 // 当从下拉框选择城市时的处理函数
-const onCitySelect = () => {
-  highlightCity(); // 高亮显示选择的城市
-  updateCityInfo(); // 更新城市信息
-  loadAttractions(selectedCity.value); // 加载选中城市的景点信息
+const onCitySelect = (city) => {
+  selectedCity.value = city;
+  updateCityInfo();
+  loadAttractions(city);
 };
 //const attractionName=ref('')//保存当前点击的景点的名字，并进行跳转，将景点名传给详情页
 const addHistory = async (attraction: Place) => {
@@ -583,54 +681,25 @@ const showDetail = async (attraction) => {
 
 // 更新城市信息
 const updateCityInfo = () => {
-  console.log('Selected City:', selectedCity.value); // 检查 selectedCity 的值
-  console.log('City Info:', cityInfoData[selectedCity.value]); // 检查加载的城市信息
-  console.log('Selected City:', selectedCity.value)
+  console.log('Selected City:', selectedCity.value);
   selectedCityInfo.value = cityInfoData[selectedCity.value] || null;
-  selectedCityInfoLocal.value=cityInfoDataLocal[selectedCity.value];
-  console.log(selectedCityInfo)
-  //console.log(selectedCityInfo.value.wordCloudImage)
+  selectedCityInfoLocal.value = cityInfoDataLocal[selectedCity.value];
+  console.log(selectedCityInfo);
 };
 
-// 清除地图上的所有高亮效果
-const clearHighlight = () => {
-  myChart.dispatchAction({
-    type: 'downplay', // 取消高亮
-    seriesIndex: 0,
-  });
-};
-
-// 高亮显示选择的城市
-const highlightCity = () => {
-  if (!selectedCity.value) return;
-
-  clearHighlight(); // 先清除所有高亮
-
-  myChart.dispatchAction({
-    type: 'highlight', // 高亮当前选中的城市
-    seriesIndex: 0,
-    name: selectedCity.value,
-  });
-
-  updateCityInfo(); // 更新右侧box中的信息
-};
 const getImageUrl = (imagePath) => {
   try {
-    // 如果是完整的 URL，直接返回
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
 
-    // 如果是点赞或收藏图标，使用相对路径
     if (imagePath.includes('setting/')) {
       return new URL(`../../assets/${imagePath}`, import.meta.url).href;
     }
 
-    // 移除路径中的 @/assets 前缀
     const cleanPath = imagePath.replace('@/assets/', '');
     console.log('清理后的路径:', cleanPath);
 
-    // 使用清理后的路径
     return new URL(`../../assets/${cleanPath}`, import.meta.url).href;
   } catch (e) {
     console.error('图片加载失败', e);
@@ -784,96 +853,30 @@ watch(tags, (newTags) => {
   }
 }, { deep: true });
 
-const initMap = () => {
-  if (!chartsDOM.value) return;
-
-  // 创建一个新的主题
-  const mapTheme = {
-    textStyle: {
-      fontFamily: 'ZhuanTi, serif',
-      fontSize: 14
-    }
-  };
-  // 注册一个专门的地图主题
-  echarts.registerTheme('mapTheme', mapTheme);
-  // 使用新主题初始化地图
-  myChart = echarts.init(chartsDOM.value, 'mapTheme');
-
-  // 注册地图数据
-  echarts.registerMap('hunan', hunanMapData);
-
-  // 地图配置项
-  const option = {
-    tooltip: {
-      trigger: 'item',
-      formatter: (params) => {
-        // 根据当前语言返回对应的城市名称
-        return locale.value === 'en' ? 
-          hunanMapData.features.find(f => f.properties.name === params.name)?.properties['en-name'] || params.name :
-          params.name;
-      },
-      textStyle: {
-        fontFamily: 'ZhuanTi, serif',
-        fontSize: 14
-      }
-    },
-    series: [{
-      name: '湖南',
-      type: 'map',
-      map: 'hunan',
-      roam: false,
-      zoom: 1.2,
-      center: [111.5, 27.3],
-      label: {
-        show: true,
-        fontFamily: 'ZhuanTi, serif',
-        fontSize: 14,
-        color: '#333',
-        formatter: (params) => {
-          // 根据当前语言返回对应的城市名称
-          return locale.value === 'en' ? 
-            hunanMapData.features.find(f => f.properties.name === params.name)?.properties['en-name'] || params.name :
-            params.name;
-        }
-      },
-      itemStyle: {
-        areaColor: '#fff8f0',
-        borderColor: '#B71C1C'
-      },
-      emphasis: {
-        label: {
-          show: true,
-          fontFamily: 'ZhuanTi, serif',
-          fontSize: 16,
-          color: '#333',
-          formatter: (params) => {
-            // 根据当前语言返回对应的城市名称
-            return locale.value === 'en' ? 
-              hunanMapData.features.find(f => f.properties.name === params.name)?.properties['en-name'] || params.name :
-              params.name;
-          }
-        },
-        itemStyle: {
-          areaColor: '#B71C1C',
-          borderColor: '#B71C1C'
-        }
-      },
-      data: []
-    }]
-  };
-
-  myChart.setOption(option);
-};
-
 const { t, locale } = useI18n();
 
 // 获取城市显示名称
 const getCityDisplayName = (city) => {
-  // 从湖南省.json中查找对应的城市
-  const cityData = hunanMapData.features.find(feature => feature.properties.name === city);
-  if (cityData && cityData.properties) {
-    // 根据当前语言返回对应的城市名称
-    return locale.value === 'en' ? cityData.properties['en-name'] : cityData.properties.name;
+  // 直接返回城市名称，如果是英文模式则返回英文名称
+  if (locale.value === 'en') {
+    // 这里可以添加城市名称的英文翻译映射
+    const cityTranslations = {
+      '长沙市': 'Changsha',
+      '株洲市': 'Zhuzhou',
+      '湘潭市': 'Xiangtan',
+      '衡阳市': 'Hengyang',
+      '邵阳市': 'Shaoyang',
+      '岳阳市': 'Yueyang',
+      '常德市': 'Changde',
+      '张家界市': 'Zhangjiajie',
+      '益阳市': 'Yiyang',
+      '郴州市': 'Chenzhou',
+      '永州市': 'Yongzhou',
+      '怀化市': 'Huaihua',
+      '娄底市': 'Loudi',
+      '湘西土家族苗族自治州': 'Xiangxi Tujia and Miao Autonomous Prefecture'
+    };
+    return cityTranslations[city] || city;
   }
   return city;
 };
@@ -936,10 +939,150 @@ const getAttractionDescription = (attractionName: string) => {
 .map-box {
   width: 500px;
   height: 600px;
+  padding: 10px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  position: relative;
+}
+
+.bubble-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  
+  // 添加城市名背景
+  &::before {
+    
+    content: attr(data-city-name);
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    font-size: 120px;
+    font-weight: bold;
+    color: rgba(183, 28, 28, 0.2);
+
+    text-orientation: upright;  // 保持每个字符正立
+    letter-spacing: 20px;
+    font-family: 'ZhuanTi', serif;
+    pointer-events: none;
+    z-index: 0;
+    line-height: 1.2;
+  }
+  
+  // 添加渐变蒙版
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0.8) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+.city-bubble {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(183, 28, 28, 0.15), inset 0 0 32px rgba(183, 28, 28, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  user-select: none;
+  touch-action: none;
+  z-index: 2;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.25), transparent 50%);
+    opacity: 0.8;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(183, 28, 28, 0.4), rgba(211, 47, 47, 0.6));
+    z-index: -1;
+  }
+
+  &.dragging {
+    cursor: grabbing;
+    z-index: 100;
+    transform: scale(1.15);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 40px rgba(183, 28, 28, 0.25), inset 0 0 40px rgba(183, 28, 28, 0.35);
+    border-color: rgba(255, 255, 255, 0.3);
+
+    &::after {
+      background: linear-gradient(135deg, rgba(183, 28, 28, 0.5), rgba(211, 47, 47, 0.7));
+    }
+
+    .bubble-text {
+      transform: scale(1.05);
+    }
+  }
+
+  &:hover:not(.dragging) {
+    transform: scale(1.1) translateY(-2px);
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 10px 36px rgba(183, 28, 28, 0.2), inset 0 0 36px rgba(183, 28, 28, 0.3);
+    border-color: rgba(255, 255, 255, 0.25);
+
+    &::after {
+      background: linear-gradient(135deg, rgba(183, 28, 28, 0.45), rgba(211, 47, 47, 0.65));
+    }
+  }
+
+  &.selected {
+    transform: scale(1.15);
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 12px 40px rgba(183, 28, 28, 0.3), inset 0 0 40px rgba(183, 28, 28, 0.4);
+    border-color: rgba(255, 255, 255, 0.35);
+    z-index: 10;
+
+    &::after {
+      background: linear-gradient(135deg, rgba(183, 28, 28, 0.6), rgba(211, 47, 47, 0.8));
+    }
+
+    .bubble-text {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.bubble-text {
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px;
+  font-family: 'ZhuanTi', serif;
+  max-width: 90%;
+  word-break: break-word;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  letter-spacing: 1px;
 }
 
 .location-box {

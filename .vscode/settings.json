@@ -5,5 +5,6 @@
         "Code/vue/src/i18n",
         "Code/vue/src/locales"
     ],
-    "i18n-ally.keystyle": "nested"
+    "i18n-ally.keystyle": "nested",
+    "vue-i18n.i18nPaths": "src\\locales,src\\i18n,Code\\vue\\src\\locales"
 }

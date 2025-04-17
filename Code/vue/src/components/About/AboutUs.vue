@@ -1,4 +1,3 @@
-
 <template>
   <div class="about-container">
     <el-carousel 
@@ -7,25 +6,7 @@
       height="700px"
       class="about-carousel"
     >
-      <!-- 第一页：关于我们 -->
-      <el-carousel-item>
-        <div class="about-card">
-          <div class="card-content">
-            <h2 class="title" :style="{ fontSize: titleFontSize }" style="margin-top:0px;">{{ $t('index.footer.about.title') }}</h2>
-            <div class="divider"></div>
-            <p class="description" :style="{ fontSize: descriptionFontSize }">
-              {{ $t('hu-xiang-wen-hua-shu-zhi-chuan-bo-wang-shi-you-hu-nan-shi-fan-da-xue-xin-xi-ke-xue-yu-gong-cheng-xue-yuan-cai-mei-ling-lao-shi-he-ma-hua-jiao-shou-zhi-dao-de-he-xin-kai-fa-tuan-dui-wan-cheng-de') }}
-              <br><br>
-              {{ $t('cai-mei-ling-lao-shi-zeng-zhu-chi-he-can-yu-guo-jia-zi-ran-ke-xue-ji-jin-xiang-mu-hu-nan-sheng-zi-ran-ke-xue-ji-jin-xiang-mu-deng-sheng-bu-ji-yi-shang-ke-yan-ke-ti-4-xiang-can-yu-le-duo-xiang-ying-yong-ruan-jian-xi-tong-de-kai-fa-ju-you-feng-fu-de-chan-pin-yan-fa-he-ying-yong-fu-wu-jing-yan') }}
-              <br><br>
-              {{ $t('ma-hua-jiao-shou-jin-wu-nian-lai-zhu-chi-guo-jia-zi-ran-ke-xue-ji-jin-mian-shang-xiang-mu-2-xiang-bing-zhu-chi-hu-nan-sheng-zhong-da-ke-ji-chuang-xin-ping-tai-zi-ke-ti-jiao-yu-bu-ren-wen-she-hui-ke-xue-yan-jiu-ji-jin-xiang-mu-jiao-cha-xue-ke-zong-he-yan-jiu-hu-nan-sheng-zi-ran-ke-xue-ji-jin-mian-shang-xiang-mu-hu-nan-sheng-jiao-yu-ting-ke-xue-yan-jiu-xiang-mu-zhong-dian-xiang-mu-deng-zong-xiang-ke-yan-ke-ti-5-xiang-jin-wu-nian-zhi-dao-xue-sheng-wan-cheng-da-xue-sheng-yan-jiu-xing-xue-xi-he-chuang-xin-xing-shi-yan-ji-hua-xiang-mu-guo-jia-ji-2-xiang-sheng-ji-2-xiang') }}
-            </p>
-          </div>
-        </div>
-      </el-carousel-item>
-
-      <!-- 第二页：团队介绍 -->
-      <el-carousel-item>
+    <el-carousel-item>
         <div class="about-card">
           <div class="card-content">
             <h2 class="title" :style="{ fontSize: titleFontSize }">{{ $t('tuan-dui-jie-shao') }}</h2>
@@ -34,15 +15,36 @@
               <img src="@/assets/img_hx/合照.jpg" alt="$t('tuan-dui-he-zhao')">
             </div>
             <p class="description" :style="{ fontSize: descriptionFontSize }">
-              {{ $t('gai-xi-tong-de-he-xin-kai-fa-tuan-dui-bao-kuo-lu-yu-xin-liu-meng-xuan-zheng-jia-jiang-yu-chen-diao-lei-wu-ren') }}
+              &nbsp;&nbsp;{{ $t('gai-xi-tong-de-he-xin-kai-fa-tuan-dui-bao-kuo-lu-yu-xin-liu-meng-xuan-zheng-jia-jiang-yu-chen-diao-lei-wu-ren') }}
               <br><br>
-              {{ $t('ben-xiang-mu-cheng-yuan-jun-wei-ruan-jian-gong-cheng-zhuan-ye-jun-zhan-xian-chu-za-shi-de-li-lun-ji-chu-min-jie-de-xue-xi-qu-xian-he-ling-ren-qi-dai-de-chuang-xin-qian-li-yi-ji-zai-jin-mi-xie-zuo-zhong-ti-xian-de-mo-qi-pei-he-wei-xiang-mu-zhu-ru-le-qiang-da-de-dong-li-he-huo-li-qie-fen-gong-jiao-wei-ming-que-tong-shi-jun-ju-bei-vuepytorch-deng-kai-fa-kuang-jia-yi-ji-zi-ran-yu-yan-chu-li-he-shen-jing-wang-luo-xiang-guan-de-zhi-shi-le-jie-jing-dian-de-shen-jing-wang-luo-mo-xing-ru-rnntransformer-deng-you-yi-ding-de-ji-shu-he-shi-jian-jing-li') }}
+              &nbsp;&nbsp;{{ $t('ben-xiang-mu-cheng-yuan-jun-wei-ruan-jian-gong-cheng-zhuan-ye-jun-zhan-xian-chu-za-shi-de-li-lun-ji-chu-min-jie-de-xue-xi-qu-xian-he-ling-ren-qi-dai-de-chuang-xin-qian-li-yi-ji-zai-jin-mi-xie-zuo-zhong-ti-xian-de-mo-qi-pei-he-wei-xiang-mu-zhu-ru-le-qiang-da-de-dong-li-he-huo-li-qie-fen-gong-jiao-wei-ming-que-tong-shi-jun-ju-bei-vuepytorch-deng-kai-fa-kuang-jia-yi-ji-zi-ran-yu-yan-chu-li-he-shen-jing-wang-luo-xiang-guan-de-zhi-shi-le-jie-jing-dian-de-shen-jing-wang-luo-mo-xing-ru-rnntransformer-deng-you-yi-ding-de-ji-shu-he-shi-jian-jing-li') }}
               <br><br>
-              {{ $t('xiao-zu-cheng-yuan-zai-hu-nan-shi-fan-da-xue-xin-xi-ke-xue-yu-gong-cheng-xue-yuan-jiao-shou-ren-gong-zhi-neng-yu-jing-zhun-guo-ji-chuan-bo-yan-jiu-yuan-yan-jiu-zhong-xin-zhu-ren-ma-hua-de-zhi-dao-xia-can-yu-le-duo-ge-jing-zhun-guo-ji-chuan-bo-xiang-guan-xiang-mu-de-yan-jiu-ke-wei-ben-xiang-mu-ti-gong-guan-jian-de-ji-shu-ji-chu-he-shi-yan-ping-tai') }}
+              &nbsp;&nbsp;{{ $t('xiao-zu-cheng-yuan-zai-hu-nan-shi-fan-da-xue-xin-xi-ke-xue-yu-gong-cheng-xue-yuan-jiao-shou-ren-gong-zhi-neng-yu-jing-zhun-guo-ji-chuan-bo-yan-jiu-yuan-yan-jiu-zhong-xin-zhu-ren-ma-hua-de-zhi-dao-xia-can-yu-le-duo-ge-jing-zhun-guo-ji-chuan-bo-xiang-guan-xiang-mu-de-yan-jiu-ke-wei-ben-xiang-mu-ti-gong-guan-jian-de-ji-shu-ji-chu-he-shi-yan-ping-tai') }}
             </p>
           </div>
         </div>
       </el-carousel-item>
+      <!-- 第一页：关于我们 -->
+      <el-carousel-item>
+        <div class="about-card">
+          <div class="card-content">
+            <h2 class="title" :style="{ fontSize: titleFontSize }" style="margin-top:0px;">{{ $t('zhi-dao-lao-shi-tuan-dui') }}</h2>
+            <div class="divider"></div>
+            <p class="description" :style="{ fontSize: descriptionFontSize }">
+              &nbsp;&nbsp;{{ $t('hu-xiang-wen-hua-shu-zhi-chuan-bo-wang-shi-you-hu-nan-shi-fan-da-xue-xin-xi-ke-xue-yu-gong-cheng-xue-yuan-ma-hua-jiao-shou-cai-mei-ling-fu-jiao-shou-he-wang-chun-lao-shi-zhi-dao-de-he-xin-kai-fa-tuan-dui-wan-cheng-de') }}
+              <br><br>
+              &nbsp;&nbsp;{{ $t('ma-hua-jiao-shou-jin-wu-nian-lai-zhu-chi-guo-jia-zi-ran-ke-xue-ji-jin-mian-shang-xiang-mu-2-xiang-bing-zhu-chi-hu-nan-sheng-zhong-da-ke-ji-chuang-xin-ping-tai-zi-ke-ti-jiao-yu-bu-ren-wen-she-hui-ke-xue-yan-jiu-ji-jin-xiang-mu-jiao-cha-xue-ke-zong-he-yan-jiu-hu-nan-sheng-zi-ran-ke-xue-ji-jin-mian-shang-xiang-mu-hu-nan-sheng-jiao-yu-ting-ke-xue-yan-jiu-xiang-mu-zhong-dian-xiang-mu-deng-zong-xiang-ke-yan-ke-ti-5-xiang-jin-wu-nian-zhi-dao-xue-sheng-wan-cheng-da-xue-sheng-yan-jiu-xing-xue-xi-he-chuang-xin-xing-shi-yan-ji-hua-xiang-mu-guo-jia-ji-2-xiang-sheng-ji-2-xiang') }}
+              <br><br>
+              &nbsp;&nbsp;{{ $t('cai-mei-ling-lao-shi-zeng-zhu-chi-he-can-yu-guo-jia-zi-ran-ke-xue-ji-jin-xiang-mu-hu-nan-sheng-zi-ran-ke-xue-ji-jin-xiang-mu-deng-sheng-bu-ji-yi-shang-ke-yan-ke-ti-4-xiang-can-yu-le-duo-xiang-ying-yong-ruan-jian-xi-tong-de-kai-fa-ju-you-feng-fu-de-chan-pin-yan-fa-he-ying-yong-fu-wu-jing-yan') }}
+              <br><br>
+              &nbsp;&nbsp;{{ $t('wang-chun-nv-bo-shi-bi-ye-yu-hu-nan-da-xue-can-yu-guo-jia-zi-ran-ke-xue-ji-jin-guo-jia-she-hui-ke-xue-ji-jin-zhong-da-xiang-mu-guo-jia-jun-gong-ji-chu-zhuan-xiang-deng-guo-jia-ji-sheng-bu-ji-ke-yan-xiang-mu-6-xiang-zhu-chi-hu-nan-sheng-jiao-yu-ting-yi-ban-xiang-mu-1-xiang-xiang-jiang-ren-gong-zhi-neng-xue-yuan-chuang-xin-xiang-mu-1-xiang-qian-tou-guo-you-qi-ye-dui-wai-xuan-chuan-guo-ji-chuan-bo-deng-xin-mei-ti-ling-yu-xiang-guan-heng-xiang-ke-ti-3-xiang') }}
+            </p>
+          </div>
+        </div>
+      </el-carousel-item>
+
+      <!-- 第二页：团队介绍 -->
+      
 
       <!-- 第三页：团队价值观 -->
       <el-carousel-item>
@@ -54,7 +56,9 @@
               {{ $t('shu-lian-wan-li-hu-xiang-zhi-hui-qian-nian-wen-mai') }}
             </p>
             <p class="description" :style="{ fontSize: descriptionFontSize }">
-              {{ $t('gai-xi-tong-cong-she-ji-dao-shi-xian-guo-cheng-zhong-de-dao-le-hu-nan-shi-fan-da-xue-de-guo-jia-shi-jie-yi-liu-jian-she-xue-ke-wai-guo-yu-yan-wen-xue-de-da-li-zhi-chi-wo-xiao-de-wai-guo-yu-yan-wen-xue-xue-ke-jian-chi-yi-wen-hua-chuan-bo-wei-zhua-shou-fu-wu-zhong-guo-wen-hua-zou-chu-qu-zhan-lve-chi-xu-tui-jin-zhong-hua-you-xiu-wen-hua-de-tui-guang-yi-cheng-wei-wo-guo-zhong-wai-wen-hua-chuan-bo-de-zhong-yao-ji-di-zhi-yi-tong-shi-zai-pei-yang-fu-he-xing-ba-jian-wai-yu-ren-cai-fu-wu-guo-jia-an-quan-wai-jiao-da-ju-yi-dai-yi-lu-jian-she-qu-yu-jing-ji-she-hui-fa-zhan-deng-fang-mian-xing-cheng-le-xian-ming-te-se-zai-ren-cai-pei-yang-mo-shi-gai-ge-gao-shui-ping-shi-zi-dui-wu-jian-she-biao-zhi-xing-ke-yan-cheng-guo-chan-chu-guo-ji-jiao-liu-he-zuo-deng-fang-mian-cheng-xiao-xian-zhu') }}
+              &nbsp;&nbsp;{{ $t('gai-xi-tong-cong-she-ji-dao-shi-xian-guo-cheng-zhong-de-dao-le-hu-nan-shi-fan-da-xue-de-guo-jia-shi-jie-yi-liu-jian-she-xue-ke-wai-guo-yu-yan-wen-xue-de-da-li-zhi-chi-wo-xiao-de-wai-guo-yu-yan-wen-xue-xue-ke-jian-chi-yi-wen-hua-chuan-bo-wei-zhua-shou-fu-wu-zhong-guo-wen-hua-zou-chu-qu-zhan-lve-chi-xu-tui-jin-zhong-hua-you-xiu-wen-hua-de-tui-guang-yi-cheng-wei-wo-guo-zhong-wai-wen-hua-chuan-bo-de-zhong-yao-ji-di-zhi-yi-tong-shi-zai-pei-yang-fu-he-xing-ba-jian-wai-yu-ren-cai-fu-wu-guo-jia-an-quan-wai-jiao-da-ju-yi-dai-yi-lu-jian-she-qu-yu-jing-ji-she-hui-fa-zhan-deng-fang-mian-xing-cheng-le-xian-ming-te-se-zai-ren-cai-pei-yang-mo-shi-gai-ge-gao-shui-ping-shi-zi-dui-wu-jian-she-biao-zhi-xing-ke-yan-cheng-guo-chan-chu-guo-ji-jiao-liu-he-zuo-deng-fang-mian-cheng-xiao-xian-zhu') }}
+              <br><br>
+              &nbsp;&nbsp;{{ $t('tong-shi-zai-pei-yang-fu-he-xing-ba-jian-wai-yu-ren-cai-fu-wu-guo-jia-an-quan-wai-jiao-da-ju-yi-dai-yi-lu-jian-she-qu-yu-jing-ji-she-hui-fa-zhan-deng-fang-mian-xing-cheng-le-xian-ming-te-se-zai-ren-cai-pei-yang-mo-shi-gai-ge-gao-shui-ping-shi-zi-dui-wu-jian-she-biao-zhi-xing-ke-yan-cheng-guo-chan-chu-guo-ji-jiao-liu-he-zuo-deng-fang-mian-cheng-xiao-xian-zhu') }}
             </p>
           </div>
         </div>
