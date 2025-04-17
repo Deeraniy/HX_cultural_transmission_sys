@@ -1,101 +1,101 @@
 [
   {
-    "title": {
-      "zh": "故宫日历·2025年·汉英对照",
-      "en": "Palace Museum Calendar 2025 (Bilingual Edition)"
-    },
-    "description": {
-      "zh": "2025年，乙巳年，生肖蛇，适逢故宫博物院建院一百周年。",
-      "en": "2025, Year of the Snake, marks the 100th anniversary of the establishment of the Palace Museum."
-    },
-    "editor": {
-      "zh": "陈丽华",
-      "en": "Chen Lihua"
-    },
-    "isbn": "978-7-5134-1668-9",
-    "publisher": {
-      "zh": "故宫出版社",
-      "en": "Palace Museum Press"
-    },
-    "price": {
-      "zh": "96元",
-      "en": "96 CNY"
-    },
-    "edition": {
-      "zh": "2024年11月第1版",
-      "en": "First edition, November 2024"
-    },
-    "prints": "16",
-    "format": {
-      "zh": "48开",
-      "en": "48K"
-    },
-    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉英日历-XHuSkowdJ260.png"
+"title": {
+    "zh": "一生的长征",
+    "en": "A Lifetime of the Long March"
+  },
+  "author": {
+    "zh": "彭东明",
+    "en": "Péng Dōngmíng"
+  },
+  "isbn": "978-7-5726-0117-0",
+  "publisher": {
+    "zh": "湖南文艺出版社",
+    "en": "Hunan Literature and Art Publishing House"
+  },
+  "price": {
+    "zh": "￥49.80",
+    "en": "¥49.80"
+  },
+  "edition": {
+    "zh": "2021年6月第1版",
+    "en": "First edition, June 2021"
+  },
+  "prints": "1",
+  "format": {
+    "zh": "16开精装",
+    "en": "16mo hardcover"
+  },
+  "description": {
+    "zh": "《一生的长征》是彭东明创作的长篇纪实文学作品，以喻杰为主人公，讲述了他从副部级官员退下来后，主动回到家乡平江山区，投身扶贫济困、为民造福的感人故事。",
+    "en": "A long-form documentary novel by Peng Dongming, 'A Lifetime of the Long March' tells the touching story of Yu Jie, who, after retiring from a vice-ministerial position, voluntarily returned to his hometown in Pingjiang to engage in poverty alleviation and serve the people."
+  },
+    "image": "https://hx-cultural-images.oss-cn-wuhan-lr.aliyuncs.com/movie_liturature/book1.png"
   },
   {
     "title": {
-      "zh": "汉代玉器研究",
-      "en": "Studies on Han Dynasty Jade"
+      "zh": "芙蓉镇",
+      "en": "Furong Town"
     },
-    "description": {
-      "zh": "汉代是玉器发展史中的繁荣时代，玉器艺术进入高峰。",
-      "en": "The Han Dynasty was a prosperous period in the history of jade craftsmanship, marking the peak of jade artistry."
+    "author": {
+      "zh": "沈从文",
+      "en": "Shěn Cóngwén"
     },
-    "editor": {
-      "zh": "徐琳",
-      "en": "Xu Lin"
+    "isbn": "978-7-02-000000-0",
+    "publisher": {
+      "zh": "人民文学出版社",
+      "en": "People's Literature Publishing House"
     },
-    "isbn": "978-7-5134-1614-6",
-      "publisher": {
-        "zh": "故宫出版社",
-        "en": "Palace Museum Press"
-      },
     "price": {
-      "zh": "236元",
-      "en": "236 CNY"
+      "zh": "￥12.80",
+      "en": "¥12.80"
     },
     "edition": {
-      "zh": "2024年9月第1版",
-      "en": "First edition, September 2024"
+      "zh": "1986年版",
+      "en": "1986 edition"
     },
-    "prints": "34",
+    "prints": "1",
     "format": {
       "zh": "16开",
-      "en": "16K"
+      "en": "16mo"
     },
-    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546汉代玉器研究-FXpuCWAOK260.png"
+    "description": {
+      "zh": "《芙蓉镇》是沈从文创作的长篇小说，以20世纪30年代的湘西小镇芙蓉镇为背景，讲述了主人公“我”与镇上居民之间的故事。小说通过细腻的笔触，展现了湘西人民的生活风貌和人情世故，同时也反映了社会变革对个体命运的影响。",
+      "en": "Furong Town is a long novel by Shen Congwen, set in the 1930s in the small town of Furong in western Hunan. It tells the story of the protagonist 'I' and the residents of the town. Through delicate writing, the novel showcases the lifestyle and human affairs of the people in western Hunan, while also reflecting the impact of social changes on individual destinies."
+    },
+    "image": "https://hx-cultural-images.oss-cn-wuhan-lr.aliyuncs.com/movie_liturature/book2.png"
   },
   {
     "title": {
-      "zh": "清代大运彩瓷（全二册）",
-      "en": "Qing Dynasty Imperial Porcelain (Two Volumes)"
+      "zh": "边城",
+      "en": "Border Town"
     },
-    "description": {
-      "zh": "清代大运瓷器是御窑厂每年烧制并送往清宫的基本任务。",
-      "en": "Qing Dynasty Imperial porcelain was a key task for the Imperial Kiln Factory each year, creating porcelain for the Qing court."
+    "author": {
+      "zh": "沈从文",
+      "en": "Shen Congwen"
     },
-    "editor": {
-      "zh": "故宫博物院",
-      "en": "Palace Museum"
-    },
-    "isbn": "978-7-5134-1653-5",
+    "isbn": "978-7-5408-7911-2",
     "publisher": {
-      "zh": "故宫出版社",
-      "en": "Palace Museum Press"
+      "zh": "四川教育出版社",
+      "en": "Sichuan Education Press"
     },
     "price": {
-      "zh": "880元",
-      "en": "880 CNY"
+      "zh": "¥23.80",
+      "en": "¥23.80"
     },
     "edition": {
-      "zh": "2024年8月第1版",
-      "en": "First edition, August 2024"
+      "zh": "2022年版",
+      "en": "2022 edition"
     },
-    "prints": "66.5",
+    "prints": "1",
     "format": {
-      "zh": "12开",
-      "en": "12K"
+      "zh": "32开平装",
+      "en": "32mo paperback"
     },
-    "image": "https://img.dpm.org.cn/Uploads/image/2024/12/18/出版推荐448-546清代大运彩瓷-QWGTJeobg260.png"
+    "description": {
+      "zh": "《边城》以20世纪30年代川湘交界的边城小镇茶峒为背景，讲述了船家少女翠翠与船总的两位儿子天保和傩送之间的爱情故事。小说通过细腻的笔触，展现了湘西人民的生活风貌和人情世故，同时也反映了社会变革对个体命运的影响。",
+      "en": "Set in the 1930s at the border town of Chazhong in western Hunan, 'Border Town' tells the love story between the ferryman's granddaughter Cui Cui and the two sons of the boat captain, Tianbao and Nuo Song. The novel delicately portrays the life and customs of the local people and reflects the impact of social changes on individual destinies."
+    },
+    "image": "https://hx-cultural-images.oss-cn-wuhan-lr.aliyuncs.com/movie_liturature/book3.png"
   }
 ]

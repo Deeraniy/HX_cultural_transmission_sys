@@ -6,7 +6,7 @@ import os
 def translate_data_and_links():
     # 初始化翻译器
     translator = Translator()
-    
+    #D:\spring_boot_content\HX_cultural_sys\Code\vue\static\data.json
     # 读取原始JSON文件
     data_file_path = r'D:\spring_boot_content\HX_cultural_sys\Code\vue\static\data.json'  # 修改文件路径
     with open(data_file_path, 'r', encoding='utf-8') as f:

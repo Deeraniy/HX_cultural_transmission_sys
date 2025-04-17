@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="红色文化图片上传">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/assets/cityInfo.json" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/assets/cityInfo.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/FilmLiteratureMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FilmLiterature/FilmLiteratureMain.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustomMain.vue" beforeDir="false" afterPath="$PROJECT_DIR$/Code/vue/src/components/FolkCustom/FolkCustomMain.vue" afterDir="false" />
-    </list>
+    <list default="true" id="557df84b-d7e5-4d19-bbcc-27387cf58ce6" name="Changes" comment="去地图" />
     <list id="403c99ed-9698-4d5d-8b85-b34b96edd3f6" name="更改" comment="影视文学文字" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,27 +55,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/spring_boot_content/HX_cultural_sys/Code/vue/src/assets/setting",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev.executor": "Run",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "ts.external.directory.path": "D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/spring_boot_content/HX_cultural_sys/Code/vue/src/assets/setting&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\software_installation\\IntelliJ IDEA 2023.2.3\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\spring_boot_content\HX_cultural_sys\Code\vue\src\assets\setting" />
@@ -190,23 +185,10 @@
       <workItem from="1744433451974" duration="3523000" />
       <workItem from="1744455711475" duration="2787000" />
       <workItem from="1744510707135" duration="5941000" />
-      <workItem from="1744618982940" duration="1156000" />
-    </task>
-    <task id="LOCAL-00041" summary="logo置换">
-      <option name="closed" value="true" />
-      <created>1742027916899</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1742027916899</updated>
-    </task>
-    <task id="LOCAL-00042" summary="用户界面+点赞收藏（未完成">
-      <option name="closed" value="true" />
-      <created>1742284646585</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1742284646585</updated>
+      <workItem from="1744618982940" duration="4845000" />
+      <workItem from="1744678636419" duration="2257000" />
+      <workItem from="1744770087358" duration="1357000" />
+      <workItem from="1744862049291" duration="2372000" />
     </task>
     <task id="LOCAL-00043" summary="图片">
       <option name="closed" value="true" />
@@ -584,7 +566,23 @@
       <option name="project" value="LOCAL" />
       <updated>1744548593130</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="城市json文件">
+      <option name="closed" value="true" />
+      <created>1744623126392</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1744623126393</updated>
+    </task>
+    <task id="LOCAL-00091" summary="去地图">
+      <option name="closed" value="true" />
+      <created>1744874092004</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1744874092004</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -608,8 +606,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="情感分析页面样式调整" />
-    <MESSAGE value="情感分析界面美化" />
     <MESSAGE value="情感分析界面美化完成+字体更换+用户初始头像" />
     <MESSAGE value="情感分析界面跳转（返回按键有问题" />
     <MESSAGE value="小优化" />
@@ -633,7 +629,9 @@
     <MESSAGE value="!!双语启动（饿死了" />
     <MESSAGE value="!!双语再启动（更饿了" />
     <MESSAGE value="红色文化图片上传" />
-    <option name="LAST_COMMIT_MESSAGE" value="红色文化图片上传" />
+    <MESSAGE value="城市json文件" />
+    <MESSAGE value="去地图" />
+    <option name="LAST_COMMIT_MESSAGE" value="去地图" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
