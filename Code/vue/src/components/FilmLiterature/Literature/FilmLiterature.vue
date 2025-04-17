@@ -35,7 +35,7 @@
           </div>
           <div class="p">{{ carouselData[currentIndex]?.description[locale] }}</div>
           <div class="ts nl2p">
-            <p>{{ $t('zhu-bian-carouseldatacurrentindexeditorlocale', [carouselData[currentIndex]?.editor[locale]]) }}</p>
+            <p>{{ $t('zhu-bian-carouseldatacurrentindexeditorlocale', [carouselData[currentIndex]?.edition[locale]]) }}</p>
             <p>{{ $t('shu-hao-carouseldatacurrentindexisbn', [carouselData[currentIndex]?.isbn]) }}</p>
             <p>{{ $t('chu-ban-carouseldatacurrentindexpublisherlocale', [carouselData[currentIndex]?.publisher[locale]]) }}</p>
             <p>{{ $t('ding-jia-carouseldatacurrentindexpricelocale', [carouselData[currentIndex]?.price[locale]]) }}</p>
