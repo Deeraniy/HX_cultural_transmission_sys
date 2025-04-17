@@ -257,7 +257,7 @@ const getPropertyValue = (value, key) => {
 
 // 根据语言环境返回不同的字体大小
 const titleFontSize = computed(() => {
-  return locale.value === 'en' ? '8rem' : '14rem';
+  return locale.value === 'en' ? '8rem' : '10rem';
 });
 
 const filterMap = {
