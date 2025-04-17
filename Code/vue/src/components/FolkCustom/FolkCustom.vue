@@ -348,16 +348,16 @@ const showDetails = async (folk) => {
 // 获取民俗名称的翻译
 const getFolkName = (name) => {
   const element = cultureElements.find(item => item.title === name);
-  return locale.value === 'en' && element?.['title-en'] ? 
-    element['title-en'] : 
+  return locale.value === 'en' && element?.['title-en'] ?
+    element['title-en'] :
     name;
 };
 
 // 获取民俗描述的翻译
 const getFolkDescription = (folk) => {
   const element = cultureElements.find(item => item.title === folk.name);
-  return locale.value === 'en' && element?.['description-en'] ? 
-    element['description-en'] : 
+  return locale.value === 'en' && element?.['description-en'] ?
+    element['description-en'] :
     folk.description;
 };
 </script>

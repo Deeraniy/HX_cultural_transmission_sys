@@ -31,11 +31,11 @@
         <!-- 右侧详情区域 -->
         <div class="location-box">
           <div class="s-title w">
-            <span>{{ carouselData[currentIndex]?.title[locale] }}</span>
+            <span>{{ carouselData[currentIndex]?.title?.[locale] }}</span>
           </div>
           <div class="p">{{ carouselData[currentIndex]?.description[locale] }}</div>
           <div class="ts nl2p">
-            <p>{{ $t('zhu-bian-carouseldatacurrentindexeditorlocale', [carouselData[currentIndex]?.editor[locale]]) }}</p>
+            <p>{{ $t('zhu-bian-carouseldatacurrentindexeditorlocale', [carouselData[currentIndex]?.editor?.[locale]]) }}</p>
             <p>{{ $t('shu-hao-carouseldatacurrentindexisbn', [carouselData[currentIndex]?.isbn]) }}</p>
             <p>{{ $t('chu-ban-carouseldatacurrentindexpublisherlocale', [carouselData[currentIndex]?.publisher[locale]]) }}</p>
             <p>{{ $t('ding-jia-carouseldatacurrentindexpricelocale', [carouselData[currentIndex]?.price[locale]]) }}</p>
