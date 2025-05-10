@@ -1,5 +1,10 @@
-# 湖湘文化数智传播网
 
+<div align="center">
+  <img src="Code/vue/src/assets/222.png" width="200" alt="Logo">
+  <br>
+
+</div>
+<h1 align="center">湖湘文化数智传播网</h1>
 <div align="center">
   <img src="https://img.shields.io/badge/Version-1.0.0-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/Python-3.12-green.svg" alt="Python">
@@ -10,7 +15,7 @@
 </div>
 
 <div align="center">
-  <img src="Code/vue/src/assets/222.png" width="200" alt="Logo">
+
   <br>
   <em>数联万里湖湘 · 智汇千年文脉</em>
 </div>
