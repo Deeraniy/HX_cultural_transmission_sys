@@ -1,4 +1,44 @@
-# 湘韵传承——湖湘文化国际传播效果分析系统
+# 湖湘文化数智传播网
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Version-1.0.0-blue.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Python-3.12-green.svg" alt="Python">
+  <img src="https://img.shields.io/badge/Vue-5.0.8-brightgreen.svg" alt="Vue">
+  <img src="https://img.shields.io/badge/Django-5.1.3-darkgreen.svg" alt="Django">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+  <img src="https://img.shields.io/badge/Status-Active-success.svg" alt="Status">
+</div>
+
+<div align="center">
+  <img src="Code/vue/src/assets/222.png" width="200" alt="Logo">
+  <br>
+  <em>数联万里湖湘 · 智汇千年文脉</em>
+</div>
+
+---
+
+## 📚 目录
+- [项目简介](#项目简介)
+- [产品设计](#1产品设计)
+- [产品实现](#3产品实现)
+- [技术栈](#技术栈)
+- [数据库设计](#数据库设计)
+- [AI模型应用](#ai模型应用)
+- [性能指标](#性能指标)
+
+## 📖 项目简介
+
+> 该系统专注于分析湖湘文化在全球范围内的传播效果，以增强其国际影响力。产品定位为一款面向文化研究者，文化爱好者，文化传播者的专业分析工具。系统通过大数据和人工智能技术，帮助用户全面评估湖湘文化在国际传播中的表现，同时制定有效的传播策略以及宣传作品。
+
+### 🌟 核心特性
+
+- 🔍 多维度数据分析
+- 🌍 全球传播效果追踪
+- 🤖 AI 驱动的智能推荐
+- 📊 实时情感分析
+- 🎯 精准用户画像
+- 🌐 多语言支持
+
 该系统专注于分析湖湘文化在全球范围内的传播效果，以增强其国际影响力。产品定位为一款面向文化研究者，文化爱好者，文化传播者的专业分析工具。系统通过大数据和人工智能技术，帮助用户全面评估湖湘文化在国际传播中的表现，同时制定有效的传播策略以及宣传作品。
 
 数据库设计：
@@ -9,9 +49,15 @@
 ### 1.产品设计
 #### 1.1 产品使命、口号和策略
 ##### 1.1.1 使命
-加强湖湘文化的国际传播能力建设，让世界走进湖湘。
+<div align="center">
+  <strong>加强湖湘文化的国际传播能力建设，让世界走进湖湘。</strong>
+</div>
+
 ##### 1.1.2 使命口号
-“湘韵传承，触手可及”。
+<div align="center">
+  <strong>"数联万里湖湘 · 智汇千年文脉"</strong>
+</div>
+
 ##### 1.1.3 目标用户
 * 文化研究者：关注文化传播的效果，帮助其在文化传播领域的研究提供数据支撑。
 * 文化爱好者：关注文化本身，帮助其领略湖湘文化的魅力。
@@ -43,9 +89,9 @@
 * 国际用户对湖湘文化缺乏认识
 * 文化遗产和非遗技艺传承困难
 ##### 1.2.2 对客户的价值
-作为一名“文化研究者”，我想要“获取湖湘文化传播相关数据，直观了解湖湘文化传播现状”，以便于我“根据所得数据，完成我的进一步研究，为湖湘文化的传播提出更精准的分析”。
-作为一名“文化爱好者”，我想要“了解湖湘各种文化”，以便于我“满足自身兴趣，制定我的旅行、学习计划”。
-作为一名“文化传播者”，我想要“了解湖湘文化传播现状，获取湖湘文化的传播策略推荐”，以便于我“精准传播湖湘文化，为湖湘文化传播事业添砖加瓦”。
+作为一名"文化研究者"，我想要"获取湖湘文化传播相关数据，直观了解湖湘文化传播现状"，以便于我"根据所得数据，完成我的进一步研究，为湖湘文化的传播提出更精准的分析"。
+作为一名"文化爱好者"，我想要"了解湖湘各种文化"，以便于我"满足自身兴趣，制定我的旅行、学习计划"。
+作为一名"文化传播者"，我想要"了解湖湘文化传播现状，获取湖湘文化的传播策略推荐"，以便于我"精准传播湖湘文化，为湖湘文化传播事业添砖加瓦"。
 
 ##### 1.2.3 解决方案
 Web网页应用
@@ -83,45 +129,26 @@ Web网页应用
 
 ### 3.产品实现
 #### 3.1 用户体验设计考虑的因素
-#### 3.2 产品所用编程语言及IDE、平台、框架等，写明版本号，可用表格表示，并写在项目的readme.md中
-|条目名称|条目内容|版本号|备注|
-|:--|--|---|--:|
-|程序设计语言|Python|3.12||
-|开发框架|Vue|5.0.8||
-|IDE|Visual Studio Code|1.95.1||
-|框架|Django|5.1.3||
-|原型设计工具|Axure RP|11||
-#### 3.3 代码仓库链接及代码提交历史截图 
-包括每个人提交的次数截图
-注意：理解git和github代码仓库原理
-#### 3.4 安装、设计、开发中遇到的主要问题及解决方法汇总，可用表格表示，并用md或者wiki存储在项目仓库中
-以下是针对 **Vue 前端** 和 **Django 后端** 开发过程中常见的主要问题及解决办法的汇总表格：
+#### 3.2 产品所用编程语言及IDE、平台、框架等
+<div align="center">
 
-| **问题类别**        | **问题名称**                      | **发生原因**                                                              | **解决办法**                                                             |
-|------------------|---------------------------------|------------------------------------------------------------------------|--------------------------------------------------------------------|
-| **前端(Vue)**       | 跨域问题 (CORS)                   | 前端与后端在不同域名或端口时，浏览器会阻止跨域请求。                               | 1. 在 Django 后端配置 CORS，使用 `django-cors-headers` 包。 <br> 2. 配置前端发送请求时的 headers，确保带上正确的凭证。 |
-| **前端(Vue)**       | 路由跳转不生效                     | Vue 路由配置错误，或前端在 SPA 模式下没有正确处理浏览器的历史记录。                     | 1. 检查 Vue Router 配置是否正确，确保 `history` 模式开启。 <br> 2. 配置 `base` 路径，确保后端服务器能正确渲染页面。|
-| **前端(Vue)**       | 数据绑定与后端数据不一致              | 后端接口返回的数据结构与前端预期不同，导致绑定数据时出错。                          | 1. 确保前后端约定统一的数据格式。 <br> 2. 使用接口调试工具，如 Postman，确保 API 返回数据结构符合前端需求。|
-| **前端(Vue)**       | 页面渲染性能问题                    | Vue 渲染时数据量过大或组件树复杂，导致页面卡顿或渲染缓慢。                             | 1. 使用虚拟滚动（例如：`vue-virtual-scroller`）。 <br> 2. 采用懒加载技术加载组件。 <br> 3. 优化组件结构，避免不必要的 re-render。|
-| **后端(Django)**    | 数据库连接池问题                    | 数据库连接数量限制或长时间未关闭的连接，导致性能瓶颈。                                | 1. 配置数据库连接池，优化数据库连接数。 <br> 2. 使用 Django 的 ORM 对象进行连接管理，避免泄漏。|
-| **后端(Django)**    | 后端接口返回错误/异常                | 后端业务逻辑出错，或输入参数未做充分验证，导致接口出错。                              | 1. 添加请求数据验证逻辑。 <br> 2. 使用 Django 的 `try-except` 语句捕获异常并返回友好的错误信息。|
-| **后端(Django)**    | API 性能问题                         | API 请求响应时间过长，影响前端体验。                                               | 1. 使用数据库索引优化查询性能。 <br> 2. 考虑使用缓存机制（如 Redis）。 <br> 3. 优化后端逻辑，减少不必要的计算。|
-| **前后端共同问题**   | 接口文档不一致                      | 前后端接口文档未及时更新，导致前端和后端之间对接口理解不一致。                          | 1. 使用工具生成 API 文档（如 Swagger）。 <br> 2. 确保前后端接口文档保持同步，定期检查和更新文档。|
-| **前后端共同问题**   | 数据格式不匹配                      | 前端与后端数据格式约定不清晰，或者数据库有改动，导致前后端数据传递错误。                                | 1. 前后端提前明确 API 返回格式和请求参数格式。 <br> 2. 使用 JSON Schema 或 TypeScript 对接口数据结构进行类型检查。|
-| **前后端共同问题**   | 接口调试困难                        | 后端接口尚未开发完毕，前端就开始开发，导致调试困难。                                  | 1. 后端开发提前提供 mock 数据接口供前端调试。 <br> 2. 使用工具（如 Postman 或 Swagger）进行接口模拟调试。|
+| 层级 | 技术选型 | 版本 | 说明 |
+|:--|--|--|--:|
+| 前端 | Vue.js | 5.0.8 | 渐进式 JavaScript 框架 |
+| 后端 | Django | 5.1.3 | Python Web 框架 |
+| 数据库 | MySQL | 8.0 | 关系型数据库 |
+| AI模型 | DistilBERT | - | 情感分析模型 |
+| 开发工具 | VS Code | 1.95.1 | 集成开发环境 |
 
-### 说明：
-- **前端(Vue)**：主要是指与 Vue 框架相关的问题，涵盖了页面渲染、路由、组件管理、与后端数据交互等方面的问题。
-- **后端(Django)**：涉及 Django 框架的问题，涵盖了数据库、接口开发、权限管理、性能等方面的问题。
-- **前后端共同问题**：是指前后端协作过程中常见的、需要双方配合解决的问题，通常涉及接口文档、数据格式、版本管理等方面。
+</div>
 
-#### 3.5 软件概要设计
-#####  3.5.1 系统架构图，如Web应用的三层架构
+#### 3.3 软件概要设计
+#####  3.3.1 系统架构图，如Web应用的三层架构
 ![618346427ec52c2be03e5c19b23bbc1](https://github.com/user-attachments/assets/8f53a030-2119-45ee-b3d8-bfd5b3f4f276)
 
 注意：通常架构图从底向上绘制较普遍，从左到右较少，可根据实际情况选择
-#####  3.5.2 基础设施图，如只有一台服务器，可不画。
-#####  3.5.3 如果使用数据分析或者大数据/人工智能算法模型设计方法/区块链技术/数字孪生（虚拟现实XR）应用，请说明。
+#####  3.3.2 基础设施图，如只有一台服务器，可不画。
+#####  3.3.3 如果使用数据分析或者大数据/人工智能算法模型设计方法/区块链技术/数字孪生（虚拟现实XR）应用，请说明。
 
 机器学习算法：
 ##### Distilbert-base-multilingual-cased-sentiments-student（基于 DistilBERT 的多语言情感分析学生模型）
@@ -145,10 +172,10 @@ Web网页应用
 2.在生成文档时，首先为每个文档随机选择主题分布，然后根据主题分布为每个词选择主题，并根据主题的词分布生成具体单词。
 3.使用吉布斯采样等贝叶斯推断方法来估计模型参数，寻找每个主题的词分布及每个文档的主题分布。
 4.通过设置α（主题平滑）和β（词平滑）超参数，可以控制每个文档中主题的数目和主题中单词的多样性，进而影响模型的表现。
-#####  3.5.4 数据库设计：包括E-R图即可，可使用数据库工具基于已有的数据库表逆向生成
+#####  3.3.4 数据库设计：包括E-R图即可，可使用数据库工具基于已有的数据库表逆向生成
 <img width="658" alt="ER-diagram" src="https://github.com/user-attachments/assets/c133a424-d442-4f84-91c8-0c86e52aa763">
 
-#####  3.5.5 接口设计：重要的业务功能（可与用户故事对应）和工具类设计
+#####  3.3.5 接口设计：重要的业务功能（可与用户故事对应）和工具类设计
 |接口名称|接口功能|输入变量或对象|输出对象|备注|
 |:--|--|---|---|--:|
 |ZhipuAI|调用智谱AI接口|prompt|response|需向智谱AI购买API Key|
@@ -163,12 +190,12 @@ Web网页应用
 微信支付API统一下单 https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_1
 * 工具 Swagger https://swagger.io/
 * Java服务器端设计，例如Spring MVC，可使用JavaDoc自动生成，也可使用[APIFox](https://apifox.com/)自动生成
-#####  3.5.6 前端设计，例如 使用[jQuery](https://jquery.com/)、[BootStrap](https://getbootstrap.com/)或者[React](https://react.dev/)、Vue.js框架等  
-#### 3.6 软件质量
-##### 3.6.1 质量控制和保证方法
+#####  3.3.6 前端设计，例如 使用[jQuery](https://jquery.com/)、[BootStrap](https://getbootstrap.com/)或者[React](https://react.dev/)、Vue.js框架等  
+#### 3.4 软件质量
+##### 3.4.1 质量控制和保证方法
 * 代码需要增加必要的日志
 * 代码需要增加异常和错误处理
-##### 3.6.2 质量工具使用
+##### 3.4.2 质量工具使用
 * 展示遵循Java代码规范的p3c扫描记录。 https://github.com/alibaba/p3c 在IDE中可安装插件Alibaba Java Coding Guidelines，扫描记录中不能有blocker。
 * 展示遵循Python 代码规范PEP8的结果。 对代码 Pycharm IDE，参考https://www.jetbrains.com/help/pycharm/tutorial-code-quality-assistance-tips-and-tricks.html 。对VSCode IDE，使用[autopep8](https://marketplace.visualstudio.com/items?itemName=ms-python.autopep8)  automatically formats Python code to conform to the PEP8 style guide. autopep8插件可自动格式化 Python 代码，使其符合 PEP8 风格. 
 参考
@@ -176,10 +203,14 @@ Web网页应用
 > * Python Code Quality: Tools & Best Practices https://realpython.com/python-code-quality/
 * 展示Pylint的Python代码语义分析结果。 参考https://code.visualstudio.com/docs/python/linting, [Pylint For VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.pylint), [Pylint Plugin for IntelliJ IDEA & PyCharm](https://plugins.jetbrains.com/plugin/11084-pylint), 注意：语义分析能突出显示Python 源代码中的语义和风格问题，通常能帮助识别并纠正可能导致错误的细微编程错误或编码实践。例如，语义检查可以检测到未定义变量的使用、未定义函数的调用、缺失的括号，甚至更细微的问题，如试图重新定义内置类型或函数。语法检查有别于格式化，因为语法检查分析的是代码的运行方式并检测错误，而格式化只是重构代码的外观。
 * Java代码复杂度，展示插件metricsreloaded的运行结果，也可安装插件CodeMetrics查看复杂度
-#### 3.7 代码统计
-* Jetbrain系列IDE可以使用Statistic插件
-* VS Code可用VS Code Counter插件
-##### 模块数
-例如代码的文件目录、包等。
-##### 行数
-可以分不同程序语言说明。通常插件会完成此功能。
+
+
+---
+
+<div align="center">
+  <img src="https://img.shields.io/badge/贡献-欢迎-blue.svg" alt="Contributions Welcome">
+  <img src="https://img.shields.io/badge/开源-MIT-green.svg" alt="License">
+  <img src="https://img.shields.io/badge/版本-1.0.0-orange.svg" alt="Version">
+  <br>
+  <sub>Built with ❤️ by 湘韵传承团队</sub>
+</div>
