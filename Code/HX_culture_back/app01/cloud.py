@@ -37,7 +37,7 @@ def get_cloud(request):
 
         # 生成词云图
 
-    wordcloud = WordCloud(collocations=False,width=800,height=800,font_path='C:\\Windows\\Fonts\\simhei.ttf', max_words=200, max_font_size=200, background_color=None, mode='RGBA',stopwords=stopwords).generate(text)
+    wordcloud = WordCloud(collocations=False,width=800,height=800, max_words=200, max_font_size=200, background_color=None, mode='RGBA',stopwords=stopwords).generate(text)
     image_path = os.path.join('static', 'wordclouds', f"{spot_name}_wordcloud.png")
     wordcloud.to_file(image_path)
     image_url = f"/static/wordclouds/{spot_name}_wordcloud.png"
@@ -71,7 +71,7 @@ def get_cloud_literature(request):
     stopwords = ["这个", "可以", "一个", "一下", "一定", "是不是", "不是", "什么", "应该", "我们", "你们", "他们", "那个", "怎么", "然后", "最后", "因为", "但是"]
 
     # 生成词云图
-    wordcloud = WordCloud(collocations=False, width=800, height=800, font_path='C:\\Windows\\Fonts\\simhei.ttf',
+    wordcloud = WordCloud(collocations=False, width=800, height=800, 
                           max_words=200, max_font_size=200, background_color=None, mode='RGBA', stopwords=stopwords).generate(text)
     image_path = os.path.join('static', 'wordclouds', f"{liter_name}_wordcloud.png")
     wordcloud.to_file(image_path)
@@ -106,7 +106,7 @@ def get_cloud_food(request):
     stopwords = ["这个", "可以", "一个", "一下", "一定", "是不是", "不是", "什么", "应该", "我们", "你们", "他们", "那个", "怎么", "然后", "最后", "因为", "但是"]
 
     # 生成词云图
-    wordcloud = WordCloud(collocations=False, width=800, height=800, font_path='C:\\Windows\\Fonts\\simhei.ttf',
+    wordcloud = WordCloud(collocations=False, width=800, height=800,
                           max_words=200, max_font_size=200, background_color=None, mode='RGBA', stopwords=stopwords).generate(text)
     image_path = os.path.join('static', 'wordclouds', f"{food_name}_wordcloud.png")
     wordcloud.to_file(image_path)
@@ -141,7 +141,7 @@ def get_cloud_folk(request):
     stopwords = ["这个", "可以", "一个", "一下", "一定", "是不是", "不是", "什么", "应该", "我们", "你们", "他们", "那个", "怎么", "然后", "最后", "因为", "但是"]
 
     # 生成词云图
-    wordcloud = WordCloud(collocations=False, width=800, height=800, font_path='C:\\Windows\\Fonts\\simhei.ttf',
+    wordcloud = WordCloud(collocations=False, width=800, height=800, 
                           max_words=200, max_font_size=200, background_color=None, mode='RGBA', stopwords=stopwords).generate(text)
     image_path = os.path.join('static', 'wordclouds', f"{folk_name}_wordcloud.png")
     wordcloud.to_file(image_path)

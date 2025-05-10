@@ -24,7 +24,7 @@
           </el-table-column>
           <el-table-column prop="img" :label="locale === 'en' ? 'Image' : '图片'" width="180">
             <template #default="scope">
-              <img :src="scope.row.img" alt="image" style="width: 100px; height: auto;" />
+              <img :src="imageMap[scope.row.img]" alt="民俗图片" style="width: 100px; height: auto;" />
             </template>
           </el-table-column>
           <el-table-column prop="name" :label="locale === 'en' ? 'Folk Custom' : '民俗'" >
@@ -61,7 +61,14 @@ import {ref, onMounted, computed} from 'vue'
 import { useI18n } from 'vue-i18n';
 import cultureElements from '@/json/culture_elements_translated.json';
 const { locale } = useI18n();
+const images = import.meta.glob('@/assets/feiyi/*.jpg', { eager: true });
 
+// 生成图片路径映射表
+const imageMap = {};
+for (const path in images) {
+  const imageName = path.split('/').pop(); // 提取文件名（如 3.jpg）
+  imageMap[imageName] = images[path].default;
+}
 const activeIndex = ref('2')
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
@@ -82,8 +89,8 @@ interface Product {
 const getFolkName = (name) => {
   // Replace 'cultureElements' with the appropriate array where you store the name and translations
   const element = cultureElements.find(item => item.title === name); // Assuming 'title' holds the original name
-  return locale.value === 'en' && element?.['title-en'] ? 
-    element['title-en'] : 
+  return locale.value === 'en' && element?.['title-en'] ?
+    element['title-en'] :
     name; // If locale is 'en', return 'title-en'; otherwise, return the original name
 };
 
@@ -102,8 +109,9 @@ async function fetchFolkCustomData() {
   try {
     const response = await FolkAPI.getFolkInfluence();
     tableData.value = response.data.map(item => ({
+      id: item.folk_id||'',
       name: item.folk_name||'',
-      img: item.image_url|| '',
+      img: `${item.folk_id}.jpg`,
       internationalIndex: item.propagation,
       externalPromotion: item.publicity,
       socialMediaScore: item.social_media,

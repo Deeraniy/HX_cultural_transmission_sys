@@ -16,7 +16,7 @@
                 <p>{{ getFolkName(folk.name) }}</p>
               </div>
               <div class="flip-card-back">
-                <img :src="folk.image" alt="图片" />
+                <img :src="imageMap[folk.image]" alt="图片" />
               </div>
             </div>
           </div>
@@ -58,7 +58,7 @@
 
       <div v-if="selectedFolk" class="folk-dialog-content">
         <div class="folk-header">
-          <img :src="selectedFolk.image" alt="详细图片" class="dialog-image" />
+          <img :src="imageMap[selectedFolk.image]" alt="详细图片" class="dialog-image" />
           <div class="folk-title-container">
             <h2>{{ getFolkName(selectedFolk.name) }}</h2>
             <h3>{{ t('detail.folk.rank') }}: {{selectedFolk.rank}}</h3>
@@ -96,6 +96,14 @@ import UserAPI from "@/api/user";
 
 const { t, locale } = useI18n();
 const userStore = useUserStore();
+const images = import.meta.glob('@/assets/feiyi/*.jpg', { eager: true });
+
+// 生成图片路径映射表
+const imageMap = {};
+for (const path in images) {
+  const imageName = path.split('/').pop(); // 提取文件名（如 3.jpg）
+  imageMap[imageName] = images[path].default;
+}
 const tagStatus = ref({
   is_liked: false,
   is_favorite: false,
@@ -230,11 +238,10 @@ async function fetchFolkCustomData() {
     folks.value = response.data.map(item => ({
       id: item.folk_id,
       name: item.folk_name || '',
-      image: item.image_url || '',
+      image: `${item.folk_id}.jpg`, // 直接使用文件名
       description: item.description || '',
       rank: item.folk_rank || ''
     }));
-    console.log('Folk data:', folks.value);
   } catch (error) {
     console.error('Error fetching folk data:', error);
   }
@@ -348,16 +355,16 @@ const showDetails = async (folk) => {
 // 获取民俗名称的翻译
 const getFolkName = (name) => {
   const element = cultureElements.find(item => item.title === name);
-  return locale.value === 'en' && element?.['title-en'] ? 
-    element['title-en'] : 
+  return locale.value === 'en' && element?.['title-en'] ?
+    element['title-en'] :
     name;
 };
 
 // 获取民俗描述的翻译
 const getFolkDescription = (folk) => {
   const element = cultureElements.find(item => item.title === folk.name);
-  return locale.value === 'en' && element?.['description-en'] ? 
-    element['description-en'] : 
+  return locale.value === 'en' && element?.['description-en'] ?
+    element['description-en'] :
     folk.description;
 };
 </script>
